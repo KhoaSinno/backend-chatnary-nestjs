@@ -153,7 +153,7 @@ http://localhost:9000
 
 ## Direct Chat
 
-### **POST** `/api/chat/direct`
+### **POST** `/api/chat/lite`
 
 **Body**
 
