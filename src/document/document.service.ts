@@ -1,9 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
+import { IngestService } from '../ingest/ingest.service';
 
 @Injectable()
 export class DocumentService {
+  constructor(private readonly ingestService: IngestService) {}
+
+  async uploadFiles(files: Express.Multer.File[]): Promise<void> {
+    for (const file of files) {
+      await this.ingestService.ingestDocument(
+        file.path,
+        file.filename,
+        undefined,
+      );
+    }
+  }
   create(createDocumentDto: CreateDocumentDto) {
     return 'This action adds a new document';
   }

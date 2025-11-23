@@ -5,11 +5,11 @@ import { PoolConfig } from 'pg';
 export const pgConfig = {
   postgresConnectionOptions: {
     type: 'postgres',
-    host: '127.0.0.1',
-    port: 5433,
-    user: 'ChatnarySYS',
-    password: '123123',
-    database: 'api',
+    host: process.env.POSTGRES_HOST || 'db',
+    port: parseInt(process.env.POSTGRES_PORT || '5432'),
+    user: process.env.POSTGRES_USER || 'ChatnarySYS',
+    password: process.env.POSTGRES_PASSWORD || '123123',
+    database: process.env.POSTGRES_DB || 'api',
   } as PoolConfig,
   tableName: 'documents',
   //   columns: {

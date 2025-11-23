@@ -17,5 +17,6 @@ import { OpenaiService } from '../llm/openai/openai.service';
     PgvectorService,
     OpenaiService,
   ],
+  exports: [IngestService],
 })
 export class IngestModule {}

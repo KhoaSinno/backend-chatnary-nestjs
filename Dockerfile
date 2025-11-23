@@ -37,8 +37,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
 
 # Create persistent directories
-RUN mkdir -p storage/uploads && \
-    mkdir -p storage/vector-db
+RUN mkdir -p uploads/
 
 # Expose BE port
 EXPOSE 8000

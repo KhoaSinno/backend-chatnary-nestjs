@@ -43,4 +43,4 @@ coverage
 *.test.ts
 
 # Uploaded files handled via volume
-storage/uploads
+uploads
