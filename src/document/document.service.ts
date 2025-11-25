@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { IngestService } from '../ingest/ingest.service';
+import { VectorService } from '../ingest/vector/vector.service';
+import { deleteFile } from './oss';
+import path from 'path';
 
 @Injectable()
 export class DocumentService {
-  constructor(private readonly ingestService: IngestService) {}
+  constructor(
+    private readonly ingestService: IngestService,
+    private vectorService: VectorService,
+  ) {}
 
+  //-- UPLOAD --
   async uploadFiles(files: Express.Multer.File[]): Promise<void> {
     for (const file of files) {
       await this.ingestService.ingestDocument(
@@ -16,8 +22,11 @@ export class DocumentService {
       );
     }
   }
-  create(createDocumentDto: CreateDocumentDto) {
-    return 'This action adds a new document';
+  // -- REMOVE --
+  async removeDocument(fileId: string) {
+    await this.vectorService.removeVectorByFileId(fileId);
+    deleteFile(path.join('uploads/documents', fileId));
+    return fileId;
   }
 
   findAll() {
@@ -30,9 +39,5 @@ export class DocumentService {
 
   update(id: number, updateDocumentDto: UpdateDocumentDto) {
     return `This action updates a #${id} document`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} document`;
   }
 }

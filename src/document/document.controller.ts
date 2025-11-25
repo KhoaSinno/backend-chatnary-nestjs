@@ -22,6 +22,7 @@ import path from 'path';
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
+  // -- UPLOAD --
   @Post('upload/files')
   @UseInterceptors(
     FilesInterceptor('files', 10, {
@@ -58,9 +59,10 @@ export class DocumentController {
     }));
   }
 
-  @Post()
-  create(@Body() createDocumentDto: CreateDocumentDto) {
-    return this.documentService.create(createDocumentDto);
+  // -- REMOVE --
+  @Delete(':fileId')
+  remove(@Param('fileId') fileId: string) {
+    return this.documentService.removeDocument(fileId);
   }
 
   @Get()
@@ -79,10 +81,5 @@ export class DocumentController {
     @Body() updateDocumentDto: UpdateDocumentDto,
   ) {
     return this.documentService.update(+id, updateDocumentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.documentService.remove(+id);
   }
 }

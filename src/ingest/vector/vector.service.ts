@@ -30,6 +30,13 @@ export class VectorService {
     });
   }
 
+  // -- DELETE VECTOR STORE BY FILEID --
+  async removeVectorByFileId(fileId: string) {
+    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
+      await vectorStore.delete({ filter: { fileId } });
+    });
+  }
+
   //   async getRetriever(projectId: string) {
   //     return this.store.asRetriever({
   //       searchType: "similarity",

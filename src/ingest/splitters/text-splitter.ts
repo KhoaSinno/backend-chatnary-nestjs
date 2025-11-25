@@ -4,8 +4,8 @@ import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 @Injectable()
 export class TextSplitterService {
   splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 100,
-    chunkOverlap: 0,
+    chunkSize: 1000,
+    chunkOverlap: 200,
   });
 
   async splitText(text: string) {
