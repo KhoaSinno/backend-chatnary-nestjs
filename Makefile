@@ -20,10 +20,22 @@ dev:
 	docker compose -f $(COMPOSE_DEV) up --build
 	@echo "⚡ DEV mode running!"
 
+## 🔄 Rebuild dev containers (when adding new packages)
+dev-rebuild:
+	@echo "🔨 Rebuilding DEV containers..."
+	docker compose -f $(COMPOSE_DEV) build --no-cache
+	docker compose -f $(COMPOSE_DEV) up -d
+	@echo "✅ DEV rebuild complete!"
+
 ## 🔄 Restart only the API dev container
 dev-restart:
 	@echo "♻ Restarting DEV API..."
 	docker compose -f $(COMPOSE_DEV) restart api
+
+## 🛑 Stop dev containers
+dev-down:
+	@echo "🛑 Stopping DEV containers..."
+	docker compose -f $(COMPOSE_DEV) down
 
 # === MAIN TASKS ===
 
@@ -66,10 +78,19 @@ ps:
 help:
 	@echo ""
 	@echo "✨ Available commands:"
-	@echo "  make rebuild      - Build nhanh + chạy lại toàn hệ thống (giữ DB, clean image thừa)"
+	@echo ""
+	@echo "📦 PRODUCTION:"
+	@echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
 	@echo "  make clean        - Dọn sạch tất cả container, volume, image"
-	@echo "  make restart-api  - Restart nhanh container API"
-	@echo "  make ingest       - Chạy ingest CLI thủ công (manual)"
+	@echo "  make restart-api  - Restart container API (production)"
+	@echo ""
+	@echo "🔧 DEVELOPMENT:"
+	@echo "  make dev          - Chạy dev mode với hot reload"
+	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+	@echo "  make dev-restart  - Restart API dev container"
+	@echo "  make dev-down     - Dừng tất cả dev containers"
+	@echo ""
+	@echo "📊 MONITORING:"
 	@echo "  make logs         - Xem log realtime"
 	@echo "  make ps           - Liệt kê container đang chạy"
 	@echo ""

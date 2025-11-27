@@ -202,6 +202,16 @@ pnpm prisma migrate dev
 pnpm start:dev
 ```
 
+### 6. Connect pgAdmin
+
+``` bash
+Host name/address: chatnary-db
+Port: 5432
+Maintenance database: api
+Username: ChatnarySYS
+Password: 123123
+```
+
 ---
 
 ## 📚 API Documentation
