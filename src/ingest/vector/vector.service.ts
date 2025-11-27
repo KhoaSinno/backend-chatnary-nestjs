@@ -23,7 +23,7 @@ export class VectorService {
     });
   }
   // Get retrievals from the vector store
-  async getRetrievals(query: string, k = 4) {
+  async getRetrievals(query: string, k = 10) {
     return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
       const results = await vectorStore.similaritySearch(query, k);
       return results;

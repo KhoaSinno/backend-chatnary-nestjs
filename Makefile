@@ -8,6 +8,22 @@
 # === CONFIG ===
 COMPOSE_FILE := docker-compose.yml
 PROJECT_NAME := backend-chatnary-nestjs
+COMPOSE_DEV := docker-compose.dev.yml
+
+# ============================
+# 🟢 DEV MODE (HOT RELOAD)
+# ============================
+
+## 🚀 Start development mode (hot reload)
+dev:
+	@echo "🚀 Starting DEV (hot reload)..."
+	docker compose -f $(COMPOSE_DEV) up --build
+	@echo "⚡ DEV mode running!"
+
+## 🔄 Restart only the API dev container
+dev-restart:
+	@echo "♻ Restarting DEV API..."
+	docker compose -f $(COMPOSE_DEV) restart api
 
 # === MAIN TASKS ===
 

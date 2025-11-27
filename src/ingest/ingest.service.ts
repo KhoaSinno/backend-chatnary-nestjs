@@ -14,12 +14,14 @@ export class IngestService {
   /* 
     1. Load PDF document
     2. Split text into chunks
-    4. Create embeddings => Store embeddings in vector database
+    3. Create embeddings => Store embeddings in vector database
     */
   async ingestDocument(filePath: string, fileId: string, projectId?: string) {
+    // 1. Load PDF document
     const text = await this.pdfService.load(filePath);
+    // 2. Split text into chunks
     const chunks = await this.textSplitterService.splitText(text);
-
+    // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
       chunks,
       metadata: { fileId, projectId },

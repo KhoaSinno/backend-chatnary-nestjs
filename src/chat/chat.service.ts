@@ -6,10 +6,14 @@ import { ChatLiteDto } from './dto/chat-lite.dto';
 import { BaseMessage } from '@langchain/core/messages';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { VectorService } from '../ingest/vector/vector.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly openaiService: OpenaiService) {}
+  constructor(
+    private readonly openaiService: OpenaiService,
+    private readonly vectorService: VectorService,
+  ) {}
   // createSimpleRAG = (llm, retriever) => {
   //   return RunnableSequence.from([
   //     {
@@ -41,14 +45,49 @@ export class ChatService {
   //   ]);
   // };
 
-  async chatLite(chatLiteDto: ChatLiteDto): Promise<BaseMessage> {
-    console.log(
-      'This action processes a lite chat + ' + JSON.stringify(chatLiteDto),
+  // async chatLite(chatLiteDto: ChatLiteDto): Promise<BaseMessage> {
+  async chatLite(chatLiteDto: ChatLiteDto) {
+    const relateDocs = await this.vectorService.getRetrievals(
+      chatLiteDto.message,
+      5,
     );
+    console.log('Related Docs: ', relateDocs);
 
-    const response = await this.openaiService.model.invoke(chatLiteDto.message);
+    const SYSTEM_PROMPT = `
+      Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
+      Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
+      Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
 
-    return response;
+    // 3. Format retrieved docs to text context
+    const context = relateDocs
+      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .join('\n\n');
+
+    console.log('Context: ', context);
+
+    const sysPrompt = [
+      {
+        role: 'system',
+        content: SYSTEM_PROMPT,
+      },
+      {
+        role: 'user',
+        content: `
+          Context:
+
+          ${context}
+
+          ---
+
+          Câu hỏi: ${chatLiteDto.message}
+      `,
+      },
+    ];
+
+    // 4. Get response from LLM
+    const response = await this.openaiService.model.invoke(sysPrompt);
+
+    return { response, relateDocs };
 
     //     const r = await this.retriever.get(projectId);
     // const chain = createSimpleRAG(this.openai.llm, r);
