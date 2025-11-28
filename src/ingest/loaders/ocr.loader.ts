@@ -7,11 +7,23 @@ import pdf from 'pdf-parse';
 
 @Injectable()
 export class OcrService implements OnModuleInit, OnModuleDestroy {
-  private worker: Tesseract.Worker;
+  private workers: Tesseract.Worker[] = [];
+  private readonly WORKER_COUNT = 4; // Số workers song song
 
   async onModuleInit() {
-    this.worker = await Tesseract.createWorker('vie');
+    // Tạo worker pool để OCR song song
+    console.log(`🔧 Initializing ${this.WORKER_COUNT} OCR workers...`);
+    const workerPromises = Array.from({ length: this.WORKER_COUNT }, () =>
+      Tesseract.createWorker('vie'),
+    );
+    this.workers = await Promise.all(workerPromises);
+    console.log('✅ OCR workers ready!');
   }
+
+  private getWorker(index: number): Tesseract.Worker {
+    return this.workers[index % this.workers.length];
+  }
+
   // Handle
   async load(filePath: string) {
     try {
@@ -19,7 +31,7 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
       const isPdf = filePath.toLowerCase().endsWith('.pdf');
       // --- CASE 1: Non-PDF files (images) ---
       if (!isPdf) {
-        const result = await this.worker.recognize(filePath);
+        const result = await this.workers[0].recognize(filePath);
         return { text: result.data.text, confidence: result.data.confidence };
       }
 
@@ -31,6 +43,8 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
 
       if (!pageCount || pageCount === 0) return { text: '' };
 
+      console.log(`📄 Processing ${pageCount} pages with OCR...`);
+
       // Create: "uploads/temp" if not exists
       const tempDir = path.join(process.cwd(), 'uploads', 'temp');
       if (!fs.existsSync(tempDir)) {
@@ -39,41 +53,50 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
 
       // List pages: convert(1) => page 1
       const convert = fromPath(filePath, {
-        density: 130, // DPI 130 - 300
+        density: 130, // dpi
         saveFilename: `ocr-${Date.now()}`, // Temporary filename
         savePath: tempDir,
-        format: 'png', // Better quality
-        width: 1200, // To upscale img
-        height: 1200, // To upscale img
+        format: 'png',
+        width: 1000, // upscale width
+        height: 1000,
       });
 
-      // Process all pages
-      let allText = '';
-      let pageNum = 1;
-
-      while (true) {
-        try {
-          const pageResult = await convert(pageNum, {
-            responseType: 'image',
-          });
-
-          if (!pageResult.path) {
-            break;
-          }
-
-          const result = await this.worker.recognize(pageResult.path);
-          allText += result.data.text + '\n';
-
-          // Clean up temp image
-          fs.unlinkSync(pageResult.path);
-          pageNum++;
-        } catch {
-          // No more pages
-          break;
-        }
+      console.log('🖼️  Converting PDF to images...');
+      const convertPromises: Promise<any>[] = [];
+      for (let page = 1; page <= pageCount; page++) {
+        convertPromises.push(convert(page, { responseType: 'image' }));
       }
+      const pageImages = await Promise.all(convertPromises);
+      console.log('✅ PDF converted to images');
 
-      return { text: allText, confidence: 0 };
+      // 5️⃣ OCR tất cả trang song song với worker pool
+      console.log(`🔍 Running OCR on ${pageCount} pages...`);
+      const ocrPromises = pageImages.map((img: any, index: number) => {
+        const worker = this.getWorker(index); // Round-robin workers
+        return worker.recognize(img.path).then((res) => ({
+          text: res.data.text,
+          path: img.path,
+          page: index + 1,
+        }));
+      });
+
+      const results = await Promise.all(ocrPromises);
+      console.log('✅ OCR completed');
+
+      // 6️⃣ Ghép text theo thứ tự trang
+      const allText = results
+        .sort((a, b) => a.page - b.page)
+        .map((r) => r.text)
+        .join('\n');
+
+      // 7️⃣ Xoá file ảnh tạm
+      results.forEach((r) => {
+        try {
+          if (fs.existsSync(r.path)) fs.unlinkSync(r.path);
+        } catch {}
+      });
+
+      return { text: allText };
     } catch (error) {
       console.log('OCR Error: ', error);
       throw error;
@@ -81,8 +104,7 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    if (this.worker) {
-      await this.worker.terminate();
-    }
+    console.log('🛑 Terminating OCR workers...');
+    await Promise.all(this.workers.map((w) => w.terminate()));
   }
 }
