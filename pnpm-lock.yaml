@@ -87,6 +87,9 @@ importers:
       '@types/node':
         specifier: ^22.10.7
         version: 22.19.1
+      '@types/pdf-parse':
+        specifier: ^1.1.5
+        version: 1.1.5
       '@types/pg':
         specifier: ^8.15.6
         version: 8.15.6
@@ -1330,6 +1333,9 @@ packages:
 
   '@types/node@22.19.1':
     resolution: {integrity: sha512-LCCV0HdSZZZb34qifBsyWlUmok6W7ouER+oQIGBScS8EsZsQbrtFTUrDX4hOl+CS6p7cnNC4td+qrSVGSCTUfQ==}
+
+  '@types/pdf-parse@1.1.5':
+    resolution: {integrity: sha512-kBfrSXsloMnUJOKi25s3+hRmkycHfLK6A09eRGqF/N8BkQoPUmaCr+q8Cli5FnfohEz/rsv82zAiPz/LXtOGhA==}
 
   '@types/pg@8.15.6':
     resolution: {integrity: sha512-NoaMtzhxOrubeL/7UZuNTrejB4MPAJ0RpxZqXQf2qXuVlTPuG6Y8p4u9dKRaue4yjmC7ZhzVO2/Yyyn25znrPQ==}
@@ -5048,6 +5054,10 @@ snapshots:
   '@types/node@22.19.1':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/pdf-parse@1.1.5':
+    dependencies:
+      '@types/node': 22.19.1
 
   '@types/pg@8.15.6':
     dependencies:
