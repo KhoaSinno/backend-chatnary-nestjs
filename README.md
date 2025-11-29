@@ -16,19 +16,34 @@
 
 ---
 
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
+- [Quick Start](#-quick-start)
+- [API Documentation](#-api-documentation)
+- [Project Structure](#-project-structure)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+
+---
+
 ## 🎯 Overview
 
-**Chatnary** is an advanced Retrieval-Augmented Generation backend system designed to process documents, embed them into vector space, and provide powerful chat capabilities with or without history.
-It supports:
+**Chatnary** is an advanced Retrieval-Augmented Generation (RAG) backend system designed to process documents, embed them into vector space, and provide powerful chat capabilities with or without history.
 
-* Automated OCR → Chunk → Embedding → Vector upsert pipeline
-* Project-based organization (like ChatGPT Workspaces)
-* High-performance semantic retrieval with **pgvector**
-* LangChainJS-powered pipelines
-* Clean modular architecture built with NestJS + Prisma
+### Key Highlights
 
-This backend is ideal for:
-📄 internal knowledge bases • 🔍 enterprise search • 🤖 AI assistants • 📚 document Q&A
+- 📊 **Intelligent Document Management** - Monitor documents, ingest new docs, and CRUD documents safety
+- 🎯 **AI-Powered Search & Q&A** - Semantic with related to docs,
+- 💰 **Role-based Access Control** - Support admin/student/teacher roles
+- 🤖 **AI assistants** - Support AI assistants
+- 🔐 **Secure & Scalable** - Built with enterprise-grade NestJS framework
+- 📱 **RESTful API** - Clean, well-documented REST endpoints
+- 🚀 **Production Ready** - Error handling, logging, and monitoring built-in
 
 ---
 
@@ -36,47 +51,53 @@ This backend is ideal for:
 
 ### 🔥 Core RAG Features
 
-* **Chat (no history)**
-  Direct single-turn chat with the RAG pipeline.
+- **Chat (no history)**
+  - Direct single-turn chat with the RAG pipeline.
 
-* **Chat with history**
-  Multi-turn conversations stored in DB.
+- **Chat with history**
+  - Multi-turn conversations stored in DB.
 
-* **Automatic Ingest Pipeline**
+- **Automatic Ingest Pipeline**
   Upload any file → Backend automatically:
 
   1. Detects if file is scanned
-  2. Performs OCR (Tesseract / Gemini Vision)
+  2. Performs OCR `Tesseract.js`
   3. Extracts text
   4. Chunks the text
-  5. Embeds using OpenAI/Cohere/Voyage
+  5. Embeds using OpenAI
   6. Stores vectors in pgvector
 
-* **Semantic Retrieval**
+- **Semantic Retrieval**
 
-  * KNN search via pgvector
-  * Hybrid search-ready (optional BM25)
+  - KNN search via pgvector
+  - [*] Hybrid search-ready
 
 ---
 
 ### 📁 Project & File Management
 
-* **Project CRUD** (similar to ChatGPT folders)
-* **File CRUD**
-* Per-project isolation (files, chats, embeddings)
+- **Project CRUD**
+  - Similar ChatGPT Project function
+
+- **File CRUD**
+- Per-project isolation (documents, chats, embeddings)
 
 ---
 
 ### 🧰 Technical Features
 
-* 🚀 NestJS modular architecture
-* 🧠 Prisma ORM with PostgreSQL
-* 🔎 pgvector vector search
-* 📄 Swagger documentation
-* ❇️ File-based storage + DB metadata
-* ⚡ Docker (super lightweight)
-* 📦 Clean Service + Controller separation
-* 🧹 DTO validation via class-validator
+- ✅ **Input Validation** - Comprehensive DTO validation with class-validator
+- ✅ **Error Handling** - Global exception filter with consistent error responses
+- ✅ **Request Logging** - Detailed HTTP request/response logging
+- ✅ **API Documentation** - Interactive Swagger/OpenAPI documentation with full schema
+- ✅ **Health Monitoring - PM2** - Health check endpoints for monitoring
+- ✅ **CORS Support** - Configured for cross-origin requests
+- ✅ **Type Safety - Prisma ORM** - ORM management with any DB
+- ✅ **Database Abstraction/pgvector vector** - Interface-based database layer for easy swapping
+- ✅ **Swagger documentation** - Visualize api document for FE
+- ✅ **File-based storage + DB metadata** - `multer` package to handle Object storage server
+- ✅ **Docker** - Build image so super lightweight
+<!-- - ✅ **Walrus Integration** - Decentralized storage with collection management -->
 
 ---
 
@@ -84,25 +105,26 @@ This backend is ideal for:
 
 ### Core Components
 
-* **NestJS 11**
-* **TypeScript**
-* **Prisma ORM**
-* **PostgreSQL + pgvector**
-* **LangChainJS**
+- **NestJS 11**
+- **TypeScript**
+- **Prisma ORM**
+- **PostgreSQL + pgvector**
+- **LangChainJS**
+- **Docker**
 
 ### Document Processing
 
-* Tesseract OCR or Gemini Vision (selectable)
-* LangChain Recursive Character Splitter
+- Tesseract OCR or Gemini Vision (selectable)
+- LangChain Recursive Character Splitter
+
+### Documentation api
+
+- **[Swagger/OpenAPI](https://swagger.io/)** - API documentation
+- **[swagger-ui-express](https://github.com/scottie1984/swagger-ui-express)** - Swagger UI
 
 ### Embeddings
 
-* ❗ Choose your provider:
-
-  * OpenAI (text-embedding-3)
-  * Cohere (multilingual)
-  * Voyage AI
-  * Local model (optional)
+- OpenAI (text-embedding-3)
 
 ---
 
@@ -140,20 +162,24 @@ This backend is ideal for:
 
 ```
 src/
- ├── projects/        # Workspace CRUD
- ├── files/           # Upload, OCR, ingest
- ├── chats/           # Chat + history
- ├── rag/             # Retrieval + LangChain pipeline
- ├── pipelines/       # Ingest & chat pipelines
+ ├── project/        # Workspace CRUD
+ ├── document/       # Upload, OCR, ingest
+ ├── chat/           # Chat + history
+ ├── llm/             # Retrieval + LangChain pipeline
+ ├── pipeline/       # Ingest & chat pipelines
  ├── database/        # PrismaModule + Service
  ├── common/          # Filters, DTOs, utils
- ├── storage/         # Uploaded files
  └── main.ts
 ```
 
 ---
 
 ## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** >= 22.x
+- **pnpm** >= 9.x (or npm/yarn)
 
 ### 1. Clone Repository
 
@@ -172,18 +198,8 @@ pnpm install
 
 `.env`
 
-```env
-PORT=3000
-
-# Database
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/Chatnary"
-
-# Embedding
-EMBED_PROVIDER=openai
-OPENAI_API_KEY=sk-...
-
-# OCR
-OCR_PROVIDER=tesseract
+```bash
+// copy .env.example => .env
 ```
 
 ---
@@ -224,10 +240,10 @@ http://localhost:3000/api/docs
 
 Includes:
 
-* DTO schemas
-* Request/response examples
-* Try-it-out
-* Endpoints fully documented
+- DTO schemas
+- Request/response examples
+- Try-it-out
+- Endpoints fully documented
 
 ---
 
@@ -237,7 +253,7 @@ Includes:
 Chatnary-backend/
 ├── src/
 │   ├── chats/
-│   ├── files/
+│   ├── documents/
 │   ├── projects/
 │   ├── rag/
 │   ├── pipelines/
@@ -284,10 +300,10 @@ Chatnary-backend/
 
 | Method | Endpoint                          |
 | ------ | --------------------------------- |
-| POST   | `/api/files/upload?projectId=...` |
-| GET    | `/api/files/:id`                  |
-| DELETE | `/api/files/:id`                  |
-| GET    | `/api/projects/:id/files`         |
+| POST   | `/api/documents/upload?projectId=...` |
+| GET    | `/api/documents/:id`                  |
+| DELETE | `/api/documents/:id`                  |
+| GET    | `/api/projects/:id/documents`         |
 
 > Upload triggers auto ingest.
 
@@ -297,59 +313,127 @@ Chatnary-backend/
 
 ### 🐳 Docker Compose (lightweight)
 
-`docker-compose.yml`
+`docker-compose.dev.yml`
 
 ```yaml
-version: "3.9"
 services:
   api:
-    build: .
-    env_file: .env
+    container_name: chatnary-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
-      - "8000:3000"
+      - "8000:8000"
     volumes:
-      - ./storage/uploads:/app/storage/uploads
+      - .:/app # sync code
+      - /app/node_modules # prevent overwrite
+      - ./uploads:/app/uploads
+    env_file: .env
     depends_on:
       - db
+    networks:
+      - app-net
 
   db:
     image: pgvector/pgvector:pg16
+    container_name: chatnary-db
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+networks:
+  app-net:
 
 volumes:
-  pgdata:
+  db_data:
+  pgadmin_data:
+
+```
+
+### 🐳 Dockerfile
+
+`Dockerfile.dev`
+
+```yaml
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install GraphicsMagick for pdf2pic
+RUN apk add --no-cache graphicsmagick ghostscript
+
+RUN npm install -g pnpm
+
+# Copy package + lock file
+COPY package.json pnpm-lock.yaml* ./
+
+# Install ALL dependencies (dev + prod)
+RUN pnpm install
+
+# Copy all source
+COPY . .
+
+# Expose NestJS port
+EXPOSE 8000
+
+# Dev mode: Hot reload
+CMD ["pnpm", "start:dev"]
+
+
 ```
 
 ---
 
 ## 🔮 Roadmap
 
-* [ ] SSE streaming for real-time ingest
-* [ ] Hybrid search (BM25 + vector)
-* [ ] Background job queue (BullMQ)
-* [ ] Rate limiting
-* [ ] Auth system (JWT)
+### ✅ Completed
+
+- [x] **PostgreSQL Database Integration** - Vector db vs SQL DB with collection management
+- [x] **Swagger Documentation** - Complete API documentation with schemas and examples
+- [x] **Database Abstraction Layer** - Interface-based design for easy database swapping
+- [x] **Error Handling** - Global exception filter with consistent responses
+- [x] **Request Logging** - Comprehensive HTTP request/response logging
+- [x] **Input Validation** - DTO-based validation with class-validator
+
+### 🚧 In Progress
+
+- [ ] SSE streaming for real-time ingest
+- [ ] Hybrid search (BM25 + vector)
+- [ ] Background job queue (BullMQ)
+- [ ] Auth system (JWT)
+
+### 📋 Coming Soon
+
+- [ ] **Authentication & Authorization** - JWT-based auth system
+- [ ] **Blockchain Integration** - Smart contract interactions
+- [ ] **WebSocket Support** - Real-time updates
+- [ ] **Rate Limiting** - API protection
+- [ ] **Caching Layer** - Performance optimization
+- [ ] **CI/CD Pipeline** - Automated deployment
+- [ ] **Database Migrations** - Schema versioning for Walrus collections
 
 ---
 
-## 📞 Support
+## 📞 Contact
 
-* Open a GitHub issue
-* Contact the dev team
-
----
-
-If bạn muốn, mình có thể tiếp tục:
-
-✅ Tạo toàn bộ **folder + files** theo README
-✅ Generate **NestJS skeleton** hoàn chỉnh
-✅ Thêm swagger decorators
-✅ Viết sample controller + service
-✅ Viết Dockerfile tối ưu 50MB
-
-Bạn có muốn mình **xuất toàn bộ project template (code đầy đủ)** không?
+- `ntakhoa.dev@gmail.com`
