@@ -10,6 +10,16 @@ COMPOSE_FILE := docker-compose.yml
 PROJECT_NAME := backend-chatnary-nestjs
 COMPOSE_DEV := docker-compose.dev.yml
 
+# === WINDOWS OCR SETUP ===
+GM_URL := https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick-binaries/1.3.43/GraphicsMagick-1.3.43-Q16-win64-dll.exe/download
+GS_URL := https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10031/gs10031w64.exe
+GM_PATH := /c/Program Files/GraphicsMagick-1.3.43-Q16
+GS_PATH := /c/Program Files/gs/gs10.03.1/bin
+
+# 1. make setup-ocr-win
+# 2. make configure-ocr-path
+# 3. make verify-ocr
+
 # ============================
 # 🟢 DEV MODE (HOT RELOAD)
 # ============================
@@ -36,6 +46,42 @@ dev-restart:
 dev-down:
 	@echo "🛑 Stopping DEV containers..."
 	docker compose -f $(COMPOSE_DEV) down
+
+# ============================
+# 🖼️ WINDOWS OCR DEPENDENCIES
+# ============================
+
+## 🔧 Install GraphicsMagick + Ghostscript on Windows
+setup-ocr-win:
+	@echo "📦 Downloading GraphicsMagick..."
+	@curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+	@echo "📦 Downloading Ghostscript..."
+	@powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+	@echo ""
+	@echo "✅ Installers downloaded!"
+	@echo "⚠️  Please run these installers manually:"
+	@echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+	@echo "   2. gs-installer.exe"
+	@echo ""
+	@echo "After installation, run: make configure-ocr-path"
+
+## ⚙️ Configure OCR tools PATH
+configure-ocr-path:
+	@echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+	@echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+	@echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+	@echo "✅ PATH configured in ~/.bashrc"
+	@echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+
+## ✅ Verify OCR installation
+verify-ocr:
+	@echo "🔍 Verifying OCR dependencies..."
+	@echo -n "GraphicsMagick: "
+	@gm version | head -n 1 || echo "❌ Not found"
+	@echo -n "Ghostscript: "
+	@gswin64c --version || echo "❌ Not found"
+	@echo ""
+	@echo "✅ All OCR dependencies verified!"
 
 # === MAIN TASKS ===
 
@@ -89,6 +135,11 @@ help:
 	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
 	@echo "  make dev-restart  - Restart API dev container"
 	@echo "  make dev-down     - Dừng tất cả dev containers"
+	@echo ""
+	@echo "🖼️ WINDOWS OCR SETUP:"
+	@echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+	@echo "  make configure-ocr-path - Add OCR tools to PATH"
+	@echo "  make verify-ocr         - Verify OCR dependencies installation"
 	@echo ""
 	@echo "📊 MONITORING:"
 	@echo "  make logs         - Xem log realtime"

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { IngestService } from './ingest.service';
 import { PdfService } from './loaders/pdf.loader';
 import { OcrService } from './loaders/ocr.loader';
@@ -16,6 +16,7 @@ import { OpenaiService } from '../llm/openai/openai.service';
     VectorService,
     PgvectorService,
     OpenaiService,
+    ConsoleLogger,
   ],
   exports: [IngestService, VectorService],
 })

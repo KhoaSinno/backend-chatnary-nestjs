@@ -1,7 +1,7 @@
 import { DistanceStrategy } from '@langchain/community/vectorstores/pgvector';
 import { PoolConfig } from 'pg';
 
-// Sample config
+// Local PostgreSQL config (Docker)
 export const pgConfig = {
   postgresConnectionOptions: {
     type: 'postgres',
@@ -21,3 +21,15 @@ export const pgConfig = {
   // supported distance strategies: cosine (default), innerProduct, or euclidean
   distanceStrategy: 'cosine' as DistanceStrategy,
 };
+
+// NeonDB config (Remote)
+export const getPgConfigNeon = () => ({
+  postgresConnectionOptions: {
+    connectionString: process.env.DATABASE_URL_NEON,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  } as PoolConfig,
+  tableName: 'documents',
+  distanceStrategy: 'cosine' as DistanceStrategy,
+});
