@@ -3,6 +3,7 @@ import { VectorService } from './vector/vector.service';
 import { PdfService } from './loaders/pdf.loader';
 import { TextSplitterService } from './splitters/text-splitter';
 import { OcrService } from './loaders/ocr.loader';
+import * as fs from 'fs';
 
 @Injectable()
 export class IngestService {
@@ -13,16 +14,39 @@ export class IngestService {
     private vectorService: VectorService,
   ) {}
   /* 
-    1. Load PDF document
+    1. Load document (Text/PDF/Image)
     2. Split text into chunks
     3. Create embeddings => Store embeddings in vector database
     */
   async ingestDocument(filePath: string, fileId: string, projectId?: string) {
-    // 1. Load PDF document
-    // const text = await this.pdfService.load(filePath);
-    const { text } = await this.ocrService.load(filePath);
+    // 1. Load document based on file type
+    let text: string;
+    const ext = filePath.toLowerCase();
+
+    if (ext.endsWith('.txt')) {
+      // Plain text file => .txt
+      text = fs.readFileSync(filePath, 'utf-8');
+    } else if (ext.endsWith('.pdf')) {
+      // Try PDF first
+      text = await this.pdfService.load(filePath);
+
+      // If PDF has no text (scanned), use OCR
+      if (!text || text.trim().length < 20) {
+        console.log('📄 PDF has no text, using OCR...');
+        const result = await this.ocrService.load(filePath);
+        text = result.text;
+      }
+    } else if (/\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext)) {
+      // Image files - use OCR
+      const result = await this.ocrService.load(filePath);
+      text = result.text;
+    } else {
+      throw new Error(`Unsupported file type: ${ext}`);
+    }
+
     // 2. Split text into chunks
     const chunks = await this.textSplitterService.splitText(text);
+
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
       chunks,

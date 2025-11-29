@@ -12,12 +12,10 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     // Tạo worker pool để OCR song song
-    console.log(`🔧 Initializing ${this.WORKER_COUNT} OCR workers...`);
     const workerPromises = Array.from({ length: this.WORKER_COUNT }, () =>
       Tesseract.createWorker('vie'),
     );
     this.workers = await Promise.all(workerPromises);
-    console.log('✅ OCR workers ready!');
   }
 
   private getWorker(index: number): Tesseract.Worker {
@@ -27,23 +25,39 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
   // Handle
   async load(filePath: string) {
     try {
-      // Check if file is PDF
-      const isPdf = filePath.toLowerCase().endsWith('.pdf');
-      // --- CASE 1: Non-PDF files (images) ---
-      if (!isPdf) {
+      const ext = filePath.toLowerCase();
+      const isPdf = ext.endsWith('.pdf');
+
+      // Supported image formats for OCR
+      const isImage = /\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext);
+
+      // --- CASE 1: Image files only ---
+      if (isImage) {
         const result = await this.workers[0].recognize(filePath);
         return { text: result.data.text, confidence: result.data.confidence };
       }
 
-      // --- CASE 2: PDF files ---
+      // --- CASE 2: Non-PDF and non-image files (e.g., .txt) ---
+      if (!isPdf) {
+        throw new Error(
+          `Unsupported file type for OCR. Only PDF and images are supported. Got: ${path.extname(filePath)}`,
+        );
+      }
+
+      // --- CASE 3: PDF files ---
       // -- Get pageNumber --
       const pdfBuffet = fs.readFileSync(filePath);
       const pdfInfo = await pdf(pdfBuffet);
+
+      if (pdfInfo.text && pdfInfo.text.trim().length > 20) {
+        // Return if PDF has embedded text
+        console.log('📄 PDF has embedded text, skipping OCR.');
+        return { text: pdfInfo.text };
+      }
+
       const pageCount = pdfInfo.numpages;
 
       if (!pageCount || pageCount === 0) return { text: '' };
-
-      console.log(`📄 Processing ${pageCount} pages with OCR...`);
 
       // Create: "uploads/temp" if not exists
       const tempDir = path.join(process.cwd(), 'uploads', 'temp');
@@ -61,7 +75,6 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
         height: 1000,
       });
 
-      console.log('🖼️  Converting PDF to images...');
       const convertPromises: Promise<any>[] = [];
       for (let page = 1; page <= pageCount; page++) {
         convertPromises.push(convert(page, { responseType: 'image' }));
