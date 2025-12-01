@@ -6,48 +6,48 @@ import {
   Patch,
   Param,
   Delete,
+  Headers,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { ChatDto } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
-
+  // -- CHAT LITE --
   @Post('/lite')
   chatLite(@Body() ChatDto: ChatDto) {
     return this.chatService.chatLite(ChatDto);
   }
-
+  // -- CHAT HISTORY --
   @Post('/')
   chatHistory(@Body() ChatDto: ChatDto) {
     return this.chatService.chatHistory(ChatDto);
   }
-
-  @Post()
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.chatService.findAll();
-  }
-
+  // -- GET CHAT DETAIL BY ID --
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+  getChatById(@Param('id') id: string) {
+    return this.chatService.getChatById(id);
+  }
+  // -- GET ALL USER CHATS --
+  @Get('/user/all')
+  getAllUserChat(@Headers('x-client-id') userId: string) {
+    return this.chatService.getAllUserChat(userId);
+  }
+  // -- UPDATE CHAT: TITLE --
+  @Patch('/user/:id')
+  update(
+    @Headers('x-client-id') userId: string,
+    @Param('id') id: string,
+    @Body() updateChatDto: UpdateChatDto,
+  ) {
+    return this.chatService.update(userId, id, updateChatDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(+id, updateChatDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
+  // -- DELETE CHAT --
+  @Delete('/user/:id')
+  remove(@Headers('x-client-id') userId: string, @Param('id') id: string) {
+    return this.chatService.remove(userId, id);
   }
 }

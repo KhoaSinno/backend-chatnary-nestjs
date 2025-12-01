@@ -3,4 +3,5 @@ export class ChatDto {
   userId?: string;
   chatId?: string;
   message: string;
+  title?: string;
 }

@@ -401,7 +401,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   providers: [PrismaService],
@@ -414,7 +414,7 @@ export class AppModule {}
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -1393,7 +1393,7 @@ enum Role {
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class UserService {

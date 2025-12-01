@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateChatDto } from './dto/create-chat.dto';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { ChatDto } from './dto/chat.dto';
-import { BaseMessage } from '@langchain/core/messages';
-import { RunnableSequence } from '@langchain/core/runnables';
-import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { VectorService } from '../ingest/vector/vector.service';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -172,23 +172,40 @@ export class ChatService {
     return { response, relateDocs, historyMessages };
   }
 
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+  // -- Get all user chats --
+  async getAllUserChat(userId: string) {
+    return await this.prisma.chats.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: { userId },
+    });
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  // -- Get Chat by ID --
+  async getChatById(id: string) {
+    return await this.prisma.chats.findUnique({
+      where: { id },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
+  // -- Update chat (title) --
+  async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
+    return await this.prisma.chats.update({
+      where: { id, userId },
+      data: updateChatDto,
+    });
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
+  // -- Delete chat --
+  async remove(userId: string, id: string) {
+    const chat = await this.prisma.chats.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new BadRequestException('Chat not found');
+    if (chat.userId !== userId)
+      throw new ForbiddenException('User Unauthorized!');
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+    return await this.prisma.chats.delete({
+      where: { id },
+    });
   }
 }
