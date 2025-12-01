@@ -121,6 +121,7 @@ ps:
 	@docker compose -f $(COMPOSE_FILE) ps
 
 # Prisma generate + db push local - no docker:
+.PHONY: prisma
 prisma:
 	@echo "🔧 Generating Prisma client and pushing DB schema..."
 	npx prisma generate

@@ -19,22 +19,59 @@ model documents {
 }
 
 model users {
-  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email    String  @unique
-  username String  @unique
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email    String     @unique
+  username String     @unique
   name     String?
   password String
+  projects projects[]
+  chats    chats[]
 }
 
 model chats {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String?  @db.Uuid
+  userId    String   @db.Uuid
   title     String   @default("New Chat")
-  messages  Json[] // array of { role, content }
+  messages  Json[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  projectId String?   @db.Uuid
+  project   projects? @relation(fields: [projectId], references: [id])
+
+  user users @relation(fields: [userId], references: [id])
+
   @@index([userId])
+  @@index([projectId])
+}
+
+model projects {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   users  @relation(fields: [userId], references: [id])
+
+  chats     chats[]
+  documents project_documents[]
+}
+
+model project_documents {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String   @db.Uuid
+  name      String
+  filePath  String
+  mimeType  String?
+  size      Int?
+  status    String // uploading | processing | done | error
+  createdAt DateTime @default(now())
+
+  projects projects @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
 }
 
 model verification_tokens {
