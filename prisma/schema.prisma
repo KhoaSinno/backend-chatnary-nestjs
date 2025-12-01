@@ -1,0 +1,46 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_NEON")
+}
+
+model documents {
+  id        String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text      String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+
+  @@map("documents")
+  @@ignore // No generate, no migration, no pull schema from db
+}
+
+model users {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email    String  @unique
+  username String  @unique
+  name     String?
+  password String
+}
+
+model chats {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?  @db.Uuid
+  title     String   @default("New Chat")
+  messages  Json[] // array of { role, content }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}

@@ -10,15 +10,20 @@ import {
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
-import { ChatLiteDto } from './dto/chat-lite.dto';
+import { ChatDto } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('/lite')
-  chatLite(@Body() chatLiteDto: ChatLiteDto) {
-    return this.chatService.chatLite(chatLiteDto);
+  chatLite(@Body() ChatDto: ChatDto) {
+    return this.chatService.chatLite(ChatDto);
+  }
+
+  @Post('/')
+  chatHistory(@Body() ChatDto: ChatDto) {
+    return this.chatService.chatHistory(ChatDto);
   }
 
   @Post()

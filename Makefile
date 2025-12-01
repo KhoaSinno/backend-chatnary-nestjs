@@ -120,6 +120,13 @@ logs:
 ps:
 	@docker compose -f $(COMPOSE_FILE) ps
 
+# Prisma generate + db push local - no docker:
+prisma:
+	@echo "🔧 Generating Prisma client and pushing DB schema..."
+	npx prisma generate
+	npx prisma db push
+	@echo "✅ Prisma setup complete!"
+	
 ## 🆘 Hiển thị hướng dẫn
 help:
 	@echo ""

@@ -1,3 +1,1082 @@
+# Project Export
+
+## Project Statistics
+
+- Total files: 61
+
+## Folder Structure
+
+```
+.dockerignore
+.env.example
+.gitignore
+.prettierrc
+API_ENDPOINTS.md
+docker-compose.dev.yml
+docker-compose.yml
+Dockerfile
+Dockerfile.dev
+eslint.config.mjs
+LICENSE
+Makefile
+nest-cli.json
+package.json
+pnpm-lock.yaml
+prisma
+  schema.prisma
+prisma.config.ts
+README.md
+src
+  app.controller.spec.ts
+  app.controller.ts
+  app.module.ts
+  app.service.ts
+  chat
+    chat.controller.ts
+    chat.module.ts
+    chat.service.ts
+    dto
+      chat-lite.dto.ts
+      create-chat.dto.ts
+      update-chat.dto.ts
+    entities
+      chat.entity.ts
+  config
+    env.config.ts
+    pg.config.ts
+  document
+    document.controller.ts
+    document.module.ts
+    document.service.ts
+    dto
+      create-document.dto.ts
+      update-document.dto.ts
+    entities
+      document.entity.ts
+    oss.ts
+  http-exception.filter.ts
+  ingest
+    ingest.module.ts
+    ingest.service.ts
+    loaders
+      ocr.loader.ts
+      pdf.loader.ts
+    splitters
+      text-splitter.ts
+    vector
+      pgvector.client.ts
+      vector.service.ts
+  llm
+    openai
+      openai.module.ts
+      openai.service.ts
+  main.ts
+  pipeline
+    pipeline.module.ts
+    pipeline.service.ts
+  response.interceptor.ts
+test
+  app.e2e-spec.ts
+  jest-e2e.json
+tsconfig.build.json
+tsconfig.json
+vie.traineddata
+_docs
+  prisma-sync-existing-db.md
+  PRISMA_GUIDE.md
+  REDIS_GUIDE.md
+  roadmap.md
+
+```
+
+### .dockerignore
+
+```gitignore
+# Node dependencies
+node_modules
+.pnpm-store
+
+# Build files
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Local databases or caches
+storage/vector-db
+storage/tmp
+storage/cache
+
+# Logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.override.yml
+
+# IDE / Editor files
+.vscode
+.idea
+
+# Test
+coverage
+*.spec.ts
+*.test.ts
+
+# Uploaded files handled via volume
+uploads
+
+```
+
+### .env.example
+
+*(Unsupported file type)*
+
+### .gitignore
+
+```gitignore
+# compiled output
+/dist
+/node_modules
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+/uploads/documents
+
+/src/generated/prisma
+
+```
+
+### .prettierrc
+
+```json
+{
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+```
+
+### API_ENDPOINTS.md
+
+```md
+# 📘 Chatnary Backend API Endpoints
+
+*(NestJS · Prisma · PGVector · LangChainJS)*
+
+## Base URL
+
+```
+<http://localhost:9000>
+
+```
+
+---
+
+# 🏠 Root
+
+### **GET** `/`
+
+* Welcome message
+
+---
+
+# ❤️ Health Check
+
+## Basic Health Check
+
+### **GET** `/health`
+
+**Response**
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2025-11-09T06:45:18.888Z",
+  "uptime": 2.958539,
+  "environment": "development",
+  "version": "1.0.0"
+}
+```
+
+## Detailed Health Check
+
+### **GET** `/health/detailed`
+
+**Response**
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2025-11-09T06:45:19.374Z",
+  "uptime": 3.444321,
+  "environment": "development",
+  "version": "1.0.0",
+  "memory": {
+    "used": 25.32,
+    "total": 51.84,
+    "unit": "MB"
+  },
+  "cpu": {
+    "user": 366829,
+    "system": 110151
+  }
+}
+```
+
+---
+
+# 📁 Projects
+
+*(Giống ChatGPT workspace — quản lý không gian dự án)*
+
+## Create Project
+
+### **POST** `/api/projects`
+
+**Body**
+
+```json
+{
+  "name": "My Workspace",
+  "description": "Optional description",
+  "color": "#4A90E2"
+}
+```
+
+## List Projects
+
+### **GET** `/api/projects`
+
+## Update Project
+
+### **PATCH** `/api/projects/:id`
+
+**Body**
+
+```json
+{
+  "name": "New Name",
+  "description": "Updated description",
+  "color": "#FF9900"
+}
+```
+
+## Delete Project
+
+### **DELETE** `/api/projects/:id`
+
+---
+
+# 📄 Documents
+
+*(Upload → OCR → Chunk → Embed → Vector Store)*
+
+## Upload File (Auto Ingest)
+
+### **POST** `/api/documents/upload?projectId=<id>`
+
+- Multipart form-data:
+
+  - `document`: the document to upload
+- Triggers:
+
+  - Detect scanned PDF/image
+  - OCR → text
+  - Chunk → embeddings
+  - Upsert pgvector
+
+**Response**
+
+```json
+{
+  "is_success": true,
+  "data": {
+    "fileId": "uuid",
+    "status": "ingesting"
+  }
+}
+```
+
+## Get File Metadata
+
+### **GET** `/api/documents/:id`
+
+## Delete File
+
+### **DELETE** `/api/documents/:id`
+
+## List Documents in Project
+
+### **GET** `/api/projects/:id/documents`
+
+---
+
+# 🧠 Chat (No History)
+
+## Direct Chat
+
+### **POST** `/api/chat/lite`
+
+**Body**
+
+```json
+{
+  // "projectId": "string",
+  "message": "Các nghiên cứu gì vậy"
+}
+```
+
+**Response**
+
+```json
+{
+  // "is_success": true,
+  // "data": {
+  //   "answer": "The document explains..."
+  // }
+  {
+  "response": {
+    "lc": 1,
+    "type": "constructor",
+    "id": [
+      "langchain_core",
+      "messages",
+      "AIMessage"
+    ],
+    "kwargs": {
+      "id": "chatcmpl-CgNozAjyLEYNvaiaRy9YoP2DqkQOD",
+      "content": "Các nghiên cứu được nhắc đến là các nghiên cứu quốc tế tập trung làm rõ vai trò và ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM) như ChatGPT của OpenAI và Gemini của Google trong nhiều lĩnh vực. Các nghiên cứu này phân tích:\n\n- Hiệu quả và khả năng của LLM hiện đại trong xử lý ngôn ngữ tự nhiên (NLP), giúp máy tính không chỉ hiểu và sinh ngôn ngữ mà còn suy luận dựa trên ngôn ngữ.\n- Ứng dụng các kỹ thuật tiên tiến như học tăng cường từ phản hồi của con người (RLHF) và kiến trúc đa phương thức để mở rộng phạm vi xử lý (văn bản, hình ảnh, âm thanh).\n- Ảnh hưởng tích cực của LLM trong thực tiễn, như cá nhân hóa phản hồi, giải quyết các nhiệm vụ phân tích phức tạp trong y tế, tài chính, giáo dục, dịch vụ khách hàng.\n- Các tiến bộ về mặt kiến trúc (ví dụ Mixture-of-Experts, Transformer) giúp tăng hiệu năng, giảm chi phí tính toán và mở rộng khả năng phân tích, hiểu ngữ cảnh, tạo lập nội dung trên nhiều dạng dữ liệu.\n- So sánh hiệu suất các LLM lớn (ChatGPT, Gemini, Claude 2, Llama 2) trên các bộ kiểm tra tiêu chuẩn như GSM8K, HumanEval, MMLU và HellaSwag; bản Gemini Ultra có thành tích nổi bật trong một số thước đo, nhưng ChatGPT lại vượt trội ở các khía cạnh khác.\n- Đánh giá ứng dụng LLM trong giáo dục (ví dụ, khảo sát tại Mỹ cho thấy giáo viên sử dụng AI tiết kiệm thời gian soạn bài, nâng cao hiệu quả công việc).\n- Bên cạnh thành tựu, các nghiên cứu cũng lưu ý về thách thức còn tồn tại: cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination, tối ưu hóa chi phí.\n\nTóm lại, đây là các nghiên cứu tổng hợp về kỹ thuật, kiến trúc, hiệu năng, khả năng ứng dụng và các thách thức hiện tại của các mô hình ngôn ngữ lớn.",
+      "additional_kwargs": {},
+      "response_metadata": {
+        "tokenUsage": {
+          "promptTokens": 2956,
+          "completionTokens": 469,
+          "totalTokens": 3425
+        },
+        "finish_reason": "stop",
+        "model_provider": "openai",
+        "model_name": "gpt-4.1-2025-04-14",
+        "usage": {
+          "prompt_tokens": 2956,
+          "completion_tokens": 469,
+          "total_tokens": 3425,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "system_fingerprint": "fp_433e8c8649"
+      },
+      "type": "ai",
+      "tool_calls": [],
+      "invalid_tool_calls": [],
+      "usage_metadata": {
+        "output_tokens": 469,
+        "input_tokens": 2956,
+        "total_tokens": 3425,
+        "input_token_details": {
+          "audio": 0,
+          "cache_read": 0
+        },
+        "output_token_details": {
+          "audio": 0,
+          "reasoning": 0
+        }
+      }
+    }
+  },
+  "relateDocs": [
+    {
+      "pageContent": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh\nChatGPT – Gemini\nCác nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và ứng dụng thực tế của các mô hình ngôn ngữ\nlớn (LLM) trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã tạo nên bước đột phá trong xử lý ngôn ngữ\ntự nhiên (NLP), cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn suy luận dựa trên ngôn ngữ\n. Những mô hình như ChatGPT của OpenAI và   Gemini của Google đã mở rộng đáng kể khả năng của\nAI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như học tăng cường từ phản hồi của con người (RLHF) để\nnâng cao tính mạch lạc trong hội thoại, hay kiến trúc đa phương thức để xử lý đồng thời văn bản, hình\nảnh, âm thanh – qua đó mở rộng phạm vi ứng dụng của LLM trong thực tiễn. Ngày nay, các công\nnghệ này đang được ứng dụng rộng rãi trong các lĩnh vực y tế, tài chính, giáo dục, dịch vụ khách hàng,\ngiúp cá nhân hóa phản hồi và giải quyết những nhiệm vụ phân tích phức tạp.",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "98069d88-c5c2-4c3e-9106-edd9f4c9c287"
+    },
+    {
+      "pageContent": "trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác. \nTóm lại, các nghiên cứu nước ngoài đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng\nTransformer đến những hệ thống đa năng như ChatGPT và Gemini ngày nay. Những kết quả đạt được\ncho thấy sự vượt trội của mô hình ngôn ngữ lớn trong việc xử lý ngôn ngữ tự nhiên và tư duy đa\ndạng, đồng thời nhấn mạnh tiềm năng ứng dụng rộng rãi của chúng vào thực tiễn (từ giáo dục, y tế đến\ntự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về những thách thức còn tồn tại – từ việc\ncải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination cho đến tối ưu hóa chi phí tính toán –\nnhằm tiếp tục hoàn thiện và phát huy tối đa lợi ích của các mô hình LLM trong tương lai.\n12\n11\n• \n11\n• \n12\n• \n12\n• \n13\n14\n15\n16\n1717\n2\n[2503.04783] Comparative Analysis Based on DeepSeek, ChatGPT, and Google Gemini:\nFeatures, Techniques, Performance, Future Prospects\nhttps://ar5iv.org/html/2503.04783v1",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "ff78c7aa-8061-4c0f-af71-16917f6c7d9b"
+    },
+    {
+      "pageContent": "năng    phân tích và tạo nội dung trên nhiều dạng dữ liệu. Những đột phá kỹ thuật này không chỉ\nnâng cao hiệu suất tổng thể của mô hình mà còn mở đường cho các ứng dụng LLM sáng tạo trong các\nlĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.). \nBên cạnh khía cạnh kỹ thuật, các nghiên cứu ứng dụng cho thấy LLM có tác động tích cực trong hoạt\nđộng thực tiễn.  Trong lĩnh vực giáo dục, việc tích hợp công cụ AI hỗ trợ giáo viên đã mang lại hiệu quả\nrõ rệt  . Một khảo sát tại Mỹ cho thấy giáo viên sử dụng AI thường xuyên ước tính tiết kiệm trung bình\n~5,9 giờ mỗi tuần (tương đương sáu tuần mỗi năm học nhờ tự động hóa công việc chuẩn bị bài giảng,\nchấm bài, v.v.).  Phần lớn giáo viên cũng nhận định AI giúp nâng cao chất lượng công việc – ví dụ có\n74% giáo viên đánh giá AI cải thiện hiệu quả các công việc hành chính của họ. Điều này minh chứng\nrằng    các mô hình AI ngôn ngữ như ChatGPT có tiềm năng hỗ trợ giảm tải công việc thủ công, tối ưu",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "85da9b92-3293-4879-ae05-280705062df5"
+    },
+    {
+      "pageContent": "đại như sau:\nKiến trúc và dữ liệu huấn luyện: GPT-3 và các thế hệ kế nhiệm được xây dựng trên kiến trúc\nTransformer, huấn luyện trên tập dữ liệu văn bản khổng lồ (hàng trăm tỷ từ) bao gồm nhiều\nnguồn khác nhau. Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình học\nđược biểu diễn ngôn ngữ rất đa dạng, làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ.\nKhả năng học từ ít ví dụ: GPT-3 có khả năng thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví\ndụ hoặc thậm chí không cần ví dụ minh họa (few-shot learning). Mô hình hiểu yêu cầu từ ngữ\ncảnh và tự suy luận để giải quyết nhiệm vụ, một năng lực tổng quát hóa mới chỉ xuất hiện khi mô\nhình đạt quy mô rất lớn (GPT-2 trở về trước chưa thể hiện rõ khả năng này). \nHiệu năng trên các tác vụ NLP: Không cần tinh chỉnh tham số cho từng bài toán cụ thể, GPT-3 đã\nđạt kết quả xuất sắc trên nhiều nhiệm vụ NLP phổ biến (như dịch máy, trả lời câu hỏi, điền từ vào",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "e8ac9cbf-bbbb-4dea-925d-0f6b88b8ee1e"
+    },
+    {
+      "pageContent": "thực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ mà chỉ dự đoán theo thống kê. Bên cạnh đó, chi phí\ntính toán để huấn luyện và vận hành những mô hình lớn như GPT-3 là rất cao, đòi hỏi tài nguyên\nphần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm cải\nthiện hiệu quả tính toán, giúp mô hình chạy nhanh hơn với chi phí thấp hơn.\nNhìn sang thế hệ mô hình mới hơn,  ChatGPT (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và Google\nGemini (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho nền tảng LLM thương mại vào năm\n2025. Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng mỗi mô hình có thế mạnh\nriêng. Theo báo cáo của Google, Gemini Ultra (phiên bản mạnh nhất của Gemini) đã   vượt trội hơn các\nmô hình tương đương trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra đạt kết quả cao hơn so với\nClaude 2, GPT-4 (ChatGPT) và Llama 2 trong các bài kiểm tra GSM8K (đánh giá khả năng toán học),",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "35a77611-9371-4a5a-b72f-a93e34f8bd34"
+    },
+    {
+      "pageContent": "Hiệu năng trên các tác vụ NLP: Không cần tinh chỉnh tham số cho từng bài toán cụ thể, GPT-3 đã\nđạt kết quả xuất sắc trên nhiều nhiệm vụ NLP phổ biến (như dịch máy, trả lời câu hỏi, điền từ vào\nchỗ trống). Thậm chí, mô hình còn vượt qua các mô hình chuyên biệt trong một số trường hợp, ví\ndụ GPT-3 có thể dịch một câu từ tiếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn\nchính xác tương đương mô hình dịch thuật được huấn luyện bài bản.\nHạn chế: Mặc dù rất mạnh mẽ, GPT-3 vẫn bộc lộ một số hạn chế. Mô hình có thể sinh ra nội dung\nsai lệch hoặc không phù hợp – ví dụ đôi khi tạo văn bản nghe có vẻ hợp lý nhưng thực chất thiếu\nchính xác về mặt dữ kiện hoặc mang định kiến. Điều này bắt nguồn từ việc mô hình chưa\nthực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ mà chỉ dự đoán theo thống kê. Bên cạnh đó, chi phí\ntính toán để huấn luyện và vận hành những mô hình lớn như GPT-3 là rất cao, đòi hỏi tài nguyên",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "1beae240-7585-4d7f-b62b-e458d77b6be6"
+    },
+    {
+      "pageContent": "nghệ này đang được ứng dụng rộng rãi trong các lĩnh vực y tế, tài chính, giáo dục, dịch vụ khách hàng,\ngiúp cá nhân hóa phản hồi và giải quyết những nhiệm vụ phân tích phức tạp.\nĐộng lực phát triển LLM xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ\nchính xác cao. Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương\npháp huấn luyện. Chẳng hạn, việc áp dụng Mixture-of-Experts (MoE) giúp mô hình chỉ kích hoạt các cụm\nchuyên gia cần thiết, giảm chi phí tính toán và tăng hiệu suất cho những tác vụ chuyên biệt. Song\nsong,    RLHF trong ChatGPT giúp mô hình hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn, trong\nkhi   Gemini được thiết kế đa phương thức (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả\nnăng    phân tích và tạo nội dung trên nhiều dạng dữ liệu. Những đột phá kỹ thuật này không chỉ\nnâng cao hiệu suất tổng thể của mô hình mà còn mở đường cho các ứng dụng LLM sáng tạo trong các",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "16cfe3aa-9454-44d8-ab29-ec21dc8ab463"
+    },
+    {
+      "pageContent": "74% giáo viên đánh giá AI cải thiện hiệu quả các công việc hành chính của họ. Điều này minh chứng\nrằng    các mô hình AI ngôn ngữ như ChatGPT có tiềm năng hỗ trợ giảm tải công việc thủ công, tối ưu\nhóa thời gian và nâng cao hiệu suất trong môi trường làm việc thực tế.\nVề mặt kiến trúc và hiệu năng,  các mô hình LLM thế hệ mới đều dựa trên kiến trúc Transformer do\nGoogle giới thiệu năm 2017. Kiến trúc này cho phép mô hình học được mối quan hệ ngữ cảnh giữa các\ntừ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của các mô\nhình ngôn ngữ cực lớn. Việc    gia tăng quy mô mô hình (số lượng tham số) đi cùng khối lượng dữ liệu\nhuấn luyện khổng lồ đã dẫn đến những bước nhảy vọt về năng lực của LLM. GPT-3   của OpenAI (ra mắt\n2020) là một ví dụ tiêu biểu: với 175 tỷ tham số, GPT-3 được huấn luyện trên khối lượng dữ liệu văn bản\n~570 GB và có thể thực hiện đa dạng nhiệm vụ NLP chỉ thông qua gợi ý ngữ cảnh,  không cần tinh chỉnh",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "07d10662-7f8a-4d29-a3e2-4806abc3a9f3"
+    },
+    {
+      "pageContent": "~570 GB và có thể thực hiện đa dạng nhiệm vụ NLP chỉ thông qua gợi ý ngữ cảnh,  không cần tinh chỉnh\nriêng cho từng tác vụ. Mô hình này cho thấy năng lực tổng quát hóa vượt trội – GPT-3 có thể\ndịch thuật giữa các ngôn ngữ hoặc     trả lời câu hỏi về những lĩnh vực khác nhau dù không được huấn\nluyện chuyên biệt cho nhiệm vụ đó, điều mà phiên bản tiền nhiệm GPT-2 (chỉ 1,5 tỷ tham số) hầu như\nchưa làm được. Thậm chí, trong một số bài toán, GPT-3 đạt độ chính xác tiệm cận hoặc vượt qua\n1\n2\n3\n4\n4\n5\n5\n6\n7\n8\n9\n1011\n11\n1\ncác mô hình được huấn luyện chuyên biệt cho tác vụ tương ứng, cho thấy hiệu quả của việc mở rộng\nquy mô và học từ ngữ cảnh.\nMột công trình nghiên cứu tiêu biểu đã tổng kết các đặc điểm chính của mô hình GPT-3 và dòng LLM hiện\nđại như sau:\nKiến trúc và dữ liệu huấn luyện: GPT-3 và các thế hệ kế nhiệm được xây dựng trên kiến trúc\nTransformer, huấn luyện trên tập dữ liệu văn bản khổng lồ (hàng trăm tỷ từ) bao gồm nhiều",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "640e2788-9e91-4fc0-ab23-4ef74ea50aa0"
+    },
+    {
+      "pageContent": "mô hình tương đương trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra đạt kết quả cao hơn so với\nClaude 2, GPT-4 (ChatGPT) và Llama 2 trong các bài kiểm tra GSM8K (đánh giá khả năng toán học), \nHumanEval (đánh giá sinh mã lập trình) và   MMLU (đánh giá hiểu biết ngôn ngữ đa lĩnh vực). Đáng\nchú ý,     Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU,\ncho thấy tiềm năng xuất sắc về kiến thức và suy luận. Tuy nhiên, ở bài kiểm tra HellaSwag về suy luận\nthường thức,  GPT-4 (ChatGPT) lại   nhỉnh hơn Gemini Ultra đôi chút, phản ánh rằng mô hình của OpenAI\nvẫn dẫn trước về một số khả năng hiểu biết ngữ cảnh thường nhật. Điều này gợi ý rằng hiệu suất\ncủa LLM phụ thuộc vào tính chất của từng nhiệm vụ cũng như cách thức huấn luyện: mô hình có thể vượt\ntrội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác. \nTóm lại, các nghiên cứu nước ngoài đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng",
+      "metadata": {
+        "fileId": "1764215364888-998384400application.pdf"
+      },
+      "id": "ee118aed-c9a3-4799-a7bc-7b199078f81b"
+    }
+  ]
+}
+}
+```
+
+---
+
+# 💬 Chat (With History)
+
+## Create Chat Session
+
+### **POST** `/api/chats`
+
+**Body**
+
+```json
+{
+  "projectId": "string",
+  "title": "Research Notes"
+}
+```
+
+## List Chats in Project
+
+### **GET** `/api/chats?projectId=<id>`
+
+## Send Message (History-based RAG)
+
+### **POST** `/api/chats/:chatId/messages`
+
+**Body**
+
+```json
+{
+  "message": "What does section 3 mean?"
+}
+```
+
+## Get Chat Messages
+
+### **GET** `/api/chats/:chatId/messages`
+
+---
+
+# 📦 Embedding & Ingest (Internal but usable)
+
+## Manual Re-Ingest File
+
+### **POST** `/api/documents/:id/reingest`
+
+---
+
+# 📙 Response Format
+
+## Success Response
+
+```json
+{
+  "is_success": true,
+  "data": {
+    // payload
+  }
+}
+```
+
+## Error Response
+
+```json
+{
+  "is_success": false,
+  "error": "Error message"
+}
+```
+
+## Validation Error
+
+```json
+{
+  "message": ["field should not be empty"],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+---
+
+# 📢 Status Codes
+
+- `200` — Success
+- `400` — Bad Request
+- `404` — Not Found
+- `500` — Internal Server Error
+
+```
+
+### docker-compose.dev.yml
+
+```yml
+services:
+  api:
+    container_name: chatnary-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # sync code
+      - /app/node_modules # prevent overwrite
+      - ./uploads:/app/uploads
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: chatnary-db
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+networks:
+  app-net:
+
+volumes:
+  db_data:
+  pgadmin_data:
+
+```
+
+### docker-compose.yml
+
+```yml
+version: "3.9"
+
+services:
+  api:
+    image: chatnary/backend-nestjs-api:latest # build 1 lần, reuse nhiều lần
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatnary-api
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - app-net
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: chatnary-db
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ChatnarySYS"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+volumes:
+  db_data:
+  pgadmin_data:
+
+networks:
+  app-net:
+
+```
+
+### Dockerfile
+
+```dockerfile
+# ----------------------------------------------------
+# 1) BUILD STAGE
+# ----------------------------------------------------
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Copy dependency files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install dependencies (only production deps needed to build dist)
+RUN pnpm install --frozen-lockfile
+
+# Copy source
+COPY . .
+
+# Build NestJS into /dist
+RUN pnpm run build
+
+
+
+# ----------------------------------------------------
+# 2) RUNTIME STAGE (SUPER LIGHTWEIGHT)
+# ----------------------------------------------------
+FROM node:22-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Copy only what is required for runtime
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package.json ./
+
+# Create persistent directories
+RUN mkdir -p uploads/
+
+# Expose BE port
+EXPOSE 8000
+
+CMD ["node", "dist/main.js"]
+
+```
+
+### Dockerfile.dev
+
+*(Unsupported file type)*
+
+### eslint.config.mjs
+
+*(Unsupported file type)*
+
+### LICENSE
+
+*(Unsupported file type)*
+
+### Makefile
+
+```makefile
+# ============================
+# 🚀 Fast DevOps Commands
+# ============================
+
+# Default goal
+.DEFAULT_GOAL := help
+
+# === CONFIG ===
+COMPOSE_FILE := docker-compose.yml
+PROJECT_NAME := backend-chatnary-nestjs
+COMPOSE_DEV := docker-compose.dev.yml
+
+# === WINDOWS OCR SETUP ===
+GM_URL := https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick-binaries/1.3.43/GraphicsMagick-1.3.43-Q16-win64-dll.exe/download
+GS_URL := https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10031/gs10031w64.exe
+GM_PATH := /c/Program Files/GraphicsMagick-1.3.43-Q16
+GS_PATH := /c/Program Files/gs/gs10.03.1/bin
+
+# 1. make setup-ocr-win
+# 2. make configure-ocr-path
+# 3. make verify-ocr
+
+# ============================
+# 🟢 DEV MODE (HOT RELOAD)
+# ============================
+
+## 🚀 Start development mode (hot reload)
+dev:
+ @echo "🚀 Starting DEV (hot reload)..."
+ docker compose -f $(COMPOSE_DEV) up --build
+ @echo "⚡ DEV mode running!"
+
+## 🔄 Rebuild dev containers (when adding new packages)
+dev-rebuild:
+ @echo "🔨 Rebuilding DEV containers..."
+ docker compose -f $(COMPOSE_DEV) build --no-cache
+ docker compose -f $(COMPOSE_DEV) up -d
+ @echo "✅ DEV rebuild complete!"
+
+## 🔄 Restart only the API dev container
+dev-restart:
+ @echo "♻ Restarting DEV API..."
+ docker compose -f $(COMPOSE_DEV) restart api
+
+## 🛑 Stop dev containers
+dev-down:
+ @echo "🛑 Stopping DEV containers..."
+ docker compose -f $(COMPOSE_DEV) down
+
+# ============================
+# 🖼️ WINDOWS OCR DEPENDENCIES
+# ============================
+
+## 🔧 Install GraphicsMagick + Ghostscript on Windows
+setup-ocr-win:
+ @echo "📦 Downloading GraphicsMagick..."
+ @curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+ @echo "📦 Downloading Ghostscript..."
+ @powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+ @echo ""
+ @echo "✅ Installers downloaded!"
+ @echo "⚠️  Please run these installers manually:"
+ @echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+ @echo "   2. gs-installer.exe"
+ @echo ""
+ @echo "After installation, run: make configure-ocr-path"
+
+## ⚙️ Configure OCR tools PATH
+configure-ocr-path:
+ @echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+ @echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+ @echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+ @echo "✅ PATH configured in ~/.bashrc"
+ @echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+
+## ✅ Verify OCR installation
+verify-ocr:
+ @echo "🔍 Verifying OCR dependencies..."
+ @echo -n "GraphicsMagick: "
+ @gm version | head -n 1 || echo "❌ Not found"
+ @echo -n "Ghostscript: "
+ @gswin64c --version || echo "❌ Not found"
+ @echo ""
+ @echo "✅ All OCR dependencies verified!"
+
+# === MAIN TASKS ===
+
+## 🧱 Rebuild toàn bộ project (build nhanh, sạch rác)
+rebuild:
+ @echo "🧱 Cleaning & rebuilding project..."
+ docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
+ docker compose -f $(COMPOSE_FILE) up -d
+ docker image prune -f
+ @echo "✅ Done! Containers running."
+ @docker compose -f $(COMPOSE_FILE) ps
+
+## 🧼 Dọn rác toàn hệ thống (deep clean)
+clean:
+ @echo "🧹 Removing all containers, images, and volumes..."
+ docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+ docker system prune -af --volumes
+ @echo "✅ Clean complete."
+
+## 🐍 Restart API only
+restart-api:
+ @echo "♻️ Restarting API service..."
+ docker compose -f $(COMPOSE_FILE) restart api
+ @docker compose -f $(COMPOSE_FILE) logs -f api
+
+## 📚 Chạy ingest thủ công
+ingest:
+ @echo "📘 Running ingest process manually..."
+ docker compose -f $(COMPOSE_FILE) run --rm ingest
+
+## 🔍 Xem log
+logs:
+ @docker compose -f $(COMPOSE_FILE) logs -f --tail=50
+
+## 🔍 Trạng thái container
+ps:
+ @docker compose -f $(COMPOSE_FILE) ps
+
+## 🆘 Hiển thị hướng dẫn
+help:
+ @echo ""
+ @echo "✨ Available commands:"
+ @echo ""
+ @echo "📦 PRODUCTION:"
+ @echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
+ @echo "  make clean        - Dọn sạch tất cả container, volume, image"
+ @echo "  make restart-api  - Restart container API (production)"
+ @echo ""
+ @echo "🔧 DEVELOPMENT:"
+ @echo "  make dev          - Chạy dev mode với hot reload"
+ @echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+ @echo "  make dev-restart  - Restart API dev container"
+ @echo "  make dev-down     - Dừng tất cả dev containers"
+ @echo ""
+ @echo "🖼️ WINDOWS OCR SETUP:"
+ @echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+ @echo "  make configure-ocr-path - Add OCR tools to PATH"
+ @echo "  make verify-ocr         - Verify OCR dependencies installation"
+ @echo ""
+ @echo "📊 MONITORING:"
+ @echo "  make logs         - Xem log realtime"
+ @echo "  make ps           - Liệt kê container đang chạy"
+ @echo ""
+
+```
+
+### nest-cli.json
+
+```json
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true
+  },
+  "generateOptions": {
+    "spec": false
+  }
+}
+```
+
+### package.json
+
+```json
+{
+  "name": "backend-chatnary-nestjs",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "dev": "nest start",
+    "start:dev": "nest start --watch",
+    "wdev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@langchain/community": "^1.0.4",
+    "@langchain/core": "^1.0.6",
+    "@langchain/openai": "^1.1.2",
+    "@langchain/textsplitters": "^1.0.0",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/mapped-types": "*",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.2.3",
+    "@prisma/client": "^7.0.1",
+    "multer": "^2.0.2",
+    "pdf-parse": "1.1.1",
+    "pdf2pic": "^3.2.0",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.10.7",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/pg": "^8.15.6",
+    "@types/supertest": "^6.0.2",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "jest": "^30.0.0",
+    "prettier": "^3.4.2",
+    "prisma": "^7.0.1",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+```
+
+### pnpm-lock.yaml
+
+```yaml
 lockfileVersion: '9.0'
 
 settings:
@@ -38,12 +1117,9 @@ importers:
       '@nestjs/swagger':
         specifier: ^11.2.3
         version: 11.2.3(@nestjs/common@11.1.9(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(reflect-metadata@0.2.2)
-      '@prisma/adapter-pg':
-        specifier: 6.9.0
-        version: 6.9.0(pg@8.16.3)
       '@prisma/client':
-        specifier: 6.9.0
-        version: 6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^7.0.1
+        version: 7.0.1(prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
       multer:
         specifier: ^2.0.2
         version: 2.0.2
@@ -130,8 +1206,8 @@ importers:
         specifier: ^3.4.2
         version: 3.6.2
       prisma:
-        specifier: 6.9.0
-        version: 6.9.0(typescript@5.9.3)
+        specifier: ^7.0.1
+        version: 7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -376,6 +1452,18 @@ packages:
   '@cfworker/json-schema@4.1.1':
     resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
 
+  '@chevrotain/cst-dts-gen@10.5.0':
+    resolution: {integrity: sha512-lhmC/FyqQ2o7pGK4Om+hzuDrm9rhFYIJ/AXoQBeongmn870Xeb0L6oGEiuR8nohFNL5sMaQEJWCxr1oIVIVXrw==}
+
+  '@chevrotain/gast@10.5.0':
+    resolution: {integrity: sha512-pXdMJ9XeDAbgOWKuD1Fldz4ieCs6+nLNmyVhe2gZVqoO7v8HXuHYs5OV2EzUtbuai37TlOAQHrTDvxMnvMJz3A==}
+
+  '@chevrotain/types@10.5.0':
+    resolution: {integrity: sha512-f1MAia0x/pAVPWH/T73BJVyO2XU5tI4/iE7cnxb7tqdNTNhQI3Uq3XkqcoteTmD4t1aM0LbHCJOhgIDn07kl2A==}
+
+  '@chevrotain/utils@10.5.0':
+    resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
+
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -383,6 +1471,20 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@electric-sql/pglite-socket@0.0.6':
+    resolution: {integrity: sha512-6RjmgzphIHIBA4NrMGJsjNWK4pu+bCWJlEWlwcxFTVY3WT86dFpKwbZaGWZV6C5Rd7sCk1Z0CI76QEfukLAUXw==}
+    hasBin: true
+    peerDependencies:
+      '@electric-sql/pglite': 0.3.2
+
+  '@electric-sql/pglite-tools@0.2.7':
+    resolution: {integrity: sha512-9dAccClqxx4cZB+Ar9B+FZ5WgxDc/Xvl9DPrTWv+dYTf0YNubLzi4wHHRGRGhrJv15XwnyKcGOZAP1VXSneSUg==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.3.2
+
+  '@electric-sql/pglite@0.3.2':
+    resolution: {integrity: sha512-zfWWa+V2ViDCY/cmUfRqeWY1yLto+EpxjXnZzenB1TyxsTiXaTWeZFIZw6mac52BsuQm0RjCnisjBtdBaXOI6w==}
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -430,6 +1532,12 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@hono/node-server@1.14.2':
+    resolution: {integrity: sha512-GHjpOeHYbr9d1vkID2sNUYkl5IxumyhDrUJB7wBp7jvqYwPFt+oNKsAPBRcdSbV7kIrXhouLE199ks1QcK4r7A==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1119,6 +2227,10 @@ packages:
   '@microsoft/tsdoc@0.16.0':
     resolution: {integrity: sha512-xgAyonlVVS+q7Vc7qLW0UrJU7rSFcETRWsqdXZtjzRU8dF+6CkozTK4V4y1LwOX7j8r/vHphjDeMeGI4tNGeGA==}
 
+  '@mrleebo/prisma-ast@0.12.1':
+    resolution: {integrity: sha512-JwqeCQ1U3fvccttHZq7Tk0m/TMC6WcFAQZdukypW3AzlJYKYTGNVd1ANU2GuhKnv4UQuOFj3oAl0LLG/gxFN1w==}
+    engines: {node: '>=16'}
+
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
@@ -1263,43 +2375,57 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@prisma/adapter-pg@6.9.0':
-    resolution: {integrity: sha512-AWCg8TvLi0VmxPzFhORebyUTmU6eCy9bviuwHqA3ZiipWHTagg/kj1D4b2oaJzXrFRFKnOiSJdFKcjODU0vu5A==}
-    peerDependencies:
-      pg: ^8.11.3
+  '@prisma/client-runtime-utils@7.0.1':
+    resolution: {integrity: sha512-R26BVX9D/iw4toUmZKZf3jniM/9pMGHHdZN5LVP2L7HNiCQKNQQx/9LuMtjepbgRqSqQO3oHN0yzojHLnKTGEw==}
 
-  '@prisma/client@6.9.0':
-    resolution: {integrity: sha512-Gg7j1hwy3SgF1KHrh0PZsYvAaykeR0PaxusnLXydehS96voYCGt1U5zVR31NIouYc63hWzidcrir1a7AIyCsNQ==}
-    engines: {node: '>=18.18'}
+  '@prisma/client@7.0.1':
+    resolution: {integrity: sha512-O74T6xcfaGAq5gXwCAvfTLvI6fmC3and2g5yLRMkNjri1K8mSpEgclDNuUWs9xj5AwNEMQ88NeD3asI+sovm1g==}
+    engines: {node: ^20.19 || ^22.12 || >=24.0}
     peerDependencies:
       prisma: '*'
-      typescript: '>=5.1.0'
+      typescript: '>=5.4.0'
     peerDependenciesMeta:
       prisma:
         optional: true
       typescript:
         optional: true
 
-  '@prisma/config@6.9.0':
-    resolution: {integrity: sha512-Wcfk8/lN3WRJd5w4jmNQkUwhUw0eksaU/+BlAJwPQKW10k0h0LC9PD/6TQFmqKVbHQL0vG2z266r0S1MPzzhbA==}
+  '@prisma/config@7.0.1':
+    resolution: {integrity: sha512-MacIjXdo+hNKxPvtMzDXykIIc8HCRWoyjQ2nguJTFqLDzJBD5L6QRaANGTLOqbGtJ3sFvLRmfXhrFg3pWoK1BA==}
 
-  '@prisma/debug@6.9.0':
-    resolution: {integrity: sha512-bFeur/qi/Q+Mqk4JdQ3R38upSYPebv5aOyD1RKywVD+rAMLtRkmTFn28ZuTtVOnZHEdtxnNOCH+bPIeSGz1+Fg==}
+  '@prisma/debug@6.8.2':
+    resolution: {integrity: sha512-4muBSSUwJJ9BYth5N8tqts8JtiLT8QI/RSAzEogwEfpbYGFo9mYsInsVo8dqXdPO2+Rm5OG5q0qWDDE3nyUbVg==}
 
-  '@prisma/driver-adapter-utils@6.9.0':
-    resolution: {integrity: sha512-HtugVGw5y50drVTboKubHJeOmoUQfDZa8vJBhzgR+iZ8KfUsJuTIU20rNd7Hi/S+JdLJGJXIxzbXiQABMNArjw==}
+  '@prisma/debug@7.0.1':
+    resolution: {integrity: sha512-5+25XokVeAK2Z2C9W457AFw7Hk032Q3QI3G58KYKXPlpgxy+9FvV1+S1jqfJ2d4Nmq9LP/uACrM6OVhpJMSr8w==}
 
-  '@prisma/engines-version@6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e':
-    resolution: {integrity: sha512-Qp9gMoBHgqhKlrvumZWujmuD7q4DV/gooEyPCLtbkc13EZdSz2RsGUJ5mHb3RJgAbk+dm6XenqG7obJEhXcJ6Q==}
+  '@prisma/dev@0.13.0':
+    resolution: {integrity: sha512-QMmF6zFeUF78yv1HYbHvod83AQnl7u6NtKyDhTRZOJup3h1icWs8R7RUVxBJZvM2tBXNAMpLQYYM/8kPlOPegA==}
 
-  '@prisma/engines@6.9.0':
-    resolution: {integrity: sha512-im0X0bwDLA0244CDf8fuvnLuCQcBBdAGgr+ByvGfQY9wWl6EA+kRGwVk8ZIpG65rnlOwtaWIr/ZcEU5pNVvq9g==}
+  '@prisma/engines-version@7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6':
+    resolution: {integrity: sha512-RA7pShKvijHib4USRB3YuLTQamHKJPkTRDc45AwxfahUQngiGVMlIj4ix4emUxkrum4o/jwn82WIwlG57EtgiQ==}
 
-  '@prisma/fetch-engine@6.9.0':
-    resolution: {integrity: sha512-PMKhJdl4fOdeE3J3NkcWZ+tf3W6rx3ht/rLU8w4SXFRcLhd5+3VcqY4Kslpdm8osca4ej3gTfB3+cSk5pGxgFg==}
+  '@prisma/engines@7.0.1':
+    resolution: {integrity: sha512-f+D/vdKeImqUHysd5Bgv8LQ1whl4sbLepHyYMQQMK61cp4WjwJVryophleLUrfEJRpBLGTBI/7fnLVENxxMFPQ==}
 
-  '@prisma/get-platform@6.9.0':
-    resolution: {integrity: sha512-/B4n+5V1LI/1JQcHp+sUpyRT1bBgZVPHbsC4lt4/19Xp4jvNIVcq5KYNtQDk5e/ukTSjo9PZVAxxy9ieFtlpTQ==}
+  '@prisma/fetch-engine@7.0.1':
+    resolution: {integrity: sha512-5DnSairYIYU7dcv/9pb1KCwIRHZfhVOd34855d01lUI5QdF9rdCkMywPQbBM67YP7iCgQoEZO0/COtOMpR4i9A==}
+
+  '@prisma/get-platform@6.8.2':
+    resolution: {integrity: sha512-vXSxyUgX3vm1Q70QwzwkjeYfRryIvKno1SXbIqwSptKwqKzskINnDUcx85oX+ys6ooN2ATGSD0xN2UTfg6Zcow==}
+
+  '@prisma/get-platform@7.0.1':
+    resolution: {integrity: sha512-DrsGnZOsF7PlAE7UtqmJenWti87RQtg7v9qW9alS71Pj0P6ZQV0RuzRQaql9dCWoo6qKAaF5U/L4kI826MmiZg==}
+
+  '@prisma/query-plan-executor@6.18.0':
+    resolution: {integrity: sha512-jZ8cfzFgL0jReE1R10gT8JLHtQxjWYLiQ//wHmVYZ2rVkFHoh0DT8IXsxcKcFlfKN7ak7k6j0XMNn2xVNyr5cA==}
+
+  '@prisma/studio-core@0.8.2':
+    resolution: {integrity: sha512-/iAEWEUpTja+7gVMu1LtR2pPlvDmveAwMHdTWbDeGlT7yiv0ZTCPpmeAGdq/Y9aJ9Zj1cEGBXGRbmmNPj022PQ==}
+    peerDependencies:
+      '@types/react': ^18.0.0 || ^19.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@scarf/scarf@1.4.0':
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
@@ -1312,6 +2438,9 @@ packages:
 
   '@sinonjs/fake-timers@13.0.5':
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
+
+  '@standard-schema/spec@1.0.0':
+    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
   '@tokenizer/inflate@0.3.1':
     resolution: {integrity: sha512-4oeoZEBQdLdt5WmP/hx1KZ6D3/Oid/0cUb2nk4F0pTDAWy+KCH3/EnAkZF/bvckWo8I33EqBm01lIPgmgc8rCA==}
@@ -1428,6 +2557,9 @@ packages:
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
+
+  '@types/react@19.2.7':
+    resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
 
   '@types/retry@0.12.0':
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -1895,6 +3027,14 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
+  c12@3.1.0:
+    resolution: {integrity: sha512-uWoS8OU1MEIsOv8p/5a82c3H31LsWVR5qiyXVfBNOzfffjUWtPnhAb4BYI2uG2HfGmZmFjCtui5XNWaps+iFuw==}
+    peerDependencies:
+      magicast: ^0.3.5
+    peerDependenciesMeta:
+      magicast:
+        optional: true
+
   call-bind-apply-helpers@1.0.2:
     resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
     engines: {node: '>= 0.4'}
@@ -1929,6 +3069,9 @@ packages:
   chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
 
+  chevrotain@10.5.0:
+    resolution: {integrity: sha512-Pkv5rBY3+CsHOYfV5g/Vs5JY9WTHHDEKOlohI2XeygaZhUeqhAlldZ8Hz9cRmxu709bvS08YzxHdTPHhffc13A==}
+
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
@@ -1940,6 +3083,9 @@ packages:
   ci-info@4.3.1:
     resolution: {integrity: sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA==}
     engines: {node: '>=8'}
+
+  citty@0.1.6:
+    resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
 
   cjs-module-lexer@2.1.1:
     resolution: {integrity: sha512-+CmxIZ/L2vNcEfvNtLdU0ZQ6mbq3FZnwAP2PPTiKP+1QOoKwlKlPgb8UKV0Dds7QVaMnHm+FwSft2VB0s/SLjQ==}
@@ -2007,6 +3153,9 @@ packages:
     resolution: {integrity: sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==}
     engines: {'0': node >= 6.0}
 
+  confbox@0.2.2:
+    resolution: {integrity: sha512-1NB+BKqhtNipMsov4xI/NnhCKp9XG9NamYp5PVm9klAT0fsrNPjaFICsCFhNhwZJKNh7zB/3q8qXz0E9oaMNtQ==}
+
   consola@3.4.2:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
@@ -2059,6 +3208,9 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -2091,12 +3243,19 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
+  deepmerge-ts@7.1.5:
+    resolution: {integrity: sha512-HOJkrhaYsweh+W+e74Yn7YStZOilkoPb6fycpwNLKzSPtruFs48nYis0zy5yJz1+ktUhHxoRDJ27RQAWLIJVJw==}
+    engines: {node: '>=16.0.0'}
+
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
 
   defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
+
+  defu@6.1.4:
+    resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -2109,6 +3268,9 @@ packages:
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
+
+  destr@2.0.5:
+    resolution: {integrity: sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA==}
 
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
@@ -2150,6 +3312,9 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
+  effect@3.18.4:
+    resolution: {integrity: sha512-b1LXQJLe9D11wfnOKAk3PKxuqYshQ0Heez+y5pnkd3jLj1yx9QhM72zZ9uUrOQyNvrs2GZZd/3maL0ZV18YuDA==}
+
   electron-to-chromium@1.5.258:
     resolution: {integrity: sha512-rHUggNV5jKQ0sSdWwlaRDkFc3/rRJIVnOSe9yR4zrR07m3ZxhP4N27Hlg8VeJGGYgFTxK5NqDmWI4DSH72vIJg==}
 
@@ -2162,6 +3327,10 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+
+  empathic@2.0.0:
+    resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==}
+    engines: {node: '>=14'}
 
   encodeurl@2.0.0:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
@@ -2314,8 +3483,15 @@ packages:
     resolution: {integrity: sha512-DT9ck5YIRU+8GYzzU5kT3eHGA5iL+1Zd0EutOmTE9Dtk+Tvuzd23VBU+ec7HPNSTxXYO55gPV/hq4pSBJDjFpA==}
     engines: {node: '>= 18'}
 
+  exsolve@1.0.8:
+    resolution: {integrity: sha512-LmDxfWXwcTArk8fUEnOfSZpHOJ6zOMUJKOtFLFqJLoKJetuQG874Uc7/Kki7zFLzYybmZhp1M7+98pfMqeX8yA==}
+
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
+
+  fast-check@3.23.2:
+    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
+    engines: {node: '>=8.0.0'}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -2472,6 +3648,9 @@ packages:
     resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
     engines: {node: '>=8.0.0'}
 
+  get-port-please@3.1.2:
+    resolution: {integrity: sha512-Gxc29eLs1fbn6LQ4jSU4vXjlwyZhF5HsGuMAa7gqBP4Rw4yxxltyDUuF5MBclFzDTXO+ACchGQoeela4DSfzdQ==}
+
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
@@ -2479,6 +3658,10 @@ packages:
   get-stream@6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
+
+  giget@2.0.0:
+    resolution: {integrity: sha512-L5bGsVkxJbJgdnwyuheIunkGatUF/zssUoxxjACCseZYAVbaqdh9Tsmmlkl8vYan09H7sbvKt4pS8GqKLBrEzA==}
+    hasBin: true
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -2524,6 +3707,9 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
+  grammex@3.1.12:
+    resolution: {integrity: sha512-6ufJOsSA7LcQehIJNCO7HIBykfM7DXQual0Ny780/DEcJIpBlHRvcqEBWGPYd7hrXL2GJ3oJI1MIhaXjWmLQOQ==}
+
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
@@ -2548,12 +3734,19 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
+  hono@4.7.10:
+    resolution: {integrity: sha512-QkACju9MiN59CKSY5JsGZCYmPZkA6sIW6OFCUp7qDjZu6S6KHtJHhAc9Uy9mV9F8PJ1/HQ3ybZF2yjCa/73fvQ==}
+    engines: {node: '>=16.9.0'}
+
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
+
+  http-status-codes@2.3.0:
+    resolution: {integrity: sha512-RJ8XvFvpPM/Dmc5SV+dC4y5PCeOhT3x1Hq0NU3rjGeg5a/CqlhZ7uudknPwZFz4aeAXDcbAyaeP7GAo9lvngtA==}
 
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
@@ -2825,10 +4018,6 @@ packages:
       node-notifier:
         optional: true
 
-  jiti@2.4.2:
-    resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
-    hasBin: true
-
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
@@ -2919,6 +4108,10 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  lilconfig@2.1.0:
+    resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
+    engines: {node: '>=10'}
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -3144,6 +4337,9 @@ packages:
   node-ensure@0.0.0:
     resolution: {integrity: sha512-DRI60hzo2oKN1ma0ckc6nQWlHU69RH6xN0sjQTjMpChPfTYvKZdcQFfdYK2RWbJcKyUizSIy/l8OTGxMAM1QDw==}
 
+  node-fetch-native@1.6.7:
+    resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -3167,6 +4363,11 @@ packages:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
 
+  nypm@0.6.2:
+    resolution: {integrity: sha512-7eM+hpOtrKrBDCh7Ypu2lJ9Z7PNZBdi/8AT3AX8xoCj43BBVHD0hPSTEvMtkMpfs8FCqBGhxB+uToIQimA111g==}
+    engines: {node: ^14.16.0 || >=16.10.0}
+    hasBin: true
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -3174,6 +4375,9 @@ packages:
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
     engines: {node: '>= 0.4'}
+
+  ohash@2.0.11:
+    resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
@@ -3291,6 +4495,9 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
+  pathe@2.0.3:
+    resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
+
   pdf-parse@1.1.1:
     resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
     engines: {node: '>=6.8.1'}
@@ -3302,6 +4509,9 @@ packages:
   peek-readable@4.1.0:
     resolution: {integrity: sha512-ZI3LnwUv5nOGbQzD9c2iDG6toheuXSZP5esSHBjopsXH4dg19soufvpUGA3uohi5anFtGb2lhAVdHzH6R/Evvg==}
     engines: {node: '>=8'}
+
+  perfect-debounce@1.0.0:
+    resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
 
   pg-cloudflare@1.2.7:
     resolution: {integrity: sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg==}
@@ -3360,6 +4570,9 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
+  pkg-types@2.3.0:
+    resolution: {integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==}
+
   playwright-core@1.56.1:
     resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
     engines: {node: '>=18'}
@@ -3378,10 +4591,6 @@ packages:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
 
-  postgres-array@3.0.4:
-    resolution: {integrity: sha512-nAUSGfSDGOaOAEGwqsRY27GPOea7CNipJPOA7lPbdEpx5Kg3qzdP0AaWC5MlhTWV9s4hFX39nomVZ+C4tnGOJQ==}
-    engines: {node: '>=12'}
-
   postgres-bytea@1.0.0:
     resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
     engines: {node: '>=0.10.0'}
@@ -3393,6 +4602,10 @@ packages:
   postgres-interval@1.2.0:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
+
+  postgres@3.4.7:
+    resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
+    engines: {node: '>=12'}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -3411,19 +4624,25 @@ packages:
     resolution: {integrity: sha512-9uBdv/B4EefsuAL+pWqueZyZS2Ba+LxfFeQ9DN14HU4bN8bhaxKdkpjpB6fs9+pSjIBu+FXQHImEg8j/Lw0+vA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
-  prisma@6.9.0:
-    resolution: {integrity: sha512-resJAwMyZREC/I40LF6FZ6rZTnlrlrYrb63oW37Gq+U+9xHwbyMSPJjKtM7VZf3gTO86t/Oyz+YeSXr3CmAY1Q==}
-    engines: {node: '>=18.18'}
+  prisma@7.0.1:
+    resolution: {integrity: sha512-zp93MdFMSU1IHPEXbUHVUuD8wauh2BUm14OVxhxGrWJQQpXpda0rW4VSST2bci4raoldX64/wQxHKkl/wqDskQ==}
+    engines: {node: ^20.19 || ^22.12 || >=24.0}
     hasBin: true
     peerDependencies:
-      typescript: '>=5.1.0'
+      better-sqlite3: '>=9.0.0'
+      typescript: '>=5.4.0'
     peerDependenciesMeta:
+      better-sqlite3:
+        optional: true
       typescript:
         optional: true
 
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
+
+  proper-lockfile@4.1.2:
+    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -3438,6 +4657,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
@@ -3463,8 +4685,20 @@ packages:
     resolution: {integrity: sha512-9G8cA+tuMS75+6G/TzW8OtLzmBDMo8p1JRxN5AZ+LAp8uxGA8V8GZm4GQ4/N5QNQEnLmg6SS7wyuSmbKepiKqA==}
     engines: {node: '>= 0.10'}
 
+  rc9@2.1.2:
+    resolution: {integrity: sha512-btXCnMmRIBINM2LDZoEmOogIZU7Qe7zn4BpomSKZ/ykbLObuBdvG+mFq11DL6fjH1DRwHhrlgtYWG96bJiC7Cg==}
+
+  react-dom@19.2.0:
+    resolution: {integrity: sha512-UlbRu4cAiGaIewkPyiRGJk0imDN2T3JjieT6spoL2UeSf5od4n5LB/mQ4ejmxhCFT1tYe8IvaFulzynWovsEFQ==}
+    peerDependencies:
+      react: ^19.2.0
+
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react@19.2.0:
+    resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
+    engines: {node: '>=0.10.0'}
 
   readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
@@ -3487,6 +4721,12 @@ packages:
 
   regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+
+  regexp-to-ast@0.5.0:
+    resolution: {integrity: sha512-tlbJqcMHnPKI9zSrystikWKwHkBqu2a/Sgw01h3zFjvYrMxEDYHzzoMZnUrbIfpTFEsoRnnviOXNCzFiSc54Qw==}
+
+  remeda@2.21.3:
+    resolution: {integrity: sha512-XXrZdLA10oEOQhLLzEJEiFFSKi21REGAkHdImIb4rt/XXy8ORGXh5HCcpUOsElfPNDb+X6TA/+wkh+p2KffYmg==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -3521,6 +4761,10 @@ packages:
     peerDependencies:
       axios: '*'
 
+  retry@0.12.0:
+    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
+    engines: {node: '>= 4'}
+
   retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
     engines: {node: '>= 4'}
@@ -3547,6 +4791,9 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   schema-utils@3.3.0:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
@@ -3661,6 +4908,9 @@ packages:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
 
+  std-env@3.9.0:
+    resolution: {integrity: sha512-UGvjygr6F6tpH7o2qyqR6QYpwraIjKSdtzyBdyytFOHmPZY917kwdwLG0RbOjWOnKmnm3PeHjaoLLMie7kPLQw==}
+
   streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
@@ -3773,6 +5023,10 @@ packages:
   test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
+
+  tinyexec@1.0.2:
+    resolution: {integrity: sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==}
+    engines: {node: '>=18'}
 
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
@@ -3968,6 +5222,14 @@ packages:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
 
+  valibot@1.1.0:
+    resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -4091,6 +5353,9 @@ packages:
   yoctocolors-cjs@2.1.3:
     resolution: {integrity: sha512-U/PBtDf35ff0D8X8D0jfdzHYEPFxAI7jJlxZXwCSez5M3190m+QobIfh+sWDWSHMCWWJN2AWamkegn6vr6YBTw==}
     engines: {node: '>=18'}
+
+  zeptomatch@2.0.2:
+    resolution: {integrity: sha512-H33jtSKf8Ijtb5BW6wua3G5DhnFjbFML36eFu+VdOoVY4HD9e7ggjqdM6639B+L87rjnR6Y+XeRzBXZdy52B/g==}
 
   zlibjs@0.3.1:
     resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
@@ -4392,12 +5657,37 @@ snapshots:
 
   '@cfworker/json-schema@4.1.1': {}
 
+  '@chevrotain/cst-dts-gen@10.5.0':
+    dependencies:
+      '@chevrotain/gast': 10.5.0
+      '@chevrotain/types': 10.5.0
+      lodash: 4.17.21
+
+  '@chevrotain/gast@10.5.0':
+    dependencies:
+      '@chevrotain/types': 10.5.0
+      lodash: 4.17.21
+
+  '@chevrotain/types@10.5.0': {}
+
+  '@chevrotain/utils@10.5.0': {}
+
   '@colors/colors@1.5.0':
     optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@electric-sql/pglite-socket@0.0.6(@electric-sql/pglite@0.3.2)':
+    dependencies:
+      '@electric-sql/pglite': 0.3.2
+
+  '@electric-sql/pglite-tools@0.2.7(@electric-sql/pglite@0.3.2)':
+    dependencies:
+      '@electric-sql/pglite': 0.3.2
+
+  '@electric-sql/pglite@0.3.2': {}
 
   '@emnapi/core@1.7.1':
     dependencies:
@@ -4460,6 +5750,10 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@hono/node-server@1.14.2(hono@4.7.10)':
+    dependencies:
+      hono: 4.7.10
 
   '@humanfs/core@0.19.1': {}
 
@@ -4944,6 +6238,11 @@ snapshots:
 
   '@microsoft/tsdoc@0.16.0': {}
 
+  '@mrleebo/prisma-ast@0.12.1':
+    dependencies:
+      chevrotain: 10.5.0
+      lilconfig: 2.1.0
+
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
       '@emnapi/core': 1.7.1
@@ -5090,45 +6389,80 @@ snapshots:
     dependencies:
       playwright: 1.56.1
 
-  '@prisma/adapter-pg@6.9.0(pg@8.16.3)':
-    dependencies:
-      '@prisma/driver-adapter-utils': 6.9.0
-      pg: 8.16.3
-      postgres-array: 3.0.4
+  '@prisma/client-runtime-utils@7.0.1': {}
 
-  '@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@prisma/client@7.0.1(prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)':
+    dependencies:
+      '@prisma/client-runtime-utils': 7.0.1
     optionalDependencies:
-      prisma: 6.9.0(typescript@5.9.3)
+      prisma: 7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       typescript: 5.9.3
 
-  '@prisma/config@6.9.0':
+  '@prisma/config@7.0.1':
     dependencies:
-      jiti: 2.4.2
+      c12: 3.1.0
+      deepmerge-ts: 7.1.5
+      effect: 3.18.4
+      empathic: 2.0.0
+    transitivePeerDependencies:
+      - magicast
 
-  '@prisma/debug@6.9.0': {}
+  '@prisma/debug@6.8.2': {}
 
-  '@prisma/driver-adapter-utils@6.9.0':
+  '@prisma/debug@7.0.1': {}
+
+  '@prisma/dev@0.13.0(typescript@5.9.3)':
     dependencies:
-      '@prisma/debug': 6.9.0
+      '@electric-sql/pglite': 0.3.2
+      '@electric-sql/pglite-socket': 0.0.6(@electric-sql/pglite@0.3.2)
+      '@electric-sql/pglite-tools': 0.2.7(@electric-sql/pglite@0.3.2)
+      '@hono/node-server': 1.14.2(hono@4.7.10)
+      '@mrleebo/prisma-ast': 0.12.1
+      '@prisma/get-platform': 6.8.2
+      '@prisma/query-plan-executor': 6.18.0
+      foreground-child: 3.3.1
+      get-port-please: 3.1.2
+      hono: 4.7.10
+      http-status-codes: 2.3.0
+      pathe: 2.0.3
+      proper-lockfile: 4.1.2
+      remeda: 2.21.3
+      std-env: 3.9.0
+      valibot: 1.1.0(typescript@5.9.3)
+      zeptomatch: 2.0.2
+    transitivePeerDependencies:
+      - typescript
 
-  '@prisma/engines-version@6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e': {}
+  '@prisma/engines-version@7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6': {}
 
-  '@prisma/engines@6.9.0':
+  '@prisma/engines@7.0.1':
     dependencies:
-      '@prisma/debug': 6.9.0
-      '@prisma/engines-version': 6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e
-      '@prisma/fetch-engine': 6.9.0
-      '@prisma/get-platform': 6.9.0
+      '@prisma/debug': 7.0.1
+      '@prisma/engines-version': 7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6
+      '@prisma/fetch-engine': 7.0.1
+      '@prisma/get-platform': 7.0.1
 
-  '@prisma/fetch-engine@6.9.0':
+  '@prisma/fetch-engine@7.0.1':
     dependencies:
-      '@prisma/debug': 6.9.0
-      '@prisma/engines-version': 6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e
-      '@prisma/get-platform': 6.9.0
+      '@prisma/debug': 7.0.1
+      '@prisma/engines-version': 7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6
+      '@prisma/get-platform': 7.0.1
 
-  '@prisma/get-platform@6.9.0':
+  '@prisma/get-platform@6.8.2':
     dependencies:
-      '@prisma/debug': 6.9.0
+      '@prisma/debug': 6.8.2
+
+  '@prisma/get-platform@7.0.1':
+    dependencies:
+      '@prisma/debug': 7.0.1
+
+  '@prisma/query-plan-executor@6.18.0': {}
+
+  '@prisma/studio-core@0.8.2(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      '@types/react': 19.2.7
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   '@scarf/scarf@1.4.0': {}
 
@@ -5141,6 +6475,8 @@ snapshots:
   '@sinonjs/fake-timers@13.0.5':
     dependencies:
       '@sinonjs/commons': 3.0.1
+
+  '@standard-schema/spec@1.0.0': {}
 
   '@tokenizer/inflate@0.3.1':
     dependencies:
@@ -5285,6 +6621,10 @@ snapshots:
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
+
+  '@types/react@19.2.7':
+    dependencies:
+      csstype: 3.2.3
 
   '@types/retry@0.12.0': {}
 
@@ -5664,8 +7004,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  aws-ssl-profiles@1.1.2:
-    optional: true
+  aws-ssl-profiles@1.1.2: {}
 
   axios@1.13.2(debug@4.4.3):
     dependencies:
@@ -5806,6 +7145,21 @@ snapshots:
 
   bytes@3.1.2: {}
 
+  c12@3.1.0:
+    dependencies:
+      chokidar: 4.0.3
+      confbox: 0.2.2
+      defu: 6.1.4
+      dotenv: 16.6.1
+      exsolve: 1.0.8
+      giget: 2.0.0
+      jiti: 2.6.1
+      ohash: 2.0.11
+      pathe: 2.0.3
+      perfect-debounce: 1.0.0
+      pkg-types: 2.3.0
+      rc9: 2.1.2
+
   call-bind-apply-helpers@1.0.2:
     dependencies:
       es-errors: 1.3.0
@@ -5833,6 +7187,15 @@ snapshots:
 
   chardet@2.1.1: {}
 
+  chevrotain@10.5.0:
+    dependencies:
+      '@chevrotain/cst-dts-gen': 10.5.0
+      '@chevrotain/gast': 10.5.0
+      '@chevrotain/types': 10.5.0
+      '@chevrotain/utils': 10.5.0
+      lodash: 4.17.21
+      regexp-to-ast: 0.5.0
+
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
@@ -5840,6 +7203,10 @@ snapshots:
   chrome-trace-event@1.0.4: {}
 
   ci-info@4.3.1: {}
+
+  citty@0.1.6:
+    dependencies:
+      consola: 3.4.2
 
   cjs-module-lexer@2.1.1: {}
 
@@ -5900,6 +7267,8 @@ snapshots:
       readable-stream: 3.6.2
       typedarray: 0.0.6
 
+  confbox@0.2.2: {}
+
   consola@3.4.2: {}
 
   console-table-printer@2.15.0:
@@ -5942,6 +7311,8 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  csstype@3.2.3: {}
+
   debug@3.2.7:
     dependencies:
       ms: 2.1.3
@@ -5956,18 +7327,23 @@ snapshots:
 
   deep-is@0.1.4: {}
 
+  deepmerge-ts@7.1.5: {}
+
   deepmerge@4.3.1: {}
 
   defaults@1.0.4:
     dependencies:
       clone: 1.0.4
 
+  defu@6.1.4: {}
+
   delayed-stream@1.0.0: {}
 
-  denque@2.1.0:
-    optional: true
+  denque@2.1.0: {}
 
   depd@2.0.0: {}
+
+  destr@2.0.5: {}
 
   detect-newline@3.1.0: {}
 
@@ -6002,6 +7378,11 @@ snapshots:
 
   ee-first@1.1.1: {}
 
+  effect@3.18.4:
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      fast-check: 3.23.2
+
   electron-to-chromium@1.5.258: {}
 
   emittery@0.13.1: {}
@@ -6009,6 +7390,8 @@ snapshots:
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
+
+  empathic@2.0.0: {}
 
   encodeurl@2.0.0: {}
 
@@ -6200,7 +7583,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  exsolve@1.0.8: {}
+
   extend@3.0.2: {}
+
+  fast-check@3.23.2:
+    dependencies:
+      pure-rand: 6.1.0
 
   fast-deep-equal@3.1.3: {}
 
@@ -6357,7 +7746,6 @@ snapshots:
   generate-function@2.3.1:
     dependencies:
       is-property: 1.0.2
-    optional: true
 
   gensync@1.0.0-beta.2: {}
 
@@ -6378,12 +7766,23 @@ snapshots:
 
   get-package-type@0.1.0: {}
 
+  get-port-please@3.1.2: {}
+
   get-proto@1.0.1:
     dependencies:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
 
   get-stream@6.0.1: {}
+
+  giget@2.0.0:
+    dependencies:
+      citty: 0.1.6
+      consola: 3.4.2
+      defu: 6.1.4
+      node-fetch-native: 1.6.7
+      nypm: 0.6.2
+      pathe: 2.0.3
 
   glob-parent@5.1.2:
     dependencies:
@@ -6439,6 +7838,8 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
+  grammex@3.1.12: {}
+
   graphemer@1.4.0: {}
 
   handlebars@4.7.8:
@@ -6462,6 +7863,8 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
+  hono@4.7.10: {}
+
   html-escaper@2.0.2: {}
 
   http-errors@2.0.0:
@@ -6471,6 +7874,8 @@ snapshots:
       setprototypeof: 1.2.0
       statuses: 2.0.1
       toidentifier: 1.0.1
+
+  http-status-codes@2.3.0: {}
 
   human-signals@2.1.0: {}
 
@@ -6493,7 +7898,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2)
+      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -6553,8 +7958,7 @@ snapshots:
 
   is-promise@4.0.0: {}
 
-  is-property@1.0.2:
-    optional: true
+  is-property@1.0.2: {}
 
   is-stream@2.0.1: {}
 
@@ -6927,10 +8331,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jiti@2.4.2: {}
-
-  jiti@2.6.1:
-    optional: true
+  jiti@2.6.1: {}
 
   js-tiktoken@1.0.21:
     dependencies:
@@ -7018,6 +8419,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
+  lilconfig@2.1.0: {}
+
   lines-and-columns@1.2.4: {}
 
   load-esm@1.0.3: {}
@@ -7057,8 +8460,7 @@ snapshots:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  long@5.3.2:
-    optional: true
+  long@5.3.2: {}
 
   lru-cache@10.4.3: {}
 
@@ -7068,11 +8470,9 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lru-cache@7.18.3:
-    optional: true
+  lru-cache@7.18.3: {}
 
-  lru.min@1.1.3:
-    optional: true
+  lru.min@1.1.3: {}
 
   magic-string@0.30.17:
     dependencies:
@@ -7176,12 +8576,10 @@ snapshots:
       named-placeholders: 1.1.3
       seq-queue: 0.0.5
       sqlstring: 2.3.3
-    optional: true
 
   named-placeholders@1.1.3:
     dependencies:
       lru-cache: 7.18.3
-    optional: true
 
   napi-postinstall@0.3.4: {}
 
@@ -7201,6 +8599,8 @@ snapshots:
 
   node-ensure@0.0.0: {}
 
+  node-fetch-native@1.6.7: {}
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -7215,9 +8615,19 @@ snapshots:
     dependencies:
       path-key: 3.1.1
 
+  nypm@0.6.2:
+    dependencies:
+      citty: 0.1.6
+      consola: 3.4.2
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      tinyexec: 1.0.2
+
   object-assign@4.1.1: {}
 
   object-inspect@1.13.4: {}
+
+  ohash@2.0.11: {}
 
   on-finished@2.4.1:
     dependencies:
@@ -7330,6 +8740,8 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  pathe@2.0.3: {}
+
   pdf-parse@1.1.1:
     dependencies:
       debug: 3.2.7
@@ -7344,6 +8756,8 @@ snapshots:
       - supports-color
 
   peek-readable@4.1.0: {}
+
+  perfect-debounce@1.0.0: {}
 
   pg-cloudflare@1.2.7:
     optional: true
@@ -7394,6 +8808,12 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
+  pkg-types@2.3.0:
+    dependencies:
+      confbox: 0.2.2
+      exsolve: 1.0.8
+      pathe: 2.0.3
+
   playwright-core@1.56.1: {}
 
   playwright@1.56.1:
@@ -7406,8 +8826,6 @@ snapshots:
 
   postgres-array@2.0.0: {}
 
-  postgres-array@3.0.4: {}
-
   postgres-bytea@1.0.0: {}
 
   postgres-date@1.0.7: {}
@@ -7415,6 +8833,8 @@ snapshots:
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+
+  postgres@3.4.7: {}
 
   prelude-ls@1.2.1: {}
 
@@ -7430,14 +8850,29 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 18.3.1
 
-  prisma@6.9.0(typescript@5.9.3):
+  prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3):
     dependencies:
-      '@prisma/config': 6.9.0
-      '@prisma/engines': 6.9.0
+      '@prisma/config': 7.0.1
+      '@prisma/dev': 0.13.0(typescript@5.9.3)
+      '@prisma/engines': 7.0.1
+      '@prisma/studio-core': 0.8.2(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      mysql2: 3.15.3
+      postgres: 3.4.7
     optionalDependencies:
       typescript: 5.9.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - magicast
+      - react
+      - react-dom
 
   process@0.11.10: {}
+
+  proper-lockfile@4.1.2:
+    dependencies:
+      graceful-fs: 4.2.11
+      retry: 0.12.0
+      signal-exit: 3.0.7
 
   proxy-addr@2.0.7:
     dependencies:
@@ -7451,6 +8886,8 @@ snapshots:
       punycode: 2.3.1
 
   punycode@2.3.1: {}
+
+  pure-rand@6.1.0: {}
 
   pure-rand@7.0.1: {}
 
@@ -7475,7 +8912,19 @@ snapshots:
       iconv-lite: 0.7.0
       unpipe: 1.0.0
 
+  rc9@2.1.2:
+    dependencies:
+      defu: 6.1.4
+      destr: 2.0.5
+
+  react-dom@19.2.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      scheduler: 0.27.0
+
   react-is@18.3.1: {}
+
+  react@19.2.0: {}
 
   readable-stream@3.6.2:
     dependencies:
@@ -7501,6 +8950,12 @@ snapshots:
 
   regenerator-runtime@0.13.11: {}
 
+  regexp-to-ast@0.5.0: {}
+
+  remeda@2.21.3:
+    dependencies:
+      type-fest: 4.41.0
+
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -7520,9 +8975,11 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
-  retry-axios@2.6.0(axios@1.13.2):
+  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
+
+  retry@0.12.0: {}
 
   retry@0.13.1: {}
 
@@ -7553,6 +9010,8 @@ snapshots:
   safe-buffer@5.2.1: {}
 
   safer-buffer@2.1.2: {}
+
+  scheduler@0.27.0: {}
 
   schema-utils@3.3.0:
     dependencies:
@@ -7587,8 +9046,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  seq-queue@0.0.5:
-    optional: true
+  seq-queue@0.0.5: {}
 
   serialize-javascript@6.0.2:
     dependencies:
@@ -7667,8 +9125,7 @@ snapshots:
 
   sprintf-js@1.0.3: {}
 
-  sqlstring@2.3.3:
-    optional: true
+  sqlstring@2.3.3: {}
 
   stack-utils@2.0.6:
     dependencies:
@@ -7677,6 +9134,8 @@ snapshots:
   statuses@2.0.1: {}
 
   statuses@2.0.2: {}
+
+  std-env@3.9.0: {}
 
   streamsearch@1.1.0: {}
 
@@ -7804,6 +9263,8 @@ snapshots:
       '@istanbuljs/schema': 0.1.3
       glob: 7.2.3
       minimatch: 3.1.2
+
+  tinyexec@1.0.2: {}
 
   tmpl@1.0.5: {}
 
@@ -8008,6 +9469,10 @@ snapshots:
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
 
+  valibot@1.1.0(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
+
   vary@1.1.2: {}
 
   walker@1.0.8:
@@ -8131,6 +9596,10 @@ snapshots:
 
   yoctocolors-cjs@2.1.3: {}
 
+  zeptomatch@2.0.2:
+    dependencies:
+      grammex: 3.1.12
+
   zlibjs@0.3.1: {}
 
   zod-to-json-schema@3.25.0(zod@4.1.12):
@@ -8138,3 +9607,5434 @@ snapshots:
       zod: 4.1.12
 
   zod@4.1.12: {}
+
+```
+
+### prisma\schema.prisma
+
+*(Unsupported file type)*
+
+### prisma.config.ts
+
+```ts
+// This file was generated by Prisma and assumes you have installed the following:
+// npm install --save-dev prisma dotenv
+import 'dotenv/config';
+import { defineConfig, env } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations',
+  },
+  datasource: {
+    url: env('DATABASE_URL_NEON'),
+  },
+});
+
+```
+
+### README.md
+
+```md
+# Chatnary RAG Backend API
+
+<div align="center">
+
+**A high-performance Retrieval-Augmented Generation backend built with NestJS + Prisma + pgvector**
+
+[![NestJS](https://img.shields.io/badge/NestJS-11.0-E0234E?logo=nestjs\&logoColor=white)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript\&logoColor=white)]()
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma\&logoColor=white)]()
+[![Postgres](https://img.shields.io/badge/Postgres-PGVector-336791?logo=postgresql\&logoColor=white)]()
+[![License](https://img.shields.io/badge/License-UNLICENSED-red)]()
+
+[API Documentation](#-api-documentation) • [Quick Start](#-quick-start) • [Architecture](#-architecture)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
+- [Quick Start](#-quick-start)
+- [API Documentation](#-api-documentation)
+- [Project Structure](#-project-structure)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+
+---
+
+## 🎯 Overview
+
+**Chatnary** is an advanced Retrieval-Augmented Generation (RAG) backend system designed to process documents, embed them into vector space, and provide powerful chat capabilities with or without history.
+
+### Key Highlights
+
+- 📊 **Intelligent Document Management** - Monitor documents, ingest new docs, and CRUD documents safety
+- 🎯 **AI-Powered Search & Q&A** - Semantic with related to docs,
+- 💰 **Role-based Access Control** - Support admin/student/teacher roles
+- 🤖 **AI assistants** - Support AI assistants
+- 🔐 **Secure & Scalable** - Built with enterprise-grade NestJS framework
+- 📱 **RESTful API** - Clean, well-documented REST endpoints
+- 🚀 **Production Ready** - Error handling, logging, and monitoring built-in
+
+---
+
+## ✨ Features
+
+### 🔥 Core RAG Features
+
+- **Chat (no history)**
+  - Direct single-turn chat with the RAG pipeline.
+
+- **Chat with history**
+  - Multi-turn conversations stored in DB.
+
+- **Automatic Ingest Pipeline**
+  Upload any file → Backend automatically:
+
+  1. Detects if file is scanned
+  2. Performs OCR `Tesseract.js`
+  3. Extracts text
+  4. Chunks the text
+  5. Embeds using OpenAI
+  6. Stores vectors in pgvector
+
+- **Semantic Retrieval**
+
+  - KNN search via pgvector
+  - [*] Hybrid search-ready
+
+---
+
+### 📁 Project & File Management
+
+- **Project CRUD**
+  - Similar ChatGPT Project function
+
+- **File CRUD**
+- Per-project isolation (documents, chats, embeddings)
+
+---
+
+### 🧰 Technical Features
+
+- ✅ **Input Validation** - Comprehensive DTO validation with class-validator
+- ✅ **Error Handling** - Global exception filter with consistent error responses
+- ✅ **Request Logging** - Detailed HTTP request/response logging
+- ✅ **API Documentation** - Interactive Swagger/OpenAPI documentation with full schema
+- ✅ **Health Monitoring - PM2** - Health check endpoints for monitoring
+- ✅ **CORS Support** - Configured for cross-origin requests
+- ✅ **Type Safety - Prisma ORM** - ORM management with any DB
+- ✅ **Database Abstraction/pgvector vector** - Interface-based database layer for easy swapping
+- ✅ **Swagger documentation** - Visualize api document for FE
+- ✅ **File-based storage + DB metadata** - `multer` package to handle Object storage server
+- ✅ **Docker** - Build image so super lightweight
+<!-- - ✅ **Walrus Integration** - Decentralized storage with collection management -->
+
+---
+
+## 🛠 Tech Stack
+
+### Core Components
+
+- **NestJS 11**
+- **TypeScript**
+- **Prisma ORM**
+- **PostgreSQL + pgvector**
+- **LangChainJS**
+- **Docker**
+
+### Document Processing
+
+- Tesseract OCR or Gemini Vision (selectable)
+- LangChain Recursive Character Splitter
+
+### Documentation api
+
+- **[Swagger/OpenAPI](https://swagger.io/)** - API documentation
+- **[swagger-ui-express](https://github.com/scottie1984/swagger-ui-express)** - Swagger UI
+
+### Embeddings
+
+- OpenAI (text-embedding-3)
+
+---
+
+## 🏗 Architecture
+
+### High-Level Overview
+
+```
+
+┌─────────────────────┐
+│      Client App      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│     NestJS Backend      │
+│  (Controllers/Services) │
+└──────────┬──────────────┘
+           │
+           ▼
+┌────────────────────────────┐
+│       RAG Pipeline         │
+│ OCR → Chunk → Embed → Vec  │
+└──────────┬─────────────────┘
+           │
+           ▼
+┌────────────────────────────┐
+│ PostgreSQL + PGVector      │
+│ Files | Chunks | Embedding │
+└────────────────────────────┘
+
+```
+
+---
+
+## 🧬 Module Structure
+
+```
+
+src/
+ ├── project/        # Workspace CRUD
+ ├── document/       # Upload, OCR, ingest
+ ├── chat/           # Chat + history
+ ├── llm/             # Retrieval + LangChain pipeline
+ ├── pipeline/       # Ingest & chat pipelines
+ ├── database/        # PrismaModule + Service
+ ├── common/          # Filters, DTOs, utils
+ └── main.ts
+
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** >= 22.x
+- **pnpm** >= 9.x (or npm/yarn)
+
+### 1. Clone Repository
+
+```bash
+git clone <your-repo>
+cd Chatnary-backend
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Environment Variables
+
+`.env`
+
+```bash
+// copy .env.example => .env
+```
+
+---
+
+### 4. Setup Database
+
+```bash
+pnpm prisma migrate dev
+```
+
+---
+
+### 5. Start Dev Server
+
+```bash
+pnpm start:dev
+```
+
+### 6. Connect pgAdmin
+
+``` bash
+Host name/address: chatnary-db
+Port: 5432
+Maintenance database: api
+Username: ChatnarySYS
+Password: 123123
+```
+
+---
+
+## 📚 API Documentation
+
+Swagger UI available at:
+
+```
+http://localhost:3000/api/docs
+```
+
+Includes:
+
+- DTO schemas
+- Request/response examples
+- Try-it-out
+- Endpoints fully documented
+
+---
+
+## 📁 Project Structure
+
+```
+Chatnary-backend/
+├── src/
+│   ├── chats/
+│   ├── documents/
+│   ├── projects/
+│   ├── rag/
+│   ├── pipelines/
+│   ├── database/
+│   ├── common/
+│   ├── app.module.ts
+│   └── main.ts
+├── prisma/
+│   └── schema.prisma
+├── storage/uploads/
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+└── README.md
+```
+
+---
+
+## 💬 Endpoint Overview
+
+### 🔹 Chat
+
+| Method | Endpoint                  | Description          |
+| ------ | ------------------------- | -------------------- |
+| POST   | `/api/chat/direct`        | Chat without history |
+| POST   | `/api/chats`              | Create chat session  |
+| POST   | `/api/chats/:id/messages` | Add message to chat  |
+| GET    | `/api/chats/:projectId`   | List chats           |
+
+---
+
+### 🔹 Projects
+
+| Method | Endpoint            |
+| ------ | ------------------- |
+| POST   | `/api/projects`     |
+| GET    | `/api/projects`     |
+| PATCH  | `/api/projects/:id` |
+| DELETE | `/api/projects/:id` |
+
+---
+
+### 🔹 Files
+
+| Method | Endpoint                          |
+| ------ | --------------------------------- |
+| POST   | `/api/documents/upload?projectId=...` |
+| GET    | `/api/documents/:id`                  |
+| DELETE | `/api/documents/:id`                  |
+| GET    | `/api/projects/:id/documents`         |
+
+> Upload triggers auto ingest.
+
+---
+
+## 🚢 Deployment
+
+### 🐳 Docker Compose (lightweight)
+
+`docker-compose.dev.yml`
+
+```yaml
+services:
+  api:
+    container_name: chatnary-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # sync code
+      - /app/node_modules # prevent overwrite
+      - ./uploads:/app/uploads
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: chatnary-db
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+networks:
+  app-net:
+
+volumes:
+  db_data:
+  pgadmin_data:
+
+```
+
+### 🐳 Dockerfile
+
+`Dockerfile.dev`
+
+```yaml
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install GraphicsMagick for pdf2pic
+RUN apk add --no-cache graphicsmagick ghostscript
+
+RUN npm install -g pnpm
+
+# Copy package + lock file
+COPY package.json pnpm-lock.yaml* ./
+
+# Install ALL dependencies (dev + prod)
+RUN pnpm install
+
+# Copy all source
+COPY . .
+
+# Expose NestJS port
+EXPOSE 8000
+
+# Dev mode: Hot reload
+CMD ["pnpm", "start:dev"]
+
+
+```
+
+---
+
+## 🔮 Roadmap
+
+### ✅ Completed
+
+- [x] **PostgreSQL Database Integration** - Vector db vs SQL DB with collection management
+- [x] **Swagger Documentation** - Complete API documentation with schemas and examples
+- [x] **Database Abstraction Layer** - Interface-based design for easy database swapping
+- [x] **Error Handling** - Global exception filter with consistent responses
+- [x] **Request Logging** - Comprehensive HTTP request/response logging
+- [x] **Input Validation** - DTO-based validation with class-validator
+
+### 🚧 In Progress
+
+- [ ] SSE streaming for real-time ingest
+- [ ] Hybrid search (BM25 + vector)
+- [ ] Background job queue (BullMQ)
+- [ ] Auth system (JWT)
+
+### 📋 Coming Soon
+
+- [ ] **Authentication & Authorization** - JWT-based auth system
+- [ ] **Blockchain Integration** - Smart contract interactions
+- [ ] **WebSocket Support** - Real-time updates
+- [ ] **Rate Limiting** - API protection
+- [ ] **Caching Layer** - Performance optimization
+- [ ] **CI/CD Pipeline** - Automated deployment
+- [ ] **Database Migrations** - Schema versioning for Walrus collections
+
+---
+
+## 📞 Contact
+
+- `ntakhoa.dev@gmail.com`
+
+```
+
+### src\app.controller.spec.ts
+
+```ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+describe('AppController', () => {
+  let appController: AppController;
+
+  beforeEach(async () => {
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [AppController],
+      providers: [AppService],
+    }).compile();
+
+    appController = app.get<AppController>(AppController);
+  });
+
+  describe('root', () => {
+    it('should return "Hello World!"', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
+  });
+});
+
+```
+
+### src\app.controller.ts
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello() {
+    return this.appService.getHello();
+  }
+}
+
+```
+
+### src\app.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { IngestModule } from './ingest/ingest.module';
+import { DocumentModule } from './document/document.module';
+import { ChatModule } from './chat/chat.module';
+import { PipelineModule } from './pipeline/pipeline.module';
+import { OpenaiModule } from './llm/openai/openai.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    IngestModule,
+    DocumentModule,
+    ChatModule,
+    PipelineModule,
+    OpenaiModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+```
+
+### src\app.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello() {
+    return { message: 'Hello from Chatnary', data: 'Hi' };
+    // throw new Error('Not implemented');
+  }
+}
+
+```
+
+### src\chat\chat.controller.ts
+
+```ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { ChatService } from './chat.service';
+import { CreateChatDto } from './dto/create-chat.dto';
+import { UpdateChatDto } from './dto/update-chat.dto';
+import { ChatDto } from './dto/chat-lite.dto';
+
+@Controller('chat')
+export class ChatController {
+  constructor(private readonly chatService: ChatService) {}
+
+  @Post('/lite')
+  chatLite(@Body() ChatDto: ChatDto) {
+    return this.chatService.chatLite(ChatDto);
+  }
+
+  @Post()
+  create(@Body() createChatDto: CreateChatDto) {
+    return this.chatService.create(createChatDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.chatService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.chatService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
+    return this.chatService.update(+id, updateChatDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.chatService.remove(+id);
+  }
+}
+
+```
+
+### src\chat\chat.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { ChatService } from './chat.service';
+import { ChatController } from './chat.controller';
+import { OpenaiService } from '../llm/openai/openai.service';
+import { IngestModule } from '../ingest/ingest.module';
+
+@Module({
+  imports: [IngestModule],
+  controllers: [ChatController],
+  providers: [ChatService, OpenaiService],
+})
+export class ChatModule {}
+
+```
+
+### src\chat\chat.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { CreateChatDto } from './dto/create-chat.dto';
+import { UpdateChatDto } from './dto/update-chat.dto';
+import { OpenaiService } from '../llm/openai/openai.service';
+import { ChatDto } from './dto/chat-lite.dto';
+import { BaseMessage } from '@langchain/core/messages';
+import { RunnableSequence } from '@langchain/core/runnables';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { VectorService } from '../ingest/vector/vector.service';
+
+@Injectable()
+export class ChatService {
+  constructor(
+    private readonly openaiService: OpenaiService,
+    private readonly vectorService: VectorService,
+  ) {}
+  // createSimpleRAG = (llm, retriever) => {
+  //   return RunnableSequence.from([
+  //     {
+  //       context: (input) => retriever.getRelevantDocuments(input.question),
+  //       question: (input) => input.question,
+  //     },
+  //     llm,
+  //   ]);
+  // };
+
+  // createHistoryRAG = (llm, retriever) => {
+  //   const questionRewriter = ChatPromptTemplate.fromMessages([
+  //     ['system', "Rewrite the user's question using conversational history."],
+  //     ['placeholder', 'history'],
+  //     ['human', '{question}'],
+  //   ]).pipe(llm);
+
+  //   return RunnableSequence.from([
+  //     {
+  //       history: (input) => input.history,
+  //       question: (input) => input.question,
+  //     },
+  //     { rewritten: questionRewriter },
+  //     {
+  //       context: (data) => retriever.getRelevantDocuments(data.rewritten),
+  //       question: (data) => data.rewritten,
+  //     },
+  //     llm,
+  //   ]);
+  // };
+
+  // async chatLite(ChatDto: ChatDto): Promise<BaseMessage> {
+  async chatLite(ChatDto: ChatDto) {
+    const relateDocs = await this.vectorService.getRetrievals(
+      ChatDto.message,
+      5,
+    );
+    console.log('Related Docs: ', relateDocs);
+
+    const SYSTEM_PROMPT = `
+      Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
+      Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
+      Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
+
+    // 3. Format retrieved docs to text context
+    const context = relateDocs
+      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .join('\n\n');
+
+    console.log('Context: ', context);
+
+    const sysPrompt = [
+      {
+        role: 'system',
+        content: SYSTEM_PROMPT,
+      },
+      {
+        role: 'user',
+        content: `
+          Context:
+
+          ${context}
+
+          ---
+
+          Câu hỏi: ${ChatDto.message}
+      `,
+      },
+    ];
+
+    // 4. Get response from LLM
+    const response = await this.openaiService.model.invoke(sysPrompt);
+
+    return { response, relateDocs };
+
+    //     const r = await this.retriever.get(projectId);
+    // const chain = createSimpleRAG(this.openai.llm, r);
+    // return chain.invoke({ question });
+  }
+
+  create(createChatDto: CreateChatDto) {
+    return 'This action adds a new chat';
+  }
+
+  findAll() {
+    return `This action returns all chat`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} chat`;
+  }
+
+  update(id: number, updateChatDto: UpdateChatDto) {
+    return `This action updates a #${id} chat`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} chat`;
+  }
+}
+
+```
+
+### src\chat\dto\chat-lite.dto.ts
+
+```ts
+export class ChatDto {
+  //   projectId: number;
+  message: string;
+}
+
+```
+
+### src\chat\dto\create-chat.dto.ts
+
+```ts
+export class CreateChatDto {}
+
+```
+
+### src\chat\dto\update-chat.dto.ts
+
+```ts
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateChatDto } from './create-chat.dto';
+
+export class UpdateChatDto extends PartialType(CreateChatDto) {}
+
+```
+
+### src\chat\entities\chat.entity.ts
+
+```ts
+export class Chat {}
+
+```
+
+### src\config\env.config.ts
+
+```ts
+export const envConfig = () => ({
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'your-api-key',
+});
+
+```
+
+### src\config\pg.config.ts
+
+```ts
+import { DistanceStrategy } from '@langchain/community/vectorstores/pgvector';
+import { PoolConfig } from 'pg';
+
+// Local PostgreSQL config (Docker)
+export const pgConfig = {
+  postgresConnectionOptions: {
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST || 'db',
+    port: parseInt(process.env.POSTGRES_PORT || '5432'),
+    user: process.env.POSTGRES_USER || 'ChatnarySYS',
+    password: process.env.POSTGRES_PASSWORD || '123123',
+    database: process.env.POSTGRES_DB || 'api',
+  } as PoolConfig,
+  tableName: 'documents',
+  //   columns: {
+  //     idColumnName: 'id',
+  //     vectorColumnName: 'vector',
+  //     contentColumnName: 'content',
+  //     metadataColumnName: 'metadata',
+  //   },
+  // supported distance strategies: cosine (default), innerProduct, or euclidean
+  distanceStrategy: 'cosine' as DistanceStrategy,
+};
+
+// NeonDB config (Remote)
+export const getPgConfigNeon = () => ({
+  postgresConnectionOptions: {
+    connectionString: process.env.DATABASE_URL_NEON,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  } as PoolConfig,
+  tableName: 'documents',
+  distanceStrategy: 'cosine' as DistanceStrategy,
+});
+
+```
+
+### src\document\document.controller.ts
+
+```ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  BadRequestException,
+  UploadedFiles,
+  Logger,
+} from '@nestjs/common';
+import { DocumentService } from './document.service';
+import { CreateDocumentDto } from './dto/create-document.dto';
+import { UpdateDocumentDto } from './dto/update-document.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { storage } from './oss';
+import path from 'path';
+
+@Controller('document')
+export class DocumentController {
+  constructor(private readonly documentService: DocumentService) {}
+
+  // -- UPLOAD --
+  @Post('upload/files')
+  @UseInterceptors(
+    FilesInterceptor('files', 10, {
+      dest: 'uploads/documents',
+      storage: storage,
+      limits: { fileSize: 20 * 1024 * 1024 },
+      fileFilter: (req, file, cb) => {
+        const extName = path.extname(file.originalname).toLowerCase();
+        const allowedExts = [
+          '.pdf',
+          '.doc',
+          '.docx',
+          '.xls',
+          '.xlsx',
+          '.ppt',
+          '.pptx',
+          '.txt',
+        ];
+        if (!allowedExts.includes(extName)) {
+          return cb(
+            new BadRequestException('Only document files are allowed!'),
+            false,
+          );
+        }
+        cb(null, true);
+      },
+    }),
+  )
+  async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    Logger.log('Uploaded files:', files);
+
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files uploaded');
+    }
+
+    await this.documentService.uploadFiles(files);
+    return files.map((file) => ({
+      url: `/uploads/documents/${file.filename}`,
+    }));
+  }
+
+  // -- REMOVE --
+  @Delete(':fileId')
+  remove(@Param('fileId') fileId: string) {
+    return this.documentService.removeDocument(fileId);
+  }
+
+  @Get()
+  findAll() {
+    return this.documentService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.documentService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateDocumentDto: UpdateDocumentDto,
+  ) {
+    return this.documentService.update(+id, updateDocumentDto);
+  }
+}
+
+```
+
+### src\document\document.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { DocumentService } from './document.service';
+import { DocumentController } from './document.controller';
+import { IngestModule } from '../ingest/ingest.module';
+
+@Module({
+  imports: [IngestModule],
+  controllers: [DocumentController],
+  providers: [DocumentService],
+})
+export class DocumentModule {}
+
+```
+
+### src\document\document.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { UpdateDocumentDto } from './dto/update-document.dto';
+import { IngestService } from '../ingest/ingest.service';
+import { VectorService } from '../ingest/vector/vector.service';
+import { deleteFile } from './oss';
+import path from 'path';
+
+@Injectable()
+export class DocumentService {
+  constructor(
+    private readonly ingestService: IngestService,
+    private vectorService: VectorService,
+  ) {}
+
+  //-- UPLOAD --
+  async uploadFiles(files: Express.Multer.File[]): Promise<void> {
+    for (const file of files) {
+      await this.ingestService.ingestDocument(
+        file.path,
+        file.filename,
+        undefined,
+      );
+    }
+  }
+  // -- REMOVE --
+  async removeDocument(fileId: string) {
+    await this.vectorService.removeVectorByFileId(fileId);
+    deleteFile(path.join('uploads/documents', fileId));
+    return fileId;
+  }
+
+  findAll() {
+    return `This action returns all document`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} document`;
+  }
+
+  update(id: number, updateDocumentDto: UpdateDocumentDto) {
+    return `This action updates a #${id} document`;
+  }
+}
+
+```
+
+### src\document\dto\create-document.dto.ts
+
+```ts
+export class CreateDocumentDto {}
+
+```
+
+### src\document\dto\update-document.dto.ts
+
+```ts
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateDocumentDto } from './create-document.dto';
+
+export class UpdateDocumentDto extends PartialType(CreateDocumentDto) {}
+
+```
+
+### src\document\entities\document.entity.ts
+
+```ts
+export class Document {}
+
+```
+
+### src\document\oss.ts
+
+```ts
+// Object storage server (OSS) configuration
+
+import * as fs from 'fs';
+import * as multer from 'multer';
+import path from 'path';
+
+export const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    try {
+      fs.mkdirSync('uploads/documents', { recursive: true });
+    } catch (error) {}
+    cb(null, 'uploads/documents/');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + ext);
+  },
+});
+
+// Delete file function
+export const deleteFile = (filePath: string) => {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error deleting file:', err);
+    } else {
+      console.log('File deleted successfully');
+    }
+  });
+};
+
+```
+
+### src\http-exception.filter.ts
+
+```ts
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { Response } from 'express';
+
+@Catch()
+export class HttpExceptionFilter<T> implements ExceptionFilter {
+  catch(exception: T, host: ArgumentsHost) {
+    const res: Response = host.switchToHttp().getResponse();
+    const messageError =
+      exception instanceof Error ? exception.message : 'Internal server error';
+    res.status(500).json({
+      statusCode: 500,
+      success: false,
+      message: messageError,
+    });
+  }
+}
+
+```
+
+### src\ingest\ingest.module.ts
+
+```ts
+import { ConsoleLogger, Module } from '@nestjs/common';
+import { IngestService } from './ingest.service';
+import { PdfService } from './loaders/pdf.loader';
+import { OcrService } from './loaders/ocr.loader';
+import { TextSplitterService } from './splitters/text-splitter';
+import { VectorService } from './vector/vector.service';
+import { PgvectorService } from './vector/pgvector.client';
+import { OpenaiService } from '../llm/openai/openai.service';
+
+@Module({
+  providers: [
+    IngestService,
+    PdfService,
+    OcrService,
+    TextSplitterService,
+    VectorService,
+    PgvectorService,
+    OpenaiService,
+    ConsoleLogger,
+  ],
+  exports: [IngestService, VectorService],
+})
+export class IngestModule {}
+
+```
+
+### src\ingest\ingest.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { VectorService } from './vector/vector.service';
+import { PdfService } from './loaders/pdf.loader';
+import { TextSplitterService } from './splitters/text-splitter';
+import { OcrService } from './loaders/ocr.loader';
+import * as fs from 'fs';
+
+@Injectable()
+export class IngestService {
+  constructor(
+    private pdfService: PdfService,
+    private ocrService: OcrService,
+    private textSplitterService: TextSplitterService,
+    private vectorService: VectorService,
+  ) {}
+  /* 
+    1. Load document (Text/PDF/Image)
+    2. Split text into chunks
+    3. Create embeddings => Store embeddings in vector database
+    */
+  async ingestDocument(filePath: string, fileId: string, projectId?: string) {
+    // 1. Load document based on file type
+    let text: string;
+    const ext = filePath.toLowerCase();
+
+    if (ext.endsWith('.txt')) {
+      // Plain text file => .txt
+      text = fs.readFileSync(filePath, 'utf-8');
+    } else if (ext.endsWith('.pdf')) {
+      // Try PDF first
+      text = await this.pdfService.load(filePath);
+
+      // If PDF has no text (scanned), use OCR
+      if (!text || text.trim().length < 20) {
+        console.log('📄 PDF has no text, using OCR...');
+        const result = await this.ocrService.load(filePath);
+        text = result.text;
+      }
+    } else if (/\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext)) {
+      // Image files - use OCR
+      const result = await this.ocrService.load(filePath);
+      text = result.text;
+    } else {
+      throw new Error(`Unsupported file type: ${ext}`);
+    }
+
+    // 2. Split text into chunks
+    const chunks = await this.textSplitterService.splitText(text);
+
+    // 3. Create embeddings => Store embeddings in vector database
+    await this.vectorService.addDocuments({
+      chunks,
+      metadata: { fileId, projectId },
+    });
+  }
+}
+
+```
+
+### src\ingest\loaders\ocr.loader.ts
+
+```ts
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import * as Tesseract from 'tesseract.js';
+import { fromPath } from 'pdf2pic';
+import * as fs from 'fs';
+import * as path from 'path';
+import pdf from 'pdf-parse';
+
+@Injectable()
+export class OcrService implements OnModuleInit, OnModuleDestroy {
+  private workers: Tesseract.Worker[] = [];
+  private readonly WORKER_COUNT = 4; // Số workers song song
+
+  async onModuleInit() {
+    // Tạo worker pool để OCR song song
+    const workerPromises = Array.from({ length: this.WORKER_COUNT }, () =>
+      Tesseract.createWorker('vie'),
+    );
+    this.workers = await Promise.all(workerPromises);
+  }
+
+  private getWorker(index: number): Tesseract.Worker {
+    return this.workers[index % this.workers.length];
+  }
+
+  // Handle
+  async load(filePath: string) {
+    try {
+      const ext = filePath.toLowerCase();
+      const isPdf = ext.endsWith('.pdf');
+
+      // Supported image formats for OCR
+      const isImage = /\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext);
+
+      // --- CASE 1: Image files only ---
+      if (isImage) {
+        const result = await this.workers[0].recognize(filePath);
+        return { text: result.data.text, confidence: result.data.confidence };
+      }
+
+      // --- CASE 2: Non-PDF and non-image files (e.g., .txt) ---
+      if (!isPdf) {
+        throw new Error(
+          `Unsupported file type for OCR. Only PDF and images are supported. Got: ${path.extname(filePath)}`,
+        );
+      }
+
+      // --- CASE 3: PDF files ---
+      // -- Get pageNumber --
+      const pdfBuffet = fs.readFileSync(filePath);
+      const pdfInfo = await pdf(pdfBuffet);
+
+      if (pdfInfo.text && pdfInfo.text.trim().length > 20) {
+        // Return if PDF has embedded text
+        console.log('📄 PDF has embedded text, skipping OCR.');
+        return { text: pdfInfo.text };
+      }
+
+      const pageCount = pdfInfo.numpages;
+
+      if (!pageCount || pageCount === 0) return { text: '' };
+
+      // Create: "uploads/temp" if not exists
+      const tempDir = path.join(process.cwd(), 'uploads', 'temp');
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
+      }
+
+      // List pages: convert(1) => page 1
+      const convert = fromPath(filePath, {
+        density: 130, // dpi
+        saveFilename: `ocr-${Date.now()}`, // Temporary filename
+        savePath: tempDir,
+        format: 'png',
+        width: 1000, // upscale width
+        height: 1000,
+      });
+
+      const convertPromises: Promise<any>[] = [];
+      for (let page = 1; page <= pageCount; page++) {
+        convertPromises.push(convert(page, { responseType: 'image' }));
+      }
+      const pageImages = await Promise.all(convertPromises);
+      console.log('✅ PDF converted to images');
+
+      // 5️⃣ OCR tất cả trang song song với worker pool
+      console.log(`🔍 Running OCR on ${pageCount} pages...`);
+      const ocrPromises = pageImages.map((img: any, index: number) => {
+        const worker = this.getWorker(index); // Round-robin workers
+        return worker.recognize(img.path).then((res) => ({
+          text: res.data.text,
+          path: img.path,
+          page: index + 1,
+        }));
+      });
+
+      const results = await Promise.all(ocrPromises);
+      console.log('✅ OCR completed');
+
+      // 6️⃣ Ghép text theo thứ tự trang
+      const allText = results
+        .sort((a, b) => a.page - b.page)
+        .map((r) => r.text)
+        .join('\n');
+
+      // 7️⃣ Xoá file ảnh tạm
+      results.forEach((r) => {
+        try {
+          if (fs.existsSync(r.path)) fs.unlinkSync(r.path);
+        } catch {}
+      });
+
+      return { text: allText };
+    } catch (error) {
+      console.log('OCR Error: ', error);
+      throw error;
+    }
+  }
+
+  async onModuleDestroy() {
+    console.log('🛑 Terminating OCR workers...');
+    await Promise.all(this.workers.map((w) => w.terminate()));
+  }
+}
+
+```
+
+### src\ingest\loaders\pdf.loader.ts
+
+```ts
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class PdfService {
+  async load(filePath: string): Promise<string> {
+    const loader = new PDFLoader(filePath);
+    const docs = await loader.load();
+    // return docs;
+    return docs.map((d) => d.pageContent).join('\n');
+  }
+}
+
+```
+
+### src\ingest\splitters\text-splitter.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
+
+@Injectable()
+export class TextSplitterService {
+  splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+
+  async splitText(text: string) {
+    return this.splitter.splitText(text);
+  }
+}
+
+```
+
+### src\ingest\vector\pgvector.client.ts
+
+```ts
+import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { PGVectorStore } from '@langchain/community/vectorstores/pgvector';
+import { OpenaiService } from '../../llm/openai/openai.service';
+import { pgConfig, getPgConfigNeon } from '../../config/pg.config';
+
+@Injectable()
+export class PgvectorService {
+  constructor(
+    private readonly openaiService: OpenaiService,
+    private readonly logger: ConsoleLogger,
+  ) {}
+  async initVectorStore() {
+    // Use NeonDB if DATABASE_URL_NEON is set, otherwise use local
+    const useNeon = !!process.env.DATABASE_URL_NEON;
+    const config = useNeon ? getPgConfigNeon() : pgConfig;
+
+    this.logger.log('🔧 PGVector Config:', {
+      useNeon,
+      connectionString: useNeon
+        ? process.env.DATABASE_URL_NEON?.substring(0, 30) + '...'
+        : `${process.env.POSTGRES_HOST || 'db'}:${process.env.POSTGRES_PORT || '5432'}`,
+    });
+
+    const vectorStore = await PGVectorStore.initialize(
+      this.openaiService.embeddings(),
+      config,
+    );
+
+    this.logger.log('✅ Connected to PGVector successfully!');
+    return vectorStore;
+  }
+}
+
+```
+
+### src\ingest\vector\vector.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { PgvectorService } from './pgvector.client';
+
+@Injectable()
+export class VectorService {
+  constructor(private readonly pgvectorService: PgvectorService) {}
+
+  // Add documents to the vector store
+  async addDocuments({
+    chunks,
+    metadata,
+  }: {
+    chunks: string[];
+    metadata: any;
+  }) {
+    await this.pgvectorService.initVectorStore().then(async (vectorStore) => {
+      await vectorStore.addDocuments(
+        chunks.map((chunk) => ({
+          pageContent: chunk,
+          metadata,
+        })),
+      );
+    });
+  }
+  // Get retrievals from the vector store
+  async getRetrievals(query: string, k = 10) {
+    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
+      const results = await vectorStore.similaritySearch(query, k);
+      return results;
+    });
+  }
+
+  // -- DELETE VECTOR STORE BY FILEID --
+  async removeVectorByFileId(fileId: string) {
+    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
+      await vectorStore.delete({ filter: { fileId } });
+    });
+  }
+
+  //   async getRetriever(projectId: string) {
+  //     return this.store.asRetriever({
+  //       searchType: "similarity",
+  //       searchKwargs: { filter: { projectId } },
+  //     });
+  //   }
+}
+
+```
+
+### src\llm\openai\openai.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { OpenaiService } from './openai.service';
+
+@Module({
+  providers: [OpenaiService],
+})
+export class OpenaiModule {}
+
+```
+
+### src\llm\openai\openai.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
+import { envConfig } from '../../config/env.config';
+
+@Injectable()
+export class OpenaiService {
+  model = new ChatOpenAI({
+    model: 'gpt-4.1',
+    apiKey: envConfig().OPENAI_API_KEY,
+  });
+
+  embeddings = () =>
+    new OpenAIEmbeddings({
+      model: 'text-embedding-3-small',
+    });
+}
+
+```
+
+### src\main.ts
+
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ResponseInterceptor } from './response.interceptor';
+import { HttpExceptionFilter } from './http-exception.filter';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const config = new DocumentBuilder()
+    .setTitle('Chatnary API')
+    .setDescription('The Chatnary API description')
+    .setVersion('1.0')
+    .addTag('chatnary')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();
+
+```
+
+### src\pipeline\pipeline.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { PipelineService } from './pipeline.service';
+
+@Module({
+  providers: [PipelineService],
+})
+export class PipelineModule {}
+
+```
+
+### src\pipeline\pipeline.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class PipelineService {}
+
+```
+
+### src\response.interceptor.ts
+
+```ts
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Response } from 'express';
+
+@Injectable()
+export class ResponseInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const res = context.switchToHttp().getResponse<Response>();
+    return next.handle().pipe(
+      map((data: any) => ({
+        statusCode: res.statusCode,
+        // message: 'success',
+        success: true,
+        data: {
+          result: data?.result ?? data,
+        },
+      })),
+    );
+  }
+}
+
+```
+
+### test\app.e2e-spec.ts
+
+```ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { App } from 'supertest/types';
+import { AppModule } from './../src/app.module';
+
+describe('AppController (e2e)', () => {
+  let app: INestApplication<App>;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
+  });
+});
+
+```
+
+### test\jest-e2e.json
+
+```json
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  }
+}
+
+```
+
+### tsconfig.build.json
+
+```json
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
+
+```
+
+### tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    // "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
+```
+
+### vie.traineddata
+
+*(Unsupported file type)*
+
+### _docs\prisma-sync-existing-db.md
+
+```md
+# Prisma Migration - Sync với Database có sẵn
+
+## 🎯 Tình huống
+
+Database trên server (NeonDB) đã có tables và data, cần đồng bộ Prisma migration history với database hiện tại **mà không mất data**.
+
+## ⚠️ Lỗi thường gặp
+
+```
+
+Drift detected: Your database schema is not in sync with your migration history.
+We need to reset the "public" schema...
+All data will be lost.
+
+```
+
+## ✅ Giải pháp (Baselining)
+
+### Bước 1: Pull schema từ database
+
+```bash
+npx prisma db pull
+```
+
+**Kết quả:** File `prisma/schema.prisma` được cập nhật với schema từ database.
+
+**Lưu ý:** Nếu có warning về `vector` type:
+
+```
+WARNING: These fields are not supported by Prisma Client
+  - Model: "documents", field: "embedding", original data type: "vector"
+```
+
+→ Bỏ qua, sẽ xử lý ở bước sau.
+
+---
+
+### Bước 2: Tạo baseline migration
+
+```bash
+# Tạo folder migration với timestamp
+mkdir -p prisma/migrations/$(date +%Y%m%d%H%M%S)_init
+
+# Hoặc trên Windows Git Bash:
+mkdir -p prisma/migrations/20251130000001_init
+```
+
+---
+
+### Bước 3: Generate SQL từ database hiện tại
+
+```bash
+npx prisma migrate diff \
+  --from-empty \
+  --to-config-datasource \
+  --script > prisma/migrations/20251130000001_init/migration.sql
+```
+
+**Kết quả:** File SQL được tạo với schema hiện tại của database.
+
+---
+
+### Bước 4: Fix migration SQL (nếu dùng pgvector)
+
+Mở file `prisma/migrations/20251130000001_init/migration.sql` và sửa:
+
+**Trước:**
+
+```sql
+-- CreateTable
+CREATE TABLE "public"."documents" (
+    "embedding" vector(),
+    ...
+);
+```
+
+**Sau:**
+
+```sql
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- CreateTable
+CREATE TABLE "public"."documents" (
+    "embedding" vector(1536),  -- Thêm dimension
+    ...
+);
+```
+
+---
+
+### Bước 5: Đánh dấu migration đã applied
+
+```bash
+npx prisma migrate resolve --applied 20251130000001_init
+```
+
+**Kết quả:**
+
+```
+Migration 20251130000001_init marked as applied.
+```
+
+---
+
+### Bước 6: Verify
+
+```bash
+npx prisma migrate status
+```
+
+**Kết quả mong đợi:**
+
+```
+Database schema is up to date!
+```
+
+---
+
+## 🔄 Quy trình hoàn chỉnh (Copy-paste)
+
+```bash
+# 1. Pull schema từ database
+npx prisma db pull
+
+# 2. Tạo folder migration
+mkdir -p prisma/migrations/20251130000001_init
+
+# 3. Generate baseline SQL
+npx prisma migrate diff \
+  --from-empty \
+  --to-config-datasource \
+  --script > prisma/migrations/20251130000001_init/migration.sql
+
+# 4. Sửa file migration.sql (thêm CREATE EXTENSION, fix vector type)
+# ... edit manually ...
+
+# 5. Đánh dấu đã applied
+npx prisma migrate resolve --applied 20251130000001_init
+
+# 6. Verify
+npx prisma migrate status
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Lỗi: "Migration was modified after it was applied"
+
+**Nguyên nhân:** Đã chạy `migrate resolve` trước khi sửa file SQL.
+
+**Fix:**
+
+```bash
+# Xóa migration cũ
+rm -rf prisma/migrations/20251130000001_init
+
+# Tạo lại với timestamp mới
+mkdir -p prisma/migrations/20251130000002_init
+
+# Generate lại SQL (đã fix)
+npx prisma migrate diff \
+  --from-empty \
+  --to-config-datasource \
+  --script > prisma/migrations/20251130000002_init/migration.sql
+
+# Đánh dấu applied
+npx prisma migrate resolve --applied 20251130000002_init
+```
+
+---
+
+### Lỗi: "syntax error at or near ')'" với vector()
+
+**Nguyên nhân:** pgvector extension chưa được khai báo và `vector()` thiếu dimension.
+
+**Fix trong migration.sql:**
+
+```sql
+-- Thêm extension TRƯỚC khi CREATE TABLE
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Sửa vector() → vector(1536)
+"embedding" vector(1536),
+```
+
+---
+
+### Lỗi: "Migration cannot be rolled back"
+
+**Nguyên nhân:** Migration đã ở trạng thái `applied`, không thể rollback.
+
+**Fix:**
+
+```bash
+# Xóa migration và tạo lại
+rm -rf prisma/migrations/[migration-name]
+# ... tạo lại từ đầu
+```
+
+---
+
+## 📋 Checklist
+
+- [ ] `npx prisma db pull` - Pull schema từ database
+- [ ] `mkdir -p prisma/migrations/[timestamp]_init` - Tạo folder
+- [ ] Generate SQL với `prisma migrate diff`
+- [ ] Sửa `migration.sql`: thêm `CREATE EXTENSION vector`, fix `vector(1536)`
+- [ ] `npx prisma migrate resolve --applied [name]` - Đánh dấu applied
+- [ ] `npx prisma migrate status` - Verify thành công
+
+---
+
+## 📚 Tài liệu tham khảo
+
+- [Prisma: Baselining with existing database](https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining)
+- [Prisma 7: Migration guide](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrade-from-prisma-6-to-prisma-7)
+- [pgvector documentation](https://github.com/pgvector/pgvector)
+
+```
+
+### _docs\PRISMA_GUIDE.md
+
+```md
+# 📘 Hướng Dẫn Sử Dụng Prisma Chi Tiết
+
+## 📑 Mục Lục
+
+- [Giới Thiệu](#giới-thiệu)
+- [Cài Đặt](#cài-đặt)
+- [Cấu Hình](#cấu-hình)
+- [Schema Prisma](#schema-prisma)
+- [Migrations](#migrations)
+- [Prisma Client](#prisma-client)
+- [Query Database](#query-database)
+- [Relations & Joins](#relations--joins)
+- [Transactions](#transactions)
+- [Raw Queries](#raw-queries)
+- [Best Practices](#best-practices)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## 🎯 Giới Thiệu
+
+Prisma là một **ORM (Object-Relational Mapping)** hiện đại cho Node.js và TypeScript. Prisma giúp bạn:
+
+- ✅ Tự động sinh TypeScript types an toàn
+- ✅ Quản lý database schema và migrations
+- ✅ Query database với API trực quan
+- ✅ Hỗ trợ PostgreSQL, MySQL, SQLite, MongoDB, SQL Server
+
+---
+
+## 📦 Cài Đặt
+
+### 1. Cài Đặt Packages
+
+```bash
+# Cài đặt Prisma CLI (dev dependency)
+pnpm add -D prisma
+
+# Cài đặt Prisma Client (runtime dependency)
+pnpm add @prisma/client
+
+# Cài đặt dotenv để load biến môi trường
+pnpm add -D dotenv @types/dotenv
+```
+
+### 2. Khởi Tạo Prisma
+
+```bash
+# Tạo thư mục prisma và file schema.prisma
+npx prisma init
+
+# Hoặc chỉ định database provider ngay từ đầu
+npx prisma init --datasource-provider postgresql
+```
+
+---
+
+## ⚙️ Cấu Hình
+
+### 1. File `.env`
+
+Tạo file `.env` ở root project:
+
+```env
+# Local PostgreSQL
+DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+
+# Hoặc Neon PostgreSQL (Cloud)
+DATABASE_URL_NEON="postgresql://user:password@host.neon.tech/dbname?sslmode=require"
+```
+
+**Lưu ý:** Đừng commit file `.env` vào Git! Thêm vào `.gitignore`:
+
+```gitignore
+.env
+.env.local
+.env*.local
+```
+
+### 2. File `prisma/schema.prisma`
+
+Đây là file cấu hình chính của Prisma:
+
+```prisma
+// Generator - Sinh Prisma Client
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"  // Tùy chọn: Đổi vị trí output
+}
+
+// Datasource - Kết nối database
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_NEON")  // Lấy từ biến môi trường
+}
+
+// Models - Định nghĩa tables
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+### 3. File `prisma.config.ts` (Tùy Chọn)
+
+File config nâng cao cho Prisma:
+
+```typescript
+import 'dotenv/config';
+import { defineConfig, env } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations',
+  },
+  datasource: {
+    url: env('DATABASE_URL_NEON'),
+  },
+});
+```
+
+---
+
+## 📊 Schema Prisma
+
+### 1. Các Kiểu Dữ Liệu (Data Types)
+
+```prisma
+model Example {
+  // String types
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String?  // Optional (nullable)
+  
+  // Number types
+  age      Int
+  price    Float
+  amount   Decimal  @db.Decimal(10, 2)
+  
+  // Boolean
+  isActive Boolean  @default(true)
+  
+  // Date/Time
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  birthDate DateTime?
+  
+  // JSON
+  metadata Json?
+  settings Json     @default("{}")
+  
+  // Enum
+  role     Role     @default(USER)
+  
+  // UUID (PostgreSQL)
+  uuid     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+```
+
+### 2. Attributes & Modifiers
+
+```prisma
+model User {
+  // Primary Key
+  id        Int      @id @default(autoincrement())
+  uuid      String   @id @default(uuid())
+  
+  // Unique constraint
+  email     String   @unique
+  username  String   @unique
+  
+  // Optional fields
+  name      String?
+  bio       String?
+  
+  // Default values
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Database-specific types
+  metadata  Json     @db.JsonB  // PostgreSQL JSONB
+  price     Decimal  @db.Decimal(10, 2)
+  
+  // Composite unique
+  @@unique([email, username])
+  
+  // Index
+  @@index([email])
+  @@index([createdAt, updatedAt])
+  
+  // Table name mapping
+  @@map("users")
+}
+```
+
+### 3. Relations (Quan Hệ)
+
+#### One-to-One
+
+```prisma
+model User {
+  id      String   @id @default(uuid())
+  email   String   @unique
+  profile Profile?  // Một user có một profile
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  bio    String?
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+```
+
+#### One-to-Many
+
+```prisma
+model User {
+  id    String @id @default(uuid())
+  email String @unique
+  posts Post[]  // Một user có nhiều posts
+}
+
+model Post {
+  id       String @id @default(uuid())
+  title    String
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+}
+```
+
+#### Many-to-Many
+
+```prisma
+model Post {
+  id         String     @id @default(uuid())
+  title      String
+  categories Category[]  // Nhiều categories
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String
+  posts Post[]  // Nhiều posts
+}
+```
+
+#### Many-to-Many với Explicit Join Table
+
+```prisma
+model Post {
+  id             String           @id @default(uuid())
+  title          String
+  postCategories PostCategory[]
+}
+
+model Category {
+  id             String           @id @default(uuid())
+  name           String
+  postCategories PostCategory[]
+}
+
+model PostCategory {
+  postId     String
+  categoryId String
+  assignedAt DateTime @default(now())
+  
+  post       Post     @relation(fields: [postId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+  
+  @@id([postId, categoryId])
+}
+```
+
+---
+
+## 🔄 Migrations
+
+### 1. Tạo Migration Mới
+
+```bash
+# Tạo migration từ thay đổi trong schema.prisma
+npx prisma migrate dev --name init
+
+# Ví dụ: Thêm field mới
+npx prisma migrate dev --name add_user_bio
+
+# Ví dụ: Tạo bảng mới
+npx prisma migrate dev --name create_posts_table
+```
+
+**Flow của `prisma migrate dev`:**
+
+1. Đọc schema.prisma
+2. Tạo file SQL migration
+3. Apply migration vào database
+4. Generate Prisma Client mới
+
+### 2. Apply Migrations (Production)
+
+```bash
+# Chỉ apply migrations (không generate client)
+npx prisma migrate deploy
+
+# Dùng trong CI/CD pipeline
+DATABASE_URL=$PROD_DB_URL npx prisma migrate deploy
+```
+
+### 3. Reset Database
+
+```bash
+# ⚠️ XÓA toàn bộ data và reset database
+npx prisma migrate reset
+
+# Tự động:
+# 1. Drop database
+# 2. Tạo database mới
+# 3. Apply tất cả migrations
+# 4. Chạy seed script (nếu có)
+```
+
+### 4. Migration History
+
+```bash
+# Xem trạng thái migrations
+npx prisma migrate status
+
+# Kiểm tra migrations đã apply
+npx prisma migrate resolve --applied <migration_name>
+
+# Đánh dấu migration đã apply (không chạy)
+npx prisma migrate resolve --rolled-back <migration_name>
+```
+
+### 5. Generate Prisma Client
+
+```bash
+# Generate/Regenerate Prisma Client
+npx prisma generate
+
+# Tự động chạy sau mỗi `npm install` nếu thêm vào package.json:
+{
+  "scripts": {
+    "postinstall": "prisma generate"
+  }
+}
+```
+
+---
+
+## 💻 Prisma Client
+
+### 1. Setup trong NestJS
+
+**File: `src/prisma.service.ts`**
+
+```typescript
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  async onModuleInit() {
+    await this.$connect();
+    console.log('✅ Prisma connected to database');
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+    console.log('❌ Prisma disconnected from database');
+  }
+}
+```
+
+**File: `src/app.module.ts`**
+
+```typescript
+import { Module } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService], // Export để dùng ở modules khác
+})
+export class AppModule {}
+```
+
+### 2. Sử Dụng trong Service
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Injectable()
+export class UserService {
+  constructor(private prisma: PrismaService) {}
+
+  // Các methods sẽ được trình bày ở phần Query Database
+}
+```
+
+---
+
+## 🔍 Query Database
+
+### 1. CRUD Operations
+
+#### Create
+
+```typescript
+// Tạo một record
+const user = await prisma.user.create({
+  data: {
+    email: 'john@example.com',
+    name: 'John Doe',
+    password: 'hashed_password',
+  },
+});
+
+// Tạo với relation
+const user = await prisma.user.create({
+  data: {
+    email: 'jane@example.com',
+    name: 'Jane Doe',
+    password: 'hashed_password',
+    posts: {
+      create: [
+        { title: 'First Post', content: 'Hello World' },
+        { title: 'Second Post', content: 'Prisma is awesome' },
+      ],
+    },
+  },
+  include: {
+    posts: true, // Include posts trong response
+  },
+});
+
+// Tạo nhiều records
+const users = await prisma.user.createMany({
+  data: [
+    { email: 'user1@example.com', name: 'User 1', password: 'pass1' },
+    { email: 'user2@example.com', name: 'User 2', password: 'pass2' },
+  ],
+  skipDuplicates: true, // Bỏ qua duplicate keys
+});
+```
+
+#### Read (Find)
+
+```typescript
+// Tìm một record duy nhất
+const user = await prisma.user.findUnique({
+  where: { email: 'john@example.com' },
+});
+
+// Tìm hoặc throw error
+const user = await prisma.user.findUniqueOrThrow({
+  where: { id: '123' },
+});
+
+// Tìm record đầu tiên match
+const user = await prisma.user.findFirst({
+  where: {
+    email: {
+      contains: '@example.com',
+    },
+  },
+});
+
+// Tìm nhiều records
+const users = await prisma.user.findMany({
+  where: {
+    role: 'USER',
+    isActive: true,
+  },
+  orderBy: {
+    createdAt: 'desc',
+  },
+  take: 10, // Limit 10
+  skip: 0,  // Offset 0
+});
+
+// Đếm records
+const count = await prisma.user.count({
+  where: {
+    isActive: true,
+  },
+});
+
+// Aggregate
+const result = await prisma.post.aggregate({
+  _count: true,
+  _avg: { views: true },
+  _sum: { likes: true },
+  _min: { createdAt: true },
+  _max: { createdAt: true },
+});
+```
+
+#### Update
+
+```typescript
+// Update một record
+const user = await prisma.user.update({
+  where: { id: '123' },
+  data: {
+    name: 'New Name',
+    updatedAt: new Date(),
+  },
+});
+
+// Update hoặc create (upsert)
+const user = await prisma.user.upsert({
+  where: { email: 'john@example.com' },
+  update: {
+    name: 'John Updated',
+  },
+  create: {
+    email: 'john@example.com',
+    name: 'John New',
+    password: 'password',
+  },
+});
+
+// Update nhiều records
+const updateResult = await prisma.user.updateMany({
+  where: {
+    isActive: false,
+  },
+  data: {
+    role: 'GUEST',
+  },
+});
+console.log(`Updated ${updateResult.count} users`);
+
+// Increment/Decrement số
+const post = await prisma.post.update({
+  where: { id: '123' },
+  data: {
+    views: { increment: 1 },
+    likes: { decrement: 1 },
+  },
+});
+```
+
+#### Delete
+
+```typescript
+// Xóa một record
+const user = await prisma.user.delete({
+  where: { id: '123' },
+});
+
+// Xóa nhiều records
+const deleteResult = await prisma.user.deleteMany({
+  where: {
+    createdAt: {
+      lt: new Date('2023-01-01'),
+    },
+  },
+});
+console.log(`Deleted ${deleteResult.count} users`);
+
+// Xóa tất cả records (⚠️ Nguy hiểm!)
+await prisma.user.deleteMany({});
+```
+
+### 2. Filtering & Operators
+
+```typescript
+// String filters
+const users = await prisma.user.findMany({
+  where: {
+    email: { contains: '@gmail.com' },        // LIKE %@gmail.com%
+    name: { startsWith: 'John' },             // LIKE John%
+    username: { endsWith: '_admin' },         // LIKE %_admin
+    bio: { not: null },                       // IS NOT NULL
+    role: { in: ['ADMIN', 'MODERATOR'] },     // IN (...)
+    status: { notIn: ['BANNED', 'DELETED'] }, // NOT IN (...)
+  },
+});
+
+// Number filters
+const posts = await prisma.post.findMany({
+  where: {
+    views: { gte: 100 },      // >= 100
+    likes: { lte: 50 },       // <= 50
+    comments: { gt: 10 },     // > 10
+    shares: { lt: 5 },        // < 5
+    score: { equals: 100 },   // = 100
+    rating: { not: 0 },       // != 0
+  },
+});
+
+// Date filters
+const recentUsers = await prisma.user.findMany({
+  where: {
+    createdAt: {
+      gte: new Date('2024-01-01'),
+      lt: new Date('2024-12-31'),
+    },
+  },
+});
+
+// Logical operators
+const users = await prisma.user.findMany({
+  where: {
+    AND: [
+      { isActive: true },
+      { role: 'USER' },
+    ],
+    // Hoặc
+    OR: [
+      { email: { contains: '@gmail.com' } },
+      { email: { contains: '@yahoo.com' } },
+    ],
+    // NOT
+    NOT: {
+      role: 'BANNED',
+    },
+  },
+});
+```
+
+### 3. Select & Include
+
+```typescript
+// Select chỉ một số fields
+const users = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+    name: true,
+    // Không lấy password
+  },
+});
+
+// Include relations
+const usersWithPosts = await prisma.user.findMany({
+  include: {
+    posts: true,
+    profile: true,
+  },
+});
+
+// Include với filters
+const usersWithPublishedPosts = await prisma.user.findMany({
+  include: {
+    posts: {
+      where: {
+        published: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 5,
+    },
+  },
+});
+
+// Nested select
+const users = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+    posts: {
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+      },
+    },
+  },
+});
+```
+
+### 4. Sorting & Pagination
+
+```typescript
+// Sorting
+const users = await prisma.user.findMany({
+  orderBy: {
+    createdAt: 'desc',
+  },
+});
+
+// Multiple sorting
+const posts = await prisma.post.findMany({
+  orderBy: [
+    { published: 'desc' },
+    { createdAt: 'desc' },
+  ],
+});
+
+// Pagination (Offset-based)
+async function getUsers(page: number, pageSize: number) {
+  const skip = (page - 1) * pageSize;
+  
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.user.count(),
+  ]);
+  
+  return {
+    data: users,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  };
+}
+
+// Pagination (Cursor-based) - Tốt hơn cho large datasets
+async function getUsersCursor(cursor?: string, take: number = 10) {
+  const users = await prisma.user.findMany({
+    take: take + 1, // Lấy thêm 1 để check hasMore
+    ...(cursor && {
+      skip: 1, // Bỏ qua cursor
+      cursor: { id: cursor },
+    }),
+    orderBy: { createdAt: 'desc' },
+  });
+  
+  const hasMore = users.length > take;
+  if (hasMore) users.pop(); // Xóa item thừa
+  
+  return {
+    data: users,
+    nextCursor: hasMore ? users[users.length - 1].id : null,
+  };
+}
+```
+
+---
+
+## 🔗 Relations & Joins
+
+### 1. One-to-One Relations
+
+```typescript
+// Create user with profile
+const user = await prisma.user.create({
+  data: {
+    email: 'john@example.com',
+    name: 'John',
+    password: 'password',
+    profile: {
+      create: {
+        bio: 'Software Developer',
+        avatarUrl: 'https://example.com/avatar.jpg',
+      },
+    },
+  },
+  include: {
+    profile: true,
+  },
+});
+
+// Update profile
+await prisma.user.update({
+  where: { id: userId },
+  data: {
+    profile: {
+      update: {
+        bio: 'Senior Developer',
+      },
+    },
+  },
+});
+```
+
+### 2. One-to-Many Relations
+
+```typescript
+// Get user with all posts
+const user = await prisma.user.findUnique({
+  where: { id: userId },
+  include: {
+    posts: {
+      orderBy: { createdAt: 'desc' },
+    },
+  },
+});
+
+// Count posts per user
+const users = await prisma.user.findMany({
+  include: {
+    _count: {
+      select: { posts: true },
+    },
+  },
+});
+```
+
+### 3. Many-to-Many Relations
+
+```typescript
+// Thêm categories cho post
+const post = await prisma.post.update({
+  where: { id: postId },
+  data: {
+    categories: {
+      connect: [
+        { id: 'category1' },
+        { id: 'category2' },
+      ],
+    },
+  },
+  include: {
+    categories: true,
+  },
+});
+
+// Xóa categories khỏi post
+await prisma.post.update({
+  where: { id: postId },
+  data: {
+    categories: {
+      disconnect: [
+        { id: 'category1' },
+      ],
+    },
+  },
+});
+
+// Get posts with categories
+const posts = await prisma.post.findMany({
+  include: {
+    categories: true,
+    author: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    },
+  },
+});
+```
+
+---
+
+## 💰 Transactions
+
+### 1. Sequential Transactions
+
+```typescript
+// Tất cả operations thành công hoặc rollback
+const result = await prisma.$transaction(async (tx) => {
+  // Tạo user
+  const user = await tx.user.create({
+    data: {
+      email: 'john@example.com',
+      name: 'John',
+      password: 'password',
+    },
+  });
+  
+  // Tạo profile
+  const profile = await tx.profile.create({
+    data: {
+      userId: user.id,
+      bio: 'New user',
+    },
+  });
+  
+  // Tạo notification
+  await tx.notification.create({
+    data: {
+      userId: user.id,
+      message: 'Welcome!',
+    },
+  });
+  
+  return { user, profile };
+});
+```
+
+### 2. Batch Transactions
+
+```typescript
+// Chạy nhiều operations cùng lúc
+const [user, posts, comments] = await prisma.$transaction([
+  prisma.user.create({ data: { ... } }),
+  prisma.post.createMany({ data: [...] }),
+  prisma.comment.deleteMany({ where: { ... } }),
+]);
+```
+
+### 3. Interactive Transactions
+
+```typescript
+// Transaction với timeout và isolation level
+const result = await prisma.$transaction(
+  async (tx) => {
+    // Kiểm tra balance
+    const account = await tx.account.findUnique({
+      where: { id: accountId },
+    });
+    
+    if (account.balance < amount) {
+      throw new Error('Insufficient funds');
+    }
+    
+    // Trừ tiền
+    await tx.account.update({
+      where: { id: accountId },
+      data: {
+        balance: { decrement: amount },
+      },
+    });
+    
+    // Tạo transaction record
+    return await tx.transaction.create({
+      data: {
+        accountId,
+        amount: -amount,
+        type: 'WITHDRAWAL',
+      },
+    });
+  },
+  {
+    maxWait: 5000, // 5s
+    timeout: 10000, // 10s
+    isolationLevel: 'Serializable',
+  }
+);
+```
+
+---
+
+## ⚡ Raw Queries
+
+### 1. Raw SQL Queries
+
+```typescript
+// Execute raw SQL
+const users = await prisma.$queryRaw`
+  SELECT * FROM users 
+  WHERE email LIKE ${`%@gmail.com`}
+  ORDER BY created_at DESC
+  LIMIT 10
+`;
+
+// Execute raw với parameters
+const email = 'john@example.com';
+const user = await prisma.$queryRaw`
+  SELECT * FROM users WHERE email = ${email}
+`;
+
+// Execute update/delete
+const result = await prisma.$executeRaw`
+  UPDATE posts 
+  SET views = views + 1 
+  WHERE id = ${postId}
+`;
+console.log(`Affected rows: ${result}`);
+```
+
+### 2. Raw Queries với Type Safety
+
+```typescript
+import { Prisma } from '@prisma/client';
+
+// Define type cho raw query result
+type UserWithPostCount = {
+  id: string;
+  email: string;
+  name: string;
+  postCount: number;
+};
+
+const users: UserWithPostCount[] = await prisma.$queryRaw`
+  SELECT 
+    u.id,
+    u.email,
+    u.name,
+    COUNT(p.id)::int as "postCount"
+  FROM users u
+  LEFT JOIN posts p ON p.author_id = u.id
+  GROUP BY u.id
+  ORDER BY "postCount" DESC
+  LIMIT 10
+`;
+```
+
+### 3. Query với Prisma.sql
+
+```typescript
+import { Prisma } from '@prisma/client';
+
+// Safe từ SQL injection
+const email = 'john@example.com';
+const users = await prisma.$queryRaw(
+  Prisma.sql`SELECT * FROM users WHERE email = ${email}`
+);
+```
+
+---
+
+## ✨ Best Practices
+
+### 1. Error Handling
+
+```typescript
+import { Prisma } from '@prisma/client';
+
+async function createUser(email: string, name: string, password: string) {
+  try {
+    const user = await prisma.user.create({
+      data: { email, name, password },
+    });
+    return user;
+  } catch (error) {
+    // Unique constraint violation
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        throw new Error('Email already exists');
+      }
+    }
+    
+    // Foreign key constraint
+    if (error.code === 'P2003') {
+      throw new Error('Related record not found');
+    }
+    
+    // Record not found
+    if (error.code === 'P2025') {
+      throw new Error('Record not found');
+    }
+    
+    throw error;
+  }
+}
+```
+
+### 2. Performance Optimization
+
+```typescript
+// ❌ N+1 Query Problem
+const users = await prisma.user.findMany();
+for (const user of users) {
+  const posts = await prisma.post.findMany({
+    where: { authorId: user.id },
+  });
+}
+
+// ✅ Solution: Include relation
+const users = await prisma.user.findMany({
+  include: {
+    posts: true,
+  },
+});
+
+// ✅ Select only needed fields
+const users = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+    name: true,
+    // Không lấy password, createdAt, updatedAt
+  },
+});
+
+// ✅ Use indexes
+// Trong schema.prisma:
+model User {
+  email String @unique
+  
+  @@index([createdAt])
+  @@index([email, name])
+}
+```
+
+### 3. Connection Pooling
+
+```typescript
+// File: prisma.service.ts
+import { PrismaClient } from '@prisma/client';
+
+// Singleton pattern
+let prisma: PrismaClient;
+
+export function getPrismaClient() {
+  if (!prisma) {
+    prisma = new PrismaClient({
+      log: ['query', 'error', 'warn'],
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    });
+  }
+  return prisma;
+}
+
+// Hoặc cấu hình connection pool
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: `${process.env.DATABASE_URL}?connection_limit=10&pool_timeout=20`,
+    },
+  },
+});
+```
+
+### 4. Soft Delete
+
+```prisma
+// Schema
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  deletedAt DateTime?
+  
+  @@index([deletedAt])
+}
+```
+
+```typescript
+// Middleware cho soft delete
+prisma.$use(async (params, next) => {
+  // Chuyển delete thành update
+  if (params.action === 'delete') {
+    params.action = 'update';
+    params.args.data = { deletedAt: new Date() };
+  }
+  
+  if (params.action === 'deleteMany') {
+    params.action = 'updateMany';
+    if (params.args.data !== undefined) {
+      params.args.data.deletedAt = new Date();
+    } else {
+      params.args.data = { deletedAt: new Date() };
+    }
+  }
+  
+  return next(params);
+});
+
+// Lọc bỏ deleted records
+prisma.$use(async (params, next) => {
+  if (params.action === 'findUnique' || params.action === 'findFirst') {
+    params.action = 'findFirst';
+    params.args.where = {
+      ...params.args.where,
+      deletedAt: null,
+    };
+  }
+  
+  if (params.action === 'findMany') {
+    if (params.args.where) {
+      if (!params.args.where.deletedAt) {
+        params.args.where.deletedAt = null;
+      }
+    } else {
+      params.args.where = { deletedAt: null };
+    }
+  }
+  
+  return next(params);
+});
+```
+
+### 5. Logging & Monitoring
+
+```typescript
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: 'event',
+      level: 'query',
+    },
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },
+  ],
+});
+
+// Log slow queries
+prisma.$on('query', (e) => {
+  if (e.duration > 1000) { // > 1s
+    console.warn('Slow query detected:', {
+      query: e.query,
+      duration: `${e.duration}ms`,
+      params: e.params,
+    });
+  }
+});
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### 1. Lỗi Thường Gặp
+
+#### P2002: Unique constraint failed
+
+```typescript
+// Lỗi: Email đã tồn tại
+try {
+  await prisma.user.create({
+    data: { email: 'existing@example.com', ... },
+  });
+} catch (error) {
+  if (error.code === 'P2002') {
+    console.error('Email already exists');
+  }
+}
+```
+
+#### P2025: Record not found
+
+```typescript
+// Dùng findUniqueOrThrow để throw error tự động
+const user = await prisma.user.findUniqueOrThrow({
+  where: { id: '123' },
+});
+
+// Hoặc handle manually
+const user = await prisma.user.findUnique({
+  where: { id: '123' },
+});
+if (!user) {
+  throw new Error('User not found');
+}
+```
+
+### 2. Database Out of Sync
+
+```bash
+# Reset database và migrations
+npx prisma migrate reset
+
+# Hoặc pull schema từ database hiện tại
+npx prisma db pull
+
+# Sau đó generate client
+npx prisma generate
+```
+
+### 3. Schema vs Database Drift
+
+```bash
+# Kiểm tra drift
+npx prisma migrate status
+
+# Tạo migration để sync
+npx prisma migrate dev --name fix_drift
+
+# Hoặc push schema trực tiếp (development only)
+npx prisma db push
+```
+
+### 4. Performance Issues
+
+```bash
+# Enable query logging
+DATABASE_URL="postgresql://...?log_statement=all"
+
+# Analyze slow queries
+npx prisma studio
+```
+
+---
+
+## 📚 Các Lệnh Prisma Quan Trọng
+
+```bash
+# Khởi tạo Prisma
+npx prisma init
+
+# Generate Prisma Client
+npx prisma generate
+
+# Format schema.prisma
+npx prisma format
+
+# Validate schema
+npx prisma validate
+
+# Pull schema từ database
+npx prisma db pull
+
+# Push schema lên database (dev only)
+npx prisma db push
+
+# Tạo migration
+npx prisma migrate dev --name <name>
+
+# Apply migrations (production)
+npx prisma migrate deploy
+
+# Reset database
+npx prisma migrate reset
+
+# Kiểm tra migration status
+npx prisma migrate status
+
+# Mở Prisma Studio (GUI)
+npx prisma studio
+
+# Seed database
+npx prisma db seed
+```
+
+---
+
+## 🎓 Ví Dụ Thực Tế: User & Posts Module
+
+### Schema
+
+```prisma
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  
+  @@index([email])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  views     Int      @default(0)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([authorId])
+  @@index([published, createdAt])
+  @@map("posts")
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+```
+
+### Service
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Injectable()
+export class UserService {
+  constructor(private prisma: PrismaService) {}
+
+  async create(email: string, name: string, password: string) {
+    return this.prisma.user.create({
+      data: { email, name, password },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async findAll(page: number = 1, pageSize: number = 10) {
+    const skip = (page - 1) * pageSize;
+    
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: pageSize,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          isActive: true,
+          _count: {
+            select: { posts: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.user.count(),
+    ]);
+
+    return {
+      data: users,
+      pagination: {
+        page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
+      },
+    };
+  }
+
+  async findOne(id: string) {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id },
+      include: {
+        posts: {
+          where: { published: true },
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        },
+      },
+    });
+  }
+
+  async update(id: string, data: { name?: string; isActive?: boolean }) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        isActive: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  async remove(id: string) {
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
+}
+```
+
+---
+
+## 🚀 Tổng Kết
+
+### Workflow Cơ Bản
+
+1. **Setup**: `npx prisma init`
+2. **Define Schema**: Viết models trong `schema.prisma`
+3. **Create Migration**: `npx prisma migrate dev --name init`
+4. **Generate Client**: `npx prisma generate`
+5. **Use Client**: Import và dùng trong code
+
+### Tips Quan Trọng
+
+- ✅ Luôn dùng `select` để chỉ lấy fields cần thiết
+- ✅ Dùng `include` để tránh N+1 queries
+- ✅ Thêm indexes cho các fields hay query
+- ✅ Dùng transactions cho operations quan trọng
+- ✅ Handle errors đúng cách (P2002, P2025, etc.)
+- ✅ Log slow queries để optimize
+- ❌ Không commit file `.env`
+- ❌ Không dùng `migrate dev` trong production
+- ❌ Không expose password trong select/include
+
+---
+
+## 📖 Tài Liệu Tham Khảo
+
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Prisma Schema Reference](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)
+- [Prisma Client API](https://www.prisma.io/docs/reference/api-reference/prisma-client-reference)
+- [Error Reference](https://www.prisma.io/docs/reference/api-reference/error-reference)
+
+---
+
+**Happy Coding with Prisma! 🎉**
+
+```
+
+### _docs\REDIS_GUIDE.md
+
+```md
+# 📘 Hướng Dẫn Sử Dụng Redis trong NestJS
+
+## 📑 Mục Lục
+
+- [Giới Thiệu](#giới-thiệu)
+- [Cài Đặt](#cài-đặt)
+- [Cấu Hình Redis](#cấu-hình-redis)
+- [Setup trong NestJS](#setup-trong-nestjs)
+- [Các Operations Cơ Bản](#các-operations-cơ-bản)
+- [Caching Strategies](#caching-strategies)
+- [Pub/Sub Pattern](#pubsub-pattern)
+- [Session Management](#session-management)
+- [Rate Limiting](#rate-limiting)
+- [Bull Queue (Job Processing)](#bull-queue-job-processing)
+- [Best Practices](#best-practices)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## 🎯 Giới Thiệu
+
+**Redis (Remote Dictionary Server)** là một in-memory data structure store, được sử dụng như:
+
+- 💾 **Database**: Lưu trữ key-value
+- 🚀 **Cache**: Tăng tốc độ truy xuất data
+- 📨 **Message Broker**: Pub/Sub messaging
+- 🔄 **Queue**: Job processing với Bull/BullMQ
+- 🔐 **Session Store**: Quản lý sessions
+- ⏱️ **Rate Limiter**: Giới hạn requests
+
+### Tại Sao Dùng Redis?
+
+✅ **Cực kỳ nhanh** - Lưu trữ trong RAM  
+✅ **Hỗ trợ nhiều data structures** - String, Hash, List, Set, Sorted Set  
+✅ **Atomic operations** - Thread-safe  
+✅ **TTL (Time To Live)** - Auto expire keys  
+✅ **Persistence** - RDB snapshots & AOF logs  
+✅ **Replication & Clustering** - High availability  
+
+---
+
+## 📦 Cài Đặt
+
+### 1. Cài Đặt Redis Server
+
+#### Docker (Khuyến Nghị)
+
+```bash
+# Pull Redis image
+docker pull redis:latest
+
+# Run Redis container
+docker run --name redis-dev -p 6379:6379 -d redis:latest
+
+# Run với password
+docker run --name redis-dev -p 6379:6379 -d redis:latest redis-server --requirepass yourpassword
+
+# Redis với persistence
+docker run --name redis-dev -p 6379:6379 -v redis-data:/data -d redis:latest redis-server --appendonly yes
+```
+
+#### Docker Compose
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-yourpassword}
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+```bash
+# Start Redis
+docker-compose up -d redis
+
+# Stop Redis
+docker-compose down
+```
+
+#### Windows (Manual Install)
+
+```bash
+# Download từ: https://github.com/microsoftarchive/redis/releases
+# Hoặc dùng WSL2 với Ubuntu
+
+# WSL2 Ubuntu
+sudo apt update
+sudo apt install redis-server
+sudo service redis-server start
+```
+
+#### macOS
+
+```bash
+# Homebrew
+brew install redis
+
+# Start Redis
+brew services start redis
+
+# Stop Redis
+brew services stop redis
+```
+
+#### Linux
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install redis-server
+sudo systemctl start redis-server
+sudo systemctl enable redis-server
+
+# Check status
+sudo systemctl status redis-server
+```
+
+### 2. Cài Đặt Redis Clients cho NestJS
+
+```bash
+# Option 1: ioredis (Khuyến nghị - Full features)
+pnpm add ioredis
+pnpm add -D @types/ioredis
+
+# Option 2: cache-manager với redis store
+pnpm add cache-manager cache-manager-redis-store
+pnpm add @nestjs/cache-manager
+
+# Option 3: Redis (Official client)
+pnpm add redis
+
+# Option 4: Upstash Redis (Serverless)
+pnpm add @upstash/redis
+```
+
+### 3. Cài Đặt Bull Queue (Optional)
+
+```bash
+# Bull cho background jobs
+pnpm add @nestjs/bull bull
+pnpm add -D @types/bull
+
+# Hoặc BullMQ (version mới hơn)
+pnpm add @nestjs/bullmq bullmq
+```
+
+---
+
+## ⚙️ Cấu Hình Redis
+
+### 1. Environment Variables
+
+Tạo hoặc cập nhật file `.env`:
+
+```env
+# Redis Configuration
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=yourpassword
+REDIS_DB=0
+
+# Redis URL (alternative)
+REDIS_URL=redis://username:password@localhost:6379/0
+
+# Upstash Redis (Serverless)
+UPSTASH_REDIS_REST_URL=https://your-endpoint.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-token
+
+# Cache TTL (seconds)
+CACHE_TTL=300
+```
+
+### 2. Redis Config Service
+
+**File: `src/config/redis.config.ts`**
+
+```typescript
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('redis', () => ({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+  password: process.env.REDIS_PASSWORD || undefined,
+  db: parseInt(process.env.REDIS_DB, 10) || 0,
+  
+  // Connection options
+  retryStrategy: (times: number) => {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+  
+  // Keep alive
+  keepAlive: 30000,
+  
+  // Timeout
+  connectTimeout: 10000,
+  commandTimeout: 5000,
+  
+  // Max retries
+  maxRetriesPerRequest: 3,
+}));
+```
+
+---
+
+## 🔧 Setup trong NestJS
+
+### Option 1: IORedis (Khuyến Nghị)
+
+#### 1.1. Redis Service
+
+**File: `src/redis/redis.service.ts`**
+
+```typescript
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import Redis from 'ioredis';
+
+@Injectable()
+export class RedisService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(RedisService.name);
+  private client: Redis;
+
+  constructor(private configService: ConfigService) {
+    const redisConfig = {
+      host: this.configService.get<string>('REDIS_HOST', 'localhost'),
+      port: this.configService.get<number>('REDIS_PORT', 6379),
+      password: this.configService.get<string>('REDIS_PASSWORD'),
+      db: this.configService.get<number>('REDIS_DB', 0),
+      retryStrategy: (times: number) => {
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+      },
+      maxRetriesPerRequest: 3,
+    };
+
+    this.client = new Redis(redisConfig);
+
+    // Event listeners
+    this.client.on('connect', () => {
+      this.logger.log('✅ Redis connected');
+    });
+
+    this.client.on('error', (err) => {
+      this.logger.error('❌ Redis error:', err);
+    });
+
+    this.client.on('close', () => {
+      this.logger.warn('⚠️ Redis connection closed');
+    });
+  }
+
+  async onModuleInit() {
+    try {
+      await this.client.ping();
+      this.logger.log('Redis is ready');
+    } catch (error) {
+      this.logger.error('Failed to connect to Redis', error);
+    }
+  }
+
+  async onModuleDestroy() {
+    await this.client.quit();
+    this.logger.log('Redis connection closed');
+  }
+
+  getClient(): Redis {
+    return this.client;
+  }
+
+  // ========== STRING OPERATIONS ==========
+  
+  async set(key: string, value: string | number | object, ttl?: number): Promise<void> {
+    const serializedValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    
+    if (ttl) {
+      await this.client.set(key, serializedValue, 'EX', ttl);
+    } else {
+      await this.client.set(key, serializedValue);
+    }
+  }
+
+  async get<T = any>(key: string): Promise<T | null> {
+    const value = await this.client.get(key);
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
+  }
+
+  async del(...keys: string[]): Promise<number> {
+    return await this.client.del(...keys);
+  }
+
+  async exists(...keys: string[]): Promise<number> {
+    return await this.client.exists(...keys);
+  }
+
+  async expire(key: string, seconds: number): Promise<number> {
+    return await this.client.expire(key, seconds);
+  }
+
+  async ttl(key: string): Promise<number> {
+    return await this.client.ttl(key);
+  }
+
+  async incr(key: string): Promise<number> {
+    return await this.client.incr(key);
+  }
+
+  async decr(key: string): Promise<number> {
+    return await this.client.decr(key);
+  }
+
+  async incrby(key: string, increment: number): Promise<number> {
+    return await this.client.incrby(key, increment);
+  }
+
+  // ========== HASH OPERATIONS ==========
+  
+  async hset(key: string, field: string, value: string | number | object): Promise<number> {
+    const serializedValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    return await this.client.hset(key, field, serializedValue);
+  }
+
+  async hget<T = any>(key: string, field: string): Promise<T | null> {
+    const value = await this.client.hget(key, field);
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
+  }
+
+  async hgetall<T = Record<string, any>>(key: string): Promise<T> {
+    const data = await this.client.hgetall(key);
+    const result: any = {};
+
+    for (const [field, value] of Object.entries(data)) {
+      try {
+        result[field] = JSON.parse(value);
+      } catch {
+        result[field] = value;
+      }
+    }
+
+    return result as T;
+  }
+
+  async hdel(key: string, ...fields: string[]): Promise<number> {
+    return await this.client.hdel(key, ...fields);
+  }
+
+  async hexists(key: string, field: string): Promise<number> {
+    return await this.client.hexists(key, field);
+  }
+
+  // ========== LIST OPERATIONS ==========
+  
+  async lpush(key: string, ...values: (string | number)[]): Promise<number> {
+    return await this.client.lpush(key, ...values.map(String));
+  }
+
+  async rpush(key: string, ...values: (string | number)[]): Promise<number> {
+    return await this.client.rpush(key, ...values.map(String));
+  }
+
+  async lpop<T = any>(key: string): Promise<T | null> {
+    const value = await this.client.lpop(key);
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
+  }
+
+  async rpop<T = any>(key: string): Promise<T | null> {
+    const value = await this.client.rpop(key);
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
+  }
+
+  async lrange(key: string, start: number, stop: number): Promise<string[]> {
+    return await this.client.lrange(key, start, stop);
+  }
+
+  async llen(key: string): Promise<number> {
+    return await this.client.llen(key);
+  }
+
+  // ========== SET OPERATIONS ==========
+  
+  async sadd(key: string, ...members: (string | number)[]): Promise<number> {
+    return await this.client.sadd(key, ...members.map(String));
+  }
+
+  async smembers(key: string): Promise<string[]> {
+    return await this.client.smembers(key);
+  }
+
+  async sismember(key: string, member: string | number): Promise<number> {
+    return await this.client.sismember(key, String(member));
+  }
+
+  async srem(key: string, ...members: (string | number)[]): Promise<number> {
+    return await this.client.srem(key, ...members.map(String));
+  }
+
+  async scard(key: string): Promise<number> {
+    return await this.client.scard(key);
+  }
+
+  // ========== SORTED SET OPERATIONS ==========
+  
+  async zadd(key: string, score: number, member: string): Promise<number> {
+    return await this.client.zadd(key, score, member);
+  }
+
+  async zrange(key: string, start: number, stop: number): Promise<string[]> {
+    return await this.client.zrange(key, start, stop);
+  }
+
+  async zrangebyscore(key: string, min: number, max: number): Promise<string[]> {
+    return await this.client.zrangebyscore(key, min, max);
+  }
+
+  async zrem(key: string, ...members: string[]): Promise<number> {
+    return await this.client.zrem(key, ...members);
+  }
+
+  async zscore(key: string, member: string): Promise<string | null> {
+    return await this.client.zscore(key, member);
+  }
+
+  // ========== UTILITY OPERATIONS ==========
+  
+  async keys(pattern: string): Promise<string[]> {
+    return await this.client.keys(pattern);
+  }
+
+  async flushdb(): Promise<string> {
+    return await this.client.flushdb();
+  }
+
+  async flushall(): Promise<string> {
+    return await this.client.flushall();
+  }
+
+  async ping(): Promise<string> {
+    return await this.client.ping();
+  }
+
+  async info(section?: string): Promise<string> {
+    return section ? await this.client.info(section) : await this.client.info();
+  }
+}
+```
+
+#### 1.2. Redis Module
+
+**File: `src/redis/redis.module.ts`**
+
+```typescript
+import { Module, Global } from '@nestjs/common';
+import { RedisService } from './redis.service';
+
+@Global() // Make it available globally
+@Module({
+  providers: [RedisService],
+  exports: [RedisService],
+})
+export class RedisModule {}
+```
+
+#### 1.3. Import vào App Module
+
+**File: `src/app.module.ts`**
+
+```typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { RedisModule } from './redis/redis.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    RedisModule,
+    // ... other modules
+  ],
+})
+export class AppModule {}
+```
+
+### Option 2: NestJS Cache Manager với Redis
+
+**File: `src/app.module.ts`**
+
+```typescript
+import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
+
+@Module({
+  imports: [
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+      password: process.env.REDIS_PASSWORD,
+      ttl: 300, // seconds
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+**Sử dụng trong Service:**
+
+```typescript
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+
+@Injectable()
+export class UserService {
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+
+  async getUser(id: string) {
+    // Check cache
+    const cachedUser = await this.cacheManager.get(`user:${id}`);
+    if (cachedUser) {
+      return cachedUser;
+    }
+
+    // Fetch from DB
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    // Save to cache (5 minutes)
+    await this.cacheManager.set(`user:${id}`, user, 300);
+
+    return user;
+  }
+}
+```
+
+---
+
+## 🔍 Các Operations Cơ Bản
+
+### 1. String Operations
+
+```typescript
+// Set & Get
+await redisService.set('user:1', { id: 1, name: 'John' });
+const user = await redisService.get('user:1');
+
+// Set with TTL (expire after 60 seconds)
+await redisService.set('session:abc', 'user123', 60);
+
+// Increment counter
+await redisService.incr('page:views');
+await redisService.incrby('page:views', 10);
+
+// Check if exists
+const exists = await redisService.exists('user:1'); // 1 = exists, 0 = not exists
+
+// Delete
+await redisService.del('user:1');
+
+// Multiple delete
+await redisService.del('user:1', 'user:2', 'user:3');
+
+// Set expiration
+await redisService.expire('temp:data', 3600); // 1 hour
+
+// Get TTL
+const ttl = await redisService.ttl('session:abc'); // seconds remaining
+```
+
+### 2. Hash Operations (Object Storage)
+
+```typescript
+// Set hash fields
+await redisService.hset('user:1', 'name', 'John');
+await redisService.hset('user:1', 'email', 'john@example.com');
+await redisService.hset('user:1', 'age', 30);
+
+// Get single field
+const name = await redisService.hget('user:1', 'name');
+
+// Get all fields
+const user = await redisService.hgetall('user:1');
+// { name: 'John', email: 'john@example.com', age: 30 }
+
+// Delete field
+await redisService.hdel('user:1', 'age');
+
+// Check if field exists
+const hasEmail = await redisService.hexists('user:1', 'email');
+```
+
+### 3. List Operations (Queue/Stack)
+
+```typescript
+// Push to list (queue)
+await redisService.rpush('notifications', 'Message 1');
+await redisService.rpush('notifications', 'Message 2');
+
+// Pop from list
+const message = await redisService.lpop('notifications'); // FIFO
+
+// Stack operations
+await redisService.lpush('stack', 'Item 1');
+const item = await redisService.lpop('stack'); // LIFO
+
+// Get range
+const messages = await redisService.lrange('notifications', 0, 9); // First 10 items
+
+// Get length
+const count = await redisService.llen('notifications');
+```
+
+### 4. Set Operations (Unique Values)
+
+```typescript
+// Add members
+await redisService.sadd('tags', 'nodejs', 'typescript', 'redis');
+
+// Get all members
+const tags = await redisService.smembers('tags');
+// ['nodejs', 'typescript', 'redis']
+
+// Check membership
+const isMember = await redisService.sismember('tags', 'nodejs');
+
+// Remove member
+await redisService.srem('tags', 'redis');
+
+// Get count
+const count = await redisService.scard('tags');
+```
+
+### 5. Sorted Set (Leaderboard)
+
+```typescript
+// Add scores
+await redisService.zadd('leaderboard', 100, 'player1');
+await redisService.zadd('leaderboard', 200, 'player2');
+await redisService.zadd('leaderboard', 150, 'player3');
+
+// Get top players (descending)
+const client = redisService.getClient();
+const topPlayers = await client.zrevrange('leaderboard', 0, 9, 'WITHSCORES');
+// ['player2', '200', 'player3', '150', 'player1', '100']
+
+// Get rank
+const rank = await client.zrevrank('leaderboard', 'player1');
+
+// Get score
+const score = await redisService.zscore('leaderboard', 'player1');
+
+// Increment score
+await client.zincrby('leaderboard', 50, 'player1');
+```
+
+---
+
+## 🚀 Caching Strategies
+
+### 1. Cache-Aside Pattern
+
+```typescript
+@Injectable()
+export class ProductService {
+  constructor(
+    private prisma: PrismaService,
+    private redis: RedisService,
+  ) {}
+
+  async getProduct(id: string) {
+    const cacheKey = `product:${id}`;
+
+    // 1. Check cache first
+    const cached = await this.redis.get(cacheKey);
+    if (cached) {
+      console.log('Cache hit');
+      return cached;
+    }
+
+    // 2. Cache miss - fetch from DB
+    console.log('Cache miss');
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+
+    // 3. Store in cache (TTL: 1 hour)
+    if (product) {
+      await this.redis.set(cacheKey, product, 3600);
+    }
+
+    return product;
+  }
+
+  async updateProduct(id: string, data: any) {
+    // Update DB
+    const product = await this.prisma.product.update({
+      where: { id },
+      data,
+    });
+
+    // Invalidate cache
+    await this.redis.del(`product:${id}`);
+
+    return product;
+  }
+}
+```
+
+### 2. Write-Through Cache
+
+```typescript
+async createProduct(data: CreateProductDto) {
+  // 1. Write to DB
+  const product = await this.prisma.product.create({ data });
+
+  // 2. Write to cache
+  await this.redis.set(`product:${product.id}`, product, 3600);
+
+  return product;
+}
+```
+
+### 3. Cache with Decorator
+
+```typescript
+// cache.decorator.ts
+export function Cacheable(ttl: number = 300) {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    const originalMethod = descriptor.value;
+
+    descriptor.value = async function (...args: any[]) {
+      const redis: RedisService = this.redis;
+      const cacheKey = `${target.constructor.name}:${propertyKey}:${JSON.stringify(args)}`;
+
+      // Check cache
+      const cached = await redis.get(cacheKey);
+      if (cached) {
+        return cached;
+      }
+
+      // Execute method
+      const result = await originalMethod.apply(this, args);
+
+      // Save to cache
+      await redis.set(cacheKey, result, ttl);
+
+      return result;
+    };
+
+    return descriptor;
+  };
+}
+
+// Usage
+@Injectable()
+export class UserService {
+  constructor(private redis: RedisService) {}
+
+  @Cacheable(600) // Cache for 10 minutes
+  async getUser(id: string) {
+    return await this.prisma.user.findUnique({ where: { id } });
+  }
+}
+```
+
+### 4. Cache Invalidation
+
+```typescript
+// Invalidate single key
+await redis.del('user:123');
+
+// Invalidate pattern
+const keys = await redis.keys('user:*');
+if (keys.length > 0) {
+  await redis.del(...keys);
+}
+
+// Invalidate all cache
+await redis.flushdb();
+```
+
+---
+
+## 📡 Pub/Sub Pattern
+
+### Publisher Service
+
+```typescript
+@Injectable()
+export class NotificationPublisher {
+  constructor(private redis: RedisService) {}
+
+  async publishNotification(userId: string, message: string) {
+    const channel = `notifications:${userId}`;
+    const payload = JSON.stringify({
+      userId,
+      message,
+      timestamp: new Date(),
+    });
+
+    const client = this.redis.getClient();
+    await client.publish(channel, payload);
+  }
+
+  async broadcastMessage(message: string) {
+    const client = this.redis.getClient();
+    await client.publish('broadcast', message);
+  }
+}
+```
+
+### Subscriber Service
+
+```typescript
+import Redis from 'ioredis';
+
+@Injectable()
+export class NotificationSubscriber implements OnModuleInit {
+  private subscriber: Redis;
+
+  constructor(private configService: ConfigService) {
+    this.subscriber = new Redis({
+      host: this.configService.get('REDIS_HOST'),
+      port: this.configService.get('REDIS_PORT'),
+    });
+  }
+
+  async onModuleInit() {
+    // Subscribe to channel
+    await this.subscriber.subscribe('broadcast', 'notifications:user123');
+
+    // Handle messages
+    this.subscriber.on('message', (channel, message) => {
+      console.log(`Message from ${channel}:`, message);
+      
+      if (channel === 'broadcast') {
+        this.handleBroadcast(message);
+      } else if (channel.startsWith('notifications:')) {
+        this.handleNotification(channel, message);
+      }
+    });
+  }
+
+  private handleBroadcast(message: string) {
+    console.log('Broadcast:', message);
+    // Send to all connected clients via WebSocket
+  }
+
+  private handleNotification(channel: string, message: string) {
+    const data = JSON.parse(message);
+    console.log('Notification:', data);
+    // Send to specific user via WebSocket
+  }
+}
+```
+
+---
+
+## 🔐 Session Management
+
+### Session Service
+
+```typescript
+@Injectable()
+export class SessionService {
+  private readonly SESSION_PREFIX = 'session:';
+  private readonly SESSION_TTL = 86400; // 24 hours
+
+  constructor(private redis: RedisService) {}
+
+  async createSession(userId: string, data: any): Promise<string> {
+    const sessionId = uuidv4();
+    const key = `${this.SESSION_PREFIX}${sessionId}`;
+
+    await this.redis.hset(key, 'userId', userId);
+    await this.redis.hset(key, 'data', JSON.stringify(data));
+    await this.redis.hset(key, 'createdAt', new Date().toISOString());
+    await this.redis.expire(key, this.SESSION_TTL);
+
+    return sessionId;
+  }
+
+  async getSession(sessionId: string): Promise<any> {
+    const key = `${this.SESSION_PREFIX}${sessionId}`;
+    const session = await this.redis.hgetall(key);
+
+    if (!session || !session.userId) {
+      return null;
+    }
+
+    return {
+      userId: session.userId,
+      data: JSON.parse(session.data || '{}'),
+      createdAt: session.createdAt,
+    };
+  }
+
+  async updateSession(sessionId: string, data: any): Promise<void> {
+    const key = `${this.SESSION_PREFIX}${sessionId}`;
+    await this.redis.hset(key, 'data', JSON.stringify(data));
+    await this.redis.expire(key, this.SESSION_TTL); // Refresh TTL
+  }
+
+  async deleteSession(sessionId: string): Promise<void> {
+    const key = `${this.SESSION_PREFIX}${sessionId}`;
+    await this.redis.del(key);
+  }
+
+  async getUserSessions(userId: string): Promise<string[]> {
+    const keys = await this.redis.keys(`${this.SESSION_PREFIX}*`);
+    const sessions: string[] = [];
+
+    for (const key of keys) {
+      const sessionUserId = await this.redis.hget(key, 'userId');
+      if (sessionUserId === userId) {
+        sessions.push(key.replace(this.SESSION_PREFIX, ''));
+      }
+    }
+
+    return sessions;
+  }
+
+  async deleteUserSessions(userId: string): Promise<void> {
+    const sessions = await this.getUserSessions(userId);
+    if (sessions.length > 0) {
+      const keys = sessions.map(id => `${this.SESSION_PREFIX}${id}`);
+      await this.redis.del(...keys);
+    }
+  }
+}
+```
+
+---
+
+## ⏱️ Rate Limiting
+
+### Rate Limiter Service
+
+```typescript
+@Injectable()
+export class RateLimiterService {
+  constructor(private redis: RedisService) {}
+
+  /**
+   * Fixed Window Rate Limiting
+   * Example: 10 requests per minute
+   */
+  async checkRateLimit(
+    key: string,
+    limit: number,
+    windowSeconds: number,
+  ): Promise<{ allowed: boolean; remaining: number; resetAt: number }> {
+    const now = Math.floor(Date.now() / 1000);
+    const window = Math.floor(now / windowSeconds);
+    const redisKey = `ratelimit:${key}:${window}`;
+
+    const current = await this.redis.incr(redisKey);
+
+    if (current === 1) {
+      await this.redis.expire(redisKey, windowSeconds);
+    }
+
+    const allowed = current <= limit;
+    const remaining = Math.max(0, limit - current);
+    const resetAt = (window + 1) * windowSeconds;
+
+    return { allowed, remaining, resetAt };
+  }
+
+  /**
+   * Sliding Window Rate Limiting (More accurate)
+   */
+  async checkSlidingWindowLimit(
+    key: string,
+    limit: number,
+    windowSeconds: number,
+  ): Promise<boolean> {
+    const now = Date.now();
+    const redisKey = `ratelimit:sliding:${key}`;
+    const client = this.redis.getClient();
+
+    // Remove old entries
+    await client.zremrangebyscore(redisKey, 0, now - windowSeconds * 1000);
+
+    // Count current requests
+    const count = await client.zcard(redisKey);
+
+    if (count >= limit) {
+      return false;
+    }
+
+    // Add new request
+    await client.zadd(redisKey, now, `${now}`);
+    await client.expire(redisKey, windowSeconds);
+
+    return true;
+  }
+
+  /**
+   * Token Bucket Rate Limiting
+   */
+  async checkTokenBucket(
+    key: string,
+    capacity: number,
+    refillRate: number,
+  ): Promise<boolean> {
+    const redisKey = `ratelimit:bucket:${key}`;
+    const now = Date.now();
+
+    const bucket = await this.redis.hgetall<{
+      tokens: number;
+      lastRefill: number;
+    }>(redisKey);
+
+    let tokens = bucket?.tokens || capacity;
+    let lastRefill = bucket?.lastRefill || now;
+
+    // Refill tokens
+    const elapsed = (now - lastRefill) / 1000;
+    const tokensToAdd = elapsed * refillRate;
+    tokens = Math.min(capacity, tokens + tokensToAdd);
+
+    if (tokens < 1) {
+      return false;
+    }
+
+    // Consume token
+    tokens -= 1;
+
+    await this.redis.hset(redisKey, 'tokens', tokens);
+    await this.redis.hset(redisKey, 'lastRefill', now);
+    await this.redis.expire(redisKey, 3600);
+
+    return true;
+  }
+}
+```
+
+### Rate Limit Guard
+
+```typescript
+import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+
+@Injectable()
+export class RateLimitGuard implements CanActivate {
+  constructor(private rateLimiter: RateLimiterService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const ip = request.ip || request.connection.remoteAddress;
+    const key = `ip:${ip}`;
+
+    const result = await this.rateLimiter.checkRateLimit(key, 100, 60); // 100 req/min
+
+    if (!result.allowed) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: 'Too many requests',
+          retryAfter: result.resetAt,
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
+    // Add headers
+    request.res.setHeader('X-RateLimit-Limit', '100');
+    request.res.setHeader('X-RateLimit-Remaining', result.remaining);
+    request.res.setHeader('X-RateLimit-Reset', result.resetAt);
+
+    return true;
+  }
+}
+
+// Usage in controller
+@Controller('api')
+@UseGuards(RateLimitGuard)
+export class ApiController {
+  // ...
+}
+```
+
+---
+
+## 🔄 Bull Queue (Job Processing)
+
+### Setup Bull Module
+
+```bash
+pnpm add @nestjs/bull bull
+pnpm add -D @types/bull
+```
+
+**File: `src/app.module.ts`**
+
+```typescript
+import { BullModule } from '@nestjs/bull';
+
+@Module({
+  imports: [
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'email',
+    }),
+    BullModule.registerQueue({
+      name: 'image-processing',
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### Email Queue Producer
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+
+interface EmailJob {
+  to: string;
+  subject: string;
+  body: string;
+}
+
+@Injectable()
+export class EmailService {
+  constructor(@InjectQueue('email') private emailQueue: Queue) {}
+
+  async sendEmail(data: EmailJob) {
+    // Add job to queue
+    await this.emailQueue.add('send-email', data, {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 2000,
+      },
+      removeOnComplete: true,
+      removeOnFail: false,
+    });
+  }
+
+  async sendBulkEmails(emails: EmailJob[]) {
+    const jobs = emails.map(email => ({
+      name: 'send-email',
+      data: email,
+    }));
+
+    await this.emailQueue.addBulk(jobs);
+  }
+
+  async scheduleEmail(data: EmailJob, sendAt: Date) {
+    const delay = sendAt.getTime() - Date.now();
+    
+    await this.emailQueue.add('send-email', data, {
+      delay: delay > 0 ? delay : 0,
+    });
+  }
+}
+```
+
+### Email Queue Consumer
+
+```typescript
+import { Processor, Process } from '@nestjs/bull';
+import { Job } from 'bull';
+import { Logger } from '@nestjs/common';
+
+@Processor('email')
+export class EmailConsumer {
+  private readonly logger = new Logger(EmailConsumer.name);
+
+  @Process('send-email')
+  async handleSendEmail(job: Job<EmailJob>) {
+    this.logger.log(`Processing job ${job.id}`);
+    
+    try {
+      const { to, subject, body } = job.data;
+      
+      // Simulate email sending
+      await this.sendEmailViaProvider(to, subject, body);
+      
+      this.logger.log(`Email sent to ${to}`);
+      
+      return { success: true, to };
+    } catch (error) {
+      this.logger.error(`Failed to send email: ${error.message}`);
+      throw error; // Will retry based on attempts config
+    }
+  }
+
+  private async sendEmailViaProvider(to: string, subject: string, body: string) {
+    // Actual email sending logic (SendGrid, SES, etc.)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+}
+```
+
+### Queue Events
+
+```typescript
+import { OnQueueActive, OnQueueCompleted, OnQueueFailed } from '@nestjs/bull';
+import { Job } from 'bull';
+
+@Processor('email')
+export class EmailConsumer {
+  @OnQueueActive()
+  onActive(job: Job) {
+    console.log(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  onComplete(job: Job, result: any) {
+    console.log(`Job ${job.id} completed with result:`, result);
+  }
+
+  @OnQueueFailed()
+  onError(job: Job, error: Error) {
+    console.error(`Job ${job.id} failed with error:`, error.message);
+  }
+}
+```
+
+### Queue Management
+
+```typescript
+@Injectable()
+export class QueueManagementService {
+  constructor(@InjectQueue('email') private emailQueue: Queue) {}
+
+  async getQueueStats() {
+    const [waiting, active, completed, failed, delayed] = await Promise.all([
+      this.emailQueue.getWaitingCount(),
+      this.emailQueue.getActiveCount(),
+      this.emailQueue.getCompletedCount(),
+      this.emailQueue.getFailedCount(),
+      this.emailQueue.getDelayedCount(),
+    ]);
+
+    return { waiting, active, completed, failed, delayed };
+  }
+
+  async pauseQueue() {
+    await this.emailQueue.pause();
+  }
+
+  async resumeQueue() {
+    await this.emailQueue.resume();
+  }
+
+  async cleanQueue() {
+    await this.emailQueue.clean(0, 'completed');
+    await this.emailQueue.clean(0, 'failed');
+  }
+
+  async getJob(jobId: string) {
+    return await this.emailQueue.getJob(jobId);
+  }
+
+  async removeJob(jobId: string) {
+    const job = await this.emailQueue.getJob(jobId);
+    if (job) {
+      await job.remove();
+    }
+  }
+}
+```
+
+---
+
+## ✨ Best Practices
+
+### 1. Key Naming Convention
+
+```typescript
+// ✅ Good - Hierarchical structure
+'user:123:profile'
+'user:123:posts'
+'session:abc123'
+'cache:product:456'
+'ratelimit:ip:192.168.1.1'
+
+// ❌ Bad - Unclear structure
+'user123profile'
+'data_456'
+```
+
+### 2. Set TTL for Keys
+
+```typescript
+// ✅ Always set TTL to prevent memory leaks
+await redis.set('temp:data', value, 3600); // 1 hour
+
+// ❌ No TTL - memory leak risk
+await redis.set('temp:data', value);
+```
+
+### 3. Error Handling
+
+```typescript
+async function getFromCache(key: string) {
+  try {
+    return await redis.get(key);
+  } catch (error) {
+    console.error('Redis error:', error);
+    // Fallback to database or return null
+    return null;
+  }
+}
+```
+
+### 4. Connection Pooling
+
+```typescript
+// Use single Redis instance (Singleton)
+@Global()
+@Module({
+  providers: [RedisService],
+  exports: [RedisService],
+})
+export class RedisModule {}
+```
+
+### 5. Monitoring
+
+```typescript
+// Monitor slow commands
+const client = redis.getClient();
+
+client.on('ready', () => {
+  client.config('SET', 'slowlog-log-slower-than', '10000'); // 10ms
+  client.config('SET', 'slowlog-max-len', '128');
+});
+
+// Get slow log
+async function getSlowLog() {
+  const client = redis.getClient();
+  const slowLog = await client.slowlog('get', 10);
+  console.log('Slow queries:', slowLog);
+}
+```
+
+### 6. Pipeline for Bulk Operations
+
+```typescript
+// ✅ Use pipeline for multiple commands
+async function setMultiple(data: Record<string, any>) {
+  const client = redis.getClient();
+  const pipeline = client.pipeline();
+
+  for (const [key, value] of Object.entries(data)) {
+    pipeline.set(key, JSON.stringify(value));
+  }
+
+  await pipeline.exec();
+}
+
+// ❌ Slow - Multiple round trips
+async function setMultipleSlow(data: Record<string, any>) {
+  for (const [key, value] of Object.entries(data)) {
+    await redis.set(key, value); // Each is a separate network call
+  }
+}
+```
+
+### 7. Use Scan Instead of Keys
+
+```typescript
+// ✅ Use SCAN for production
+async function findKeys(pattern: string): Promise<string[]> {
+  const client = redis.getClient();
+  const keys: string[] = [];
+  let cursor = '0';
+
+  do {
+    const [newCursor, foundKeys] = await client.scan(
+      cursor,
+      'MATCH',
+      pattern,
+      'COUNT',
+      100,
+    );
+    cursor = newCursor;
+    keys.push(...foundKeys);
+  } while (cursor !== '0');
+
+  return keys;
+}
+
+// ❌ KEYS blocks Redis - Never use in production
+const keys = await redis.keys('user:*'); // Blocks Redis!
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### 1. Connection Issues
+
+```typescript
+// Check connection
+try {
+  await redis.ping();
+  console.log('Redis connected');
+} catch (error) {
+  console.error('Redis connection failed:', error);
+}
+
+// Check Redis server
+// Run in terminal:
+// redis-cli ping
+// redis-cli info server
+```
+
+### 2. Memory Issues
+
+```bash
+# Check memory usage
+redis-cli info memory
+
+# Find large keys
+redis-cli --bigkeys
+
+# Set max memory
+redis-cli config set maxmemory 256mb
+redis-cli config set maxmemory-policy allkeys-lru
+```
+
+### 3. Performance Issues
+
+```typescript
+// Enable query logging
+const redis = new Redis({
+  lazyConnect: true,
+  showFriendlyErrorStack: true,
+  enableReadyCheck: true,
+  maxRetriesPerRequest: 3,
+  retryStrategy(times) {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+});
+
+// Monitor commands
+redis.monitor((err, monitor) => {
+  monitor.on('monitor', (time, args) => {
+    console.log('Command:', args);
+  });
+});
+```
+
+### 4. Data Persistence
+
+```bash
+# Enable AOF (Append Only File)
+redis-cli config set appendonly yes
+redis-cli config set appendfsync everysec
+
+# Manual save
+redis-cli save
+redis-cli bgsave
+```
+
+---
+
+## 📚 Common Use Cases
+
+### 1. Shopping Cart
+
+```typescript
+@Injectable()
+export class CartService {
+  constructor(private redis: RedisService) {}
+
+  async addToCart(userId: string, productId: string, quantity: number) {
+    const key = `cart:${userId}`;
+    await this.redis.hset(key, productId, quantity);
+    await this.redis.expire(key, 86400 * 7); // 7 days
+  }
+
+  async getCart(userId: string) {
+    const key = `cart:${userId}`;
+    return await this.redis.hgetall(key);
+  }
+
+  async removeFromCart(userId: string, productId: string) {
+    const key = `cart:${userId}`;
+    await this.redis.hdel(key, productId);
+  }
+
+  async clearCart(userId: string) {
+    const key = `cart:${userId}`;
+    await this.redis.del(key);
+  }
+}
+```
+
+### 2. Real-time Analytics
+
+```typescript
+@Injectable()
+export class AnalyticsService {
+  constructor(private redis: RedisService) {}
+
+  async trackPageView(url: string) {
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const key = `pageviews:${date}:${url}`;
+    await this.redis.incr(key);
+    await this.redis.expire(key, 86400 * 30); // 30 days
+  }
+
+  async getPageViews(url: string, date: string) {
+    const key = `pageviews:${date}:${url}`;
+    const views = await this.redis.get(key);
+    return parseInt(views || '0', 10);
+  }
+
+  async trackUserActivity(userId: string, action: string) {
+    const timestamp = Date.now();
+    const key = `activity:${userId}`;
+    await this.redis.zadd(key, timestamp, `${action}:${timestamp}`);
+    await this.redis.expire(key, 86400); // 24 hours
+  }
+}
+```
+
+### 3. Distributed Lock
+
+```typescript
+@Injectable()
+export class LockService {
+  constructor(private redis: RedisService) {}
+
+  async acquireLock(
+    resource: string,
+    ttl: number = 10000,
+  ): Promise<string | null> {
+    const lockKey = `lock:${resource}`;
+    const lockValue = uuidv4();
+    const client = this.redis.getClient();
+
+    const result = await client.set(
+      lockKey,
+      lockValue,
+      'PX',
+      ttl,
+      'NX',
+    );
+
+    return result === 'OK' ? lockValue : null;
+  }
+
+  async releaseLock(resource: string, lockValue: string): Promise<boolean> {
+    const lockKey = `lock:${resource}`;
+    const client = this.redis.getClient();
+
+    const script = `
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+      else
+        return 0
+      end
+    `;
+
+    const result = await client.eval(script, 1, lockKey, lockValue);
+    return result === 1;
+  }
+
+  async withLock<T>(
+    resource: string,
+    callback: () => Promise<T>,
+    ttl: number = 10000,
+  ): Promise<T> {
+    const lockValue = await this.acquireLock(resource, ttl);
+
+    if (!lockValue) {
+      throw new Error('Failed to acquire lock');
+    }
+
+    try {
+      return await callback();
+    } finally {
+      await this.releaseLock(resource, lockValue);
+    }
+  }
+}
+
+// Usage
+await lockService.withLock('payment:user123', async () => {
+  // Critical section - only one instance can execute this
+  await processPayment(userId);
+});
+```
+
+---
+
+## 🚀 Redis Cloud Options
+
+### 1. Upstash Redis (Serverless)
+
+```bash
+pnpm add @upstash/redis
+```
+
+```typescript
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+// Same API as ioredis
+await redis.set('key', 'value');
+const value = await redis.get('key');
+```
+
+### 2. AWS ElastiCache
+
+```env
+REDIS_HOST=your-cluster.cache.amazonaws.com
+REDIS_PORT=6379
+```
+
+### 3. Azure Cache for Redis
+
+```env
+REDIS_HOST=your-cache.redis.cache.windows.net
+REDIS_PORT=6380
+REDIS_PASSWORD=your-access-key
+```
+
+---
+
+## 🎓 Tổng Kết
+
+### Redis là giải pháp tốt cho
+
+✅ Caching - Giảm database load  
+✅ Session storage - User sessions  
+✅ Real-time analytics - Counters, leaderboards  
+✅ Rate limiting - API throttling  
+✅ Queue management - Background jobs  
+✅ Pub/Sub - Real-time messaging  
+✅ Distributed locks - Prevent race conditions  
+
+### Lưu Ý Quan Trọng
+
+- Redis lưu data trong RAM → Nhanh nhưng giới hạn memory
+- Luôn set TTL để tránh memory leak
+- Dùng SCAN thay vì KEYS trong production
+- Monitor memory usage thường xuyên
+- Backup data với RDB/AOF
+- Dùng Redis Cluster cho high availability
+
+---
+
+**Happy Caching with Redis! 🚀**
+
+```
+
+### _docs\roadmap.md
+
+```md
+# ✅ **Mục tiêu hệ thống**
+
+* RAG backend đơn giản – *tối ưu*, dễ scale
+* Prisma ORM (không dùng TypeORM)
+* API sạch, dễ mở rộng version sau
+* Ingest tự động khi upload file (OCR nếu cần)
+* CRUD Project giống ChatGPT Workspace
+* CRUD File + embedding pipeline
+* Chat có và không có history
+
+---
+
+# 🏗️ **PHẦN 1 — Cấu trúc thư mục NestJS tối ưu**
+
+**Đây là kiến trúc chính thức, đã được tinh gọn cho RAG + Prisma + Ingest + Chat.**
+
+```
+
+src/
+ ├── app.module.ts
+ │
+ ├── common/
+ │    ├── dto/
+ │    ├── utils/
+ │    └── filters/
+ │
+ ├── database/
+ │    ├── prisma.service.ts
+ │    └── prisma.module.ts
+ │
+ ├── projects/
+ │    ├── projects.module.ts
+ │    ├── projects.controller.ts
+ │    ├── projects.service.ts
+ │    └── dto/
+ │
+ ├── files/
+ │    ├── files.module.ts
+ │    ├── files.controller.ts
+ │    ├── files.service.ts
+ │    ├── file-storage.service.ts     # Lưu file disk
+ │    ├── file-ocr.service.ts         # OCR nhận dạng scanned
+ │    ├── file-ingest.service.ts      # Chunk → Embed → Upsert vector
+ │    └── dto/
+ │
+ ├── chats/
+ │    ├── chats.module.ts
+ │    ├── chats.controller.ts
+ │    ├── chats.service.ts
+ │    ├── chats-history.service.ts    # Chat with history
+ │    ├── chats-direct.service.ts     # Chat none-history
+ │    └── dto/
+ │
+ ├── rag/
+ │    ├── rag.module.ts
+ │    ├── rag.service.ts              # Retrieval + LangChainJS
+ │    ├── vector-store.service.ts     # pgvector search
+ │    ├── embed.service.ts            # Embedding OpenAI/Cohere
+ │    └── chunk.service.ts            # Text splitter
+ │
+ ├── pipelines/
+ │    ├── ingest.pipeline.ts          # upload → ocr → chunk → embed → upsert
+ │    └── chat.pipeline.ts            # query → retrieve → llm → format
+ │
+ ├── storage/
+ │    └── uploads/                    # <projectId>/<fileId>_filename.ext
+ │
+ └── main.ts
+
+```
+
+---
+
+# 🧠 **PHẦN 2 — Prisma schema chuẩn cho 6 tính năng**
+
+### `prisma/schema.prisma`
+
+```prisma
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  files       File[]
+  chats       Chat[]
+}
+
+model File {
+  id            String   @id @default(uuid())
+  projectId     String
+  originalName  String
+  mimeType      String
+  size          Int
+  text          String?        // after OCR or extract
+  embeddingDone Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id])
+  chunks  Chunk[]
+}
+
+model Chunk {
+  id       String   @id @default(uuid())
+  fileId   String
+  index    Int
+  content  String
+  embedding Float[] @db.Vector(1536)
+
+  file File @relation(fields: [fileId], references: [id])
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  projectId String
+  title     String?
+  createdAt DateTime @default(now())
+
+  project  Project @relation(fields: [projectId], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  chatId    String
+  role      String // user/assistant/system
+  content   String
+  createdAt DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id])
+}
+```
+
+---
+
+# 🤖 **PHẦN 3 — Các module & API endpoints**
+
+## 1) **Chat without history**
+
+```
+POST /api/chat/direct
+↓
+ragService.answer(question)
+```
+
+## 2) **Chat with history**
+
+```
+POST /api/chats/:chatId/messages
+POST /api/chats (tạo chat mới)
+GET  /api/chats/:projectId
+```
+
+---
+
+## 3) **Upload file → ingest auto**
+
+```
+POST /api/files/upload?projectId=xxx
+  → fileStorage.save()
+  → fileOcr.detectScanned()
+  → fileOcr.extractText()
+  → chunkService.split()
+  → embedService.embedChunks()
+  → vectorStore.upsert()
+```
+
+---
+
+## 4) **CRUD File**
+
+```
+GET /api/files/:id
+DELETE /api/files/:id
+GET /api/projects/:id/files
+```
+
+---
+
+## 5) **CRUD Project (giống ChatGPT workspace)**
+
+```
+POST /api/projects
+GET  /api/projects
+PATCH /api/projects/:id
+DELETE /api/projects/:id
+```
+
+---
+
+# ⚙️ **PHẦN 4 — Docker Compose Version (siêu nhẹ)**
+
+### 📦 `docker-compose.yml`
+
+```yaml
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: rag-nest-api
+    env_file: .env
+    ports:
+      - "8000:3000"
+    depends_on:
+      - db
+    volumes:
+      - ./storage/uploads:/app/storage/uploads
+
+  db:
+    image: postgres:16-alpine
+    container_name: pgvector-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: |
+      sh -c "postgres -c shared_preload_libraries=pgvector"
+
+volumes:
+  pgdata:
+```
+
+**Nhẹ vì:**
+
+- Postgres dùng alpine
+- Node chỉ chạy API
+- Không dùng queue nặng (BullMQ tùy chọn thêm)
+
+---
+
+# 🌊 **PHẦN 5 — Ingest Pipeline (upload là chạy luôn)**
+
+### `ingest.pipeline.ts`
+
+```ts
+@Injectable()
+export class IngestPipeline {
+  constructor(
+    private ocr: FileOcrService,
+    private chunker: ChunkService,
+    private embed: EmbedService,
+    private vector: VectorStoreService,
+    private prisma: PrismaService,
+  ) {}
+
+  async run(fileRecord: File) {
+    // 1. Extract text or OCR
+    const raw = await this.ocr.extract(fileRecord);
+
+    // 2. Chunk
+    const chunks = await this.chunker.split(raw);
+
+    // 3. Embed
+    const vectors = await this.embed.batchEmbed(chunks);
+
+    // 4. Upsert
+    await this.vector.upsert(fileRecord.id, vectors);
+
+    // 5. Save state
+    await this.prisma.file.update({
+      where: { id: fileRecord.id },
+      data: { embeddingDone: true, text: raw },
+    });
+  }
+}
+```
+
+---
+
+# 💬 **PHẦN 6 — Nếu thiếu gì thì hỏi**
+
+Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton**:
+
+### **1️⃣ Bạn muốn dùng dịch vụ embedding nào?**
+
+- OpenAI (text-embedding-3-large / small)
+- Cohere (multilingual tốt tiếng Việt)
+- Voyage AI
+- Local model (nếu dùng)
+
+### **2️⃣ OCR bạn muốn:**
+
+- Tesseract local
+- Google OCR
+- Gemini OCR (Vision)
+- Không cần OCR
+
+### **3️⃣ Chat LLM bạn muốn dùng:**
+
+- OpenAI GPT-4o / mini
+- Gemini 1.5
+- Groq + Llama3
+- DeepSeek
+
+---
+
+# 👉 Hãy trả lời 3 câu trên
+
+Mình sẽ generate **toàn bộ project NestJS scaffold** cho bạn (copy chạy ngay), gồm:
+
+- 50+ file NestJS hoàn chỉnh
+- Prisma schema + migrations
+- Docker Compose
+- Full routers
+- Services
+- Pipelines
+- RagService với LangChainJS
+- Auto-ingest pipeline hoạt động ngay
+
+Chỉ cần bạn trả lời 3 câu đó.
+
+```

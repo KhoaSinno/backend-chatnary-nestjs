@@ -7,6 +7,8 @@ import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
 import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
+import { PrismaService } from './prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -19,8 +21,9 @@ import { OpenaiModule } from './llm/openai/openai.module';
     ChatModule,
     PipelineModule,
     OpenaiModule,
+    PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
