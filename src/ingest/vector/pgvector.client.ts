@@ -5,11 +5,18 @@ import { pgConfig, getPgConfigNeon } from '../../config/pg.config';
 
 @Injectable()
 export class PgvectorService {
+  private vectorStore: PGVectorStore | null = null;
+
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly logger: ConsoleLogger,
   ) {}
   async initVectorStore() {
+    // Check singleton
+    if (this.vectorStore) {
+      return this.vectorStore;
+    }
+
     // Use NeonDB if DATABASE_URL_NEON is set, otherwise use local
     const useNeon = !!process.env.DATABASE_URL_NEON;
     const config = useNeon ? getPgConfigNeon() : pgConfig;
@@ -21,12 +28,13 @@ export class PgvectorService {
         : `${process.env.POSTGRES_HOST || 'db'}:${process.env.POSTGRES_PORT || '5432'}`,
     });
 
-    const vectorStore = await PGVectorStore.initialize(
+    // Init ONCE
+    this.vectorStore = await PGVectorStore.initialize(
       this.openaiService.embeddings(),
       config,
     );
 
     this.logger.log('✅ Connected to PGVector successfully!');
-    return vectorStore;
+    return this.vectorStore;
   }
 }

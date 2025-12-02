@@ -13,36 +13,25 @@ export class VectorService {
     chunks: string[];
     metadata: any;
   }) {
-    return await this.pgvectorService
-      .initVectorStore()
-      .then(async (vectorStore) => {
-        return await vectorStore.addDocuments(
-          chunks.map((chunk) => ({
-            pageContent: chunk,
-            metadata,
-          })),
-        );
-      });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+
+    return vectorStore.addDocuments(
+      chunks.map((chunk) => ({
+        pageContent: chunk,
+        metadata,
+      })),
+    );
   }
   // Get retrievals from the vector store
   async getRetrievals(query: string, k = 10) {
-    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      const results = await vectorStore.similaritySearch(query, k);
-      return results;
-    });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+    const results = await vectorStore.similaritySearch(query, k);
+    return results;
   }
 
   // -- DELETE VECTOR STORE BY FILEID --
   async removeVectorByFileId(fileId: string) {
-    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      await vectorStore.delete({ filter: { fileId } });
-    });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+    await vectorStore.delete({ filter: { fileId } });
   }
-
-  //   async getRetriever(projectId: string) {
-  //     return this.store.asRetriever({
-  //       searchType: "similarity",
-  //       searchKwargs: { filter: { projectId } },
-  //     });
-  //   }
 }
