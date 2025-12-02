@@ -76,7 +76,7 @@ export class ChatService {
   }
 
   // -- Chat history --
-  async chatHistory(chatDto: ChatDto) {
+  async chatHistory(userId: string, chatDto: ChatDto) {
     const topK = 5;
     const historyNum = 5;
 
@@ -120,6 +120,7 @@ export class ChatService {
       const created = await this.prisma.chats.create({
         data: {
           messages: [],
+          userId: userId,
         },
       });
       chatId = created.id;

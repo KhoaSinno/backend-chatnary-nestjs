@@ -22,8 +22,11 @@ export class ChatController {
   }
   // -- CHAT HISTORY --
   @Post('/')
-  chatHistory(@Body() ChatDto: ChatDto) {
-    return this.chatService.chatHistory(ChatDto);
+  chatHistory(
+    @Headers('x-client-id') userId: string,
+    @Body() ChatDto: ChatDto,
+  ) {
+    return this.chatService.chatHistory(userId, ChatDto);
   }
   // -- GET CHAT DETAIL BY ID --
   @Get(':id')

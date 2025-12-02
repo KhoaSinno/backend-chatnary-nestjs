@@ -14,6 +14,10 @@ export const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    // Latin1 to utf-8
+    file.originalname = Buffer.from(file.originalname, 'latin1').toString(
+      'utf8',
+    );
     cb(null, uniqueSuffix + ext);
   },
 });

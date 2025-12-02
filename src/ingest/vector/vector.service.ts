@@ -13,14 +13,16 @@ export class VectorService {
     chunks: string[];
     metadata: any;
   }) {
-    await this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      await vectorStore.addDocuments(
-        chunks.map((chunk) => ({
-          pageContent: chunk,
-          metadata,
-        })),
-      );
-    });
+    return await this.pgvectorService
+      .initVectorStore()
+      .then(async (vectorStore) => {
+        return await vectorStore.addDocuments(
+          chunks.map((chunk) => ({
+            pageContent: chunk,
+            metadata,
+          })),
+        );
+      });
   }
   // Get retrievals from the vector store
   async getRetrievals(query: string, k = 10) {

@@ -52,5 +52,8 @@ export class IngestService {
       chunks,
       metadata: { fileId, projectId },
     });
+
+    // Return number of chunks processed
+    return chunks.length;
   }
 }

@@ -51,14 +51,17 @@ export class DocumentController {
       },
     }),
   )
-  async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
+  async uploadFiles(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('projectId') projectId?: string,
+  ) {
     Logger.log('Uploaded files:', files);
 
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
     }
 
-    await this.documentService.uploadFiles(files);
+    await this.documentService.uploadFiles(files, projectId);
     return files.map((file) => ({
       url: `/uploads/documents/${file.filename}`,
     }));

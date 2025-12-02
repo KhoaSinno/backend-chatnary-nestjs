@@ -9,6 +9,7 @@ import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PrismaService } from './prisma/prisma.service';
     PipelineModule,
     OpenaiModule,
     PrismaModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
