@@ -70,8 +70,11 @@ export class DocumentController {
 
   // -- REMOVE --
   @Delete(':fileId')
-  removeDocument(@Param('fileId') fileId: string) {
-    return this.documentService.removeDocument(fileId);
+  removeDocument(
+    @Headers('x-client-id') userId: string,
+    @Param('fileId') fileId: string,
+  ) {
+    return this.documentService.removeDocument(fileId, userId);
   }
 
   // -- GET ALL DOCUMENTS --
