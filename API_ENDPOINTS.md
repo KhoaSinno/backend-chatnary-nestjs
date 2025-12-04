@@ -111,7 +111,7 @@ http://localhost:9000
 
 ## Upload File (Auto Ingest)
 
-### **POST** `/api/documents/upload?projectId=<id>`
+### **POST** `/api/document/upload/files`
 
 * Multipart form-data:
 
@@ -123,15 +123,28 @@ http://localhost:9000
   * Chunk → embeddings
   * Upsert pgvector
 
+**Body**
+
+```json
+// multi part
+{
+  "projectId": "ac066e7e-8f22-40d5-b5cf-893a89b77fab",
+  "files": "multi-part..."
+}
+
+```
+
 **Response**
 
 ```json
 {
-  "is_success": true,
-  "data": {
-    "fileId": "uuid",
-    "status": "ingesting"
-  }
+  "statusCode": 201,
+  "success": true,
+  "data": [
+    {
+      "url": "/uploads/documents/1764829198418-674679539.pdf"
+    }
+  ]
 }
 ```
 

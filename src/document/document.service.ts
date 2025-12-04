@@ -18,6 +18,7 @@ export class DocumentService {
 
   //-- UPLOAD --
   async uploadFiles(
+    userId: string,
     files: Express.Multer.File[],
     projectId?: string,
   ): Promise<void> {
@@ -26,6 +27,7 @@ export class DocumentService {
         const chunksCount = await this.ingestService.ingestDocument(
           file.path,
           file.filename,
+          userId,
           projectId,
         );
 
@@ -42,6 +44,7 @@ export class DocumentService {
             mimeType: file.mimetype,
             size: file.size,
             status: 'done',
+            userId: userId,
           });
           this.logger.log(
             `📝 Document record created for: ${file.originalname}`,
@@ -59,12 +62,14 @@ export class DocumentService {
           mimeType: file.mimetype,
           size: file.size,
           status: 'error',
+          userId: userId,
         });
       }
     }
   }
   // -- REMOVE --
   async removeDocument(fileId: string) {
+    // TODO: Check ownership or permissions
     await this.vectorService.removeVectorByFileId(fileId);
     deleteFile(path.join('uploads/documents', fileId));
     return fileId;
@@ -80,6 +85,7 @@ export class DocumentService {
         mimeType: documentDto.mimeType,
         size: documentDto.size,
         status: documentDto.status,
+        userId: documentDto.userId,
       },
     });
   }
@@ -93,15 +99,26 @@ export class DocumentService {
     });
   }
 
-  findAll() {
-    return `This action returns all document`;
+  // -- GET ALL DOCUMENTS --
+  async getAllDocuments(userId: string) {
+    return await this.prisma.project_documents.findMany({
+      where: {
+        userId: userId,
+      },
+    });
   }
 
   findOne(id: number) {
     return `This action returns a #${id} document`;
   }
 
-  update(id: number, updateDocumentDto: UpdateDocumentDto) {
-    return `This action updates a #${id} document`;
+  // -- UPDATE DOCUMENT --
+  async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
+    return await this.prisma.project_documents.update({
+      where: { id: id },
+      data: {
+        name: updateDocumentDto.name,
+      },
+    });
   }
 }

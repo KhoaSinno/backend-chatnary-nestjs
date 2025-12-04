@@ -18,7 +18,12 @@ export class IngestService {
     2. Split text into chunks
     3. Create embeddings => Store embeddings in vector database
     */
-  async ingestDocument(filePath: string, fileId: string, projectId?: string) {
+  async ingestDocument(
+    filePath: string,
+    fileId: string,
+    userId: string,
+    projectId?: string,
+  ) {
     // 1. Load document based on file type
     let text: string;
     const ext = filePath.toLowerCase();
@@ -50,7 +55,7 @@ export class IngestService {
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
       chunks,
-      metadata: { fileId, projectId },
+      metadata: { fileId, projectId, userId },
     });
 
     // Return number of chunks processed

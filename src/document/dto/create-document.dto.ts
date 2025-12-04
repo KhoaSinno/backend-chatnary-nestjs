@@ -5,4 +5,5 @@ export class CreateDocumentDto {
   mimeType?: string;
   size?: number;
   status: string;
+  userId: string;
 }

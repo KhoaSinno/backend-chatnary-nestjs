@@ -30,6 +30,7 @@ export class ChatService {
     const relateDocs = await this.vectorService.getRetrievals(
       chatDto.message,
       topK,
+      chatDto.userId as string,
     );
     if (!relateDocs || relateDocs.length === 0) {
       return {
@@ -87,6 +88,7 @@ export class ChatService {
     const relateDocs = await this.vectorService.getRetrievals(
       chatDto.message,
       topK,
+      chatDto.userId as string,
       chatDto.projectId,
     );
     if (!relateDocs || relateDocs.length === 0) {

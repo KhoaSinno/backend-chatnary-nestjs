@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL_NEON")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_NEON")
+  directUrl = env("DATABASE_URL_NEON_DIRECT")
 }
 
 model documents {
@@ -19,13 +20,14 @@ model documents {
 }
 
 model users {
-  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email    String     @unique
-  username String     @unique
-  name     String?
-  password String
-  projects projects[]
-  chats    chats[]
+  id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String              @unique
+  username         String              @unique
+  name             String?
+  password         String
+  projects         projects[]
+  chats            chats[]
+  projectDocuments project_documents[]
 }
 
 model chats {
@@ -61,7 +63,6 @@ model projects {
 
 model project_documents {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  projectId String   @db.Uuid
   name      String
   filePath  String
   mimeType  String?
@@ -69,7 +70,11 @@ model project_documents {
   status    String // uploading | processing | done | error
   createdAt DateTime @default(now())
 
-  projects projects @relation(fields: [projectId], references: [id])
+  projectId String   @db.Uuid
+  projects  projects @relation(fields: [projectId], references: [id])
+
+  userId String @db.Uuid
+  users  users  @relation(fields: [userId], references: [id])
 
   @@index([projectId])
 }

@@ -10,9 +10,9 @@ import {
   BadRequestException,
   UploadedFiles,
   Logger,
+  Headers,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
-import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './oss';
@@ -22,7 +22,7 @@ import path from 'path';
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
-  // -- UPLOAD --
+  // -- UPLOAD FILES --
   @Post('upload/files')
   @UseInterceptors(
     FilesInterceptor('files', 10, {
@@ -52,6 +52,7 @@ export class DocumentController {
     }),
   )
   async uploadFiles(
+    @Headers('x-client-id') userId: string,
     @UploadedFiles() files: Express.Multer.File[],
     @Body('projectId') projectId?: string,
   ) {
@@ -61,7 +62,7 @@ export class DocumentController {
       throw new BadRequestException('No files uploaded');
     }
 
-    await this.documentService.uploadFiles(files, projectId);
+    await this.documentService.uploadFiles(userId, files, projectId);
     return files.map((file) => ({
       url: `/uploads/documents/${file.filename}`,
     }));
@@ -69,13 +70,14 @@ export class DocumentController {
 
   // -- REMOVE --
   @Delete(':fileId')
-  remove(@Param('fileId') fileId: string) {
+  removeDocument(@Param('fileId') fileId: string) {
     return this.documentService.removeDocument(fileId);
   }
 
+  // -- GET ALL DOCUMENTS --
   @Get()
-  findAll() {
-    return this.documentService.findAll();
+  getAllDocuments(@Headers('x-client-id') userId: string) {
+    return this.documentService.getAllDocuments(userId);
   }
 
   @Get(':id')
@@ -83,11 +85,12 @@ export class DocumentController {
     return this.documentService.findOne(+id);
   }
 
+  //  -- UPDATE DOCUMENT --
   @Patch(':id')
-  update(
+  updateDocument(
     @Param('id') id: string,
     @Body() updateDocumentDto: UpdateDocumentDto,
   ) {
-    return this.documentService.update(+id, updateDocumentDto);
+    return this.documentService.updateDocument(id, updateDocumentDto);
   }
 }

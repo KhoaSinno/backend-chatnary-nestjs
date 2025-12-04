@@ -11,7 +11,7 @@ export class VectorService {
     metadata,
   }: {
     chunks: string[];
-    metadata: { fileId: string; projectId?: string };
+    metadata: { fileId: string; projectId?: string; userId: string };
   }) {
     const vectorStore = await this.pgvectorService.initVectorStore();
 
@@ -24,9 +24,16 @@ export class VectorService {
   }
 
   // -- RETRIEVE SIMILAR DOCUMENTS --
-  async getRetrievals(query: string, k = 10, projectId?: string) {
+  async getRetrievals(
+    query: string,
+    k = 10,
+    userId: string,
+    projectId?: string,
+  ) {
     const vectorStore = await this.pgvectorService.initVectorStore();
-    const filter = projectId ? { projectId } : undefined;
+    const filter: { userId: string; projectId?: string } = { userId };
+
+    if (projectId) filter.projectId = projectId;
 
     const results = await vectorStore.similaritySearch(query, k, filter);
     return results;

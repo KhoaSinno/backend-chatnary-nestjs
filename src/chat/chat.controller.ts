@@ -17,7 +17,8 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
   // -- CHAT LITE --
   @Post('/lite')
-  chatLite(@Body() ChatDto: ChatDto) {
+  chatLite(@Headers('x-client-id') userId: string, @Body() ChatDto: ChatDto) {
+    ChatDto.userId = userId;
     return this.chatService.chatLite(ChatDto);
   }
   // -- CHAT HISTORY --
