@@ -51,7 +51,7 @@ export class DocumentService {
         // If ingestion successful (has chunks), save document record in DB
         if (chunksCount > 0) {
           // update 'done' status
-          await this.updateDocumentStatusDone(document.id, 'done');
+          await this.updateDocumentStatus(document.id, 'done');
 
           this.logger.log(
             `📝 Document record created for: ${file.originalname}`,
@@ -63,7 +63,7 @@ export class DocumentService {
         this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
         // Optionally update 'error' status
         if (document) {
-          await this.updateDocumentStatusDone(document.id, 'error');
+          await this.updateDocumentStatus(document.id, 'error');
         }
       }
     }
@@ -128,8 +128,14 @@ export class DocumentService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} document`;
+  // -- GET DOCUMENT DETAIL --
+  async getDocumentDetail(userId: string, id: string) {
+    return await this.prisma.project_documents.findFirst({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
   }
 
   // -- UPDATE DOCUMENT --
@@ -141,8 +147,13 @@ export class DocumentService {
       },
     });
   }
+  // -- UPDATE DOCUMENT STATUS --
+  async updateDocumentStatus(id: string, status: string) {
+    // Validate status
+    if (!['processing', 'done', 'error'].includes(status)) {
+      throw new Error('Invalid status value');
+    }
 
-  async updateDocumentStatusDone(id: string, status: string) {
     return await this.prisma.project_documents.update({
       where: { id: id },
       data: {

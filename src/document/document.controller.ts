@@ -84,8 +84,11 @@ export class DocumentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.documentService.findOne(+id);
+  getDocumentDetail(
+    @Headers('x-client-id') userId: string,
+    @Param('id') id: string,
+  ) {
+    return this.documentService.getDocumentDetail(userId, id);
   }
 
   //  -- UPDATE DOCUMENT --
