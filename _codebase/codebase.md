@@ -2,7 +2,7 @@
 
 ## Project Statistics
 
-- Total files: 61
+- Total files: 68
 
 ## Folder Structure
 
@@ -24,7 +24,7 @@ package.json
 pnpm-lock.yaml
 prisma
   schema.prisma
-prisma.config.ts
+  seed.ts
 README.md
 src
   app.controller.spec.ts
@@ -36,8 +36,7 @@ src
     chat.module.ts
     chat.service.ts
     dto
-      chat-lite.dto.ts
-      create-chat.dto.ts
+      chat.dto.ts
       update-chat.dto.ts
     entities
       chat.entity.ts
@@ -74,6 +73,18 @@ src
   pipeline
     pipeline.module.ts
     pipeline.service.ts
+  prisma
+    prisma.module.ts
+    prisma.service.ts
+  project
+    dto
+      create-project.dto.ts
+      update-project.dto.ts
+    entities
+      project.entity.ts
+    project.controller.ts
+    project.module.ts
+    project.service.ts
   response.interceptor.ts
 test
   app.e2e-spec.ts
@@ -229,9 +240,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
-
-<http://localhost:9000>
-
+http://localhost:9000
 ```
 
 ---
@@ -339,15 +348,15 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 ### **POST** `/api/documents/upload?projectId=<id>`
 
-- Multipart form-data:
+* Multipart form-data:
 
-  - `document`: the document to upload
-- Triggers:
+  * `document`: the document to upload
+* Triggers:
 
-  - Detect scanned PDF/image
-  - OCR → text
-  - Chunk → embeddings
-  - Upsert pgvector
+  * Detect scanned PDF/image
+  * OCR → text
+  * Chunk → embeddings
+  * Upsert pgvector
 
 **Response**
 
@@ -537,14 +546,141 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 ## Create Chat Session
 
-### **POST** `/api/chats`
+### **POST** `/api/chat`
 
 **Body**
 
 ```json
 {
-  "projectId": "string",
-  "title": "Research Notes"
+  "message": "Đối tượng nào được giảm học phí bao gồm",
+  "chatId": "40c6dc17-239a-498e-8cdc-8ca1973570c7"
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "result": {
+      "response": {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain_core",
+          "messages",
+          "AIMessage"
+        ],
+        "kwargs": {
+          "id": "chatcmpl-ChrlHjMQ0LQvKWH7jnifhfu16H35T",
+          "content": "Dựa trên thông tin trong tài liệu, các đối tượng được giảm học phí bao gồm:\n\n1. Đối tượng giảm 70% học phí:  \nSinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n2. Đối tượng giảm 50% học phí:  \nSinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.",
+          "additional_kwargs": {},
+          "response_metadata": {
+            "tokenUsage": {
+              "promptTokens": 1894,
+              "completionTokens": 155,
+              "totalTokens": 2049
+            },
+            "finish_reason": "stop",
+            "model_provider": "openai",
+            "model_name": "gpt-4.1-2025-04-14",
+            "usage": {
+              "prompt_tokens": 1894,
+              "completion_tokens": 155,
+              "total_tokens": 2049,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "system_fingerprint": "fp_09249d7c7b"
+          },
+          "type": "ai",
+          "tool_calls": [],
+          "invalid_tool_calls": [],
+          "usage_metadata": {
+            "output_tokens": 155,
+            "input_tokens": 1894,
+            "total_tokens": 2049,
+            "input_token_details": {
+              "audio": 0,
+              "cache_read": 0
+            },
+            "output_token_details": {
+              "audio": 0,
+              "reasoning": 0
+            }
+          }
+        }
+      },
+      "relateDocs": [
+        {
+          "pageContent": "z\nĐối tượng 3: (Khoản 4 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên từ 16 tuổi đến 22 tuổi đang | (f2? ”2ẩt);\nhọc văn bằng thứ nhất không có nguồn | - Bản sao có công chứng Quyết định\nnuôi dưỡng thuộc đối tượng hưởng trợ | về việc trợ cấp xã hội.\ncấp xã hội hàng tháng theo quy định tại\nkhoản 1 và khoản 2 Điều 5 Nghị định\nsố 20/2021/NĐ-CP.\nĐối tượng 4: (Khoản 7 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên là dân tộc thiểu số có cha | (29 ”/Ấ1);\nhoặc mẹ hoặc cả cha và mẹ hoặc ông | - Giấy chứng nhận hộ nghèo, hộ cận\nbà (trong trường hợp ở với ông bà) | nghèo.\nthuộc hộ nghèo và hộ cận nghèo theo\nquy định của Thủ tướng Chính phủ.\nĐối tượng 5: (Khoản 10 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên là dân tộc thiểu số rất ít | (92G 7229); ĩ\nngười ở vùng có điều kiện kinh tế - xã | - Bản sao công chứng của Giấy khai\nhội khó khăn và đặc biệt khó khăn. sinh.\n2. Đối tượng giảm 70% học phí Hồ sơ cần thực hiện",
+          "metadata": {
+            "fileId": "1764430266866-974747285.pdf"
+          },
+          "id": "e50744f7-8478-4612-b6c2-3aa4c97fe72d"
+        },
+        {
+          "pageContent": "người ở vùng có điều kiện kinh tế - xã | - Bản sao công chứng của Giấy khai\nhội khó khăn và đặc biệt khó khăn. sinh.\n2. Đối tượng giảm 70% học phí Hồ sơ cần thực hiện\nĐối tượng 6: (Khoản 1 - Điều 16) - Đơn đề nghị miễn, giảm học phí\nSinh viên là người dân tộc thiểu số | (2Ø? 79);\n(ngoài đối tượng dân tộc thiểu số rất ít | - Bản sao công chứng của Giấy khai\nngười) ở thôn/bản đặc biệt khó khăn, | sinh.\nxã khu vực III vùng dân tộc và miền\nnúi, xã đặc biệt khó khăn vùng bãi\nngang ven biển hải đảo theo quy định\ncủa cơ quan có thẳm quyền.\n3. Đối tượng giảm 502% học phí Hồ sơ cần thực hiện\nĐối tượng 7: (Khoản 2 - Điều 16) - Đơn đề nghị miễn, giảm học phí\nSinh viên là con cán bộ, công chức, | (2O ”2ấz);\nviên chức, công nhân mà cha hoặc mẹ |- Bản sao công chứng của Quyết\nbị mắc bệnh nghề nghiệp hoặc tai nạn | định hưởng trợ cấp hàng tháng của\nlao động được hưởng trợ cấp thường | cha hoặc mẹ bị tai nạn lao động hoặc\nxuyên. mắc bệnh nghề nghiệp do tổ chức\nBảo hiểm xã hội cấp.\nưu ý:",
+          "metadata": {
+            "fileId": "1764430266866-974747285.pdf"
+          },
+          "id": "c3fa2a16-b88e-478e-a909-6a4a34219f1b"
+        },
+        {
+          "pageContent": "7 UBND THÀNH PHÓ CÀN THƠ CỘNG HÒA XÃ HỌI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC Độc lập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ.\nSố: A62 /TB-ĐHKTCN Cân Thơ, ngày A6 tháng 9 năm 2025\nTTHÔNG BÁO\nVề các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy\nhọc kỳ I năm học 2025 - 2026\nCăn cứ Nghị định số 238/2025/NĐ-CP ngày 03 tháng 9 năm 2025 của\nChính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chi\nphí học tập và giá dịch vụ trong lĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ\nthuật - Công nghệ Cần Thơ thông báo đến lãnh đạo các khoa, có vấn học tập và\ntoàn thễ sinh viên chính quy các nội dung sau:\nI. Đối tượng được miễn, giảm: Sinh viên thuộc đối tượng được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n(được nêu cụ thể tại phần “Thủ tục thực hiện”).\nXI. Thũ tục thực hiện",
+          "metadata": {
+            "fileId": "1764430266866-974747285.pdf"
+          },
+          "id": "f3fdb86e-5240-4df7-b4d2-f71c2077ceae"
+        },
+        {
+          "pageContent": "1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n(được nêu cụ thể tại phần “Thủ tục thực hiện”).\nXI. Thũ tục thực hiện\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để\nđược xét miễn, giảm học phí, cụ thể như sau:\n1. Đối tượng miễn học phí Hồ sơ cần thực hiện\nĐối tượng 1: (Khoản 2 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nCon của người hoạt động cách mạng | (e2 ?iễu);\ntrước tháng 08/1945; Con của Anh |- Bản sao có công chứng Giấy xác\nhùng Lực lượng vũ trang nhân dân, | nhận đối tượng do cơ quan quản lý\nAnh hùng Lao động trong thời kỳ | đối với người có công.\nkháng chiến; Con của liệt sĩ, thương.\nbinh, bệnh binh hoặc được hưởng\nchính sách như thương binh, bệnh binh;\nCon của người hoạt động kháng chiến\nbị nhiễm chất độc hóa học.\nĐối tượng 2: (Khoản 3 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên khuyết tật. 0soH2H, :\n- Bản sao có công chứng Giầy xác nhận\nkhuyết tật\nSoannod kh\nCamScanner'",
+          "metadata": {
+            "fileId": "1764430266866-974747285.pdf"
+          },
+          "id": "9aa6bdaf-6277-48c6-98e3-8570ec1b7363"
+        },
+        {
+          "pageContent": "Căn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi làm đơn này đề\nnghị được Nhà trường xem xét để được miễn, giảm học phí theo quy định và chế độ\nhiện hành.\n\nx..., ngày .... tháng .... năm...\nñ Người làm đơn\nXác nhận của CVHT dc tên và ghí rõ họ tân)\nSoannod kh\nŒCamScanner",
+          "metadata": {
+            "fileId": "1764430266866-974747285.pdf"
+          },
+          "id": "02fc5615-1d43-496a-b703-a30170c1df44"
+        }
+      ],
+      "historyMessages": {
+        "id": "40c6dc17-239a-498e-8cdc-8ca1973570c7",
+        "userId": null,
+        "title": "New Chat",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Đối tượng nào được miễn học phí bao gồm"
+          },
+          {
+            "role": "assistant",
+            "content": "Các đối tượng được miễn học phí bao gồm:\n\n1. Con của người hoạt động cách mạng trước tháng 08/1945; Con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; Con của liệt sĩ, thương binh, bệnh binh hoặc được hưởng chính sách như thương binh, bệnh binh; Con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.  \n2. Sinh viên khuyết tật.  \n3. Sinh viên từ 16 tuổi đến 22 tuổi đang học văn bằng thứ nhất không có nguồn nuôi dưỡng thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/NĐ-CP.  \n4. Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.  \n5. Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.  \n\n(Ngoài ra, sinh viên cần thỏa mãn điều kiện về hộ khẩu thường trú tại thành phố Cần Thơ theo yêu cầu của cơ sở đào tạo.)"
+          },
+          {
+            "role": "user",
+            "content": "Đối tượng nào được giảm học phí bao gồm"
+          }
+        ],
+        "createdAt": "2025-12-01T06:31:00.036Z",
+        "updatedAt": "2025-12-01T06:33:19.708Z"
+      }
+    }
+  }
 }
 ```
 
@@ -614,10 +750,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # 📢 Status Codes
 
-- `200` — Success
-- `400` — Bad Request
-- `404` — Not Found
-- `500` — Internal Server Error
+* `200` — Success
+* `400` — Bad Request
+* `404` — Not Found
+* `500` — Internal Server Error
 
 ```
 
@@ -839,26 +975,26 @@ GS_PATH := /c/Program Files/gs/gs10.03.1/bin
 
 ## 🚀 Start development mode (hot reload)
 dev:
- @echo "🚀 Starting DEV (hot reload)..."
- docker compose -f $(COMPOSE_DEV) up --build
- @echo "⚡ DEV mode running!"
+	@echo "🚀 Starting DEV (hot reload)..."
+	docker compose -f $(COMPOSE_DEV) up --build
+	@echo "⚡ DEV mode running!"
 
 ## 🔄 Rebuild dev containers (when adding new packages)
 dev-rebuild:
- @echo "🔨 Rebuilding DEV containers..."
- docker compose -f $(COMPOSE_DEV) build --no-cache
- docker compose -f $(COMPOSE_DEV) up -d
- @echo "✅ DEV rebuild complete!"
+	@echo "🔨 Rebuilding DEV containers..."
+	docker compose -f $(COMPOSE_DEV) build --no-cache
+	docker compose -f $(COMPOSE_DEV) up -d
+	@echo "✅ DEV rebuild complete!"
 
 ## 🔄 Restart only the API dev container
 dev-restart:
- @echo "♻ Restarting DEV API..."
- docker compose -f $(COMPOSE_DEV) restart api
+	@echo "♻ Restarting DEV API..."
+	docker compose -f $(COMPOSE_DEV) restart api
 
 ## 🛑 Stop dev containers
 dev-down:
- @echo "🛑 Stopping DEV containers..."
- docker compose -f $(COMPOSE_DEV) down
+	@echo "🛑 Stopping DEV containers..."
+	docker compose -f $(COMPOSE_DEV) down
 
 # ============================
 # 🖼️ WINDOWS OCR DEPENDENCIES
@@ -866,98 +1002,106 @@ dev-down:
 
 ## 🔧 Install GraphicsMagick + Ghostscript on Windows
 setup-ocr-win:
- @echo "📦 Downloading GraphicsMagick..."
- @curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
- @echo "📦 Downloading Ghostscript..."
- @powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
- @echo ""
- @echo "✅ Installers downloaded!"
- @echo "⚠️  Please run these installers manually:"
- @echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
- @echo "   2. gs-installer.exe"
- @echo ""
- @echo "After installation, run: make configure-ocr-path"
+	@echo "📦 Downloading GraphicsMagick..."
+	@curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+	@echo "📦 Downloading Ghostscript..."
+	@powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+	@echo ""
+	@echo "✅ Installers downloaded!"
+	@echo "⚠️  Please run these installers manually:"
+	@echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+	@echo "   2. gs-installer.exe"
+	@echo ""
+	@echo "After installation, run: make configure-ocr-path"
 
 ## ⚙️ Configure OCR tools PATH
 configure-ocr-path:
- @echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
- @echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
- @echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
- @echo "✅ PATH configured in ~/.bashrc"
- @echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+	@echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+	@echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+	@echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+	@echo "✅ PATH configured in ~/.bashrc"
+	@echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
 
 ## ✅ Verify OCR installation
 verify-ocr:
- @echo "🔍 Verifying OCR dependencies..."
- @echo -n "GraphicsMagick: "
- @gm version | head -n 1 || echo "❌ Not found"
- @echo -n "Ghostscript: "
- @gswin64c --version || echo "❌ Not found"
- @echo ""
- @echo "✅ All OCR dependencies verified!"
+	@echo "🔍 Verifying OCR dependencies..."
+	@echo -n "GraphicsMagick: "
+	@gm version | head -n 1 || echo "❌ Not found"
+	@echo -n "Ghostscript: "
+	@gswin64c --version || echo "❌ Not found"
+	@echo ""
+	@echo "✅ All OCR dependencies verified!"
 
 # === MAIN TASKS ===
 
 ## 🧱 Rebuild toàn bộ project (build nhanh, sạch rác)
 rebuild:
- @echo "🧱 Cleaning & rebuilding project..."
- docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
- docker compose -f $(COMPOSE_FILE) up -d
- docker image prune -f
- @echo "✅ Done! Containers running."
- @docker compose -f $(COMPOSE_FILE) ps
+	@echo "🧱 Cleaning & rebuilding project..."
+	docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
+	docker compose -f $(COMPOSE_FILE) up -d
+	docker image prune -f
+	@echo "✅ Done! Containers running."
+	@docker compose -f $(COMPOSE_FILE) ps
 
 ## 🧼 Dọn rác toàn hệ thống (deep clean)
 clean:
- @echo "🧹 Removing all containers, images, and volumes..."
- docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
- docker system prune -af --volumes
- @echo "✅ Clean complete."
+	@echo "🧹 Removing all containers, images, and volumes..."
+	docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+	docker system prune -af --volumes
+	@echo "✅ Clean complete."
 
 ## 🐍 Restart API only
 restart-api:
- @echo "♻️ Restarting API service..."
- docker compose -f $(COMPOSE_FILE) restart api
- @docker compose -f $(COMPOSE_FILE) logs -f api
+	@echo "♻️ Restarting API service..."
+	docker compose -f $(COMPOSE_FILE) restart api
+	@docker compose -f $(COMPOSE_FILE) logs -f api
 
 ## 📚 Chạy ingest thủ công
 ingest:
- @echo "📘 Running ingest process manually..."
- docker compose -f $(COMPOSE_FILE) run --rm ingest
+	@echo "📘 Running ingest process manually..."
+	docker compose -f $(COMPOSE_FILE) run --rm ingest
 
 ## 🔍 Xem log
 logs:
- @docker compose -f $(COMPOSE_FILE) logs -f --tail=50
+	@docker compose -f $(COMPOSE_FILE) logs -f --tail=50
 
 ## 🔍 Trạng thái container
 ps:
- @docker compose -f $(COMPOSE_FILE) ps
+	@docker compose -f $(COMPOSE_FILE) ps
 
+# Prisma generate + db push local - no docker:
+.PHONY: prisma
+prisma:
+	@echo "🔧 Generating Prisma client and pushing DB schema..."
+	npx prisma generate
+	npx prisma db push
+	@echo "✅ Prisma setup complete!"
+	
 ## 🆘 Hiển thị hướng dẫn
 help:
- @echo ""
- @echo "✨ Available commands:"
- @echo ""
- @echo "📦 PRODUCTION:"
- @echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
- @echo "  make clean        - Dọn sạch tất cả container, volume, image"
- @echo "  make restart-api  - Restart container API (production)"
- @echo ""
- @echo "🔧 DEVELOPMENT:"
- @echo "  make dev          - Chạy dev mode với hot reload"
- @echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
- @echo "  make dev-restart  - Restart API dev container"
- @echo "  make dev-down     - Dừng tất cả dev containers"
- @echo ""
- @echo "🖼️ WINDOWS OCR SETUP:"
- @echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
- @echo "  make configure-ocr-path - Add OCR tools to PATH"
- @echo "  make verify-ocr         - Verify OCR dependencies installation"
- @echo ""
- @echo "📊 MONITORING:"
- @echo "  make logs         - Xem log realtime"
- @echo "  make ps           - Liệt kê container đang chạy"
- @echo ""
+	@echo ""
+	@echo "✨ Available commands:"
+	@echo ""
+	@echo "📦 PRODUCTION:"
+	@echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
+	@echo "  make clean        - Dọn sạch tất cả container, volume, image"
+	@echo "  make restart-api  - Restart container API (production)"
+	@echo ""
+	@echo "🔧 DEVELOPMENT:"
+	@echo "  make dev          - Chạy dev mode với hot reload"
+	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+	@echo "  make dev-restart  - Restart API dev container"
+	@echo "  make dev-down     - Dừng tất cả dev containers"
+	@echo ""
+	@echo "🖼️ WINDOWS OCR SETUP:"
+	@echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+	@echo "  make configure-ocr-path - Add OCR tools to PATH"
+	@echo "  make verify-ocr         - Verify OCR dependencies installation"
+	@echo ""
+	@echo "📊 MONITORING:"
+	@echo "  make logs         - Xem log realtime"
+	@echo "  make ps           - Liệt kê container đang chạy"
+	@echo ""
 
 ```
 
@@ -987,6 +1131,9 @@ help:
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -1014,7 +1161,9 @@ help:
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.3",
-    "@prisma/client": "^7.0.1",
+    "@prisma/adapter-pg": "6.9.0",
+    "@prisma/client": "6.9.0",
+    "bcrypt": "^6.0.0",
     "multer": "^2.0.2",
     "pdf-parse": "1.1.1",
     "pdf2pic": "^3.2.0",
@@ -1030,6 +1179,7 @@ help:
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@types/bcrypt": "^6.0.0",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
@@ -1045,7 +1195,7 @@ help:
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
-    "prisma": "^7.0.1",
+    "prisma": "6.9.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
@@ -1118,9 +1268,15 @@ importers:
       '@nestjs/swagger':
         specifier: ^11.2.3
         version: 11.2.3(@nestjs/common@11.1.9(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(reflect-metadata@0.2.2)
+      '@prisma/adapter-pg':
+        specifier: 6.9.0
+        version: 6.9.0(pg@8.16.3)
       '@prisma/client':
-        specifier: ^7.0.1
-        version: 7.0.1(prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
+        specifier: 6.9.0
+        version: 6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3)
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
       multer:
         specifier: ^2.0.2
         version: 2.0.2
@@ -1161,6 +1317,9 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.1
         version: 11.1.9(@nestjs/common@11.1.9(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(@nestjs/platform-express@11.1.9)
+      '@types/bcrypt':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@types/dotenv':
         specifier: ^8.2.3
         version: 8.2.3
@@ -1207,8 +1366,8 @@ importers:
         specifier: ^3.4.2
         version: 3.6.2
       prisma:
-        specifier: ^7.0.1
-        version: 7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+        specifier: 6.9.0
+        version: 6.9.0(typescript@5.9.3)
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -1453,18 +1612,6 @@ packages:
   '@cfworker/json-schema@4.1.1':
     resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
 
-  '@chevrotain/cst-dts-gen@10.5.0':
-    resolution: {integrity: sha512-lhmC/FyqQ2o7pGK4Om+hzuDrm9rhFYIJ/AXoQBeongmn870Xeb0L6oGEiuR8nohFNL5sMaQEJWCxr1oIVIVXrw==}
-
-  '@chevrotain/gast@10.5.0':
-    resolution: {integrity: sha512-pXdMJ9XeDAbgOWKuD1Fldz4ieCs6+nLNmyVhe2gZVqoO7v8HXuHYs5OV2EzUtbuai37TlOAQHrTDvxMnvMJz3A==}
-
-  '@chevrotain/types@10.5.0':
-    resolution: {integrity: sha512-f1MAia0x/pAVPWH/T73BJVyO2XU5tI4/iE7cnxb7tqdNTNhQI3Uq3XkqcoteTmD4t1aM0LbHCJOhgIDn07kl2A==}
-
-  '@chevrotain/utils@10.5.0':
-    resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
-
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -1472,20 +1619,6 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
-
-  '@electric-sql/pglite-socket@0.0.6':
-    resolution: {integrity: sha512-6RjmgzphIHIBA4NrMGJsjNWK4pu+bCWJlEWlwcxFTVY3WT86dFpKwbZaGWZV6C5Rd7sCk1Z0CI76QEfukLAUXw==}
-    hasBin: true
-    peerDependencies:
-      '@electric-sql/pglite': 0.3.2
-
-  '@electric-sql/pglite-tools@0.2.7':
-    resolution: {integrity: sha512-9dAccClqxx4cZB+Ar9B+FZ5WgxDc/Xvl9DPrTWv+dYTf0YNubLzi4wHHRGRGhrJv15XwnyKcGOZAP1VXSneSUg==}
-    peerDependencies:
-      '@electric-sql/pglite': 0.3.2
-
-  '@electric-sql/pglite@0.3.2':
-    resolution: {integrity: sha512-zfWWa+V2ViDCY/cmUfRqeWY1yLto+EpxjXnZzenB1TyxsTiXaTWeZFIZw6mac52BsuQm0RjCnisjBtdBaXOI6w==}
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -1533,12 +1666,6 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@hono/node-server@1.14.2':
-    resolution: {integrity: sha512-GHjpOeHYbr9d1vkID2sNUYkl5IxumyhDrUJB7wBp7jvqYwPFt+oNKsAPBRcdSbV7kIrXhouLE199ks1QcK4r7A==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2228,10 +2355,6 @@ packages:
   '@microsoft/tsdoc@0.16.0':
     resolution: {integrity: sha512-xgAyonlVVS+q7Vc7qLW0UrJU7rSFcETRWsqdXZtjzRU8dF+6CkozTK4V4y1LwOX7j8r/vHphjDeMeGI4tNGeGA==}
 
-  '@mrleebo/prisma-ast@0.12.1':
-    resolution: {integrity: sha512-JwqeCQ1U3fvccttHZq7Tk0m/TMC6WcFAQZdukypW3AzlJYKYTGNVd1ANU2GuhKnv4UQuOFj3oAl0LLG/gxFN1w==}
-    engines: {node: '>=16'}
-
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
@@ -2376,57 +2499,43 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@prisma/client-runtime-utils@7.0.1':
-    resolution: {integrity: sha512-R26BVX9D/iw4toUmZKZf3jniM/9pMGHHdZN5LVP2L7HNiCQKNQQx/9LuMtjepbgRqSqQO3oHN0yzojHLnKTGEw==}
+  '@prisma/adapter-pg@6.9.0':
+    resolution: {integrity: sha512-AWCg8TvLi0VmxPzFhORebyUTmU6eCy9bviuwHqA3ZiipWHTagg/kj1D4b2oaJzXrFRFKnOiSJdFKcjODU0vu5A==}
+    peerDependencies:
+      pg: ^8.11.3
 
-  '@prisma/client@7.0.1':
-    resolution: {integrity: sha512-O74T6xcfaGAq5gXwCAvfTLvI6fmC3and2g5yLRMkNjri1K8mSpEgclDNuUWs9xj5AwNEMQ88NeD3asI+sovm1g==}
-    engines: {node: ^20.19 || ^22.12 || >=24.0}
+  '@prisma/client@6.9.0':
+    resolution: {integrity: sha512-Gg7j1hwy3SgF1KHrh0PZsYvAaykeR0PaxusnLXydehS96voYCGt1U5zVR31NIouYc63hWzidcrir1a7AIyCsNQ==}
+    engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
-      typescript: '>=5.4.0'
+      typescript: '>=5.1.0'
     peerDependenciesMeta:
       prisma:
         optional: true
       typescript:
         optional: true
 
-  '@prisma/config@7.0.1':
-    resolution: {integrity: sha512-MacIjXdo+hNKxPvtMzDXykIIc8HCRWoyjQ2nguJTFqLDzJBD5L6QRaANGTLOqbGtJ3sFvLRmfXhrFg3pWoK1BA==}
+  '@prisma/config@6.9.0':
+    resolution: {integrity: sha512-Wcfk8/lN3WRJd5w4jmNQkUwhUw0eksaU/+BlAJwPQKW10k0h0LC9PD/6TQFmqKVbHQL0vG2z266r0S1MPzzhbA==}
 
-  '@prisma/debug@6.8.2':
-    resolution: {integrity: sha512-4muBSSUwJJ9BYth5N8tqts8JtiLT8QI/RSAzEogwEfpbYGFo9mYsInsVo8dqXdPO2+Rm5OG5q0qWDDE3nyUbVg==}
+  '@prisma/debug@6.9.0':
+    resolution: {integrity: sha512-bFeur/qi/Q+Mqk4JdQ3R38upSYPebv5aOyD1RKywVD+rAMLtRkmTFn28ZuTtVOnZHEdtxnNOCH+bPIeSGz1+Fg==}
 
-  '@prisma/debug@7.0.1':
-    resolution: {integrity: sha512-5+25XokVeAK2Z2C9W457AFw7Hk032Q3QI3G58KYKXPlpgxy+9FvV1+S1jqfJ2d4Nmq9LP/uACrM6OVhpJMSr8w==}
+  '@prisma/driver-adapter-utils@6.9.0':
+    resolution: {integrity: sha512-HtugVGw5y50drVTboKubHJeOmoUQfDZa8vJBhzgR+iZ8KfUsJuTIU20rNd7Hi/S+JdLJGJXIxzbXiQABMNArjw==}
 
-  '@prisma/dev@0.13.0':
-    resolution: {integrity: sha512-QMmF6zFeUF78yv1HYbHvod83AQnl7u6NtKyDhTRZOJup3h1icWs8R7RUVxBJZvM2tBXNAMpLQYYM/8kPlOPegA==}
+  '@prisma/engines-version@6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e':
+    resolution: {integrity: sha512-Qp9gMoBHgqhKlrvumZWujmuD7q4DV/gooEyPCLtbkc13EZdSz2RsGUJ5mHb3RJgAbk+dm6XenqG7obJEhXcJ6Q==}
 
-  '@prisma/engines-version@7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6':
-    resolution: {integrity: sha512-RA7pShKvijHib4USRB3YuLTQamHKJPkTRDc45AwxfahUQngiGVMlIj4ix4emUxkrum4o/jwn82WIwlG57EtgiQ==}
+  '@prisma/engines@6.9.0':
+    resolution: {integrity: sha512-im0X0bwDLA0244CDf8fuvnLuCQcBBdAGgr+ByvGfQY9wWl6EA+kRGwVk8ZIpG65rnlOwtaWIr/ZcEU5pNVvq9g==}
 
-  '@prisma/engines@7.0.1':
-    resolution: {integrity: sha512-f+D/vdKeImqUHysd5Bgv8LQ1whl4sbLepHyYMQQMK61cp4WjwJVryophleLUrfEJRpBLGTBI/7fnLVENxxMFPQ==}
+  '@prisma/fetch-engine@6.9.0':
+    resolution: {integrity: sha512-PMKhJdl4fOdeE3J3NkcWZ+tf3W6rx3ht/rLU8w4SXFRcLhd5+3VcqY4Kslpdm8osca4ej3gTfB3+cSk5pGxgFg==}
 
-  '@prisma/fetch-engine@7.0.1':
-    resolution: {integrity: sha512-5DnSairYIYU7dcv/9pb1KCwIRHZfhVOd34855d01lUI5QdF9rdCkMywPQbBM67YP7iCgQoEZO0/COtOMpR4i9A==}
-
-  '@prisma/get-platform@6.8.2':
-    resolution: {integrity: sha512-vXSxyUgX3vm1Q70QwzwkjeYfRryIvKno1SXbIqwSptKwqKzskINnDUcx85oX+ys6ooN2ATGSD0xN2UTfg6Zcow==}
-
-  '@prisma/get-platform@7.0.1':
-    resolution: {integrity: sha512-DrsGnZOsF7PlAE7UtqmJenWti87RQtg7v9qW9alS71Pj0P6ZQV0RuzRQaql9dCWoo6qKAaF5U/L4kI826MmiZg==}
-
-  '@prisma/query-plan-executor@6.18.0':
-    resolution: {integrity: sha512-jZ8cfzFgL0jReE1R10gT8JLHtQxjWYLiQ//wHmVYZ2rVkFHoh0DT8IXsxcKcFlfKN7ak7k6j0XMNn2xVNyr5cA==}
-
-  '@prisma/studio-core@0.8.2':
-    resolution: {integrity: sha512-/iAEWEUpTja+7gVMu1LtR2pPlvDmveAwMHdTWbDeGlT7yiv0ZTCPpmeAGdq/Y9aJ9Zj1cEGBXGRbmmNPj022PQ==}
-    peerDependencies:
-      '@types/react': ^18.0.0 || ^19.0.0
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
+  '@prisma/get-platform@6.9.0':
+    resolution: {integrity: sha512-/B4n+5V1LI/1JQcHp+sUpyRT1bBgZVPHbsC4lt4/19Xp4jvNIVcq5KYNtQDk5e/ukTSjo9PZVAxxy9ieFtlpTQ==}
 
   '@scarf/scarf@1.4.0':
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
@@ -2439,9 +2548,6 @@ packages:
 
   '@sinonjs/fake-timers@13.0.5':
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
-
-  '@standard-schema/spec@1.0.0':
-    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
   '@tokenizer/inflate@0.3.1':
     resolution: {integrity: sha512-4oeoZEBQdLdt5WmP/hx1KZ6D3/Oid/0cUb2nk4F0pTDAWy+KCH3/EnAkZF/bvckWo8I33EqBm01lIPgmgc8rCA==}
@@ -2476,6 +2582,9 @@ packages:
 
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
+
+  '@types/bcrypt@6.0.0':
+    resolution: {integrity: sha512-/oJGukuH3D2+D+3H4JWLaAsJ/ji86dhRidzZ/Od7H/i8g+aCmvkeCc6Ni/f9uxGLSQVCRZkX2/lqEFG2BvWtlQ==}
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
@@ -2558,9 +2667,6 @@ packages:
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
-
-  '@types/react@19.2.7':
-    resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
 
   '@types/retry@0.12.0':
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -2972,6 +3078,10 @@ packages:
     resolution: {integrity: sha512-aTUKW4ptQhS64+v2d6IkPzymEzzhw+G0bA1g3uBRV3+ntkH+svttKseW5IOR4Ed6NUVKqnY7qT3dKvzQ7io4AA==}
     hasBin: true
 
+  bcrypt@6.0.0:
+    resolution: {integrity: sha512-cU8v/EGSrnH+HnxV2z0J7/blxH8gq7Xh2JFT6Aroax7UohdmiJJlxApMxtKfuI7z68NvvVcmR78k2LbT6efhRg==}
+    engines: {node: '>= 18'}
+
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -3028,14 +3138,6 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  c12@3.1.0:
-    resolution: {integrity: sha512-uWoS8OU1MEIsOv8p/5a82c3H31LsWVR5qiyXVfBNOzfffjUWtPnhAb4BYI2uG2HfGmZmFjCtui5XNWaps+iFuw==}
-    peerDependencies:
-      magicast: ^0.3.5
-    peerDependenciesMeta:
-      magicast:
-        optional: true
-
   call-bind-apply-helpers@1.0.2:
     resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
     engines: {node: '>= 0.4'}
@@ -3070,9 +3172,6 @@ packages:
   chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
 
-  chevrotain@10.5.0:
-    resolution: {integrity: sha512-Pkv5rBY3+CsHOYfV5g/Vs5JY9WTHHDEKOlohI2XeygaZhUeqhAlldZ8Hz9cRmxu709bvS08YzxHdTPHhffc13A==}
-
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
@@ -3084,9 +3183,6 @@ packages:
   ci-info@4.3.1:
     resolution: {integrity: sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA==}
     engines: {node: '>=8'}
-
-  citty@0.1.6:
-    resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
 
   cjs-module-lexer@2.1.1:
     resolution: {integrity: sha512-+CmxIZ/L2vNcEfvNtLdU0ZQ6mbq3FZnwAP2PPTiKP+1QOoKwlKlPgb8UKV0Dds7QVaMnHm+FwSft2VB0s/SLjQ==}
@@ -3154,9 +3250,6 @@ packages:
     resolution: {integrity: sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==}
     engines: {'0': node >= 6.0}
 
-  confbox@0.2.2:
-    resolution: {integrity: sha512-1NB+BKqhtNipMsov4xI/NnhCKp9XG9NamYp5PVm9klAT0fsrNPjaFICsCFhNhwZJKNh7zB/3q8qXz0E9oaMNtQ==}
-
   consola@3.4.2:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
@@ -3209,9 +3302,6 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  csstype@3.2.3:
-    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
-
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -3244,19 +3334,12 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  deepmerge-ts@7.1.5:
-    resolution: {integrity: sha512-HOJkrhaYsweh+W+e74Yn7YStZOilkoPb6fycpwNLKzSPtruFs48nYis0zy5yJz1+ktUhHxoRDJ27RQAWLIJVJw==}
-    engines: {node: '>=16.0.0'}
-
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
 
   defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
-
-  defu@6.1.4:
-    resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -3269,9 +3352,6 @@ packages:
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
-
-  destr@2.0.5:
-    resolution: {integrity: sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA==}
 
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
@@ -3313,9 +3393,6 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  effect@3.18.4:
-    resolution: {integrity: sha512-b1LXQJLe9D11wfnOKAk3PKxuqYshQ0Heez+y5pnkd3jLj1yx9QhM72zZ9uUrOQyNvrs2GZZd/3maL0ZV18YuDA==}
-
   electron-to-chromium@1.5.258:
     resolution: {integrity: sha512-rHUggNV5jKQ0sSdWwlaRDkFc3/rRJIVnOSe9yR4zrR07m3ZxhP4N27Hlg8VeJGGYgFTxK5NqDmWI4DSH72vIJg==}
 
@@ -3328,10 +3405,6 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
-
-  empathic@2.0.0:
-    resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==}
-    engines: {node: '>=14'}
 
   encodeurl@2.0.0:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
@@ -3484,15 +3557,8 @@ packages:
     resolution: {integrity: sha512-DT9ck5YIRU+8GYzzU5kT3eHGA5iL+1Zd0EutOmTE9Dtk+Tvuzd23VBU+ec7HPNSTxXYO55gPV/hq4pSBJDjFpA==}
     engines: {node: '>= 18'}
 
-  exsolve@1.0.8:
-    resolution: {integrity: sha512-LmDxfWXwcTArk8fUEnOfSZpHOJ6zOMUJKOtFLFqJLoKJetuQG874Uc7/Kki7zFLzYybmZhp1M7+98pfMqeX8yA==}
-
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
-
-  fast-check@3.23.2:
-    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
-    engines: {node: '>=8.0.0'}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -3649,9 +3715,6 @@ packages:
     resolution: {integrity: sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==}
     engines: {node: '>=8.0.0'}
 
-  get-port-please@3.1.2:
-    resolution: {integrity: sha512-Gxc29eLs1fbn6LQ4jSU4vXjlwyZhF5HsGuMAa7gqBP4Rw4yxxltyDUuF5MBclFzDTXO+ACchGQoeela4DSfzdQ==}
-
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
@@ -3659,10 +3722,6 @@ packages:
   get-stream@6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
-
-  giget@2.0.0:
-    resolution: {integrity: sha512-L5bGsVkxJbJgdnwyuheIunkGatUF/zssUoxxjACCseZYAVbaqdh9Tsmmlkl8vYan09H7sbvKt4pS8GqKLBrEzA==}
-    hasBin: true
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -3708,9 +3767,6 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  grammex@3.1.12:
-    resolution: {integrity: sha512-6ufJOsSA7LcQehIJNCO7HIBykfM7DXQual0Ny780/DEcJIpBlHRvcqEBWGPYd7hrXL2GJ3oJI1MIhaXjWmLQOQ==}
-
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
@@ -3735,19 +3791,12 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hono@4.7.10:
-    resolution: {integrity: sha512-QkACju9MiN59CKSY5JsGZCYmPZkA6sIW6OFCUp7qDjZu6S6KHtJHhAc9Uy9mV9F8PJ1/HQ3ybZF2yjCa/73fvQ==}
-    engines: {node: '>=16.9.0'}
-
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
-
-  http-status-codes@2.3.0:
-    resolution: {integrity: sha512-RJ8XvFvpPM/Dmc5SV+dC4y5PCeOhT3x1Hq0NU3rjGeg5a/CqlhZ7uudknPwZFz4aeAXDcbAyaeP7GAo9lvngtA==}
 
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
@@ -4019,6 +4068,10 @@ packages:
       node-notifier:
         optional: true
 
+  jiti@2.4.2:
+    resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
+    hasBin: true
+
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
@@ -4109,10 +4162,6 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
-
-  lilconfig@2.1.0:
-    resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
-    engines: {node: '>=10'}
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -4327,6 +4376,10 @@ packages:
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
 
+  node-addon-api@8.5.0:
+    resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
+    engines: {node: ^18 || ^20 || >= 21}
+
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
@@ -4338,9 +4391,6 @@ packages:
   node-ensure@0.0.0:
     resolution: {integrity: sha512-DRI60hzo2oKN1ma0ckc6nQWlHU69RH6xN0sjQTjMpChPfTYvKZdcQFfdYK2RWbJcKyUizSIy/l8OTGxMAM1QDw==}
 
-  node-fetch-native@1.6.7:
-    resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
-
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -4349,6 +4399,10 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
 
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -4364,11 +4418,6 @@ packages:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
 
-  nypm@0.6.2:
-    resolution: {integrity: sha512-7eM+hpOtrKrBDCh7Ypu2lJ9Z7PNZBdi/8AT3AX8xoCj43BBVHD0hPSTEvMtkMpfs8FCqBGhxB+uToIQimA111g==}
-    engines: {node: ^14.16.0 || >=16.10.0}
-    hasBin: true
-
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -4376,9 +4425,6 @@ packages:
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
     engines: {node: '>= 0.4'}
-
-  ohash@2.0.11:
-    resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
@@ -4496,9 +4542,6 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  pathe@2.0.3:
-    resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
-
   pdf-parse@1.1.1:
     resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
     engines: {node: '>=6.8.1'}
@@ -4510,9 +4553,6 @@ packages:
   peek-readable@4.1.0:
     resolution: {integrity: sha512-ZI3LnwUv5nOGbQzD9c2iDG6toheuXSZP5esSHBjopsXH4dg19soufvpUGA3uohi5anFtGb2lhAVdHzH6R/Evvg==}
     engines: {node: '>=8'}
-
-  perfect-debounce@1.0.0:
-    resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
 
   pg-cloudflare@1.2.7:
     resolution: {integrity: sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg==}
@@ -4571,9 +4611,6 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  pkg-types@2.3.0:
-    resolution: {integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==}
-
   playwright-core@1.56.1:
     resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
     engines: {node: '>=18'}
@@ -4592,6 +4629,10 @@ packages:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
 
+  postgres-array@3.0.4:
+    resolution: {integrity: sha512-nAUSGfSDGOaOAEGwqsRY27GPOea7CNipJPOA7lPbdEpx5Kg3qzdP0AaWC5MlhTWV9s4hFX39nomVZ+C4tnGOJQ==}
+    engines: {node: '>=12'}
+
   postgres-bytea@1.0.0:
     resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
     engines: {node: '>=0.10.0'}
@@ -4603,10 +4644,6 @@ packages:
   postgres-interval@1.2.0:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
-
-  postgres@3.4.7:
-    resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
-    engines: {node: '>=12'}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -4625,25 +4662,19 @@ packages:
     resolution: {integrity: sha512-9uBdv/B4EefsuAL+pWqueZyZS2Ba+LxfFeQ9DN14HU4bN8bhaxKdkpjpB6fs9+pSjIBu+FXQHImEg8j/Lw0+vA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
-  prisma@7.0.1:
-    resolution: {integrity: sha512-zp93MdFMSU1IHPEXbUHVUuD8wauh2BUm14OVxhxGrWJQQpXpda0rW4VSST2bci4raoldX64/wQxHKkl/wqDskQ==}
-    engines: {node: ^20.19 || ^22.12 || >=24.0}
+  prisma@6.9.0:
+    resolution: {integrity: sha512-resJAwMyZREC/I40LF6FZ6rZTnlrlrYrb63oW37Gq+U+9xHwbyMSPJjKtM7VZf3gTO86t/Oyz+YeSXr3CmAY1Q==}
+    engines: {node: '>=18.18'}
     hasBin: true
     peerDependencies:
-      better-sqlite3: '>=9.0.0'
-      typescript: '>=5.4.0'
+      typescript: '>=5.1.0'
     peerDependenciesMeta:
-      better-sqlite3:
-        optional: true
       typescript:
         optional: true
 
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-
-  proper-lockfile@4.1.2:
-    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -4658,9 +4689,6 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
-
-  pure-rand@6.1.0:
-    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
@@ -4686,20 +4714,8 @@ packages:
     resolution: {integrity: sha512-9G8cA+tuMS75+6G/TzW8OtLzmBDMo8p1JRxN5AZ+LAp8uxGA8V8GZm4GQ4/N5QNQEnLmg6SS7wyuSmbKepiKqA==}
     engines: {node: '>= 0.10'}
 
-  rc9@2.1.2:
-    resolution: {integrity: sha512-btXCnMmRIBINM2LDZoEmOogIZU7Qe7zn4BpomSKZ/ykbLObuBdvG+mFq11DL6fjH1DRwHhrlgtYWG96bJiC7Cg==}
-
-  react-dom@19.2.0:
-    resolution: {integrity: sha512-UlbRu4cAiGaIewkPyiRGJk0imDN2T3JjieT6spoL2UeSf5od4n5LB/mQ4ejmxhCFT1tYe8IvaFulzynWovsEFQ==}
-    peerDependencies:
-      react: ^19.2.0
-
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
-
-  react@19.2.0:
-    resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
-    engines: {node: '>=0.10.0'}
 
   readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
@@ -4722,12 +4738,6 @@ packages:
 
   regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-
-  regexp-to-ast@0.5.0:
-    resolution: {integrity: sha512-tlbJqcMHnPKI9zSrystikWKwHkBqu2a/Sgw01h3zFjvYrMxEDYHzzoMZnUrbIfpTFEsoRnnviOXNCzFiSc54Qw==}
-
-  remeda@2.21.3:
-    resolution: {integrity: sha512-XXrZdLA10oEOQhLLzEJEiFFSKi21REGAkHdImIb4rt/XXy8ORGXh5HCcpUOsElfPNDb+X6TA/+wkh+p2KffYmg==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -4762,10 +4772,6 @@ packages:
     peerDependencies:
       axios: '*'
 
-  retry@0.12.0:
-    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
-    engines: {node: '>= 4'}
-
   retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
     engines: {node: '>= 4'}
@@ -4792,9 +4798,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  scheduler@0.27.0:
-    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   schema-utils@3.3.0:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
@@ -4909,9 +4912,6 @@ packages:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
 
-  std-env@3.9.0:
-    resolution: {integrity: sha512-UGvjygr6F6tpH7o2qyqR6QYpwraIjKSdtzyBdyytFOHmPZY917kwdwLG0RbOjWOnKmnm3PeHjaoLLMie7kPLQw==}
-
   streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
@@ -5024,10 +5024,6 @@ packages:
   test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
-
-  tinyexec@1.0.2:
-    resolution: {integrity: sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==}
-    engines: {node: '>=18'}
 
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
@@ -5223,14 +5219,6 @@ packages:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
 
-  valibot@1.1.0:
-    resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
-    peerDependencies:
-      typescript: '>=5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -5354,9 +5342,6 @@ packages:
   yoctocolors-cjs@2.1.3:
     resolution: {integrity: sha512-U/PBtDf35ff0D8X8D0jfdzHYEPFxAI7jJlxZXwCSez5M3190m+QobIfh+sWDWSHMCWWJN2AWamkegn6vr6YBTw==}
     engines: {node: '>=18'}
-
-  zeptomatch@2.0.2:
-    resolution: {integrity: sha512-H33jtSKf8Ijtb5BW6wua3G5DhnFjbFML36eFu+VdOoVY4HD9e7ggjqdM6639B+L87rjnR6Y+XeRzBXZdy52B/g==}
 
   zlibjs@0.3.1:
     resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
@@ -5658,37 +5643,12 @@ snapshots:
 
   '@cfworker/json-schema@4.1.1': {}
 
-  '@chevrotain/cst-dts-gen@10.5.0':
-    dependencies:
-      '@chevrotain/gast': 10.5.0
-      '@chevrotain/types': 10.5.0
-      lodash: 4.17.21
-
-  '@chevrotain/gast@10.5.0':
-    dependencies:
-      '@chevrotain/types': 10.5.0
-      lodash: 4.17.21
-
-  '@chevrotain/types@10.5.0': {}
-
-  '@chevrotain/utils@10.5.0': {}
-
   '@colors/colors@1.5.0':
     optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
-
-  '@electric-sql/pglite-socket@0.0.6(@electric-sql/pglite@0.3.2)':
-    dependencies:
-      '@electric-sql/pglite': 0.3.2
-
-  '@electric-sql/pglite-tools@0.2.7(@electric-sql/pglite@0.3.2)':
-    dependencies:
-      '@electric-sql/pglite': 0.3.2
-
-  '@electric-sql/pglite@0.3.2': {}
 
   '@emnapi/core@1.7.1':
     dependencies:
@@ -5751,10 +5711,6 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
-
-  '@hono/node-server@1.14.2(hono@4.7.10)':
-    dependencies:
-      hono: 4.7.10
 
   '@humanfs/core@0.19.1': {}
 
@@ -6239,11 +6195,6 @@ snapshots:
 
   '@microsoft/tsdoc@0.16.0': {}
 
-  '@mrleebo/prisma-ast@0.12.1':
-    dependencies:
-      chevrotain: 10.5.0
-      lilconfig: 2.1.0
-
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
       '@emnapi/core': 1.7.1
@@ -6390,80 +6341,45 @@ snapshots:
     dependencies:
       playwright: 1.56.1
 
-  '@prisma/client-runtime-utils@7.0.1': {}
-
-  '@prisma/client@7.0.1(prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)':
+  '@prisma/adapter-pg@6.9.0(pg@8.16.3)':
     dependencies:
-      '@prisma/client-runtime-utils': 7.0.1
+      '@prisma/driver-adapter-utils': 6.9.0
+      pg: 8.16.3
+      postgres-array: 3.0.4
+
+  '@prisma/client@6.9.0(prisma@6.9.0(typescript@5.9.3))(typescript@5.9.3)':
     optionalDependencies:
-      prisma: 7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      prisma: 6.9.0(typescript@5.9.3)
       typescript: 5.9.3
 
-  '@prisma/config@7.0.1':
+  '@prisma/config@6.9.0':
     dependencies:
-      c12: 3.1.0
-      deepmerge-ts: 7.1.5
-      effect: 3.18.4
-      empathic: 2.0.0
-    transitivePeerDependencies:
-      - magicast
+      jiti: 2.4.2
 
-  '@prisma/debug@6.8.2': {}
+  '@prisma/debug@6.9.0': {}
 
-  '@prisma/debug@7.0.1': {}
-
-  '@prisma/dev@0.13.0(typescript@5.9.3)':
+  '@prisma/driver-adapter-utils@6.9.0':
     dependencies:
-      '@electric-sql/pglite': 0.3.2
-      '@electric-sql/pglite-socket': 0.0.6(@electric-sql/pglite@0.3.2)
-      '@electric-sql/pglite-tools': 0.2.7(@electric-sql/pglite@0.3.2)
-      '@hono/node-server': 1.14.2(hono@4.7.10)
-      '@mrleebo/prisma-ast': 0.12.1
-      '@prisma/get-platform': 6.8.2
-      '@prisma/query-plan-executor': 6.18.0
-      foreground-child: 3.3.1
-      get-port-please: 3.1.2
-      hono: 4.7.10
-      http-status-codes: 2.3.0
-      pathe: 2.0.3
-      proper-lockfile: 4.1.2
-      remeda: 2.21.3
-      std-env: 3.9.0
-      valibot: 1.1.0(typescript@5.9.3)
-      zeptomatch: 2.0.2
-    transitivePeerDependencies:
-      - typescript
+      '@prisma/debug': 6.9.0
 
-  '@prisma/engines-version@7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6': {}
+  '@prisma/engines-version@6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e': {}
 
-  '@prisma/engines@7.0.1':
+  '@prisma/engines@6.9.0':
     dependencies:
-      '@prisma/debug': 7.0.1
-      '@prisma/engines-version': 7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6
-      '@prisma/fetch-engine': 7.0.1
-      '@prisma/get-platform': 7.0.1
+      '@prisma/debug': 6.9.0
+      '@prisma/engines-version': 6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e
+      '@prisma/fetch-engine': 6.9.0
+      '@prisma/get-platform': 6.9.0
 
-  '@prisma/fetch-engine@7.0.1':
+  '@prisma/fetch-engine@6.9.0':
     dependencies:
-      '@prisma/debug': 7.0.1
-      '@prisma/engines-version': 7.1.0-2.f09f2815f091dbba658cdcd2264306d88bb5bda6
-      '@prisma/get-platform': 7.0.1
+      '@prisma/debug': 6.9.0
+      '@prisma/engines-version': 6.9.0-10.81e4af48011447c3cc503a190e86995b66d2a28e
+      '@prisma/get-platform': 6.9.0
 
-  '@prisma/get-platform@6.8.2':
+  '@prisma/get-platform@6.9.0':
     dependencies:
-      '@prisma/debug': 6.8.2
-
-  '@prisma/get-platform@7.0.1':
-    dependencies:
-      '@prisma/debug': 7.0.1
-
-  '@prisma/query-plan-executor@6.18.0': {}
-
-  '@prisma/studio-core@0.8.2(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@types/react': 19.2.7
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
+      '@prisma/debug': 6.9.0
 
   '@scarf/scarf@1.4.0': {}
 
@@ -6476,8 +6392,6 @@ snapshots:
   '@sinonjs/fake-timers@13.0.5':
     dependencies:
       '@sinonjs/commons': 3.0.1
-
-  '@standard-schema/spec@1.0.0': {}
 
   '@tokenizer/inflate@0.3.1':
     dependencies:
@@ -6522,6 +6436,10 @@ snapshots:
   '@types/babel__traverse@7.28.0':
     dependencies:
       '@babel/types': 7.28.5
+
+  '@types/bcrypt@6.0.0':
+    dependencies:
+      '@types/node': 22.19.1
 
   '@types/body-parser@1.19.6':
     dependencies:
@@ -6622,10 +6540,6 @@ snapshots:
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
-
-  '@types/react@19.2.7':
-    dependencies:
-      csstype: 3.2.3
 
   '@types/retry@0.12.0': {}
 
@@ -7005,7 +6919,8 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  aws-ssl-profiles@1.1.2: {}
+  aws-ssl-profiles@1.1.2:
+    optional: true
 
   axios@1.13.2(debug@4.4.3):
     dependencies:
@@ -7072,6 +6987,11 @@ snapshots:
   base64-js@1.5.1: {}
 
   baseline-browser-mapping@2.8.30: {}
+
+  bcrypt@6.0.0:
+    dependencies:
+      node-addon-api: 8.5.0
+      node-gyp-build: 4.8.4
 
   binary-extensions@2.3.0: {}
 
@@ -7146,21 +7066,6 @@ snapshots:
 
   bytes@3.1.2: {}
 
-  c12@3.1.0:
-    dependencies:
-      chokidar: 4.0.3
-      confbox: 0.2.2
-      defu: 6.1.4
-      dotenv: 16.6.1
-      exsolve: 1.0.8
-      giget: 2.0.0
-      jiti: 2.6.1
-      ohash: 2.0.11
-      pathe: 2.0.3
-      perfect-debounce: 1.0.0
-      pkg-types: 2.3.0
-      rc9: 2.1.2
-
   call-bind-apply-helpers@1.0.2:
     dependencies:
       es-errors: 1.3.0
@@ -7188,15 +7093,6 @@ snapshots:
 
   chardet@2.1.1: {}
 
-  chevrotain@10.5.0:
-    dependencies:
-      '@chevrotain/cst-dts-gen': 10.5.0
-      '@chevrotain/gast': 10.5.0
-      '@chevrotain/types': 10.5.0
-      '@chevrotain/utils': 10.5.0
-      lodash: 4.17.21
-      regexp-to-ast: 0.5.0
-
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
@@ -7204,10 +7100,6 @@ snapshots:
   chrome-trace-event@1.0.4: {}
 
   ci-info@4.3.1: {}
-
-  citty@0.1.6:
-    dependencies:
-      consola: 3.4.2
 
   cjs-module-lexer@2.1.1: {}
 
@@ -7268,8 +7160,6 @@ snapshots:
       readable-stream: 3.6.2
       typedarray: 0.0.6
 
-  confbox@0.2.2: {}
-
   consola@3.4.2: {}
 
   console-table-printer@2.15.0:
@@ -7312,8 +7202,6 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  csstype@3.2.3: {}
-
   debug@3.2.7:
     dependencies:
       ms: 2.1.3
@@ -7328,23 +7216,18 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deepmerge-ts@7.1.5: {}
-
   deepmerge@4.3.1: {}
 
   defaults@1.0.4:
     dependencies:
       clone: 1.0.4
 
-  defu@6.1.4: {}
-
   delayed-stream@1.0.0: {}
 
-  denque@2.1.0: {}
+  denque@2.1.0:
+    optional: true
 
   depd@2.0.0: {}
-
-  destr@2.0.5: {}
 
   detect-newline@3.1.0: {}
 
@@ -7379,11 +7262,6 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  effect@3.18.4:
-    dependencies:
-      '@standard-schema/spec': 1.0.0
-      fast-check: 3.23.2
-
   electron-to-chromium@1.5.258: {}
 
   emittery@0.13.1: {}
@@ -7391,8 +7269,6 @@ snapshots:
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
-
-  empathic@2.0.0: {}
 
   encodeurl@2.0.0: {}
 
@@ -7584,13 +7460,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  exsolve@1.0.8: {}
-
   extend@3.0.2: {}
-
-  fast-check@3.23.2:
-    dependencies:
-      pure-rand: 6.1.0
 
   fast-deep-equal@3.1.3: {}
 
@@ -7747,6 +7617,7 @@ snapshots:
   generate-function@2.3.1:
     dependencies:
       is-property: 1.0.2
+    optional: true
 
   gensync@1.0.0-beta.2: {}
 
@@ -7767,23 +7638,12 @@ snapshots:
 
   get-package-type@0.1.0: {}
 
-  get-port-please@3.1.2: {}
-
   get-proto@1.0.1:
     dependencies:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
 
   get-stream@6.0.1: {}
-
-  giget@2.0.0:
-    dependencies:
-      citty: 0.1.6
-      consola: 3.4.2
-      defu: 6.1.4
-      node-fetch-native: 1.6.7
-      nypm: 0.6.2
-      pathe: 2.0.3
 
   glob-parent@5.1.2:
     dependencies:
@@ -7839,8 +7699,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  grammex@3.1.12: {}
-
   graphemer@1.4.0: {}
 
   handlebars@4.7.8:
@@ -7864,8 +7722,6 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.7.10: {}
-
   html-escaper@2.0.2: {}
 
   http-errors@2.0.0:
@@ -7875,8 +7731,6 @@ snapshots:
       setprototypeof: 1.2.0
       statuses: 2.0.1
       toidentifier: 1.0.1
-
-  http-status-codes@2.3.0: {}
 
   human-signals@2.1.0: {}
 
@@ -7899,7 +7753,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.13.2(debug@4.4.3))
+      retry-axios: 2.6.0(axios@1.13.2)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -7959,7 +7813,8 @@ snapshots:
 
   is-promise@4.0.0: {}
 
-  is-property@1.0.2: {}
+  is-property@1.0.2:
+    optional: true
 
   is-stream@2.0.1: {}
 
@@ -8332,7 +8187,10 @@ snapshots:
       - supports-color
       - ts-node
 
-  jiti@2.6.1: {}
+  jiti@2.4.2: {}
+
+  jiti@2.6.1:
+    optional: true
 
   js-tiktoken@1.0.21:
     dependencies:
@@ -8420,8 +8278,6 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lilconfig@2.1.0: {}
-
   lines-and-columns@1.2.4: {}
 
   load-esm@1.0.3: {}
@@ -8461,7 +8317,8 @@ snapshots:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  long@5.3.2: {}
+  long@5.3.2:
+    optional: true
 
   lru-cache@10.4.3: {}
 
@@ -8471,9 +8328,11 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lru-cache@7.18.3: {}
+  lru-cache@7.18.3:
+    optional: true
 
-  lru.min@1.1.3: {}
+  lru.min@1.1.3:
+    optional: true
 
   magic-string@0.30.17:
     dependencies:
@@ -8577,10 +8436,12 @@ snapshots:
       named-placeholders: 1.1.3
       seq-queue: 0.0.5
       sqlstring: 2.3.3
+    optional: true
 
   named-placeholders@1.1.3:
     dependencies:
       lru-cache: 7.18.3
+    optional: true
 
   napi-postinstall@0.3.4: {}
 
@@ -8592,6 +8453,8 @@ snapshots:
 
   node-abort-controller@3.1.1: {}
 
+  node-addon-api@8.5.0: {}
+
   node-domexception@1.0.0: {}
 
   node-emoji@1.11.0:
@@ -8600,11 +8463,11 @@ snapshots:
 
   node-ensure@0.0.0: {}
 
-  node-fetch-native@1.6.7: {}
-
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
+
+  node-gyp-build@4.8.4: {}
 
   node-int64@0.4.0: {}
 
@@ -8616,19 +8479,9 @@ snapshots:
     dependencies:
       path-key: 3.1.1
 
-  nypm@0.6.2:
-    dependencies:
-      citty: 0.1.6
-      consola: 3.4.2
-      pathe: 2.0.3
-      pkg-types: 2.3.0
-      tinyexec: 1.0.2
-
   object-assign@4.1.1: {}
 
   object-inspect@1.13.4: {}
-
-  ohash@2.0.11: {}
 
   on-finished@2.4.1:
     dependencies:
@@ -8741,8 +8594,6 @@ snapshots:
 
   path-type@4.0.0: {}
 
-  pathe@2.0.3: {}
-
   pdf-parse@1.1.1:
     dependencies:
       debug: 3.2.7
@@ -8757,8 +8608,6 @@ snapshots:
       - supports-color
 
   peek-readable@4.1.0: {}
-
-  perfect-debounce@1.0.0: {}
 
   pg-cloudflare@1.2.7:
     optional: true
@@ -8809,12 +8658,6 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  pkg-types@2.3.0:
-    dependencies:
-      confbox: 0.2.2
-      exsolve: 1.0.8
-      pathe: 2.0.3
-
   playwright-core@1.56.1: {}
 
   playwright@1.56.1:
@@ -8827,6 +8670,8 @@ snapshots:
 
   postgres-array@2.0.0: {}
 
+  postgres-array@3.0.4: {}
+
   postgres-bytea@1.0.0: {}
 
   postgres-date@1.0.7: {}
@@ -8834,8 +8679,6 @@ snapshots:
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
-
-  postgres@3.4.7: {}
 
   prelude-ls@1.2.1: {}
 
@@ -8851,29 +8694,14 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 18.3.1
 
-  prisma@7.0.1(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3):
+  prisma@6.9.0(typescript@5.9.3):
     dependencies:
-      '@prisma/config': 7.0.1
-      '@prisma/dev': 0.13.0(typescript@5.9.3)
-      '@prisma/engines': 7.0.1
-      '@prisma/studio-core': 0.8.2(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      mysql2: 3.15.3
-      postgres: 3.4.7
+      '@prisma/config': 6.9.0
+      '@prisma/engines': 6.9.0
     optionalDependencies:
       typescript: 5.9.3
-    transitivePeerDependencies:
-      - '@types/react'
-      - magicast
-      - react
-      - react-dom
 
   process@0.11.10: {}
-
-  proper-lockfile@4.1.2:
-    dependencies:
-      graceful-fs: 4.2.11
-      retry: 0.12.0
-      signal-exit: 3.0.7
 
   proxy-addr@2.0.7:
     dependencies:
@@ -8887,8 +8715,6 @@ snapshots:
       punycode: 2.3.1
 
   punycode@2.3.1: {}
-
-  pure-rand@6.1.0: {}
 
   pure-rand@7.0.1: {}
 
@@ -8913,19 +8739,7 @@ snapshots:
       iconv-lite: 0.7.0
       unpipe: 1.0.0
 
-  rc9@2.1.2:
-    dependencies:
-      defu: 6.1.4
-      destr: 2.0.5
-
-  react-dom@19.2.0(react@19.2.0):
-    dependencies:
-      react: 19.2.0
-      scheduler: 0.27.0
-
   react-is@18.3.1: {}
-
-  react@19.2.0: {}
 
   readable-stream@3.6.2:
     dependencies:
@@ -8951,12 +8765,6 @@ snapshots:
 
   regenerator-runtime@0.13.11: {}
 
-  regexp-to-ast@0.5.0: {}
-
-  remeda@2.21.3:
-    dependencies:
-      type-fest: 4.41.0
-
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -8976,11 +8784,9 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
-  retry-axios@2.6.0(axios@1.13.2(debug@4.4.3)):
+  retry-axios@2.6.0(axios@1.13.2):
     dependencies:
       axios: 1.13.2(debug@4.4.3)
-
-  retry@0.12.0: {}
 
   retry@0.13.1: {}
 
@@ -9011,8 +8817,6 @@ snapshots:
   safe-buffer@5.2.1: {}
 
   safer-buffer@2.1.2: {}
-
-  scheduler@0.27.0: {}
 
   schema-utils@3.3.0:
     dependencies:
@@ -9047,7 +8851,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  seq-queue@0.0.5: {}
+  seq-queue@0.0.5:
+    optional: true
 
   serialize-javascript@6.0.2:
     dependencies:
@@ -9126,7 +8931,8 @@ snapshots:
 
   sprintf-js@1.0.3: {}
 
-  sqlstring@2.3.3: {}
+  sqlstring@2.3.3:
+    optional: true
 
   stack-utils@2.0.6:
     dependencies:
@@ -9135,8 +8941,6 @@ snapshots:
   statuses@2.0.1: {}
 
   statuses@2.0.2: {}
-
-  std-env@3.9.0: {}
 
   streamsearch@1.1.0: {}
 
@@ -9264,8 +9068,6 @@ snapshots:
       '@istanbuljs/schema': 0.1.3
       glob: 7.2.3
       minimatch: 3.1.2
-
-  tinyexec@1.0.2: {}
 
   tmpl@1.0.5: {}
 
@@ -9470,10 +9272,6 @@ snapshots:
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
 
-  valibot@1.1.0(typescript@5.9.3):
-    optionalDependencies:
-      typescript: 5.9.3
-
   vary@1.1.2: {}
 
   walker@1.0.8:
@@ -9597,10 +9395,6 @@ snapshots:
 
   yoctocolors-cjs@2.1.3: {}
 
-  zeptomatch@2.0.2:
-    dependencies:
-      grammex: 3.1.12
-
   zlibjs@0.3.1: {}
 
   zod-to-json-schema@3.25.0(zod@4.1.12):
@@ -9615,23 +9409,62 @@ snapshots:
 
 *(Unsupported file type)*
 
-### prisma.config.ts
+### prisma\seed.ts
 
 ```ts
-// This file was generated by Prisma and assumes you have installed the following:
-// npm install --save-dev prisma dotenv
-import 'dotenv/config';
-import { defineConfig, env } from 'prisma/config';
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
-export default defineConfig({
-  schema: 'prisma/schema.prisma',
-  migrations: {
-    path: 'prisma/migrations',
-  },
-  datasource: {
-    url: env('DATABASE_URL_NEON'),
-  },
-});
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log('🌱 Seeding users...');
+
+  const passwordHash = await bcrypt.hash('123456', 10);
+
+  const user = await prisma.users.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      email: 'admin@example.com',
+      username: 'admin',
+      name: 'Administrator',
+      password: passwordHash,
+    },
+  });
+
+  // 2. Create sample projects for this user
+  const project1 = await prisma.projects.create({
+    data: {
+      name: 'AI Văn Bản',
+      description: 'Project dùng để test RAG + OCR',
+      userId: user.id,
+    },
+  });
+
+  const project2 = await prisma.projects.create({
+    data: {
+      name: 'Thư Viện Số',
+      description: 'Project số hóa tài liệu PDF',
+      userId: user.id,
+    },
+  });
+
+  console.log('📁 Projects created:');
+  console.log('  -', project1.id);
+  console.log('  -', project2.id);
+
+  console.log('✅ Seed completed!');
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
 
 ```
 
@@ -9773,7 +9606,6 @@ export default defineConfig({
 ### High-Level Overview
 
 ```
-
 ┌─────────────────────┐
 │      Client App      │
 └──────────┬──────────┘
@@ -9795,7 +9627,6 @@ export default defineConfig({
 │ PostgreSQL + PGVector      │
 │ Files | Chunks | Embedding │
 └────────────────────────────┘
-
 ```
 
 ---
@@ -9803,7 +9634,6 @@ export default defineConfig({
 ## 🧬 Module Structure
 
 ```
-
 src/
  ├── project/        # Workspace CRUD
  ├── document/       # Upload, OCR, ingest
@@ -9813,7 +9643,6 @@ src/
  ├── database/        # PrismaModule + Service
  ├── common/          # Filters, DTOs, utils
  └── main.ts
-
 ```
 
 ---
@@ -10142,6 +9971,9 @@ import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
 import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { PrismaService } from './prisma/prisma.service';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -10154,9 +9986,11 @@ import { OpenaiModule } from './llm/openai/openai.module';
     ChatModule,
     PipelineModule,
     OpenaiModule,
+    PrismaModule,
+    ProjectModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
 
@@ -10188,44 +10022,52 @@ import {
   Patch,
   Param,
   Delete,
+  Headers,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
-import { ChatDto } from './dto/chat-lite.dto';
+import { ChatDto } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
-
+  // -- CHAT LITE --
   @Post('/lite')
   chatLite(@Body() ChatDto: ChatDto) {
     return this.chatService.chatLite(ChatDto);
   }
-
-  @Post()
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
+  // -- CHAT HISTORY --
+  @Post('/')
+  chatHistory(
+    @Headers('x-client-id') userId: string,
+    @Body() ChatDto: ChatDto,
+  ) {
+    return this.chatService.chatHistory(userId, ChatDto);
   }
-
-  @Get()
-  findAll() {
-    return this.chatService.findAll();
-  }
-
+  // -- GET CHAT DETAIL BY ID --
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+  getChatById(@Param('id') id: string) {
+    return this.chatService.getChatById(id);
+  }
+  // -- GET ALL USER CHATS --
+  @Get('/user/all')
+  getAllUserChat(@Headers('x-client-id') userId: string) {
+    return this.chatService.getAllUserChat(userId);
+  }
+  // -- UPDATE CHAT: TITLE --
+  @Patch('/user/:id')
+  update(
+    @Headers('x-client-id') userId: string,
+    @Param('id') id: string,
+    @Body() updateChatDto: UpdateChatDto,
+  ) {
+    return this.chatService.update(userId, id, updateChatDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(+id, updateChatDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
+  // -- DELETE CHAT --
+  @Delete('/user/:id')
+  remove(@Headers('x-client-id') userId: string, @Param('id') id: string) {
+    return this.chatService.remove(userId, id);
   }
 }
 
@@ -10239,11 +10081,12 @@ import { ChatService } from './chat.service';
 import { ChatController } from './chat.controller';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { IngestModule } from '../ingest/ingest.module';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   imports: [IngestModule],
   controllers: [ChatController],
-  providers: [ChatService, OpenaiService],
+  providers: [ChatService, OpenaiService, PrismaService],
 })
 export class ChatModule {}
 
@@ -10252,94 +10095,75 @@ export class ChatModule {}
 ### src\chat\chat.service.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
-import { CreateChatDto } from './dto/create-chat.dto';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
-import { ChatDto } from './dto/chat-lite.dto';
-import { BaseMessage } from '@langchain/core/messages';
-import { RunnableSequence } from '@langchain/core/runnables';
-import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { ChatDto } from './dto/chat.dto';
 import { VectorService } from '../ingest/vector/vector.service';
+import { PrismaService } from '../prisma/prisma.service';
 
+type MessageType = {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+};
 @Injectable()
 export class ChatService {
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly vectorService: VectorService,
+    private prisma: PrismaService,
   ) {}
-  // createSimpleRAG = (llm, retriever) => {
-  //   return RunnableSequence.from([
-  //     {
-  //       context: (input) => retriever.getRelevantDocuments(input.question),
-  //       question: (input) => input.question,
-  //     },
-  //     llm,
-  //   ]);
-  // };
 
-  // createHistoryRAG = (llm, retriever) => {
-  //   const questionRewriter = ChatPromptTemplate.fromMessages([
-  //     ['system', "Rewrite the user's question using conversational history."],
-  //     ['placeholder', 'history'],
-  //     ['human', '{question}'],
-  //   ]).pipe(llm);
+  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatLite(chatDto: ChatDto) {
+    // TODO: Upgrade with flexible topK ~ Score threshold
+    const topK = 5;
 
-  //   return RunnableSequence.from([
-  //     {
-  //       history: (input) => input.history,
-  //       question: (input) => input.question,
-  //     },
-  //     { rewritten: questionRewriter },
-  //     {
-  //       context: (data) => retriever.getRelevantDocuments(data.rewritten),
-  //       question: (data) => data.rewritten,
-  //     },
-  //     llm,
-  //   ]);
-  // };
-
-  // async chatLite(ChatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(ChatDto: ChatDto) {
+    // 1. Get relevant docs from vector DB
     const relateDocs = await this.vectorService.getRetrievals(
-      ChatDto.message,
-      5,
+      chatDto.message,
+      topK,
     );
+    if (!relateDocs || relateDocs.length === 0) {
+      return {
+        answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
+        relateDocs: [],
+      };
+    }
     console.log('Related Docs: ', relateDocs);
+
+    // 2. Build context
+    const context = relateDocs
+      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .join('\n\n');
+    console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
       Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
       Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
 
-    // 3. Format retrieved docs to text context
-    const context = relateDocs
-      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
-      .join('\n\n');
-
-    console.log('Context: ', context);
-
-    const sysPrompt = [
-      {
-        role: 'system',
-        content: SYSTEM_PROMPT,
-      },
-      {
-        role: 'user',
-        content: `
+    const FINAL_USER_PROMPT = `
           Context:
 
           ${context}
 
           ---
 
-          Câu hỏi: ${ChatDto.message}
-      `,
-      },
+          Câu hỏi: ${chatDto.message}
+      `;
+
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT.trim() },
+      { role: 'user', content: FINAL_USER_PROMPT.trim() },
     ];
 
-    // 4. Get response from LLM
-    const response = await this.openaiService.model.invoke(sysPrompt);
+    // 3. Call LLM
+    const response = await this.openaiService.model.invoke(messages);
 
     return { response, relateDocs };
 
@@ -10348,43 +10172,154 @@ export class ChatService {
     // return chain.invoke({ question });
   }
 
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+  // -- Chat history --
+  async chatHistory(userId: string, chatDto: ChatDto) {
+    const topK = 5;
+    const historyNum = 5;
+
+    // 1. Get relevant docs from vector DB
+    const relateDocs = await this.vectorService.getRetrievals(
+      chatDto.message,
+      topK,
+    );
+    if (!relateDocs || relateDocs.length === 0) {
+      return {
+        answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
+        relateDocs: [],
+      };
+    }
+    console.log('Related Docs: ', relateDocs);
+
+    // 2. Build context
+    const context = relateDocs
+      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .join('\n\n');
+    console.log('Context: ', context);
+
+    const SYSTEM_PROMPT = `
+      Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
+      Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
+      Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
+
+    const FINAL_USER_PROMPT = `
+          Context:
+
+          ${context}
+
+          ---
+
+          Câu hỏi: ${chatDto.message}
+      `;
+    // 3. Get history messages
+    // Ensure chat exists or create it
+    let chatId = chatDto.chatId;
+    if (!chatId) {
+      const created = await this.prisma.chats.create({
+        data: {
+          messages: [],
+          userId: userId,
+        },
+      });
+      chatId = created.id;
+    }
+
+    // Add userMessage to history
+    await this.prisma.chats.update({
+      where: { id: chatId },
+      data: {
+        messages: {
+          push: { role: 'user', content: chatDto.message },
+        },
+      },
+    });
+
+    const historyMessages = await this.prisma.chats.findUnique({
+      where: { id: chatId },
+    });
+
+    if (!historyMessages) {
+      throw new Error('Chat not found');
+    }
+
+    console.log('clean mess', historyMessages.messages);
+    const contentHistory: MessageType[] = (historyMessages.messages ?? [])
+      .slice(-historyNum)
+      .map((m: MessageType) => ({ role: m.role, content: m.content }));
+
+    const messages = [
+      ...contentHistory, // Last up to 5 messages
+      { role: 'system', content: SYSTEM_PROMPT.trim() },
+      { role: 'user', content: FINAL_USER_PROMPT.trim() },
+    ];
+
+    console.log('message var:', messages);
+
+    // 3. Call LLM
+    const response = await this.openaiService.model.invoke(messages);
+
+    // 4. Save assistant response to history
+    await this.prisma.chats.update({
+      where: { id: chatId },
+      data: {
+        messages: {
+          push: { role: 'assistant', content: response.content as string },
+        },
+      },
+    });
+
+    return { response, relateDocs, historyMessages };
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  // -- Get all user chats --
+  async getAllUserChat(userId: string) {
+    return await this.prisma.chats.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: { userId },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
+  // -- Get Chat by ID --
+  async getChatById(id: string) {
+    return await this.prisma.chats.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
+  // -- Update chat (title) --
+  async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
+    return await this.prisma.chats.update({
+      where: { id, userId },
+      data: updateChatDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+  // -- Delete chat --
+  async remove(userId: string, id: string) {
+    const chat = await this.prisma.chats.findUnique({
+      where: { id },
+    });
+    if (!chat) throw new BadRequestException('Chat not found');
+    if (chat.userId !== userId)
+      throw new ForbiddenException('User Unauthorized!');
+
+    return await this.prisma.chats.delete({
+      where: { id },
+    });
   }
 }
 
 ```
 
-### src\chat\dto\chat-lite.dto.ts
+### src\chat\dto\chat.dto.ts
 
 ```ts
 export class ChatDto {
   //   projectId: number;
+  userId?: string;
+  chatId?: string;
   message: string;
+  title?: string;
 }
-
-```
-
-### src\chat\dto\create-chat.dto.ts
-
-```ts
-export class CreateChatDto {}
 
 ```
 
@@ -10392,9 +10327,9 @@ export class CreateChatDto {}
 
 ```ts
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateChatDto } from './create-chat.dto';
+import { ChatDto } from './chat.dto';
 
-export class UpdateChatDto extends PartialType(CreateChatDto) {}
+export class UpdateChatDto extends PartialType(ChatDto) {}
 
 ```
 
@@ -10410,6 +10345,7 @@ export class Chat {}
 ```ts
 export const envConfig = () => ({
   OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'your-api-key',
+  DATABASE_URL_NEON: process.env.DATABASE_URL_NEON || 'your-database-url',
 });
 
 ```
@@ -10511,14 +10447,17 @@ export class DocumentController {
       },
     }),
   )
-  async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
+  async uploadFiles(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('projectId') projectId?: string,
+  ) {
     Logger.log('Uploaded files:', files);
 
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
     }
 
-    await this.documentService.uploadFiles(files);
+    await this.documentService.uploadFiles(files, projectId);
     return files.map((file) => ({
       url: `/uploads/documents/${file.filename}`,
     }));
@@ -10554,15 +10493,16 @@ export class DocumentController {
 ### src\document\document.module.ts
 
 ```ts
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentController } from './document.controller';
 import { IngestModule } from '../ingest/ingest.module';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   imports: [IngestModule],
   controllers: [DocumentController],
-  providers: [DocumentService],
+  providers: [DocumentService, PrismaService, ConsoleLogger],
 })
 export class DocumentModule {}
 
@@ -10571,28 +10511,69 @@ export class DocumentModule {}
 ### src\document\document.service.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { IngestService } from '../ingest/ingest.service';
 import { VectorService } from '../ingest/vector/vector.service';
 import { deleteFile } from './oss';
 import path from 'path';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateDocumentDto } from './dto/create-document.dto';
 
 @Injectable()
 export class DocumentService {
   constructor(
     private readonly ingestService: IngestService,
     private vectorService: VectorService,
+    private prisma: PrismaService,
+    private readonly logger: ConsoleLogger,
   ) {}
 
   //-- UPLOAD --
-  async uploadFiles(files: Express.Multer.File[]): Promise<void> {
+  async uploadFiles(
+    files: Express.Multer.File[],
+    projectId?: string,
+  ): Promise<void> {
     for (const file of files) {
-      await this.ingestService.ingestDocument(
-        file.path,
-        file.filename,
-        undefined,
-      );
+      try {
+        const chunksCount = await this.ingestService.ingestDocument(
+          file.path,
+          file.filename,
+          projectId,
+        );
+
+        this.logger.log(
+          `✅ Ingested ${chunksCount} chunks for: ${file.originalname}`,
+        );
+
+        // If ingestion successful (has chunks), save document record in DB
+        if (chunksCount > 0) {
+          await this.createDocument({
+            projectId: projectId as string,
+            name: file.originalname,
+            filePath: file.path,
+            mimeType: file.mimetype,
+            size: file.size,
+            status: 'done',
+          });
+          this.logger.log(
+            `📝 Document record created for: ${file.originalname}`,
+          );
+        } else {
+          this.logger.warn(`⚠️ No chunks created for: ${file.originalname}`);
+        }
+      } catch (error) {
+        this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
+        // Optionally save with error status
+        await this.createDocument({
+          projectId: projectId as string,
+          name: file.originalname,
+          filePath: file.path,
+          mimeType: file.mimetype,
+          size: file.size,
+          status: 'error',
+        });
+      }
     }
   }
   // -- REMOVE --
@@ -10600,6 +10581,26 @@ export class DocumentService {
     await this.vectorService.removeVectorByFileId(fileId);
     deleteFile(path.join('uploads/documents', fileId));
     return fileId;
+  }
+
+  //   projectId String   @db.Uuid
+  // name      String
+  // filePath  String
+  // mimeType  String?
+  // size      Int?
+  // status    String // uploading | processing | done | error
+  // createdAt DateTime @default(now())
+  async createDocument(documentDto: CreateDocumentDto) {
+    await this.prisma.project_documents.create({
+      data: {
+        projectId: documentDto.projectId,
+        name: documentDto.name,
+        filePath: documentDto.filePath,
+        mimeType: documentDto.mimeType,
+        size: documentDto.size,
+        status: documentDto.status,
+      },
+    });
   }
 
   findAll() {
@@ -10620,7 +10621,14 @@ export class DocumentService {
 ### src\document\dto\create-document.dto.ts
 
 ```ts
-export class CreateDocumentDto {}
+export class CreateDocumentDto {
+  projectId: string;
+  name: string;
+  filePath: string;
+  mimeType?: string;
+  size?: number;
+  status: string;
+}
 
 ```
 
@@ -10660,6 +10668,10 @@ export const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    // Latin1 to utf-8
+    file.originalname = Buffer.from(file.originalname, 'latin1').toString(
+      'utf8',
+    );
     cb(null, uniqueSuffix + ext);
   },
 });
@@ -10680,19 +10692,49 @@ export const deleteFile = (filePath: string) => {
 ### src\http-exception.filter.ts
 
 ```ts
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
+import { request, Response } from 'express';
 
 @Catch()
 export class HttpExceptionFilter<T> implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: T, host: ArgumentsHost) {
-    const res: Response = host.switchToHttp().getResponse();
+    const ctx = host.switchToHttp();
+    const res = ctx.getResponse<Response>();
+    const req = ctx.getRequest<Request>();
+
+    // -- STATUS CODE DETECTION --
+    const statusCode =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    // -- MESSAGE DETECTION --
     const messageError =
-      exception instanceof Error ? exception.message : 'Internal server error';
-    res.status(500).json({
-      statusCode: 500,
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : (exception as any)?.message || 'Internal server error';
+
+    // -- LOG ERROR --
+    this.logger.error(
+      `❌ ${request.method} ${request.url}`,
+      (exception as any).stack,
+    );
+
+    res.status(statusCode).json({
+      statusCode: statusCode,
       success: false,
       message: messageError,
+      timestamp: new Date().toISOString(),
+      path: req.url,
     });
   }
 }
@@ -10785,6 +10827,9 @@ export class IngestService {
       chunks,
       metadata: { fileId, projectId },
     });
+
+    // Return number of chunks processed
+    return chunks.length;
   }
 }
 
@@ -10967,11 +11012,18 @@ import { pgConfig, getPgConfigNeon } from '../../config/pg.config';
 
 @Injectable()
 export class PgvectorService {
+  private vectorStore: PGVectorStore | null = null;
+
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly logger: ConsoleLogger,
   ) {}
   async initVectorStore() {
+    // Check singleton
+    if (this.vectorStore) {
+      return this.vectorStore;
+    }
+
     // Use NeonDB if DATABASE_URL_NEON is set, otherwise use local
     const useNeon = !!process.env.DATABASE_URL_NEON;
     const config = useNeon ? getPgConfigNeon() : pgConfig;
@@ -10983,13 +11035,14 @@ export class PgvectorService {
         : `${process.env.POSTGRES_HOST || 'db'}:${process.env.POSTGRES_PORT || '5432'}`,
     });
 
-    const vectorStore = await PGVectorStore.initialize(
+    // Init ONCE
+    this.vectorStore = await PGVectorStore.initialize(
       this.openaiService.embeddings(),
       config,
     );
 
     this.logger.log('✅ Connected to PGVector successfully!');
-    return vectorStore;
+    return this.vectorStore;
   }
 }
 
@@ -11013,36 +11066,27 @@ export class VectorService {
     chunks: string[];
     metadata: any;
   }) {
-    await this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      await vectorStore.addDocuments(
-        chunks.map((chunk) => ({
-          pageContent: chunk,
-          metadata,
-        })),
-      );
-    });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+
+    return vectorStore.addDocuments(
+      chunks.map((chunk) => ({
+        pageContent: chunk,
+        metadata,
+      })),
+    );
   }
   // Get retrievals from the vector store
   async getRetrievals(query: string, k = 10) {
-    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      const results = await vectorStore.similaritySearch(query, k);
-      return results;
-    });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+    const results = await vectorStore.similaritySearch(query, k);
+    return results;
   }
 
   // -- DELETE VECTOR STORE BY FILEID --
   async removeVectorByFileId(fileId: string) {
-    return this.pgvectorService.initVectorStore().then(async (vectorStore) => {
-      await vectorStore.delete({ filter: { fileId } });
-    });
+    const vectorStore = await this.pgvectorService.initVectorStore();
+    await vectorStore.delete({ filter: { fileId } });
   }
-
-  //   async getRetriever(projectId: string) {
-  //     return this.store.asRetriever({
-  //       searchType: "similarity",
-  //       searchKwargs: { filter: { projectId } },
-  //     });
-  //   }
 }
 
 ```
@@ -11133,6 +11177,163 @@ export class PipelineService {}
 
 ```
 
+### src\prisma\prisma.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService],
+})
+export class PrismaModule {}
+
+```
+
+### src\prisma\prisma.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client';
+import { envConfig } from '../config/env.config';
+
+@Injectable()
+export class PrismaService extends PrismaClient {
+  constructor() {
+    const adapter = new PrismaPg({
+      connectionString: envConfig().DATABASE_URL_NEON,
+    });
+    super({ adapter } as any);
+  }
+}
+
+```
+
+### src\project\dto\create-project.dto.ts
+
+```ts
+export class CreateProjectDto {
+  name: string;
+  description?: string;
+  userId: string;
+}
+
+```
+
+### src\project\dto\update-project.dto.ts
+
+```ts
+import { PartialType } from '@nestjs/swagger';
+import { CreateProjectDto } from './create-project.dto';
+
+export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+
+```
+
+### src\project\entities\project.entity.ts
+
+```ts
+export class Project {}
+
+```
+
+### src\project\project.controller.ts
+
+```ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { ProjectService } from './project.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+
+@Controller('project')
+export class ProjectController {
+  constructor(private readonly projectService: ProjectService) {}
+
+  @Post()
+  create(@Body() createProjectDto: CreateProjectDto) {
+    return this.projectService.create(createProjectDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.projectService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.projectService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+    return this.projectService.update(+id, updateProjectDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.projectService.remove(+id);
+  }
+}
+
+```
+
+### src\project\project.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { ProjectService } from './project.service';
+import { ProjectController } from './project.controller';
+
+@Module({
+  controllers: [ProjectController],
+  providers: [ProjectService],
+})
+export class ProjectModule {}
+
+```
+
+### src\project\project.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+
+@Injectable()
+export class ProjectService {
+  create(createProjectDto: CreateProjectDto) {
+    return 'This action adds a new project';
+  }
+
+  findAll() {
+    return `This action returns all project`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} project`;
+  }
+
+  update(id: number, updateProjectDto: UpdateProjectDto) {
+    return `This action updates a #${id} project`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} project`;
+  }
+}
+
+```
+
 ### src\response.interceptor.ts
 
 ```ts
@@ -11150,18 +11351,80 @@ import { Response } from 'express';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const res = context.switchToHttp().getResponse<Response>();
+    // -- RETURN WRAPPED RESPONSE --
     return next.handle().pipe(
-      map((data: any) => ({
-        statusCode: res.statusCode,
-        // message: 'success',
-        success: true,
-        data: {
-          result: data?.result ?? data,
-        },
-      })),
+      map((data: any) => {
+        // If response already formatted → do NOTHING
+        if (
+          data &&
+          typeof data === 'object' &&
+          data.hasOwnProperty('statusCode') &&
+          data.hasOwnProperty('success')
+        ) {
+          return data;
+        }
+        return {
+          statusCode: res.statusCode || 200,
+          // message: data?.message ?? 'success',
+          success: true,
+          data: data ?? null,
+        };
+      }),
     );
   }
 }
+
+// ========== UPDATED VERSION ==========
+// import {
+//   CallHandler,
+//   ExecutionContext,
+//   Injectable,
+//   NestInterceptor,
+// } from '@nestjs/common';
+// import { Observable } from 'rxjs';
+// import { map } from 'rxjs/operators';
+// import { Response } from 'express';
+
+// export interface ApiResponse<T> {
+//   statusCode: number;
+//   success: boolean;
+//   data: T;
+// }
+
+// function isWrappedResponse(data: unknown): data is ApiResponse<unknown> {
+//   return (
+//     typeof data === 'object' &&
+//     data !== null &&
+//     'success' in data &&
+//     'statusCode' in data
+//   );
+// }
+
+// @Injectable()
+// export class ResponseInterceptor<T>
+//   implements NestInterceptor<T, ApiResponse<T>>
+// {
+//   intercept(
+//     context: ExecutionContext,
+//     next: CallHandler<T>,
+//   ): Observable<ApiResponse<T>> {
+//     const res = context.switchToHttp().getResponse<Response>();
+
+//     return next.handle().pipe(
+//       map((data: T) => {
+//         if (isWrappedResponse(data)) {
+//           return data;
+//         }
+
+//         return {
+//           statusCode: res.statusCode ?? 200,
+//           success: true,
+//           data,
+//         };
+//       }),
+//     );
+//   }
+// }
 
 ```
 
@@ -11267,11 +11530,9 @@ Database trên server (NeonDB) đã có tables và data, cần đồng bộ Pris
 ## ⚠️ Lỗi thường gặp
 
 ```
-
 Drift detected: Your database schema is not in sync with your migration history.
 We need to reset the "public" schema...
 All data will be lost.
-
 ```
 
 ## ✅ Giải pháp (Baselining)
@@ -14739,7 +15000,6 @@ REDIS_PASSWORD=your-access-key
 **Đây là kiến trúc chính thức, đã được tinh gọn cho RAG + Prisma + Ingest + Chat.**
 
 ```
-
 src/
  ├── app.module.ts
  │
@@ -14790,7 +15050,6 @@ src/
  │    └── uploads/                    # <projectId>/<fileId>_filename.ext
  │
  └── main.ts
-
 ```
 
 ---
@@ -14951,9 +15210,9 @@ volumes:
 
 **Nhẹ vì:**
 
-- Postgres dùng alpine
-- Node chỉ chạy API
-- Không dùng queue nặng (BullMQ tùy chọn thêm)
+* Postgres dùng alpine
+* Node chỉ chạy API
+* Không dùng queue nặng (BullMQ tùy chọn thêm)
 
 ---
 
@@ -15002,24 +15261,24 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 ### **1️⃣ Bạn muốn dùng dịch vụ embedding nào?**
 
-- OpenAI (text-embedding-3-large / small)
-- Cohere (multilingual tốt tiếng Việt)
-- Voyage AI
-- Local model (nếu dùng)
+* OpenAI (text-embedding-3-large / small)
+* Cohere (multilingual tốt tiếng Việt)
+* Voyage AI
+* Local model (nếu dùng)
 
 ### **2️⃣ OCR bạn muốn:**
 
-- Tesseract local
-- Google OCR
-- Gemini OCR (Vision)
-- Không cần OCR
+* Tesseract local
+* Google OCR
+* Gemini OCR (Vision)
+* Không cần OCR
 
 ### **3️⃣ Chat LLM bạn muốn dùng:**
 
-- OpenAI GPT-4o / mini
-- Gemini 1.5
-- Groq + Llama3
-- DeepSeek
+* OpenAI GPT-4o / mini
+* Gemini 1.5
+* Groq + Llama3
+* DeepSeek
 
 ---
 
@@ -15027,14 +15286,14 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 Mình sẽ generate **toàn bộ project NestJS scaffold** cho bạn (copy chạy ngay), gồm:
 
-- 50+ file NestJS hoàn chỉnh
-- Prisma schema + migrations
-- Docker Compose
-- Full routers
-- Services
-- Pipelines
-- RagService với LangChainJS
-- Auto-ingest pipeline hoạt động ngay
+* 50+ file NestJS hoàn chỉnh
+* Prisma schema + migrations
+* Docker Compose
+* Full routers
+* Services
+* Pipelines
+* RagService với LangChainJS
+* Auto-ingest pipeline hoạt động ngay
 
 Chỉ cần bạn trả lời 3 câu đó.
 

@@ -76,7 +76,10 @@ export class ChatService {
   }
 
   // -- Chat history --
-  async chatHistory(userId: string, chatDto: ChatDto) {
+  async chatHistory(chatDto: ChatDto) {
+    // -- VALIDATIONS --
+    // ... TODO: ...
+
     const topK = 5;
     const historyNum = 5;
 
@@ -84,6 +87,7 @@ export class ChatService {
     const relateDocs = await this.vectorService.getRetrievals(
       chatDto.message,
       topK,
+      chatDto.projectId,
     );
     if (!relateDocs || relateDocs.length === 0) {
       return {
@@ -116,11 +120,19 @@ export class ChatService {
     // 3. Get history messages
     // Ensure chat exists or create it
     let chatId = chatDto.chatId;
-    if (!chatId) {
+
+    // Check if chatId is null, undefined, or string "null"
+    if (
+      !chatId ||
+      chatId == null ||
+      chatId === 'null' ||
+      chatId === 'undefined'
+    ) {
       const created = await this.prisma.chats.create({
         data: {
           messages: [],
-          userId: userId,
+          userId: chatDto.userId as string,
+          projectId: chatDto.projectId as string,
         },
       });
       chatId = created.id;

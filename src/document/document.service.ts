@@ -16,10 +16,6 @@ export class DocumentService {
     private readonly logger: ConsoleLogger,
   ) {}
 
-  // -- READ PROPERTIES FILE --
-  // async readPropFile(file: Express.Multer.File) {
-
-  // }
   //-- UPLOAD --
   async uploadFiles(
     files: Express.Multer.File[],
@@ -74,13 +70,7 @@ export class DocumentService {
     return fileId;
   }
 
-  //   projectId String   @db.Uuid
-  // name      String
-  // filePath  String
-  // mimeType  String?
-  // size      Int?
-  // status    String // uploading | processing | done | error
-  // createdAt DateTime @default(now())
+  // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
     await this.prisma.project_documents.create({
       data: {
@@ -91,6 +81,15 @@ export class DocumentService {
         size: documentDto.size,
         status: documentDto.status,
       },
+    });
+  }
+
+  // -- GET DOCUMENT IN PROJECT --
+  async getDocumentsInProject(projectId: string) {
+    // Check exist project
+
+    return await this.prisma.project_documents.findMany({
+      where: { projectId: projectId },
     });
   }
 

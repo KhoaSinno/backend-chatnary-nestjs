@@ -5,13 +5,13 @@ import { PgvectorService } from './pgvector.client';
 export class VectorService {
   constructor(private readonly pgvectorService: PgvectorService) {}
 
-  // Add documents to the vector store
+  // -- ADD DOCUMENTS TO VECTOR STORE --
   async addDocuments({
     chunks,
     metadata,
   }: {
     chunks: string[];
-    metadata: any;
+    metadata: { fileId: string; projectId?: string };
   }) {
     const vectorStore = await this.pgvectorService.initVectorStore();
 
@@ -22,10 +22,13 @@ export class VectorService {
       })),
     );
   }
-  // Get retrievals from the vector store
-  async getRetrievals(query: string, k = 10) {
+
+  // -- RETRIEVE SIMILAR DOCUMENTS --
+  async getRetrievals(query: string, k = 10, projectId?: string) {
     const vectorStore = await this.pgvectorService.initVectorStore();
-    const results = await vectorStore.similaritySearch(query, k);
+    const filter = projectId ? { projectId } : undefined;
+
+    const results = await vectorStore.similaritySearch(query, k, filter);
     return results;
   }
 

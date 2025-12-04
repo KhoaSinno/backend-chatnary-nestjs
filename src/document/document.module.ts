@@ -8,5 +8,6 @@ import { PrismaService } from '../prisma/prisma.service';
   imports: [IngestModule],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService, ConsoleLogger],
+  exports: [DocumentService],
 })
 export class DocumentModule {}
