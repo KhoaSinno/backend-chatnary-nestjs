@@ -324,14 +324,14 @@ http://localhost:9000
 
 ## Create Chat Session
 
-### **POST** `/api/chat`
+### **POST** `/project/:projectId/chats/messages`
 
 **Body**
 
 ```json
 {
-  "message": "Đối tượng nào được giảm học phí bao gồm",
-  "chatId": "40c6dc17-239a-498e-8cdc-8ca1973570c7"
+  "message": "Tài liệu nghiên cứu những llm nào và nó có điểm mạnh gì",
+  "chatId": "40c6dc17-239a-498e-8cdc-8ca1973570c7" // this is OPT: 
 }
 ```
 
@@ -342,121 +342,128 @@ http://localhost:9000
   "statusCode": 201,
   "success": true,
   "data": {
-    "result": {
-      "response": {
-        "lc": 1,
-        "type": "constructor",
-        "id": [
-          "langchain_core",
-          "messages",
-          "AIMessage"
-        ],
-        "kwargs": {
-          "id": "chatcmpl-ChrlHjMQ0LQvKWH7jnifhfu16H35T",
-          "content": "Dựa trên thông tin trong tài liệu, các đối tượng được giảm học phí bao gồm:\n\n1. Đối tượng giảm 70% học phí:  \nSinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n2. Đối tượng giảm 50% học phí:  \nSinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.",
-          "additional_kwargs": {},
-          "response_metadata": {
-            "tokenUsage": {
-              "promptTokens": 1894,
-              "completionTokens": 155,
-              "totalTokens": 2049
-            },
-            "finish_reason": "stop",
-            "model_provider": "openai",
-            "model_name": "gpt-4.1-2025-04-14",
-            "usage": {
-              "prompt_tokens": 1894,
-              "completion_tokens": 155,
-              "total_tokens": 2049,
-              "prompt_tokens_details": {
-                "cached_tokens": 0,
-                "audio_tokens": 0
-              },
-              "completion_tokens_details": {
-                "reasoning_tokens": 0,
-                "audio_tokens": 0,
-                "accepted_prediction_tokens": 0,
-                "rejected_prediction_tokens": 0
-              }
-            },
-            "system_fingerprint": "fp_09249d7c7b"
+    "response": {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "chatcmpl-CjLlNqy6w49SCWgMPnYw81eFR922i",
+        "content": "Tài liệu nghiên cứu các mô hình ngôn ngữ lớn (LLM) tiêu biểu như ChatGPT của OpenAI và Gemini của Google. Các điểm mạnh của các LLM này bao gồm:\n\n- Xử lý ngôn ngữ tự nhiên vượt trội: Cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn có thể suy luận dựa trên ngôn ngữ.\n- Khả năng đa phương thức: Đặc biệt, Gemini được thiết kế để xử lý đồng thời văn bản, hình ảnh, âm thanh, mã nguồn, giúp mở rộng phạm vi ứng dụng vào thực tiễn và phân tích, tạo nội dung trên nhiều dạng dữ liệu.\n- Phản hồi tự nhiên, cá nhân hóa: Ứng dụng kỹ thuật học tăng cường từ phản hồi của con người (RLHF) như trong ChatGPT, giúp mô hình hiểu ngữ cảnh và phản hồi mạch lạc, tự nhiên hơn.\n- Hiệu suất mô hình cao nhờ kiến trúc Transformer: Tăng quy mô tham số và khối lượng dữ liệu huấn luyện giúp các mô hình như GPT-3 đạt bước nhảy vọt về năng lực và có thể thực hiện đa dạng nhiệm vụ NLP.\n- Tiết kiệm chi phí tính toán: Ứng dụng kỹ thuật Mixture-of-Experts (MoE) giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết, tối ưu hiệu suất cho các tác vụ chuyên biệt.\n- Tác động thực tiễn rõ rệt: Trong giáo dục, AI như ChatGPT giúp tiết kiệm thời gian cho giáo viên (trung bình ~5,9 giờ mỗi tuần), nâng cao hiệu quả các công việc hành chính và được đông đảo giáo viên đánh giá tích cực.\n- Ứng dụng rộng rãi: LLM đang được ứng dụng trong nhiều lĩnh vực như y tế, tài chính, giáo dục, dịch vụ khách hàng, giúp cá nhân hóa phản hồi và giải quyết các nhiệm vụ phân tích phức tạp.\n\nTóm lại, tài liệu tập trung vào ChatGPT và Gemini, nhấn mạnh sức mạnh kỹ thuật, khả năng ứng dụng rộng rãi và hiệu quả thực tiễn của chúng.",
+        "additional_kwargs": {},
+        "response_metadata": {
+          "tokenUsage": {
+            "promptTokens": 1517,
+            "completionTokens": 452,
+            "totalTokens": 1969
           },
-          "type": "ai",
-          "tool_calls": [],
-          "invalid_tool_calls": [],
-          "usage_metadata": {
-            "output_tokens": 155,
-            "input_tokens": 1894,
-            "total_tokens": 2049,
-            "input_token_details": {
-              "audio": 0,
-              "cache_read": 0
+          "finish_reason": "stop",
+          "model_provider": "openai",
+          "model_name": "gpt-4.1-2025-04-14",
+          "usage": {
+            "prompt_tokens": 1517,
+            "completion_tokens": 452,
+            "total_tokens": 1969,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
             },
-            "output_token_details": {
-              "audio": 0,
-              "reasoning": 0
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
             }
+          },
+          "system_fingerprint": "fp_433e8c8649"
+        },
+        "type": "ai",
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "output_tokens": 452,
+          "input_tokens": 1517,
+          "total_tokens": 1969,
+          "input_token_details": {
+            "audio": 0,
+            "cache_read": 0
+          },
+          "output_token_details": {
+            "audio": 0,
+            "reasoning": 0
           }
         }
+      }
+    },
+    "relateDocs": [
+      {
+        "pageContent": "trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác. \nTóm lại, các nghiên cứu nước ngoài đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng\nTransformer đến những hệ thống đa năng như ChatGPT và Gemini ngày nay. Những kết quả đạt được\ncho thấy sự vượt trội của mô hình ngôn ngữ lớn trong việc xử lý ngôn ngữ tự nhiên và tư duy đa\ndạng, đồng thời nhấn mạnh tiềm năng ứng dụng rộng rãi của chúng vào thực tiễn (từ giáo dục, y tế đến\ntự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về những thách thức còn tồn tại – từ việc\ncải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination cho đến tối ưu hóa chi phí tính toán –\nnhằm tiếp tục hoàn thiện và phát huy tối đa lợi ích của các mô hình LLM trong tương lai.\n12\n11\n• \n11\n• \n12\n• \n12\n• \n13\n14\n15\n16\n1717\n2\n[2503.04783] Comparative Analysis Based on DeepSeek, ChatGPT, and Google Gemini:\nFeatures, Techniques, Performance, Future Prospects\nhttps://ar5iv.org/html/2503.04783v1",
+        "metadata": {
+          "fileId": "ddf65c6e-f201-41d9-bd41-e10733fa050b",
+          "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+          "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+        },
+        "id": "cfff2cf5-8ef8-492f-bdac-892764472ebe"
       },
-      "relateDocs": [
-        {
-          "pageContent": "z\nĐối tượng 3: (Khoản 4 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên từ 16 tuổi đến 22 tuổi đang | (f2? ”2ẩt);\nhọc văn bằng thứ nhất không có nguồn | - Bản sao có công chứng Quyết định\nnuôi dưỡng thuộc đối tượng hưởng trợ | về việc trợ cấp xã hội.\ncấp xã hội hàng tháng theo quy định tại\nkhoản 1 và khoản 2 Điều 5 Nghị định\nsố 20/2021/NĐ-CP.\nĐối tượng 4: (Khoản 7 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên là dân tộc thiểu số có cha | (29 ”/Ấ1);\nhoặc mẹ hoặc cả cha và mẹ hoặc ông | - Giấy chứng nhận hộ nghèo, hộ cận\nbà (trong trường hợp ở với ông bà) | nghèo.\nthuộc hộ nghèo và hộ cận nghèo theo\nquy định của Thủ tướng Chính phủ.\nĐối tượng 5: (Khoản 10 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên là dân tộc thiểu số rất ít | (92G 7229); ĩ\nngười ở vùng có điều kiện kinh tế - xã | - Bản sao công chứng của Giấy khai\nhội khó khăn và đặc biệt khó khăn. sinh.\n2. Đối tượng giảm 70% học phí Hồ sơ cần thực hiện",
-          "metadata": {
-            "fileId": "1764430266866-974747285.pdf"
-          },
-          "id": "e50744f7-8478-4612-b6c2-3aa4c97fe72d"
+      {
+        "pageContent": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh\nChatGPT – Gemini\nCác nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và ứng dụng thực tế của các mô hình ngôn ngữ\nlớn (LLM) trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã tạo nên bước đột phá trong xử lý ngôn ngữ\ntự nhiên (NLP), cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn suy luận dựa trên ngôn ngữ\n. Những mô hình như ChatGPT của OpenAI và   Gemini của Google đã mở rộng đáng kể khả năng của\nAI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như học tăng cường từ phản hồi của con người (RLHF) để\nnâng cao tính mạch lạc trong hội thoại, hay kiến trúc đa phương thức để xử lý đồng thời văn bản, hình\nảnh, âm thanh – qua đó mở rộng phạm vi ứng dụng của LLM trong thực tiễn. Ngày nay, các công\nnghệ này đang được ứng dụng rộng rãi trong các lĩnh vực y tế, tài chính, giáo dục, dịch vụ khách hàng,\ngiúp cá nhân hóa phản hồi và giải quyết những nhiệm vụ phân tích phức tạp.",
+        "metadata": {
+          "fileId": "ddf65c6e-f201-41d9-bd41-e10733fa050b",
+          "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+          "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
         },
-        {
-          "pageContent": "người ở vùng có điều kiện kinh tế - xã | - Bản sao công chứng của Giấy khai\nhội khó khăn và đặc biệt khó khăn. sinh.\n2. Đối tượng giảm 70% học phí Hồ sơ cần thực hiện\nĐối tượng 6: (Khoản 1 - Điều 16) - Đơn đề nghị miễn, giảm học phí\nSinh viên là người dân tộc thiểu số | (2Ø? 79);\n(ngoài đối tượng dân tộc thiểu số rất ít | - Bản sao công chứng của Giấy khai\nngười) ở thôn/bản đặc biệt khó khăn, | sinh.\nxã khu vực III vùng dân tộc và miền\nnúi, xã đặc biệt khó khăn vùng bãi\nngang ven biển hải đảo theo quy định\ncủa cơ quan có thẳm quyền.\n3. Đối tượng giảm 502% học phí Hồ sơ cần thực hiện\nĐối tượng 7: (Khoản 2 - Điều 16) - Đơn đề nghị miễn, giảm học phí\nSinh viên là con cán bộ, công chức, | (2O ”2ấz);\nviên chức, công nhân mà cha hoặc mẹ |- Bản sao công chứng của Quyết\nbị mắc bệnh nghề nghiệp hoặc tai nạn | định hưởng trợ cấp hàng tháng của\nlao động được hưởng trợ cấp thường | cha hoặc mẹ bị tai nạn lao động hoặc\nxuyên. mắc bệnh nghề nghiệp do tổ chức\nBảo hiểm xã hội cấp.\nưu ý:",
-          "metadata": {
-            "fileId": "1764430266866-974747285.pdf"
-          },
-          "id": "c3fa2a16-b88e-478e-a909-6a4a34219f1b"
+        "id": "8a1b7c99-2313-44b1-9a31-8b7826d8d568"
+      },
+      {
+        "pageContent": "năng    phân tích và tạo nội dung trên nhiều dạng dữ liệu. Những đột phá kỹ thuật này không chỉ\nnâng cao hiệu suất tổng thể của mô hình mà còn mở đường cho các ứng dụng LLM sáng tạo trong các\nlĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.). \nBên cạnh khía cạnh kỹ thuật, các nghiên cứu ứng dụng cho thấy LLM có tác động tích cực trong hoạt\nđộng thực tiễn.  Trong lĩnh vực giáo dục, việc tích hợp công cụ AI hỗ trợ giáo viên đã mang lại hiệu quả\nrõ rệt  . Một khảo sát tại Mỹ cho thấy giáo viên sử dụng AI thường xuyên ước tính tiết kiệm trung bình\n~5,9 giờ mỗi tuần (tương đương sáu tuần mỗi năm học nhờ tự động hóa công việc chuẩn bị bài giảng,\nchấm bài, v.v.).  Phần lớn giáo viên cũng nhận định AI giúp nâng cao chất lượng công việc – ví dụ có\n74% giáo viên đánh giá AI cải thiện hiệu quả các công việc hành chính của họ. Điều này minh chứng\nrằng    các mô hình AI ngôn ngữ như ChatGPT có tiềm năng hỗ trợ giảm tải công việc thủ công, tối ưu",
+        "metadata": {
+          "fileId": "ddf65c6e-f201-41d9-bd41-e10733fa050b",
+          "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+          "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
         },
-        {
-          "pageContent": "7 UBND THÀNH PHÓ CÀN THƠ CỘNG HÒA XÃ HỌI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC Độc lập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ.\nSố: A62 /TB-ĐHKTCN Cân Thơ, ngày A6 tháng 9 năm 2025\nTTHÔNG BÁO\nVề các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy\nhọc kỳ I năm học 2025 - 2026\nCăn cứ Nghị định số 238/2025/NĐ-CP ngày 03 tháng 9 năm 2025 của\nChính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chi\nphí học tập và giá dịch vụ trong lĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ\nthuật - Công nghệ Cần Thơ thông báo đến lãnh đạo các khoa, có vấn học tập và\ntoàn thễ sinh viên chính quy các nội dung sau:\nI. Đối tượng được miễn, giảm: Sinh viên thuộc đối tượng được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n(được nêu cụ thể tại phần “Thủ tục thực hiện”).\nXI. Thũ tục thực hiện",
-          "metadata": {
-            "fileId": "1764430266866-974747285.pdf"
-          },
-          "id": "f3fdb86e-5240-4df7-b4d2-f71c2077ceae"
+        "id": "3e14d077-aaa3-493f-84be-79365f1e56e1"
+      },
+      {
+        "pageContent": "74% giáo viên đánh giá AI cải thiện hiệu quả các công việc hành chính của họ. Điều này minh chứng\nrằng    các mô hình AI ngôn ngữ như ChatGPT có tiềm năng hỗ trợ giảm tải công việc thủ công, tối ưu\nhóa thời gian và nâng cao hiệu suất trong môi trường làm việc thực tế.\nVề mặt kiến trúc và hiệu năng,  các mô hình LLM thế hệ mới đều dựa trên kiến trúc Transformer do\nGoogle giới thiệu năm 2017. Kiến trúc này cho phép mô hình học được mối quan hệ ngữ cảnh giữa các\ntừ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của các mô\nhình ngôn ngữ cực lớn. Việc    gia tăng quy mô mô hình (số lượng tham số) đi cùng khối lượng dữ liệu\nhuấn luyện khổng lồ đã dẫn đến những bước nhảy vọt về năng lực của LLM. GPT-3   của OpenAI (ra mắt\n2020) là một ví dụ tiêu biểu: với 175 tỷ tham số, GPT-3 được huấn luyện trên khối lượng dữ liệu văn bản\n~570 GB và có thể thực hiện đa dạng nhiệm vụ NLP chỉ thông qua gợi ý ngữ cảnh,  không cần tinh chỉnh",
+        "metadata": {
+          "fileId": "ddf65c6e-f201-41d9-bd41-e10733fa050b",
+          "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+          "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
         },
-        {
-          "pageContent": "1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n(được nêu cụ thể tại phần “Thủ tục thực hiện”).\nXI. Thũ tục thực hiện\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để\nđược xét miễn, giảm học phí, cụ thể như sau:\n1. Đối tượng miễn học phí Hồ sơ cần thực hiện\nĐối tượng 1: (Khoản 2 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nCon của người hoạt động cách mạng | (e2 ?iễu);\ntrước tháng 08/1945; Con của Anh |- Bản sao có công chứng Giấy xác\nhùng Lực lượng vũ trang nhân dân, | nhận đối tượng do cơ quan quản lý\nAnh hùng Lao động trong thời kỳ | đối với người có công.\nkháng chiến; Con của liệt sĩ, thương.\nbinh, bệnh binh hoặc được hưởng\nchính sách như thương binh, bệnh binh;\nCon của người hoạt động kháng chiến\nbị nhiễm chất độc hóa học.\nĐối tượng 2: (Khoản 3 - Điều 15) - Đơn đề nghị miễn, giảm học phí\nSinh viên khuyết tật. 0soH2H, :\n- Bản sao có công chứng Giầy xác nhận\nkhuyết tật\nSoannod kh\nCamScanner'",
-          "metadata": {
-            "fileId": "1764430266866-974747285.pdf"
-          },
-          "id": "9aa6bdaf-6277-48c6-98e3-8570ec1b7363"
+        "id": "56ba452b-14d2-4269-82bd-b4abc97dd282"
+      },
+      {
+        "pageContent": "nghệ này đang được ứng dụng rộng rãi trong các lĩnh vực y tế, tài chính, giáo dục, dịch vụ khách hàng,\ngiúp cá nhân hóa phản hồi và giải quyết những nhiệm vụ phân tích phức tạp.\nĐộng lực phát triển LLM xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ\nchính xác cao. Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương\npháp huấn luyện. Chẳng hạn, việc áp dụng Mixture-of-Experts (MoE) giúp mô hình chỉ kích hoạt các cụm\nchuyên gia cần thiết, giảm chi phí tính toán và tăng hiệu suất cho những tác vụ chuyên biệt. Song\nsong,    RLHF trong ChatGPT giúp mô hình hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn, trong\nkhi   Gemini được thiết kế đa phương thức (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả\nnăng    phân tích và tạo nội dung trên nhiều dạng dữ liệu. Những đột phá kỹ thuật này không chỉ\nnâng cao hiệu suất tổng thể của mô hình mà còn mở đường cho các ứng dụng LLM sáng tạo trong các",
+        "metadata": {
+          "fileId": "ddf65c6e-f201-41d9-bd41-e10733fa050b",
+          "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+          "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
         },
-        {
-          "pageContent": "Căn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi làm đơn này đề\nnghị được Nhà trường xem xét để được miễn, giảm học phí theo quy định và chế độ\nhiện hành.\n\nx..., ngày .... tháng .... năm...\nñ Người làm đơn\nXác nhận của CVHT dc tên và ghí rõ họ tân)\nSoannod kh\nŒCamScanner",
-          "metadata": {
-            "fileId": "1764430266866-974747285.pdf"
-          },
-          "id": "02fc5615-1d43-496a-b703-a30170c1df44"
-        }
-      ],
-      "historyMessages": {
-        "id": "40c6dc17-239a-498e-8cdc-8ca1973570c7",
-        "userId": null,
-        "title": "New Chat",
-        "messages": [
+        "id": "dfb59683-960b-4692-bafb-7138c65dceed"
+      }
+    ],
+    "chat": {
+      "id": "153bb144-f300-4942-8224-26fc7b176fa5",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        [
           {
             "role": "user",
-            "content": "Đối tượng nào được miễn học phí bao gồm"
+            "content": "Tài liệu nghiên cứu những llm nào và nó có điểm mạnh gì"
           },
           {
             "role": "assistant",
-            "content": "Các đối tượng được miễn học phí bao gồm:\n\n1. Con của người hoạt động cách mạng trước tháng 08/1945; Con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; Con của liệt sĩ, thương binh, bệnh binh hoặc được hưởng chính sách như thương binh, bệnh binh; Con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.  \n2. Sinh viên khuyết tật.  \n3. Sinh viên từ 16 tuổi đến 22 tuổi đang học văn bằng thứ nhất không có nguồn nuôi dưỡng thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/NĐ-CP.  \n4. Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.  \n5. Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.  \n\n(Ngoài ra, sinh viên cần thỏa mãn điều kiện về hộ khẩu thường trú tại thành phố Cần Thơ theo yêu cầu của cơ sở đào tạo.)"
-          },
-          {
-            "role": "user",
-            "content": "Đối tượng nào được giảm học phí bao gồm"
+            "content": "Tài liệu nghiên cứu các mô hình ngôn ngữ lớn (LLM) tiêu biểu như ChatGPT của OpenAI và Gemini của Google. Các điểm mạnh của các LLM này bao gồm:\n\n- Xử lý ngôn ngữ tự nhiên vượt trội: Cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn có thể suy luận dựa trên ngôn ngữ.\n- Khả năng đa phương thức: Đặc biệt, Gemini được thiết kế để xử lý đồng thời văn bản, hình ảnh, âm thanh, mã nguồn, giúp mở rộng phạm vi ứng dụng vào thực tiễn và phân tích, tạo nội dung trên nhiều dạng dữ liệu.\n- Phản hồi tự nhiên, cá nhân hóa: Ứng dụng kỹ thuật học tăng cường từ phản hồi của con người (RLHF) như trong ChatGPT, giúp mô hình hiểu ngữ cảnh và phản hồi mạch lạc, tự nhiên hơn.\n- Hiệu suất mô hình cao nhờ kiến trúc Transformer: Tăng quy mô tham số và khối lượng dữ liệu huấn luyện giúp các mô hình như GPT-3 đạt bước nhảy vọt về năng lực và có thể thực hiện đa dạng nhiệm vụ NLP.\n- Tiết kiệm chi phí tính toán: Ứng dụng kỹ thuật Mixture-of-Experts (MoE) giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết, tối ưu hiệu suất cho các tác vụ chuyên biệt.\n- Tác động thực tiễn rõ rệt: Trong giáo dục, AI như ChatGPT giúp tiết kiệm thời gian cho giáo viên (trung bình ~5,9 giờ mỗi tuần), nâng cao hiệu quả các công việc hành chính và được đông đảo giáo viên đánh giá tích cực.\n- Ứng dụng rộng rãi: LLM đang được ứng dụng trong nhiều lĩnh vực như y tế, tài chính, giáo dục, dịch vụ khách hàng, giúp cá nhân hóa phản hồi và giải quyết các nhiệm vụ phân tích phức tạp.\n\nTóm lại, tài liệu tập trung vào ChatGPT và Gemini, nhấn mạnh sức mạnh kỹ thuật, khả năng ứng dụng rộng rãi và hiệu quả thực tiễn của chúng."
           }
-        ],
-        "createdAt": "2025-12-01T06:31:00.036Z",
-        "updatedAt": "2025-12-01T06:33:19.708Z"
-      }
+        ]
+      ],
+      "createdAt": "2025-12-05T08:47:31.624Z",
+      "updatedAt": "2025-12-05T08:47:42.958Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
     }
   }
 }

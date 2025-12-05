@@ -44,7 +44,7 @@ export class ChatService {
     const context = relateDocs
       .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
       .join('\n\n');
-    console.log('Context: ', context);
+    // console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
@@ -82,7 +82,7 @@ export class ChatService {
     // ... TODO: ...
 
     const topK = 5;
-    const historyNum = 5;
+    const historyNum = 6;
 
     // 1. Get relevant docs from vector DB
     const relateDocs = await this.vectorService.getRetrievals(
@@ -91,19 +91,20 @@ export class ChatService {
       chatDto.userId as string,
       chatDto.projectId,
     );
+    // Empty docs => return "Chatbot Don't know"
     if (!relateDocs || relateDocs.length === 0) {
       return {
         answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
         relateDocs: [],
       };
     }
-    console.log('Related Docs: ', relateDocs);
+    // console.log('Related Docs: ', relateDocs);
 
-    // 2. Build context
+    // 2. Clean context
     const context = relateDocs
       .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
       .join('\n\n');
-    console.log('Context: ', context);
+    // console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
@@ -122,8 +123,6 @@ export class ChatService {
     // 3. Get history messages
     // Ensure chat exists or create it
     let chatId = chatDto.chatId;
-
-    // Check if chatId is null, undefined, or string "null"
     if (
       !chatId ||
       chatId == null ||
@@ -141,14 +140,14 @@ export class ChatService {
     }
 
     // Add userMessage to history
-    await this.prisma.chats.update({
-      where: { id: chatId },
-      data: {
-        messages: {
-          push: { role: 'user', content: chatDto.message },
-        },
-      },
-    });
+    // await this.prisma.chats.update({
+    //   where: { id: chatId },
+    //   data: {
+    //     messages: {
+    //       push: { role: 'user', content: chatDto.message },
+    //     },
+    //   },
+    // });
 
     const historyMessages = await this.prisma.chats.findUnique({
       where: { id: chatId },
@@ -157,14 +156,14 @@ export class ChatService {
     if (!historyMessages) {
       throw new Error('Chat not found');
     }
+    // console.log('clean mess', historyMessages.messages);
 
-    console.log('clean mess', historyMessages.messages);
     const contentHistory: MessageType[] = (historyMessages.messages ?? [])
       .slice(-historyNum)
       .map((m: MessageType) => ({ role: m.role, content: m.content }));
 
     const messages = [
-      ...contentHistory, // Last up to 5 messages
+      ...contentHistory, // Last up to 6 messages
       { role: 'system', content: SYSTEM_PROMPT.trim() },
       { role: 'user', content: FINAL_USER_PROMPT.trim() },
     ];
@@ -175,16 +174,19 @@ export class ChatService {
     const response = await this.openaiService.model.invoke(messages);
 
     // 4. Save assistant response to history
-    await this.prisma.chats.update({
+    const chat = await this.prisma.chats.update({
       where: { id: chatId },
       data: {
         messages: {
-          push: { role: 'assistant', content: response.content as string },
+          push: [
+            { role: 'user', content: chatDto.message },
+            { role: 'assistant', content: response.content as string },
+          ],
         },
       },
     });
 
-    return { response, relateDocs, historyMessages };
+    return { response, relateDocs, chat };
   }
 
   // -- Get all user chats --
