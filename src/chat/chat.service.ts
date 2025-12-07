@@ -42,13 +42,14 @@ export class ChatService {
 
     // 2. Build context
     const context = relateDocs
-      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .map((d) => `### "chunkIndex" ${d.metadata.chunkIndex}\n${d.pageContent}`)
       .join('\n\n');
     // console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
       Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
+      Dựa trên "Context", hãy trích dẫn theo "chunkIndex" ở đầu đoạn "Context" và trả về theo format trích dẫn [#] trong câu trả lời của bạn để người dùng dễ dàng tham khảo tài liệu gốc.
       Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
 
     const FINAL_USER_PROMPT = `
@@ -102,14 +103,36 @@ export class ChatService {
 
     // 2. Clean context
     const context = relateDocs
-      .map((d, i) => `### Document ${i + 1}\n${d.pageContent}`)
+      .map((d) => `### Chunk ${d.metadata.chunkIndex}\n${d.pageContent}`)
       .join('\n\n');
     // console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
       Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
-      Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
+
+      QUY TẮC TRÍCH DẪN (CITATION):
+
+      1. Mỗi đoạn trong Context có dạng:
+        ### Chunk {chunkIndex}
+        Nội dung...
+
+      2. Khi sử dụng thông tin từ chunk nào, bạn phải chèn citation
+        theo format: [chunkIndex]
+        ngay SAU câu, hoặc SAU bullet point sử dụng thông tin đó.
+
+      3. Chỉ chèn citation khi thông tin thật sự đến từ chunk đó.
+        Tuyệt đối không bịa, không chèn sai chunk.
+
+      4. Tránh lặp lại citation không cần thiết (nếu cùng chunk được dùng
+        liên tục trong nhiều câu liên tiếp, bạn có thể gộp cuối đoạn).
+
+      5. KHÔNG bao giờ tạo chunkIndex mới.
+        Bạn chỉ được dùng chunkIndex đã có trong Context.
+
+      6. Câu trả lời phải rõ ràng, mạch lạc, và có citations chính xác
+        theo đúng vị trí sử dụng thông tin.
+      `;
 
     const FINAL_USER_PROMPT = `
           Context:
@@ -160,12 +183,16 @@ export class ChatService {
 
     const contentHistory: MessageType[] = (historyMessages.messages ?? [])
       .slice(-historyNum)
-      .map((m: MessageType) => ({ role: m.role, content: m.content }));
+      .filter((m: any) => m && m.role && m.content) // Filter out invalid messages
+      .map((m: any) => ({
+        role: m.role as 'system' | 'user' | 'assistant',
+        content: m.content,
+      }));
 
     const messages = [
       ...contentHistory, // Last up to 6 messages
-      { role: 'system', content: SYSTEM_PROMPT.trim() },
-      { role: 'user', content: FINAL_USER_PROMPT.trim() },
+      { role: 'system' as const, content: SYSTEM_PROMPT.trim() },
+      { role: 'user' as const, content: FINAL_USER_PROMPT.trim() },
     ];
 
     console.log('message var:', messages);
@@ -173,20 +200,44 @@ export class ChatService {
     // 3. Call LLM
     const response = await this.openaiService.model.invoke(messages);
 
+    const citations = relateDocs.map((doc) => ({
+      index: doc.metadata.chunkIndex,
+      snippet: doc.pageContent.substring(0, 200) + '...',
+      text: doc.pageContent,
+      fileId: doc.metadata.fileId,
+      fileUrl: doc.metadata.fileUrl,
+      page: doc.metadata.page,
+      chunkIndex: doc.metadata.chunkIndex,
+      startOffset: doc.metadata.startOffset,
+      endOffset: doc.metadata.endOffset,
+    }));
+
     // 4. Save assistant response to history
+    // Get current messages and append new ones (avoid nested arrays)
+    const currentChat = await this.prisma.chats.findUnique({
+      where: { id: chatId },
+      select: { messages: true },
+    });
+
+    const updatedMessages = [
+      ...((currentChat?.messages as MessageType[]) || []),
+      { role: 'user' as const, content: chatDto.message },
+      { role: 'assistant' as const, content: response.content as string },
+    ];
+
     const chat = await this.prisma.chats.update({
       where: { id: chatId },
       data: {
-        messages: {
-          push: [
-            { role: 'user', content: chatDto.message },
-            { role: 'assistant', content: response.content as string },
-          ],
-        },
+        messages: updatedMessages,
       },
     });
 
-    return { response, relateDocs, chat };
+    return {
+      answer: response.content,
+      citations,
+      relateDocs,
+      chat,
+    };
   }
 
   // -- Get all user chats --

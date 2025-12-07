@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PgvectorService } from './pgvector.client';
+import { ChunkResult } from '../splitters/text-splitter';
 
+type Metadata = {
+  fileId: string;
+  projectId?: string;
+  userId: string;
+  fileUrl: string;
+};
 @Injectable()
 export class VectorService {
   constructor(private readonly pgvectorService: PgvectorService) {}
@@ -10,15 +17,21 @@ export class VectorService {
     chunks,
     metadata,
   }: {
-    chunks: string[];
-    metadata: { fileId: string; projectId?: string; userId: string };
+    chunks: ChunkResult[];
+    metadata: Metadata;
   }) {
     const vectorStore = await this.pgvectorService.initVectorStore();
 
     return vectorStore.addDocuments(
       chunks.map((chunk) => ({
-        pageContent: chunk,
-        metadata,
+        pageContent: chunk.text,
+        metadata: {
+          ...metadata,
+          chunkIndex: chunk.chunkIndex,
+          page: chunk.page,
+          startOffset: chunk.startOffset,
+          endOffset: chunk.endOffset,
+        },
       })),
     );
   }
