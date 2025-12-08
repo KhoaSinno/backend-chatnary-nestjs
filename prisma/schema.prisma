@@ -51,6 +51,8 @@ model projects {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
+  color       String?  @default("#3B82F6")
+  isArchived  Boolean  @default(false) // soft delete - TODO:
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

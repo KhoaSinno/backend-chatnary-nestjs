@@ -222,7 +222,11 @@ export class ChatService {
     const updatedMessages = [
       ...((currentChat?.messages as MessageType[]) || []),
       { role: 'user' as const, content: chatDto.message },
-      { role: 'assistant' as const, content: response.content as string },
+      {
+        role: 'assistant' as const,
+        content: response.content as string,
+        citation: citations,
+      },
     ];
 
     const chat = await this.prisma.chats.update({

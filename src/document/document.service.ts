@@ -83,7 +83,7 @@ export class DocumentService {
 
     // Delete physical file
     try {
-      deleteFile(path.join('uploads/documents', fileId));
+      deleteFile(path.join(process.cwd(), document.filePath));
     } catch (error) {
       console.error('⚠️ File delete error:', error);
       throw new NotFoundException('Delete file uploads error');

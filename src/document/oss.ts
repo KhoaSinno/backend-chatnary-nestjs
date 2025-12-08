@@ -24,7 +24,8 @@ export const storage = multer.diskStorage({
 
 // Delete file function
 export const deleteFile = (filePath: string) => {
-  fs.unlink(filePath, (err) => {
+  const normalizedPath = path.normalize(filePath);
+  fs.unlink(normalizedPath, (err) => {
     if (err) {
       console.error('Error deleting file:', err);
     } else {
