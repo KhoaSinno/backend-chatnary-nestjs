@@ -247,23 +247,32 @@ export class ChatService {
   // -- Get all user chats --
   async getAllUserChat(userId: string) {
     return await this.prisma.chats.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
       where: { userId },
     });
   }
 
-  // -- Get Chat by ID --
-  async getChatById(id: string) {
-    return await this.prisma.chats.findUnique({
-      where: { id },
+  // -- Get global user chats --
+  async getGlobalUserChat(userId: string) {
+    return await this.prisma.chats.findMany({
+      orderBy: { updatedAt: 'desc' },
+      where: { userId, projectId: null },
     });
   }
 
-  // -- Update chat (title) --
+  // -- Get Chat by ID --
+  async getChatById(userId: string, id: string) {
+    return await this.prisma.chats.findUnique({
+      where: { id, userId },
+    });
+  }
+
+  // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
     return await this.prisma.chats.update({
       where: { id, userId },
       data: updateChatDto,
+      omit: { userId: true, messages: true },
     });
   }
 
@@ -278,6 +287,7 @@ export class ChatService {
 
     return await this.prisma.chats.delete({
       where: { id },
+      omit: { userId: true, messages: true },
     });
   }
 }
