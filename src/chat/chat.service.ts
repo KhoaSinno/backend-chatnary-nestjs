@@ -8,11 +8,59 @@ import { OpenaiService } from '../llm/openai/openai.service';
 import { ChatDto } from './dto/chat.dto';
 import { VectorService } from '../ingest/vector/vector.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { ContentBlock } from '@langchain/core/messages';
+import { DocumentInterface } from '@langchain/core/documents';
+import { JsonValue } from '@prisma/client/runtime/library';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
   content: string;
 };
+
+type CitationType = {
+  index: number;
+  snippet: string;
+  text: string;
+  fileId: string;
+  fileUrl: string;
+  page: number;
+  chunkIndex: number;
+  startOffset: number;
+  endOffset: number;
+};
+
+// type ChatType = {
+//   id: string;
+//   title: string;
+//   messages: JSON[];
+//   createdAt: Date;
+//   updatedAt: Date;
+//   userId: string;
+//   projectId: string | null;
+// };
+
+type BaseMessage =
+  | {
+      answer: string;
+      relateDocs: never[];
+      citations?: undefined;
+      chat?: undefined;
+    }
+  | {
+      answer: string | (ContentBlock | ContentBlock.Text)[];
+      citations: CitationType[];
+      relateDocs: DocumentInterface<Record<string, any>>[];
+      chat: {
+        id: string;
+        userId: string;
+        title: string;
+        messages: JsonValue[];
+        createdAt: Date;
+        updatedAt: Date;
+        projectId: string | null;
+      };
+    };
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -21,64 +69,9 @@ export class ChatService {
     private prisma: PrismaService,
   ) {}
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
-    // TODO: Upgrade with flexible topK ~ Score threshold
-    const topK = 5;
+  // -- PRIVATE CHAT FUNC --
 
-    // 1. Get relevant docs from vector DB
-    const relateDocs = await this.vectorService.getRetrievals(
-      chatDto.message,
-      topK,
-      chatDto.userId as string,
-    );
-    if (!relateDocs || relateDocs.length === 0) {
-      return {
-        answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
-        relateDocs: [],
-      };
-    }
-    console.log('Related Docs: ', relateDocs);
-
-    // 2. Build context
-    const context = relateDocs
-      .map((d) => `### "chunkIndex" ${d.metadata.chunkIndex}\n${d.pageContent}`)
-      .join('\n\n');
-    // console.log('Context: ', context);
-
-    const SYSTEM_PROMPT = `
-      Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
-      Nếu không thấy câu trả lời trong Context thì trả lời "Tôi không tìm thấy thông tin trong tài liệu."
-      Dựa trên "Context", hãy trích dẫn theo "chunkIndex" ở đầu đoạn "Context" và trả về theo format trích dẫn [#] trong câu trả lời của bạn để người dùng dễ dàng tham khảo tài liệu gốc.
-      Tuyệt đối không được bịa, không lấy thông tin ngoài tài liệu. `;
-
-    const FINAL_USER_PROMPT = `
-          Context:
-
-          ${context}
-
-          ---
-
-          Câu hỏi: ${chatDto.message}
-      `;
-
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT.trim() },
-      { role: 'user', content: FINAL_USER_PROMPT.trim() },
-    ];
-
-    // 3. Call LLM
-    const response = await this.openaiService.model.invoke(messages);
-
-    return { response, relateDocs };
-
-    //     const r = await this.retriever.get(projectId);
-    // const chain = createSimpleRAG(this.openai.llm, r);
-    // return chain.invoke({ question });
-  }
-
-  // -- Chat history --
-  async chatHistory(chatDto: ChatDto) {
+  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
     // -- VALIDATIONS --
     // ... TODO: ...
 
@@ -162,16 +155,6 @@ export class ChatService {
       chatId = created.id;
     }
 
-    // Add userMessage to history
-    // await this.prisma.chats.update({
-    //   where: { id: chatId },
-    //   data: {
-    //     messages: {
-    //       push: { role: 'user', content: chatDto.message },
-    //     },
-    //   },
-    // });
-
     const historyMessages = await this.prisma.chats.findUnique({
       where: { id: chatId },
     });
@@ -181,11 +164,13 @@ export class ChatService {
     }
     // console.log('clean mess', historyMessages.messages);
 
-    const contentHistory: MessageType[] = (historyMessages.messages ?? [])
+    const contentHistory: MessageType[] = (
+      (historyMessages.messages ?? []) as MessageType[]
+    )
       .slice(-historyNum)
-      .filter((m: any) => m && m.role && m.content) // Filter out invalid messages
-      .map((m: any) => ({
-        role: m.role as 'system' | 'user' | 'assistant',
+      .filter((m: MessageType) => m && m.role && m.content) // Filter out invalid messages
+      .map((m: MessageType) => ({
+        role: m.role,
         content: m.content,
       }));
 
@@ -200,16 +185,16 @@ export class ChatService {
     // 3. Call LLM
     const response = await this.openaiService.model.invoke(messages);
 
-    const citations = relateDocs.map((doc) => ({
-      index: doc.metadata.chunkIndex,
+    const citations: CitationType[] = relateDocs.map((doc) => ({
+      index: doc.metadata.chunkIndex as number,
       snippet: doc.pageContent.substring(0, 200) + '...',
       text: doc.pageContent,
-      fileId: doc.metadata.fileId,
-      fileUrl: doc.metadata.fileUrl,
-      page: doc.metadata.page,
-      chunkIndex: doc.metadata.chunkIndex,
-      startOffset: doc.metadata.startOffset,
-      endOffset: doc.metadata.endOffset,
+      fileId: doc.metadata.fileId as string,
+      fileUrl: doc.metadata.fileUrl as string,
+      page: doc.metadata.page as number,
+      chunkIndex: doc.metadata.chunkIndex as number,
+      startOffset: doc.metadata.startOffset as number,
+      endOffset: doc.metadata.endOffset as number,
     }));
 
     // 4. Save assistant response to history
@@ -242,6 +227,19 @@ export class ChatService {
       relateDocs,
       chat,
     };
+  }
+
+  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatLite(chatDto: ChatDto) {
+    return await this.chatUtil(chatDto);
+  }
+
+  // -- Chat history --
+  async chatHistory(chatDto: ChatDto) {
+    // -- VALIDATIONS --
+    // ... TODO: ...
+
+    return await this.chatUtil(chatDto);
   }
 
   // -- Get all user chats --

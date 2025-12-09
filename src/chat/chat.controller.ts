@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Headers,
+  Query,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -17,10 +18,15 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   // -- CHAT LITE --
-  @Post('/lite')
-  chatLite(@Headers('x-client-id') userId: string, @Body() ChatDto: ChatDto) {
-    ChatDto.userId = userId;
-    return this.chatService.chatLite(ChatDto);
+  @Post('/global')
+  chatLite(
+    @Headers('x-client-id') userId: string,
+    @Query('chatId') chatId: string | undefined,
+    @Body() chatDto: ChatDto,
+  ) {
+    chatDto.userId = userId;
+    chatDto.chatId = chatId;
+    return this.chatService.chatLite(chatDto);
   }
 
   // -- CHAT HISTORY --
