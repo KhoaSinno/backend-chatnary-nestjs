@@ -95,6 +95,60 @@ export class DocumentService {
     });
   }
 
+  // Remove all documents in a project
+  async removeDocumentInProject(projectId: string, userId: string) {
+    // Get all documents in project
+    const documents = await this.prisma.project_documents.findMany({
+      where: { projectId: projectId, userId: userId },
+    });
+
+    if (documents.length === 0) {
+      return {
+        count: 0,
+        isDeleted: true,
+      };
+    }
+
+    // Remove each document's vector and physical file
+    for (const document of documents) {
+      // Remove vectors
+      try {
+        await this.vectorService.removeVectorByFileId(document.id);
+        this.logger.log(`🗑️ Deleted vectors for document: ${document.name}`);
+      } catch (error) {
+        this.logger.error(
+          `⚠️ Vector delete error for ${document.name}:`,
+          error,
+        );
+      }
+
+      // Delete physical file
+      try {
+        deleteFile(path.join(process.cwd(), document.filePath));
+        this.logger.log(`🗑️ Deleted file: ${document.filePath}`);
+      } catch (error) {
+        this.logger.error(
+          `⚠️ File delete error for ${document.filePath}:`,
+          error,
+        );
+      }
+    }
+
+    // Delete all document records from DB
+    const deleteResult = await this.prisma.project_documents.deleteMany({
+      where: { projectId: projectId, userId: userId },
+    });
+
+    this.logger.log(
+      `✅ Deleted ${deleteResult.count} document records from database`,
+    );
+
+    return {
+      count: deleteResult.count,
+      isDeleted: true,
+    };
+  }
+
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
     return await this.prisma.project_documents.create({
@@ -116,6 +170,10 @@ export class DocumentService {
 
     return await this.prisma.project_documents.findMany({
       where: { projectId: projectId },
+      omit: {
+        projectId: true,
+        userId: true,
+      },
     });
   }
 
@@ -124,6 +182,17 @@ export class DocumentService {
     return await this.prisma.project_documents.findMany({
       where: {
         userId: userId,
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            color: true,
+            isArchived: true,
+          },
+        },
       },
     });
   }
@@ -134,6 +203,17 @@ export class DocumentService {
       where: {
         id: id,
         userId: userId,
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            color: true,
+            isArchived: true,
+          },
+        },
       },
     });
   }

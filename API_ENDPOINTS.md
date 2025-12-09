@@ -5,36 +5,18 @@
 ## Base URL
 
 ```
-http://localhost:9000
+http://localhost:8000
 ```
 
 ---
 
 # 🏠 Root
 
-### **GET** `/`
+### **GET** `/api/v1/docs`
 
-* Welcome message
+* API documents Backend
 
----
-
-# ❤️ Health Check
-
-## Basic Health Check
-
-### **GET** `/health`
-
-**Response**
-
-```json
-{
-  "status": "ok",
-  "timestamp": "2025-11-09T06:45:18.888Z",
-  "uptime": 2.958539,
-  "environment": "development",
-  "version": "1.0.0"
-}
-```
+<!-- ---
 
 ## Detailed Health Check
 
@@ -59,7 +41,7 @@ http://localhost:9000
     "system": 110151
   }
 }
-```
+``` -->
 
 ---
 
@@ -69,49 +51,184 @@ http://localhost:9000
 
 ## Create Project
 
-### **POST** `/api/projects`
+### **POST** `/api/v1/project`
 
 **Body**
 
 ```json
 {
-  "name": "My Workspace",
-  "description": "Optional description",
-  "color": "#4A90E2"
+  "name": "Sinoo khung bo",
+  "description": "Desc ...",
+  "color": "#3B82F6",
+  "isArchived": false
 }
 ```
 
-## List Projects
+**Response**
 
-### **GET** `/api/projects`
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+    "name": "Sinoo khung bo",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-08T15:48:49.375Z",
+    "updatedAt": "2025-12-08T15:48:49.375Z",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
+
+## List Projects by user
+
+### **GET** `/api/v1/project`
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "46da89f2-401a-489c-98ea-4a4121d6ed91",
+      "name": "AI Văn Bản",
+      "description": "Project dùng để test RAG + OCR",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-04T07:46:19.870Z",
+      "updatedAt": "2025-12-04T07:46:19.870Z",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+    },
+    {
+      "id": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+      "name": "Thư Viện Số",
+      "description": "Project số hóa tài liệu PDF",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-04T07:46:19.967Z",
+      "updatedAt": "2025-12-04T07:46:19.967Z",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+    },
+    {
+      "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+      "name": "Sinoo khung bo",
+      "description": "Desc ...",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-08T15:48:49.375Z",
+      "updatedAt": "2025-12-08T15:48:49.375Z",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+    }
+  ]
+}
+```
 
 ## Update Project
 
-### **PATCH** `/api/projects/:id`
+### **PATCH** `/api/v1/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 **Body**
 
 ```json
 {
-  "name": "New Name",
-  "description": "Updated description",
-  "color": "#FF9900"
+  "name": "Sinoo khung bo 1101"
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+    "name": "Sinoo khung bo 1101",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-08T15:48:49.375Z",
+    "updatedAt": "2025-12-08T15:53:24.488Z",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
+
+## List Documents in Project
+
+### **GET** `/api/v1/project/:id/documents`
+
+**Param**
+id = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z"
+    }
+  ]
 }
 ```
 
 ## Delete Project
 
-### **DELETE** `/api/projects/:id`
+### **DELETE** `/api/v1/project/:id`
+
+**Param**
+id = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z"
+    }
+  ]
+}
+```
 
 ---
 
 # 📄 Documents
 
+## Access static file
+
+https
+
 *(Upload → OCR → Chunk → Embed → Vector Store)*
 
-## Upload File (Auto Ingest)
+## Upload Document (Auto Ingest)
 
-### **POST** `/api/document/upload/files`
+### **POST** `/api/v1/document/upload/files`
 
 * Multipart form-data:
 
@@ -129,7 +246,7 @@ http://localhost:9000
 // multi part
 {
   "projectId": "ac066e7e-8f22-40d5-b5cf-893a89b77fab",
-  "files": "multi-part..."
+  "files": // multi-part... from form input
 }
 
 ```
@@ -148,17 +265,99 @@ http://localhost:9000
 }
 ```
 
-## Get File Metadata
+## Get All Document by user
 
-### **GET** `/api/documents/:id`
+### **GET** `/api/v1/document`
 
-## Delete File
+**Response**
 
-### **DELETE** `/api/documents/:id`
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "projects": {
+        "id": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+        "name": "Thư Viện Số",
+        "description": "Project số hóa tài liệu PDF",
+        "color": "#3B82F6",
+        "isArchived": false
+      }
+    }
+  ]
+}
+```
 
-## List Documents in Project
+## Get Document Detail by user
 
-### **GET** `/api/projects/:id/documents`
+### **GET** `/api/v1/document/:id`
+
+**Param**
+
+id = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+    "name": "MGHP HK1(2025-2026).pdf",
+    "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+    "mimeType": "application/pdf",
+    "size": 2751843,
+    "status": "done",
+    "createdAt": "2025-12-07T04:08:06.354Z",
+    "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+    "projects": {
+      "id": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+      "name": "Thư Viện Số",
+      "description": "Project số hóa tài liệu PDF",
+      "color": "#3B82F6",
+      "isArchived": false
+    }
+  }
+}
+```
+
+## Delete Document
+
+### **DELETE** `/api/v1/documents/:id`
+
+**Param**: id = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "bbd5fbf1-1c07-4568-83ee-0b4331d974e0",
+    "name": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+    "filePath": "uploads\\documents\\1765071449784-107452698.pdf",
+    "mimeType": "application/pdf",
+    "size": 39998,
+    "status": "done",
+    "createdAt": "2025-12-07T01:37:29.792Z",
+    "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
 
 # 💬 Chat (With History)
 
@@ -336,11 +535,11 @@ http://localhost:9000
 
 ## List Chats in Project
 
-### **GET** `/api/chats?projectId=<id>`
+### **GET** `/api/v1/chats?projectId=<id>`
 
 ## Send Message (History-based RAG)
 
-### **POST** `/api/chats/:chatId/messages`
+### **POST** `/api/v1/chats/:chatId/messages`
 
 **Body**
 
@@ -352,15 +551,15 @@ http://localhost:9000
 
 ## Get Chat Messages
 
-### **GET** `/api/chats/:chatId/messages`
+### **GET** `/api/v1/chats/:chatId/messages`
 
 ---
 
 # 📦 Embedding & Ingest (Internal but usable)
 
-## Manual Re-Ingest File
+## Manual Re-Ingest Document
 
-### **POST** `/api/documents/:id/reingest`
+### **POST** `/api/v1/documents/:id/reingest`
 
 ---
 

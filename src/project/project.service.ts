@@ -60,7 +60,9 @@ export class ProjectService {
   // -- GET DOCUMENTS IN PROJECT --
   async getDocumentsInProject(userId: string, projectId: string) {
     // Check existed
-    const project = await this.prisma.projects.findFirst({});
+    const project = await this.prisma.projects.findFirst({
+      where: { id: projectId, userId: userId },
+    });
     if (!project)
       throw new NotFoundException(
         'Project not found or does not belong to user',
@@ -84,9 +86,23 @@ export class ProjectService {
 
   // -- DELETE PROJECT CASCADE --
   async removeProject(id: string) {
-    return await this.prisma.projects.delete({
+    // Get project info first (before delete)
+    const project = await this.prisma.projects.findUnique({
       where: { id: id },
     });
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    // Delete: Vector + Disk files FIRST (before cascade delete)
+    await this.documentService.removeDocumentInProject(id, project.userId);
+
+    // Then delete project (cascade will delete DB records)
+    const projectDel = await this.prisma.projects.delete({
+      where: { id: id },
+    });
+
+    return projectDel;
   }
 
   findAll() {

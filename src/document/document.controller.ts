@@ -83,6 +83,7 @@ export class DocumentController {
     return this.documentService.getAllDocuments(userId);
   }
 
+  // -- GET DOCUMENT DETAIL BY USER --
   @Get(':id')
   getDocumentDetail(
     @Headers('x-client-id') userId: string,

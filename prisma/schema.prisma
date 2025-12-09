@@ -39,9 +39,9 @@ model chats {
   updatedAt DateTime @updatedAt
 
   projectId String?   @db.Uuid
-  project   projects? @relation(fields: [projectId], references: [id])
+  project   projects? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  user users @relation(fields: [userId], references: [id])
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([projectId])
@@ -57,7 +57,7 @@ model projects {
   updatedAt   DateTime @updatedAt
 
   userId String @db.Uuid
-  user   users  @relation(fields: [userId], references: [id])
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   chats     chats[]
   documents project_documents[]
@@ -73,10 +73,10 @@ model project_documents {
   createdAt DateTime @default(now())
 
   projectId String   @db.Uuid
-  projects  projects @relation(fields: [projectId], references: [id])
+  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   userId String @db.Uuid
-  users  users  @relation(fields: [userId], references: [id])
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([projectId])
 }

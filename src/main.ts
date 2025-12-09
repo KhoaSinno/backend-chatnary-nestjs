@@ -13,10 +13,15 @@ async function bootstrap() {
     .addTag('chatnary')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
 
+  // -- Response interceptor --
   app.useGlobalInterceptors(new ResponseInterceptor());
+  // -- HTTP exception filter --
   app.useGlobalFilters(new HttpExceptionFilter());
+  // -- Prefix all routes with /api/v1 --
+  app.setGlobalPrefix('api/v1');
+  // -- Swagger setup --
+  SwaggerModule.setup('api/v1/docs', app, documentFactory);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

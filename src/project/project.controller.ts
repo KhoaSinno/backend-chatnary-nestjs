@@ -17,9 +17,14 @@ import { ChatDto } from '../chat/dto/chat.dto';
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
+
   // -- CREATE --
   @Post()
-  createNewProject(@Body() createProjectDto: CreateProjectDto) {
+  createNewProject(
+    @Headers('x-client-id') userId: string,
+    @Body() createProjectDto: CreateProjectDto,
+  ) {
+    createProjectDto.userId = userId;
     return this.projectService.createNewProject(createProjectDto);
   }
 
