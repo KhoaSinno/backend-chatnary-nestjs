@@ -1,4 +1,12 @@
 export const envConfig = () => ({
-  OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'your-api-key',
-  DATABASE_URL_NEON: process.env.DATABASE_URL_NEON || 'your-database-url',
+  openai: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+  database: {
+    url: process.env.DATABASE_URL_NEON,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN ?? '5m',
+  },
 });

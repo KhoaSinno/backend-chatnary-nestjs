@@ -12,6 +12,10 @@ import { PrismaService } from './prisma/prisma.service';
 import { ProjectModule } from './project/project.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+import { envConfig } from './config/env.config';
+import { UserModule } from './user/user.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -21,8 +25,15 @@ import { join } from 'path';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      load: [envConfig],
+      validationSchema: Joi.object({
+        OPENAI_API_KEY: Joi.string().required(),
+        DATABASE_URL_NEON: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().optional(),
+      }),
     }),
+
     IngestModule,
     DocumentModule,
     ChatModule,
@@ -30,6 +41,8 @@ import { join } from 'path';
     OpenaiModule,
     PrismaModule,
     ProjectModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

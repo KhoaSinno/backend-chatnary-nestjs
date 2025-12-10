@@ -183,7 +183,7 @@ export class ChatService {
     console.log('message var:', messages);
 
     // 3. Call LLM
-    const response = await this.openaiService.model.invoke(messages);
+    const response = await this.openaiService.getChatModel().invoke(messages);
 
     const citations: CitationType[] = relateDocs.map((doc) => ({
       index: doc.metadata.chunkIndex as number,

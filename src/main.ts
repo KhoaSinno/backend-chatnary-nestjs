@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('The Chatnary API description')
     .setVersion('1.0')
     .addTag('chatnary')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 

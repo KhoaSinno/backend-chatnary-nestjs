@@ -30,7 +30,7 @@ export class PgvectorService {
 
     // Init ONCE
     this.vectorStore = await PGVectorStore.initialize(
-      this.openaiService.embeddings(),
+      this.openaiService.getEmbeddings(),
       config,
     );
 
