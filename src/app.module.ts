@@ -16,6 +16,8 @@ import { AuthModule } from './auth/auth.module';
 import { envConfig } from './config/env.config';
 import { UserModule } from './user/user.module';
 import * as Joi from 'joi';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -45,6 +47,13 @@ import * as Joi from 'joi';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

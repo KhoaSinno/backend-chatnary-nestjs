@@ -1,4 +1,24 @@
+# Implement authentication
 
+### Khi login
+
+- return { accessToken, refreshToken, user }
+
+### FE lưu
+
+- AT vào memory / localStorage
+
+- RT vào localStorage hoặc cookie httpOnly
+
+### Khi request API
+
+- FE gửi Bearer AT
+
+- Nếu AT hết hạn → FE gọi refresh với RT
+
+- BE kiểm tra RT → cấp token mới
+
+# Implement citation
 
 1. Cách parse citation trong câu trả lời
 2. Cách render `[chunkIndex]`

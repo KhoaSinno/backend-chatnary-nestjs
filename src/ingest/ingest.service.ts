@@ -24,30 +24,6 @@ export class IngestService {
     userId: string,
     projectId?: string,
   ) {
-    // 1. Load document based on file type
-    // let text: string;
-    // const ext = filePath.toLowerCase();
-
-    // if (ext.endsWith('.txt')) {
-    //   // Plain text file => .txt
-    //   text = fs.readFileSync(filePath, 'utf-8');
-    // } else if (ext.endsWith('.pdf')) {
-    //   // Try PDF first
-    //   text = await this.pdfService.load(filePath);
-
-    //   // If PDF has no text (scanned), use OCR
-    //   if (!text || text.trim().length < 20) {
-    //     console.log('📄 PDF has no text, using OCR...');
-    //     const result = await this.ocrService.load(filePath);
-    //     text = result.text;
-    //   }
-    // } else if (/\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext)) {
-    //   // Image files - use OCR
-    //   const result = await this.ocrService.load(filePath);
-    //   text = result.text;
-    // } else {
-    //   throw new Error(`Unsupported file type: ${ext}`);
-    // }
     const pdfPages = await this.pdfService.load(filePath);
 
     // OCR handle

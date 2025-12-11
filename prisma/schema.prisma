@@ -25,6 +25,7 @@ model users {
   username         String              @unique
   name             String?
   password         String
+  refreshToken     String?
   projects         projects[]
   chats            chats[]
   projectDocuments project_documents[]

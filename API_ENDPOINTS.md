@@ -16,34 +16,34 @@ http://localhost:8000
 
 * API documents Backend
 
-<!-- ---
-// TODO
-## Detailed Health Check
+---
 
-### **GET** `/health/detailed`
+# 🔑 Authentication
+
+## Register
+
+### **POST** `/api/v1/auth/signin`
+
+**Param**
+chatId = bbe027d-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+
+```
 
 **Response**
 
 ```json
-{
-  "status": "ok",
-  "timestamp": "2025-11-09T06:45:19.374Z",
-  "uptime": 3.444321,
-  "environment": "development",
-  "version": "1.0.0",
-  "memory": {
-    "used": 25.32,
-    "total": 51.84,
-    "unit": "MB"
-  },
-  "cpu": {
-    "user": 366829,
-    "system": 110151
-  }
-}
-``` -->
 
----
+```
+
+## Login
+
+## Refresh token
+
+## Logout
 
 # 📁 Projects
 
