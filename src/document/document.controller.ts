@@ -11,12 +11,14 @@ import {
   UploadedFiles,
   Logger,
   Headers,
+  Req,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './oss';
 import path from 'path';
+import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('document')
 export class DocumentController {
@@ -52,7 +54,7 @@ export class DocumentController {
     }),
   )
   async uploadFiles(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @UploadedFiles() files: Express.Multer.File[],
     @Body('projectId') projectId?: string,
   ) {
@@ -62,7 +64,7 @@ export class DocumentController {
       throw new BadRequestException('No files uploaded');
     }
 
-    await this.documentService.uploadFiles(userId, files, projectId);
+    await this.documentService.uploadFiles(req.user.userId, files, projectId);
     return files.map((file) => ({
       url: `/uploads/documents/${file.filename}`,
     }));
@@ -71,25 +73,25 @@ export class DocumentController {
   // -- REMOVE --
   @Delete(':fileId')
   removeDocument(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('fileId') fileId: string,
   ) {
-    return this.documentService.removeDocument(fileId, userId);
+    return this.documentService.removeDocument(fileId, req.user.userId);
   }
 
   // -- GET ALL DOCUMENTS --
   @Get()
-  getAllDocuments(@Headers('x-client-id') userId: string) {
-    return this.documentService.getAllDocuments(userId);
+  getAllDocuments(@Req() req: { user: JwtPayloadWithRt }) {
+    return this.documentService.getAllDocuments(req.user.userId);
   }
 
   // -- GET DOCUMENT DETAIL BY USER --
   @Get(':id')
   getDocumentDetail(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('id') id: string,
   ) {
-    return this.documentService.getDocumentDetail(userId, id);
+    return this.documentService.getDocumentDetail(req.user.userId, id);
   }
 
   //  -- UPDATE DOCUMENT --

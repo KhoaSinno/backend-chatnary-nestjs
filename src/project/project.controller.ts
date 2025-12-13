@@ -8,11 +8,13 @@ import {
   Delete,
   Headers,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ChatDto } from '../chat/dto/chat.dto';
+import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('project')
 export class ProjectController {
@@ -21,42 +23,48 @@ export class ProjectController {
   // -- CREATE --
   @Post()
   createNewProject(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Body() createProjectDto: CreateProjectDto,
   ) {
-    createProjectDto.userId = userId;
+    createProjectDto.userId = req.user.userId;
     return this.projectService.createNewProject(createProjectDto);
   }
 
   // -- READ BY USERID --
   @Get('')
-  findByUserId(@Headers('x-client-id') userId: string) {
-    return this.projectService.findByUserId(userId);
+  findByUserId(@Req() req: { user: JwtPayloadWithRt }) {
+    return this.projectService.findByUserId(req.user.userId);
   }
 
   // -- GET CHATS IN PROJECT --
   @Get('/:projectId/chats')
   async getChatsInProject(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('projectId') projectId: string,
   ) {
     // RETURN LIST OF CHATS IN A PROJECT
-    return await this.projectService.getChatsInProject(userId, projectId);
+    return await this.projectService.getChatsInProject(
+      req.user.userId,
+      projectId,
+    );
   }
 
   // -- GET DOCUMENTS IN PROJECT --
   @Get('/:projectId/documents')
   async getDocumentsProject(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('projectId') projectId: string,
   ) {
-    return await this.projectService.getDocumentsInProject(userId, projectId);
+    return await this.projectService.getDocumentsInProject(
+      req.user.userId,
+      projectId,
+    );
   }
 
   // -- GET CHAT IN PROJECTS --
   @Get('/:projectId/chats/:chatId/messages')
   async getChatDetailInProject(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('projectId') projectId: string,
     @Param('chatId') chatId: string,
   ) {
@@ -65,7 +73,7 @@ export class ProjectController {
 
     // RETURN CHAT MESSAGES IN A PROJECT SPECIFIC CHAT
     return await this.projectService.getChatDetailInProject(
-      userId,
+      req.user.userId,
       projectId,
       chatId,
     );
@@ -74,13 +82,13 @@ export class ProjectController {
   // -- POST CHAT IN PROJECTS --
   @Post('/:projectId/chats/messages')
   async chatMessageInProject(
-    @Headers('x-client-id') userId: string,
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('projectId') projectId: string,
     @Query('chatId') chatId: string | undefined,
     @Body() body: ChatDto, // message
   ) {
     body.chatId = chatId;
-    body.userId = userId;
+    body.userId = req.user.userId;
     body.projectId = projectId;
     // RETURN CHAT MESSAGES IN A PROJECT SPECIFIC CHAT
     return await this.projectService.chatMessageInProject(body);
