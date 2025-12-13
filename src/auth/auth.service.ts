@@ -62,7 +62,11 @@ export class AuthService {
     const { password: _, ...userSafe } = user;
 
     // Sign JWT
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.role as string,
+    );
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
@@ -91,7 +95,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
     // Compare RT
-    const isRtValid = bcrypt.compareSync(rt, user.refreshToken as string);
+    const isRtValid = bcrypt.compareSync(rt, user.refreshToken);
     if (!isRtValid) throw new ForbiddenException('Access Denied');
 
     // Get new AT - RT
@@ -112,8 +116,8 @@ export class AuthService {
   }
 
   // -- HELPERS --
-  async getTokens(userId: string, email: string) {
-    const payload = { sub: userId, userId, email };
+  async getTokens(userId: string, email: string, role: string = 'USER') {
+    const payload = { userId, email, role };
 
     const jwtSecret = this.configService.get<string>('jwt.secret');
     const jwtRefreshSecret =

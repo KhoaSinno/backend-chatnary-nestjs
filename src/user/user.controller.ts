@@ -11,6 +11,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../constant/index.constant';
 
 @Controller('user')
 export class UserController {
@@ -24,6 +26,7 @@ export class UserController {
 
   @Get()
   @ApiBearerAuth()
+  @Roles(Role.ADMIN)
   findAllUsers() {
     return this.userService.findAllUsers();
   }

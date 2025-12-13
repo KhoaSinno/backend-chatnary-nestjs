@@ -51,11 +51,10 @@
 
 ### 🔥 Core RAG Features
 
-- **Chat (no history)**
-  - Direct single-turn chat with the RAG pipeline.
-
-- **Chat with history**
+- **Chat history - Semantic Retrieval**
   - Multi-turn conversations stored in DB.
+  - KNN search via pgvector (Default with none index modify)
+  - [TODO] Hybrid search-ready
 
 - **Automatic Ingest Pipeline**
   Upload any file → Backend automatically:
@@ -67,20 +66,22 @@
   5. Embeds using OpenAI
   6. Stores vectors in pgvector
 
-- **Semantic Retrieval**
+- **Document module**
+  - Use multer with Object storage server: `oss.ts`
+  - Start point to pipeline ingest
+  - Base CRUD
 
-  - KNN search via pgvector
-  - [*] Hybrid search-ready
+- **Project (Same ChatGPT)**
+  - Base CRUD
 
----
+- **User**
+  - [TODO] Role control
+  - Base CRUD
 
-### 📁 Project & File Management
-
-- **Project CRUD**
-  - Similar ChatGPT Project function
-
-- **File CRUD**
-- Per-project isolation (documents, chats, embeddings)
+- **Auth**
+  - Authentication with jwt: Access/Refresh token apply with Guard + Passport in Nestjs
+  - Apply
+  - Base CRUD
 
 ---
 

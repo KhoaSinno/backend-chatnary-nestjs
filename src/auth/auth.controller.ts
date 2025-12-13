@@ -39,7 +39,7 @@ export class AuthController {
   refreshToken(@Req() req: { user: JwtPayloadWithRt }) {
     console.log(req);
     return this.authService.refreshToken(
-      req.user.sub, // userId
+      req.user.userId, // userId
       req.user.refreshToken, // refreshToken FE gửi lên
     );
   }

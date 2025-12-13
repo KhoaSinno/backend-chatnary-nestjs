@@ -18,13 +18,16 @@ import { UserModule } from './user/user.module';
 import * as Joi from 'joi';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [
+    // Serve static files from the "uploads" directory
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
       serveRoot: '/uploads',
     }),
+    // Environment configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,
       load: [envConfig],
@@ -35,7 +38,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         JWT_EXPIRES_IN: Joi.string().optional(),
       }),
     }),
-
+    // Application modules
     IngestModule,
     DocumentModule,
     ChatModule,
@@ -50,9 +53,15 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
   providers: [
     AppService,
     PrismaService,
+    // JWT authentication guard
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    // Role-based access control guard
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

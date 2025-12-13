@@ -19,6 +19,13 @@ model documents {
   @@ignore // No generate, no migration, no pull schema from db
 }
 
+enum Role {
+  ADMIN
+  USER
+  GUEST
+  LIBERIAN
+}
+
 model users {
   id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email            String              @unique
@@ -26,6 +33,7 @@ model users {
   name             String?
   password         String
   refreshToken     String?
+  role             Role                @default(USER)
   projects         projects[]
   chats            chats[]
   projectDocuments project_documents[]
