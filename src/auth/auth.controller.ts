@@ -13,7 +13,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entities/auth.entity';
 import { Public } from './decorators/public.decorator';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { JwtPayloadWithRt } from './strategies/refresh.strategy';
+import { JwtPayload, JwtPayloadWithRt } from './strategies/refresh.strategy';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -39,13 +39,13 @@ export class AuthController {
   refreshToken(@Req() req: { user: JwtPayloadWithRt }) {
     console.log(req);
     return this.authService.refreshToken(
-      req.user.userId, // userId
-      req.user.refreshToken, // refreshToken FE gửi lên
+      req.user.userId,
+      req.user.refreshToken,
     );
   }
 
   @Post('logout')
-  logout(@Headers('x-client-id') userId: string) {
-    return this.authService.logout(userId);
+  logout(@Req() req: { user: JwtPayload }) {
+    return this.authService.logout(req.user.userId);
   }
 }

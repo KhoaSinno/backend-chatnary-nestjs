@@ -26,7 +26,7 @@ export class UserController {
 
   @Get()
   @ApiBearerAuth()
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   findAllUsers() {
     return this.userService.findAllUsers();
   }

@@ -5,14 +5,14 @@
 ## Base URL
 
 ```
-http://localhost:8000
+http://localhost:8000/api/v1
 ```
 
 ---
 
 # 🏠 Root
 
-### **GET** `/api/v1/docs`
+### **GET** `/docs`
 
 * API documents Backend
 
@@ -22,28 +22,141 @@ http://localhost:8000
 
 ## Register
 
-### **POST** `/api/v1/auth/signin`
-
-**Param**
-chatId = bbe027d-74ea-4630-a846-5040a9772jkk
+### **POST** `/auth/register`
 
 **Body**
 
 ```json
-
+{
+  "email": "user1@example.com",
+  "password": "123456"
+}
 ```
 
 **Response**
 
 ```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "message": "User registered successfully"
+  }
+}
 
+// Error
+{
+  "statusCode": 403,
+  "success": false,
+  "message": {
+    "message": "User already exists",
+    "error": "Forbidden",
+    "statusCode": 403
+  },
+  "timestamp": "2025-12-13T08:34:50.308Z",
+  "path": "/api/v1/auth/register"
+}
 ```
 
 ## Login
 
+### **POST** `/auth/login`
+
+**Body**
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "123456"
+}
+```
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjU2MDA3NjJ9.OlDUVXNx2FNlF7g7ldbuiHFFueiexPW6dvSj0jIQNsM",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjYyMDQ2NjJ9.tiCXjCNmMOrzdZYKmgoEXQvgFvViZAWd8IhFn8bIYIE",
+    "user": {
+      "id": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "email": "admin@example.com",
+      "username": "admin",
+      "name": "Administrator",
+      "refreshToken": "$2b$10$L/FBJkavJpoQMrz3dgjg7.MdglrEahBl6dS77syc.P08fkXyHjGuu",
+      "role": "ADMIN"
+    }
+  }
+}
+
+// Error
+{
+  "statusCode": 500,
+  "success": false,
+  "message": "Invalid credentials",
+  "timestamp": "2025-12-13T08:58:05.663Z",
+  "path": "/api/v1/auth/login"
+}
+```
+
 ## Refresh token
 
+### **POST** `/auth/refresh`
+
+**Headers(Bearer header)**
+authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjU0NDQwMTl9.822N8k9AZQ5Yk3KT1gwd-NI77ujFDFd7TjR_yainwQk",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro"
+  }
+}
+
+// Error
+{
+  "statusCode": 403,
+  "success": false,
+  "message": {
+    "message": "Access Denied",
+    "error": "Forbidden",
+    "statusCode": 403
+  },
+  "timestamp": "2025-12-13T09:00:00.471Z",
+  "path": "/api/v1/auth/refresh"
+}
+```
+
 ## Logout
+
+### **POST** `/auth/logout`
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "message": "User logged out successfully"
+  }
+}
+
+// Error 
+// TODO
+
+```
 
 # 📁 Projects
 
@@ -51,7 +164,7 @@ chatId = bbe027d-74ea-4630-a846-5040a9772jkk
 
 ## Create Project
 
-### **POST** `/api/v1/project`
+### **POST** `/project`
 
 **Body**
 
@@ -85,7 +198,7 @@ chatId = bbe027d-74ea-4630-a846-5040a9772jkk
 
 ## List Projects by user
 
-### **GET** `/api/v1/project`
+### **GET** `/project`
 
 **Response**
 
@@ -130,7 +243,7 @@ chatId = bbe027d-74ea-4630-a846-5040a9772jkk
 
 ## List Chats in Project
 
-### **GET** `/api/v1/project/:projectId/chats`
+### **GET** `/project/:projectId/chats`
 
 **Param**
 projectId = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -241,7 +354,7 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 ## List Documents in Project
 
-### **GET** `/api/v1/project/:id/documents`
+### **GET** `/project/:id/documents`
 
 **Param**
 id = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -268,7 +381,7 @@ id = eae33420-8426-4f3e-b055-d4afeefad60b
 
 ## List Chat detail in Project
 
-### **GET** `/api/v1/project/:projectId/chats/:chatId/messages`
+### **GET** `/project/:projectId/chats/:chatId/messages`
 
 **Param**
 projectId = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -360,7 +473,7 @@ chatId = eae33420-8426-4f3e-b055-32sadgasgb
 
 ## Create New chat in Project
 
-### **GET** `/api/v1/project/:projectId/chats/messages`
+### **GET** `/project/:projectId/chats/messages`
 
 **Param**
 projectId = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -594,7 +707,7 @@ chatId = null
 
 ## Update Project
 
-### **PATCH** `/api/v1/project/:projectId`
+### **PATCH** `/project/:projectId`
 
 **Param**
 projectId = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -629,7 +742,7 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 ## Delete Project
 
-### **DELETE** `/api/v1/project/:projectId`
+### **DELETE** `/project/:projectId`
 
 **Param**
 projectId = eae33420-8426-4f3e-b055-d4afeefad60b
@@ -666,7 +779,7 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 *(Upload → OCR → Chunk → Embed → Vector Store)*
 
-### **POST** `/api/v1/document/upload/files`
+### **POST** `/document/upload/files`
 
 **Mulit-Part (Body)**
 
@@ -695,7 +808,7 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 ## Get All Document by user
 
-### **GET** `/api/v1/document`
+### **GET** `/document`
 
 **Response**
 
@@ -728,7 +841,7 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 
 ## Get Document Detail by user
 
-### **GET** `/api/v1/document/:id`
+### **GET** `/document/:id`
 
 **Param**
 
@@ -763,7 +876,7 @@ id = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
 
 ## Delete Document
 
-### **DELETE** `/api/v1/documents/:documentId`
+### **DELETE** `/documents/:documentId`
 
 **Param**
 documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
@@ -793,7 +906,7 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
 
 *Will have projectId = null
 
-### **POST** `/api/v1/chat/global`
+### **POST** `/chat/global`
 
 **Query**
 chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
@@ -1026,7 +1139,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 
 ## Create Chat Session
 
-### **POST** `/api/v1/project/:projectId/chats/messages`
+### **POST** `/project/:projectId/chats/messages`
 
 **Param**
 projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
@@ -1203,7 +1316,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 
 ## Get Chat Messages
 
-### **GET** `/api/v1/chat/:chatId`
+### **GET** `/chat/:chatId`
 
 **Param**
 chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
@@ -1294,7 +1407,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ## Get All Chats
 
-### **GET** `/api/v1/chat/user/all`
+### **GET** `/chat/user/all`
 
 **Response**
 
@@ -1402,7 +1515,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ## Get Global Chats
 
-### **GET** `/api/v1/chat/user/global`
+### **GET** `/chat/user/global`
 
 **Response**
 
@@ -1412,7 +1525,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ## Update chat global
 
-### **PATCH** `/api/v1/chat/user/:chatId`
+### **PATCH** `/chat/user/:chatId`
 
 **Param**
 chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
@@ -1445,7 +1558,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ## Delete chat global
 
-### **DELETE** `/api/v1/chat/user/:chatId`
+### **DELETE** `/chat/user/:chatId`
 
 **Param**
 chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
