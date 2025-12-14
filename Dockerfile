@@ -5,25 +5,18 @@ FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Install pnpm
+# 🔥 Cài OpenSSL (QUAN TRỌNG CHO PRISMA)
+RUN apt-get update -y && apt-get install -y openssl
+
 RUN npm install -g pnpm
 
-# Copy package files
 COPY package.json pnpm-lock.yaml* ./
-
-# 🔥 COPY PRISMA SCHEMA TRƯỚC (QUAN TRỌNG NHẤT)
 COPY prisma ./prisma
 
-# Install dependencies (postinstall lúc này OK)
 RUN pnpm install --frozen-lockfile
-
-# Generate Prisma Client (rõ ràng, dễ debug)
 RUN npx prisma generate
 
-# Copy source code
 COPY . .
-
-# Build NestJS
 RUN pnpm run build
 
 
@@ -36,14 +29,18 @@ FROM node:22-slim
 WORKDIR /app
 ENV NODE_ENV=production
 
+# 🔥 Cài OpenSSL cho runtime
+RUN apt-get update -y && apt-get install -y openssl
+
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
 
 RUN mkdir -p uploads/
 
-EXPOSE 8000
+EXPOSE 8080
 CMD ["node", "dist/src/main.js"]
+
 
 
 
