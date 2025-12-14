@@ -1,0 +1,46 @@
+# Node dependencies
+node_modules
+.pnpm-store
+
+# Build files
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Local databases or caches
+storage/vector-db
+storage/tmp
+storage/cache
+
+# Logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.override.yml
+
+# IDE / Editor files
+.vscode
+.idea
+
+# Test
+coverage
+*.spec.ts
+*.test.ts
+
+# Uploaded files handled via volume
+uploads

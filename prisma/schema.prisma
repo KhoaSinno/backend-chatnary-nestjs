@@ -1,0 +1,117 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_NEON")
+  directUrl = env("DATABASE_URL_NEON_DIRECT")
+}
+
+model documents {
+  id        String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text      String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+
+  @@map("documents")
+  @@ignore // No generate, no migration, no pull schema from db
+}
+
+enum Role {
+  ADMIN
+  USER
+  GUEST
+  LIBERIAN
+}
+
+enum AccessLevelDoc {
+  PUBLIC
+  PRIVATE
+  RESTRICTED
+}
+
+model users {
+  id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String              @unique
+  username         String              @unique
+  name             String?
+  password         String
+  refreshToken     String?
+  role             Role                @default(USER)
+  projects         projects[]
+  chats            chats[]
+  projectDocuments project_documents[]
+}
+
+model chats {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  title     String   @default("New Chat")
+  messages  Json[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String?   @db.Uuid
+  project   projects? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([projectId])
+}
+
+model projects {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  color       String?  @default("#3B82F6")
+  isArchived  Boolean  @default(false) // soft delete - TODO:
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chats     chats[]
+  documents project_documents[]
+}
+
+model project_documents {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  // ===== Search info =====
+  title         String? // Title of the document not name of file
+  description   String? // AI generated short description
+  authors       String[]       @default([])
+  subjects      String[]       @default([])
+  tags          String[]       @default([])
+  documentType  String? // ebook | paper | thesis | report | slide | law | other
+  publishedYear Int?
+  accessLevel   AccessLevelDoc @default(PRIVATE) // public | private | restricted
+
+  // ===== File info =====
+  name     String
+  filePath String
+  mimeType String?
+  size     Int?
+  status   String // uploading | processing | done | error
+
+  // ===== Dynamic metadata =====
+  metadata Json? // expandable unstable fields 
+
+  // ===== Search & tracking =====
+  indexedAt DateTime? // when the document was indexed for search Elasticsearch
+  viewCount Int       @default(0)
+
+  createdAt DateTime @default(now())
+
+  // ===== Relations =====
+  projectId String   @db.Uuid
+  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String @db.Uuid
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}

@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  api:
+    image: chatnary/backend-nestjs-api:latest # build 1 lần, reuse nhiều lần
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatnary-api
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - app-net
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: chatnary-db
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ChatnarySYS"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+volumes:
+  db_data:
+  pgadmin_data:
+
+networks:
+  app-net:

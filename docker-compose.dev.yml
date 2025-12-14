@@ -1,0 +1,51 @@
+services:
+  api:
+    container_name: chatnary-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # sync code
+      - /app/node_modules # prevent overwrite
+      - ./uploads:/app/uploads
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: chatnary-db
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: ChatnarySYS
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: chatnary-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@chatnary.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-net
+
+networks:
+  app-net:
+
+volumes:
+  db_data:
+  pgadmin_data:
