@@ -43,7 +43,8 @@ COPY package.json ./
 RUN mkdir -p uploads/
 
 EXPOSE 8000
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
+
 
 
 # # ----------------------------------------------------
@@ -93,4 +94,4 @@ CMD ["node", "dist/main.js"]
 # # Expose BE port
 # EXPOSE 8000
 
-# CMD ["node", "dist/main.js"]
+# CMD ["node", "dist/src/main.js"]
