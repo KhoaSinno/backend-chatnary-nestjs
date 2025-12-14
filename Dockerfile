@@ -14,6 +14,9 @@ COPY package.json pnpm-lock.yaml* ./
 # Install dependencies (only production deps needed to build dist)
 RUN pnpm install --frozen-lockfile
 
+# generate Prisma Client
+RUN npx prisma generate
+
 # Copy source
 COPY . .
 
