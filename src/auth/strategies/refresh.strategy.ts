@@ -9,7 +9,7 @@ export interface JwtPayload {
   email: string;
   role: string;
 }
-
+// Return value
 export interface JwtPayloadWithRt extends JwtPayload {
   refreshToken: string;
 }

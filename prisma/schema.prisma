@@ -26,6 +26,12 @@ enum Role {
   LIBERIAN
 }
 
+enum AccessLevelDoc {
+  PUBLIC
+  PRIVATE
+  RESTRICTED
+}
+
 model users {
   id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email            String              @unique
@@ -73,14 +79,34 @@ model projects {
 }
 
 model project_documents {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  filePath  String
-  mimeType  String?
-  size      Int?
-  status    String // uploading | processing | done | error
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  // ===== Search info =====
+  title         String? // Title of the document not name of file
+  description   String? // AI generated short description
+  authors       String[]       @default([])
+  subjects      String[]       @default([])
+  tags          String[]       @default([])
+  documentType  String? // ebook | paper | thesis | report | slide | law | other
+  publishedYear Int?
+  accessLevel   AccessLevelDoc @default(PRIVATE) // public | private | restricted
+
+  // ===== File info =====
+  name     String
+  filePath String
+  mimeType String?
+  size     Int?
+  status   String // uploading | processing | done | error
+
+  // ===== Dynamic metadata =====
+  metadata Json? // expandable unstable fields 
+
+  // ===== Search & tracking =====
+  indexedAt DateTime? // when the document was indexed for search Elasticsearch
+  viewCount Int       @default(0)
+
   createdAt DateTime @default(now())
 
+  // ===== Relations =====
   projectId String   @db.Uuid
   project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
@@ -88,12 +114,4 @@ model project_documents {
   user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([projectId])
-}
-
-model verification_tokens {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@id([identifier, token])
 }

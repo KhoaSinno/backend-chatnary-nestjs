@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from '../../user/user.service';
 import { ConfigService } from '@nestjs/config';
+import { JwtPayload } from './refresh.strategy';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -18,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: any) {
-    return payload; // CHỈ return payload, không query DB nữa
+  validate(payload: JwtPayload) {
+    return payload; // Attach to req.user
   }
 }

@@ -15,6 +15,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../constant/index.constant';
 
 @Controller('user')
+@Roles(Role.ADMIN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -26,7 +27,6 @@ export class UserController {
 
   @Get()
   @ApiBearerAuth()
-  @Roles(Role.ADMIN, Role.USER)
   findAllUsers() {
     return this.userService.findAllUsers();
   }

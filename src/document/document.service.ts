@@ -7,6 +7,7 @@ import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { project_documents } from '@prisma/client';
+import { AccessLevelDoc } from '../constant/index.constant';
 
 @Injectable()
 export class DocumentService {
@@ -35,6 +36,8 @@ export class DocumentService {
           size: file.size,
           status: 'processing',
           userId: userId,
+          accessLevel: AccessLevelDoc.PRIVATE,
+          viewCount: 0,
         });
 
         const chunksCount = await this.ingestService.ingestDocument(

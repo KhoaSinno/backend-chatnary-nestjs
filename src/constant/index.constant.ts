@@ -9,3 +9,9 @@ export enum Role {
   LIBRARIAN = 'LIBRARIAN',
   GUEST = 'GUEST',
 }
+
+export enum AccessLevelDoc {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
+  RESTRICTED = 'RESTRICTED',
+}
