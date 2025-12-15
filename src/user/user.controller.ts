@@ -16,29 +16,33 @@ import { Role } from '../constant/index.constant';
 
 @Controller('user')
 @Roles(Role.ADMIN)
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @ApiBearerAuth()
-  createNewUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createNewUser(createUserDto);
-  }
-
+  // === GET ===
   @Get()
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   findAllUsers() {
     return this.userService.findAllUsers();
   }
 
   @Get(':userId')
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   findUserById(@Param('userId') id: string) {
     return this.userService.findUserById(id);
   }
 
+  // === POST ===
+  // TODO: Avatar image update
+  @Post()
+  createNewUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createNewUser(createUserDto);
+  }
+
+  // === PATCH ===
   @Patch(':userId')
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   updateUser(
     @Param('userId') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -46,8 +50,9 @@ export class UserController {
     return this.userService.updateUser(id, updateUserDto);
   }
 
+  // === DELETE ===
   @Delete(':userId')
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   removeUser(@Param('userId') id: string) {
     return this.userService.removeUser(id);
   }

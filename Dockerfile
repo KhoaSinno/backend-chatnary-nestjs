@@ -5,7 +5,7 @@ FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# 🔥 Cài OpenSSL (QUAN TRỌNG CHO PRISMA)
+# 🔥 Install OpenSSL (IMPORTANT FOR PRISMA)
 RUN apt-get update -y && apt-get install -y openssl
 
 RUN npm install -g pnpm
@@ -14,7 +14,7 @@ COPY package.json pnpm-lock.yaml* ./
 COPY prisma ./prisma
 
 RUN pnpm install --frozen-lockfile
-RUN npx prisma generate
+RUN npx prisma generate 
 
 COPY . .
 RUN pnpm run build
@@ -29,7 +29,7 @@ FROM node:22-slim
 WORKDIR /app
 ENV NODE_ENV=production
 
-# 🔥 Cài OpenSSL cho runtime
+# 🔥 Install OpenSSL for runtime
 RUN apt-get update -y && apt-get install -y openssl
 
 COPY --from=builder /app/dist ./dist
@@ -42,7 +42,7 @@ EXPOSE 8080
 CMD ["node", "dist/src/main.js"]
 
 
-
+# ----------------- Fly mode -------------------
 
 # # ----------------------------------------------------
 # # 1) BUILD STAGE

@@ -95,7 +95,7 @@ model project_documents {
   filePath String
   mimeType String?
   size     Int?
-  status   String // uploading | processing | done | error
+  status   String // processing | done | error
 
   // ===== Dynamic metadata =====
   metadata Json? // expandable unstable fields 
