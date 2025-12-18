@@ -5,10 +5,11 @@ import { ChatService } from '../chat/chat.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { IngestModule } from '../ingest/ingest.module';
+import { RetrievalModule } from '../retrieval/retrieval.module';
 import { DocumentModule } from '../document/document.module';
 
 @Module({
-  imports: [IngestModule, DocumentModule],
+  imports: [IngestModule, RetrievalModule, DocumentModule],
   controllers: [ProjectController],
   providers: [ProjectService, ChatService, PrismaService, OpenaiService],
 })

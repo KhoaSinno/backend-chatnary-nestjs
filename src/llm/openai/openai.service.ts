@@ -10,6 +10,16 @@ export class OpenaiService {
     this.apiKey = this.config.get<string>('openai.apiKey')!;
   }
 
+  // Modal: Rewrite user's prompt
+  getRewriteModel(modelName = 'gpt-4o-mini') {
+    return new ChatOpenAI({
+      model: modelName,
+      apiKey: this.apiKey,
+      temperature: 0,
+    });
+  }
+
+  // Modal: Final chat with user
   getChatModel(modelName = 'gpt-4.1') {
     return new ChatOpenAI({
       model: modelName,
@@ -19,6 +29,7 @@ export class OpenaiService {
     });
   }
 
+  // Modal: Embeddings
   getEmbeddings(model = 'text-embedding-3-small') {
     return new OpenAIEmbeddings({
       model,

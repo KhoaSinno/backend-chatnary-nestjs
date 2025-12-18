@@ -8,7 +8,7 @@ import pdf from 'pdf-parse';
 @Injectable()
 export class OcrService implements OnModuleInit, OnModuleDestroy {
   private workers: Tesseract.Worker[] = [];
-  private readonly WORKER_COUNT = 4; // Số workers song song
+  private readonly WORKER_COUNT = 8; // Số workers song song
 
   async onModuleInit() {
     // Tạo worker pool để OCR song song
@@ -84,13 +84,14 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
 
       // 5️⃣ OCR tất cả trang song song với worker pool
       console.log(`🔍 Running OCR on ${pageCount} pages...`);
-      const ocrPromises = pageImages.map((img: any, index: number) => {
+      const ocrPromises = pageImages.map(async (img: any, index: number) => {
         const worker = this.getWorker(index); // Round-robin workers
-        return worker.recognize(img.path).then((res) => ({
+        const res = await worker.recognize(img.path);
+        return ({
           text: res.data.text,
           path: img.path,
           page: index + 1,
-        }));
+        });
       });
 
       const results = await Promise.all(ocrPromises);

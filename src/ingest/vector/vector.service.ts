@@ -37,9 +37,9 @@ export class VectorService {
   }
 
   // -- RETRIEVE SIMILAR DOCUMENTS --
-  async getRetrievals(
+  async getRetrievalsWithK(
     query: string,
-    k = 10,
+    k: number,
     userId: string,
     projectId?: string,
   ) {
@@ -49,6 +49,32 @@ export class VectorService {
     if (projectId) filter.projectId = projectId;
 
     const results = await vectorStore.similaritySearch(query, k, filter);
+    return results;
+  }
+
+  // -- RETRIEVE SIMILAR WITH SCORE --
+  async getRetrievalsWithScore(
+    query: string,
+    k = 20,
+    userId: string,
+    projectId?: string,
+  ) {
+    const vectorStore = await this.pgvectorService.initVectorStore();
+
+    const filter: { userId: string; projectId?: string } = { userId };
+
+    if (projectId) filter.projectId = projectId;
+
+    const results = await vectorStore.similaritySearchWithScore(
+      query,
+      k,
+      filter,
+    );
+
+    //  for (const [doc, score] of similaritySearchWithScoreResults) {
+    //   console.log(`* [SIM=${score.toFixed(3)}] ${doc.pageContent} [${JSON.stringify(doc.metadata)}]`);
+    // }
+
     return results;
   }
 

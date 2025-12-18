@@ -19,6 +19,7 @@ import * as Joi from 'joi';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { RetrievalModule } from './retrieval/retrieval.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     ProjectModule,
     AuthModule,
     UserModule,
+    RetrievalModule,
   ],
   controllers: [AppController],
   providers: [

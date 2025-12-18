@@ -11,6 +11,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ContentBlock } from '@langchain/core/messages';
 import { DocumentInterface } from '@langchain/core/documents';
 import { JsonValue } from '@prisma/client/runtime/library';
+import { RetrievalService } from '../retrieval/retrieval.service';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -49,7 +50,7 @@ type BaseMessage =
   | {
       answer: string | (ContentBlock | ContentBlock.Text)[];
       citations: CitationType[];
-      relateDocs: DocumentInterface<Record<string, any>>[];
+      relateDocs: [DocumentInterface<Record<string, any>>, number][];
       chat: {
         id: string;
         userId: string;
@@ -67,6 +68,7 @@ export class ChatService {
     private readonly openaiService: OpenaiService,
     private readonly vectorService: VectorService,
     private prisma: PrismaService,
+    private readonly retrievalService: RetrievalService,
   ) {}
 
   // -- PRIVATE CHAT FUNC --
@@ -75,30 +77,41 @@ export class ChatService {
     // -- VALIDATIONS --
     // ... TODO: ...
 
+    console.log('ChatDto', JSON.stringify(chatDto));
+
     const topK = 5;
     const historyNum = 6;
 
     // 1. Get relevant docs from vector DB
-    const relateDocs = await this.vectorService.getRetrievals(
+    // const relateDocs = await this.vectorService.getRetrievalsWithK(
+    //   chatDto.message,
+    //   topK,
+    //   chatDto.userId as string,
+    //   chatDto.projectId,
+    // );
+    // // Empty docs => return "Chatbot Don't know"
+    // if (!relateDocs || relateDocs.length === 0) {
+    //   return {
+    //     answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
+    //     relateDocs: [],
+    //   };
+    // }
+
+    // Get docs over 0.75 score threshold
+    const relateDocs = await this.retrievalService.retrieveScore(
       chatDto.message,
-      topK,
       chatDto.userId as string,
       chatDto.projectId,
     );
-    // Empty docs => return "Chatbot Don't know"
-    if (!relateDocs || relateDocs.length === 0) {
-      return {
-        answer: 'Tôi không tìm thấy thông tin trong tài liệu.',
-        relateDocs: [],
-      };
-    }
+
     // console.log('Related Docs: ', relateDocs);
 
     // 2. Clean context
     const context = relateDocs
-      .map((d) => `### Chunk ${d.metadata.chunkIndex}\n${d.pageContent}`)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(([d, _]) => `### Chunk ${d.metadata.chunkIndex}\n${d.pageContent}`)
       .join('\n\n');
-    // console.log('Context: ', context);
+    console.log('Context: ', context);
 
     const SYSTEM_PROMPT = `
       Bạn là một assistant chỉ trả lời dựa trên thông tin trong "Context".
@@ -180,12 +193,13 @@ export class ChatService {
       { role: 'user' as const, content: FINAL_USER_PROMPT.trim() },
     ];
 
-    console.log('message var:', messages);
+    // console.log('message var:', messages);
 
     // 3. Call LLM
     const response = await this.openaiService.getChatModel().invoke(messages);
 
-    const citations: CitationType[] = relateDocs.map((doc) => ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const citations: CitationType[] = relateDocs.map(([doc, _]) => ({
       index: doc.metadata.chunkIndex as number,
       snippet: doc.pageContent.substring(0, 200) + '...',
       text: doc.pageContent,
