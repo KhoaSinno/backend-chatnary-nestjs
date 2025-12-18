@@ -79,7 +79,7 @@ export class ChatService {
 
     console.log('ChatDto', JSON.stringify(chatDto));
 
-    const topK = 5;
+    // const topK = 5;
     const historyNum = 6;
 
     // 1. Get relevant docs from vector DB

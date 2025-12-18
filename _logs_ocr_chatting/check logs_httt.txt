@@ -1,0 +1,422 @@
+check logs:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Dựa trên thông tin trong các đoạn trích, chương trình đào tạo ngành Hệ thống Thông tin (HTTT) tại Trường Đại học Kỹ thuật - Công nghệ Cần Thơ năm 2022 bao gồm các học phần sau:\n\n**Danh sách các môn học và thông tin môn:**\n\n1. Thực tập tốt nghiệp/Học phần thay thế: Khóa luận tốt nghiệp/Thực tập tốt nghiệp\n2. Thiết kế giao diện người dùng đồ họa\n3. Phân tích và trực quan dữ liệu\n4. Phần mềm mã nguồn mở\n5. Máy học\n6. Toán rời rạc\n7. Khai phá dữ liệu\n8. Phân tích và thiết kế hệ thống thông tin\n9. Quản trị cơ sở dữ liệu\n10. Hệ điều hành\n11. Phương pháp nghiên cứu trong công nghệ thông tin\n12. Lập trình Java 1\n13. Lập trình Java 2\n14. Lập trình web\n15. Trí tuệ nhân tạo\n16. Nhập môn Công nghệ phần mềm\n17. Quản trị dự án\n18. Quản trị cơ sở dữ liệu MySQL\n19. An toàn các hệ thống thông tin\n20. Thương mại điện tử\n21. Hệ cơ sở dữ liệu đa phương tiện\n22. Phát triển ứng dụng\n23. Nguyên lý thiết kế và kiến trúc phần mềm\n24. Ngôn ngữ hóa dữ liệu\n25. Điện toán đám mây\n\nNgoài ra, còn có các học phần về kỹ năng sử dụng công nghệ thông tin nâng cao, xử lý ảnh, thị giác máy tính, các môn về mạng máy tính, bảo mật, xây dựng ứng dụng mạng, các môn về kinh tế, chính trị, tư tưởng Hồ Chí Minh, chủ nghĩa xã hội khoa học, v.v. Tuy nhiên, do thông tin bị phân tán và không liệt kê rõ ràng toàn bộ danh sách, nên số lượng môn học có thể nhiều hơn danh sách trên[119][115][104][75][65][91][93][94][96].\n\n**Tổng số môn học:**  \nDựa trên các thông tin trích xuất được, có ít nhất 25 môn học chuyên ngành và một số môn đại cương, kỹ năng mềm, chính trị, v.v. Tuy nhiên, do tài liệu không liệt kê một bảng tổng hợp duy nhất, nên con số chính xác có thể cao hơn. Nếu chỉ tính các môn chuyên ngành và bắt buộc được liệt kê rõ, có khoảng 25 môn học[119][115].\n\n**Lưu ý:**  \n- Một số môn có thể là tự chọn hoặc thay thế cho nhau.\n- Thông tin chi tiết về số tín chỉ, số tiết, và mô tả môn học có trong các đoạn trích, nhưng không phải tất cả các môn đều có đầy đủ thông tin này trong tài liệu.\n- Nếu cần danh sách chi tiết hơn từng môn (tên, mã, số tín chỉ, mô tả), bạn có thể yêu cầu cụ thể hơn về từng nhóm môn hoặc từng học kỳ.\n\nTóm lại, chương trình đào tạo ngành HTTT tại Cần Thơ năm 2022 có ít nhất 25 môn học chuyên ngành, kèm theo các môn đại cương và kỹ năng bổ trợ khác[119][115].",
+    "citations": [
+      {
+        "index": 119,
+        "snippet": "11008(a)\n\n1-U004(a)\nJi\n\n73\n\n74\n\n75\n\n76\n\n77\n\nC À- JJOc phẩn điều kiệm, k9, 2ng tính vào điểm trung bình chung tích I y\n\nMã\n\nBắt\nbuộc\n\nhọc \"Tên học phâu Thọe tím\nphân chí\nẦ \" ,\n11197 IJhực tập tỐt nghiệ...",
+        "text": "11008(a)\n\n1-U004(a)\nJi\n\n73\n\n74\n\n75\n\n76\n\n77\n\nC À- JJOc phẩn điều kiệm, k9, 2ng tính vào điểm trung bình chung tích I y\n\nMã\n\nBắt\nbuộc\n\nhọc \"Tên học phâu Thọe tím\nphân chí\nẦ \" ,\n11197 IJhực tập tỐt nghiệp ILiệ thông 9 10\nthông tin\nJoc phẩm thay thế Khóa luận tốt\n ghiệp/Thực tập tốt nghiệp \n1I176 Thiết kê giao diện người dùng 2\nđô họa\nT1103 Phân tích và trực quan dữ liệu 9 3\nUT023 Phần mềm mã nguồn mở 9 2\n11085 Máy học 9 3\n\nTự\nchọn\n\nSố Số\ntiết tiết\n1 I LM i\n0 450\n15 30\n3Q 30\n15 30\n30 30\n\n13. MA TTRẬN LIÊN KẾT GIỮA CÁC HỌC PHẨN VỚI COR CIĐT\nDáng 11 Mối quan hệ giữa chuẩn đầu ra của ngành Hệ thống thông tin và chuẩn\ndầu ra của từng học phần\n\n43\n\nYiọc phần\nbọc trước\n(a), song\n\nhành (b)\n\n!\n\n1LU004(a)\nb \n\nX LXI mmmmb ()6190290020Đ089. 70080 Ụ7\nX M - X 1 () tp gụ 26p 99 96089 6 \nI lX X Xị ,J LẸp 3 2",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 119,
+        "startOffset": 77350,
+        "endOffset": 78150
+      },
+      {
+        "index": 104,
+        "snippet": "đề xã hội.\nGiới thiệu tổng quan về Iĩnh vực xử Iý ảnh và\nthị giác máy tính; các công cụ trong giai đoạn\nthu nhận ảnh; xử Iý tín hiệu số; phân tích ảnh\nxử Iý nâng cao chất Iượng ảnh, cải thiện ảnh;\ncác...",
+        "text": "đề xã hội.\nGiới thiệu tổng quan về Iĩnh vực xử Iý ảnh và\nthị giác máy tính; các công cụ trong giai đoạn\nthu nhận ảnh; xử Iý tín hiệu số; phân tích ảnh\nxử Iý nâng cao chất Iượng ảnh, cải thiện ảnh;\ncác phương pháp phát hiện biên; phân vùng\nảnh; nén ảnh.\nIọc phần cùng cấp cho sinh viên kiến thức\ncăn bản về Tìn học và kỹ năng sử dụng Công\nnghệ thông tin ứng dụng nâng cao. Các kiến\nthức giảng dạy trong học phần bao gồm: kỹ\nnăng soạn thảo văn bản nâng cao, xử Iý bảng\ntính nâng cao, sử dụng trình chiếu nâng cao\nxây dựng trang tin điện tử. C ác kiển thức này\ngIÚPp Sinh viên dụng CNITI nâng cao một cách\nhiệu quả trong công. việc.\nHọc phân này \"cũng cấp cho sinh viên kiến\nthức cơ bản về mô hình hóa hệ thống thực tế\n\n37\n\n3 TC\n(30 1T\n30 T11)\n\n(15L\n60 TID\n\nsử dụng ngôn ngữ Iập trình mô phỏng dựng\n69\n\n",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 104,
+        "startOffset": 67600,
+        "endOffset": 68400
+      },
+      {
+        "index": 96,
+        "snippet": "ầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyết trình các kết quả\n_đã thực hiện.\n\n21C\n(0 1 1\n60 T1\n\n2 TC\n(01T\n60 11D)\n\n \n\nChi chú\n\nRưư phân này c...",
+        "text": "ầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyết trình các kết quả\n_đã thực hiện.\n\n21C\n(0 1 1\n60 T1\n\n2 TC\n(01T\n60 11D)\n\n \n\nChi chú\n\nRưư phân này cung cấp cho sinh viên hiểu\nbiết về dữ liệu Iớn thông qua các khái niệm,\nthuật ngữ, đặc tính, nền tảng kỹ thuật. Sinh\nviên được cung cấp kiến thức về ảnh hưởng\ncủa dữ liệu Iớn đối với nền thương mại đựa\ntrên sự thông minh. Học phần cung cấp cho\nsinh viên khái niệm Iưu trữ dữ liệu Iớn, xử Iý\ndữ liệu Iớn. Sinh viên được học về một số kỹ\n\nthuật Iưu trữ dữ liệu Iớn và kỹ thuật phân tích\n\"dữ liệu Iớn.\n\n Học phần này, cung cấp cho sinh viên các kiến\n\nthức cơ bản về hệ thống Blockchain, các khái\nniệm, công nghệ và ứng dụng của hệ thống\nnày. Ngoài ra, môn học cũng trình bày các\nkiên thức trong việc cài",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 96,
+        "startOffset": 62400,
+        "endOffset": 63200
+      },
+      {
+        "index": 65,
+        "snippet": "yền trong nền kinh tế thị trường; Kinh\ntế thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tế\n\n\"của Việt Nam.\nMôn học ch...",
+        "text": "yền trong nền kinh tế thị trường; Kinh\ntế thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tế\n\n\"của Việt Nam.\nMôn học chủ nghĩa: xã hội khoa học gồm 7\n\nchương, được thiết kế giảng dạy cho sinh viên\nđại học khối không chuyên ngành Iý luận\nchính trị , trình bày các kiến thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triển của chủ nghĩa xã hội khoa\nhọc).\n\nTiỌc phần. Tư tưởng li Chí Minh gồm 6\nchương cung cấp cho sinh viên kiến thức cơ\nbản về: Tôi tượng, phương pháp nghiên cứu\n\n26\n\n21C\n\n(30.L1\n\n01H)\n\n2 TC\n(30 11\n\nO 1U1)\n\n2 TC\nG0 11\n\n011D\n\nChi chú\nTên học\nphần\n\nA \nNội dung cần đạt được của học phẩn\n\nvà ý nghĩa học tập môn Tư tưởng HỖ C hí\nMinh; về cơ sở, quá trình hình thành và phát\ntriển tư t",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 65,
+        "startOffset": 42250,
+        "endOffset": 43050
+      },
+      {
+        "index": 91,
+        "snippet": "er-to-Cornsurmer),\nkỹ. thuật và công cụ phát triển nhanh một hệ\nthống 1TM1ZIL, bao BỒm các yêu cầu cần tuân\nthủ đối với một hệ thống 11 M12I; Iựa chọn\ngiải pháp, kỹ thuật xây dựng các website\n1M31); p...",
+        "text": "er-to-Cornsurmer),\nkỹ. thuật và công cụ phát triển nhanh một hệ\nthống 1TM1ZIL, bao BỒm các yêu cầu cần tuân\nthủ đối với một hệ thống 11 M12I; Iựa chọn\ngiải pháp, kỹ thuật xây dựng các website\n1M31); phương pháp phát triển, tích hợp dựa\ntrên nền tảng các hệ quản trị nỘI dung mã\nnguồn mở.\n\nHọc phần bao gồm m các nội dung chính: tổng quan về dữ liệu đa phương tiện và hệ cơ sở dữ\nliệu đa phương tiện, các kỹ thuật truy xuất\nthông tin đôi với dữ liệu văn bản, hình ảnh,\nâm thanh, video; kiến trúc cơ sở dữ liệu đa\n\nph Iương Ý tiện.\n\nHọc phần giới thiệu cho sinh viên c các kiến\nthức về nên tảng cho sự kết nối các thiết bị\nvới Internet, Jo . Học phần trang bị các kỹ\nnăng thực hành về Iập trình JOTL và các kỹ\nthuật thiết kế hệ thống lo ,\n\nTầỌCc phần này cung cấp cho sinh viên các kiến\nthức về nguyên ",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 91,
+        "startOffset": 59150,
+        "endOffset": 59950
+      },
+      {
+        "index": 94,
+        "snippet": " đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nri\n\n53\n\n55\n\nlTêu học\nphầm\n\nNội dung cần đạt được củ...",
+        "text": " đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nri\n\n53\n\n55\n\nlTêu học\nphầm\n\nNội dung cần đạt được của học phần\n\nDồ án Hệ\nthống thông\nUn2\n\nĐô án liệ\nthông thông\ntin 3\n\nPhân tích cơ\nsở dữ liệu Iớn\n\nI3lockchain\n\ncăn bản\n\n Hệ trợ giúp\nquyết định\n\nbáo cáo khoa học và thuyết trình các kết quả\n\nđã thực hiện.\n\nKhối\nIượng\nkiến\nthức\n\nCán bộ hướng dẫn sẽ mô tà các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiều rõ yêu cầu của đề\n\ntài và các nghiên cứu liên quan đến dề tài),\nphân tích yêu cầu, thi",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 94,
+        "startOffset": 61100,
+        "endOffset": 61900
+      },
+      {
+        "index": 75,
+        "snippet": "\nIĩnh vực khác nhau về mạng như thiết kế và\ncài đặt mạng máy tính, bảo mật mạng máy\n\ntính, xây dựng ứng dụng m ang,.\n\nHọc phần bao gồm: những hiểu biết mở TÔ \nvề các hệ thống thông tin được sử dụng đề...",
+        "text": "\nIĩnh vực khác nhau về mạng như thiết kế và\ncài đặt mạng máy tính, bảo mật mạng máy\n\ntính, xây dựng ứng dụng m ang,.\n\nHọc phần bao gồm: những hiểu biết mở TÔ \nvề các hệ thống thông tin được sử dụng đề đạt\nđược các mục tiêu của công ty. Các công\nnghệ hiện đại sẽ gÓp phần vào sự phát triển\ntrong tương lai của các hệ thống và ứng dụng\n sa. U cũng sẽ được giới thiệu. Các vân đề\nphần vào việc Iập kế hoạch, thiết kế, phát\ntriển, triển khai và quản Iý thành công các hệ\nthống t thông tin.\nEloc phần này cung cấp cho sinh viên kỹni năng\nIập trình căn bản, có khả năng mô hình hóa\nbài toán băn Iưu đồ giải thuật, hiểu định\nnghĩa các kiệu dữ liệu, định nghĩa kiểu dữ liệu\nmới dựa trên các kiểu dựng sẵn, xây dựng và\nsử dụng hàm, có khả năng truy xuất và Iưu trữ\ndữ liệu đưới dạng tập tin thông qua một\n\nngô",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 75,
+        "startOffset": 48750,
+        "endOffset": 49550
+      },
+      {
+        "index": 93,
+        "snippet": "ộc xây dựng\nvà phát triển các dịch vụ điện toán đám mây\nNgười học sẽ được tìm hiểu về cùng những\nkỹ thuật, cơ chê nên tảng giúp cho công nghệ\nnày trở thành hiện thực. Ngoài ra, người học\ncũng dược cùn...",
+        "text": "ộc xây dựng\nvà phát triển các dịch vụ điện toán đám mây\nNgười học sẽ được tìm hiểu về cùng những\nkỹ thuật, cơ chê nên tảng giúp cho công nghệ\nnày trở thành hiện thực. Ngoài ra, người học\ncũng dược cùng cấp đầy đủ các kiến thức\ntrong việc triển khai một phần mềm như một\ndịch vụ trên diện toán đám mây riêng..\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát. triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nv Iệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của dề\ntài và các nghiên cứu liên \"quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nr",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 93,
+        "startOffset": 60450,
+        "endOffset": 61250
+      },
+      {
+        "index": 8,
+        "snippet": "g đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc...",
+        "text": "g đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiểu số và miền núi giai đoạn 2021 - 2025.\n\nScanned with\n(Theo phụ Iực JJJ kèm theo Nghị\nđịnh số 23 2025/NĐ-CP)\n\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nự do - Hạnh phúc\n\nIÊN, GIẢM HỌC PHÍ\n\nKinh gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cản Thơ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp\nCô vấn học tập\nHẠ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\n Thuộc đôi tượng\n(Ghí rÕ đối tượng được quy định tại Nghị định 238/20257N2-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đ",
+        "fileId": "ea733901-8870-4d66-a83f-8d70f8cbd849",
+        "fileUrl": "uploads\\documents\\1766026630050-494788439.pdf",
+        "page": 1,
+        "chunkIndex": 8,
+        "startOffset": 5200,
+        "endOffset": 6000
+      },
+      {
+        "index": 115,
+        "snippet": "1094 R\n\n11002\nTIC 0 37\n\nđoán rời rạc\n\nIKhai phá dữ Y liệu\n\n Phân tích và thiết kế hệ thống\n\n11014 thông tin\n\nsa (012\nT005\n\nlIệ quán trị cơ sở dữ liệu\n\nÌ Iệ điều hành\n\nPhương pháp nghiên cứu trong\n_ Jc...",
+        "text": "1094 R\n\n11002\nTIC 0 37\n\nđoán rời rạc\n\nIKhai phá dữ Y liệu\n\n Phân tích và thiết kế hệ thống\n\n11014 thông tin\n\nsa (012\nT005\n\nlIệ quán trị cơ sở dữ liệu\n\nÌ Iệ điều hành\n\nPhương pháp nghiên cứu trong\n_ Jcông nghệ thông tin\n\nIT202\n\n1-1020 le \"ông nghệ .NI: FT.\nT021\n\n1024 .\nTT022,\n1-1009 \n1T211\n\nIập trình Java 1 \n\nập trình Java 2\n\nI ập trình web\n\nsị rí tuệ nhân tạo\n\nNhập môn C Ông nghệ phần\nmềm\n\n11JO4O\n\nQuả ìn trị dự án. L i N TT.\n\nEIệ quản trị CƠ SỞ dữ liệu\nMySQI\n\nAn toàn các Hệ thống thông tin\n\nThương mại diện tử\nHệ cơ sở dữ liệu đa phương\ntiện\n\nPhát t triển ứng dụng. lN\n\nNguyên Iý thiết kế và kiến trúc.\n\n\"Ngôn 1 ngữ hóa dữ diệu. \n\nphầt ân mềm\n\nliện toán đám mây 4 Ầ\nnà Bắt Tự nấ\nchĩ buộc chọn II\n3 3 30\n212 30\n3 3 30\n\n3 3 30\n3 3 3Q\n3 3 30\n2 2 30\n3 3 s 45\n3 3 30\n\n3 3 30\n3 3 30\n3 - 3 30\n2 2 30\n78",
+        "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+        "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+        "page": 1,
+        "chunkIndex": 115,
+        "startOffset": 74750,
+        "endOffset": 75550
+      }
+    ],
+    "relateDocs": [
+      [
+        {
+          "pageContent": "11008(a)\n\n1-U004(a)\nJi\n\n73\n\n74\n\n75\n\n76\n\n77\n\nC À- JJOc phẩn điều kiệm, k9, 2ng tính vào điểm trung bình chung tích I y\n\nMã\n\nBắt\nbuộc\n\nhọc \"Tên học phâu Thọe tím\nphân chí\nẦ \" ,\n11197 IJhực tập tỐt nghiệp ILiệ thông 9 10\nthông tin\nJoc phẩm thay thế Khóa luận tốt\n ghiệp/Thực tập tốt nghiệp \n1I176 Thiết kê giao diện người dùng 2\nđô họa\nT1103 Phân tích và trực quan dữ liệu 9 3\nUT023 Phần mềm mã nguồn mở 9 2\n11085 Máy học 9 3\n\nTự\nchọn\n\nSố Số\ntiết tiết\n1 I LM i\n0 450\n15 30\n3Q 30\n15 30\n30 30\n\n13. MA TTRẬN LIÊN KẾT GIỮA CÁC HỌC PHẨN VỚI COR CIĐT\nDáng 11 Mối quan hệ giữa chuẩn đầu ra của ngành Hệ thống thông tin và chuẩn\ndầu ra của từng học phần\n\n43\n\nYiọc phần\nbọc trước\n(a), song\n\nhành (b)\n\n!\n\n1LU004(a)\nb \n\nX LXI mmmmb ()6190290020Đ089. 70080 Ụ7\nX M - X 1 () tp gụ 26p 99 96089 6 \nI lX X Xị ,J LẸp 3 2",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 78150,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 119,
+            "startOffset": 77350
+          },
+          "id": "af559bd6-27b7-4c87-9d97-de59aeb9d670"
+        },
+        0.541483269378044
+      ],
+      [
+        {
+          "pageContent": "đề xã hội.\nGiới thiệu tổng quan về Iĩnh vực xử Iý ảnh và\nthị giác máy tính; các công cụ trong giai đoạn\nthu nhận ảnh; xử Iý tín hiệu số; phân tích ảnh\nxử Iý nâng cao chất Iượng ảnh, cải thiện ảnh;\ncác phương pháp phát hiện biên; phân vùng\nảnh; nén ảnh.\nIọc phần cùng cấp cho sinh viên kiến thức\ncăn bản về Tìn học và kỹ năng sử dụng Công\nnghệ thông tin ứng dụng nâng cao. Các kiến\nthức giảng dạy trong học phần bao gồm: kỹ\nnăng soạn thảo văn bản nâng cao, xử Iý bảng\ntính nâng cao, sử dụng trình chiếu nâng cao\nxây dựng trang tin điện tử. C ác kiển thức này\ngIÚPp Sinh viên dụng CNITI nâng cao một cách\nhiệu quả trong công. việc.\nHọc phân này \"cũng cấp cho sinh viên kiến\nthức cơ bản về mô hình hóa hệ thống thực tế\n\n37\n\n3 TC\n(30 1T\n30 T11)\n\n(15L\n60 TID\n\nsử dụng ngôn ngữ Iập trình mô phỏng dựng\n69\n\n",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 68400,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 104,
+            "startOffset": 67600
+          },
+          "id": "118f162e-4328-4123-b8d5-4bc4261589ea"
+        },
+        0.5413871221494216
+      ],
+      [
+        {
+          "pageContent": "ầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyết trình các kết quả\n_đã thực hiện.\n\n21C\n(0 1 1\n60 T1\n\n2 TC\n(01T\n60 11D)\n\n \n\nChi chú\n\nRưư phân này cung cấp cho sinh viên hiểu\nbiết về dữ liệu Iớn thông qua các khái niệm,\nthuật ngữ, đặc tính, nền tảng kỹ thuật. Sinh\nviên được cung cấp kiến thức về ảnh hưởng\ncủa dữ liệu Iớn đối với nền thương mại đựa\ntrên sự thông minh. Học phần cung cấp cho\nsinh viên khái niệm Iưu trữ dữ liệu Iớn, xử Iý\ndữ liệu Iớn. Sinh viên được học về một số kỹ\n\nthuật Iưu trữ dữ liệu Iớn và kỹ thuật phân tích\n\"dữ liệu Iớn.\n\n Học phần này, cung cấp cho sinh viên các kiến\n\nthức cơ bản về hệ thống Blockchain, các khái\nniệm, công nghệ và ứng dụng của hệ thống\nnày. Ngoài ra, môn học cũng trình bày các\nkiên thức trong việc cài",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 63200,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 96,
+            "startOffset": 62400
+          },
+          "id": "0b0f1e9f-27ca-4620-b19d-ec0a863ff68d"
+        },
+        0.5403063941367134
+      ],
+      [
+        {
+          "pageContent": "yền trong nền kinh tế thị trường; Kinh\ntế thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tế\n\n\"của Việt Nam.\nMôn học chủ nghĩa: xã hội khoa học gồm 7\n\nchương, được thiết kế giảng dạy cho sinh viên\nđại học khối không chuyên ngành Iý luận\nchính trị , trình bày các kiến thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triển của chủ nghĩa xã hội khoa\nhọc).\n\nTiỌc phần. Tư tưởng li Chí Minh gồm 6\nchương cung cấp cho sinh viên kiến thức cơ\nbản về: Tôi tượng, phương pháp nghiên cứu\n\n26\n\n21C\n\n(30.L1\n\n01H)\n\n2 TC\n(30 11\n\nO 1U1)\n\n2 TC\nG0 11\n\n011D\n\nChi chú\nTên học\nphần\n\nA \nNội dung cần đạt được của học phẩn\n\nvà ý nghĩa học tập môn Tư tưởng HỖ C hí\nMinh; về cơ sở, quá trình hình thành và phát\ntriển tư t",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 43050,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 65,
+            "startOffset": 42250
+          },
+          "id": "ed8defab-3fc4-43c5-b983-1f63dd8804db"
+        },
+        0.5396319490561468
+      ],
+      [
+        {
+          "pageContent": "er-to-Cornsurmer),\nkỹ. thuật và công cụ phát triển nhanh một hệ\nthống 1TM1ZIL, bao BỒm các yêu cầu cần tuân\nthủ đối với một hệ thống 11 M12I; Iựa chọn\ngiải pháp, kỹ thuật xây dựng các website\n1M31); phương pháp phát triển, tích hợp dựa\ntrên nền tảng các hệ quản trị nỘI dung mã\nnguồn mở.\n\nHọc phần bao gồm m các nội dung chính: tổng quan về dữ liệu đa phương tiện và hệ cơ sở dữ\nliệu đa phương tiện, các kỹ thuật truy xuất\nthông tin đôi với dữ liệu văn bản, hình ảnh,\nâm thanh, video; kiến trúc cơ sở dữ liệu đa\n\nph Iương Ý tiện.\n\nHọc phần giới thiệu cho sinh viên c các kiến\nthức về nên tảng cho sự kết nối các thiết bị\nvới Internet, Jo . Học phần trang bị các kỹ\nnăng thực hành về Iập trình JOTL và các kỹ\nthuật thiết kế hệ thống lo ,\n\nTầỌCc phần này cung cấp cho sinh viên các kiến\nthức về nguyên ",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 59950,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 91,
+            "startOffset": 59150
+          },
+          "id": "7d122c29-30db-41b3-995a-20370b3ef95c"
+        },
+        0.537542496626674
+      ],
+      [
+        {
+          "pageContent": " đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nri\n\n53\n\n55\n\nlTêu học\nphầm\n\nNội dung cần đạt được của học phần\n\nDồ án Hệ\nthống thông\nUn2\n\nĐô án liệ\nthông thông\ntin 3\n\nPhân tích cơ\nsở dữ liệu Iớn\n\nI3lockchain\n\ncăn bản\n\n Hệ trợ giúp\nquyết định\n\nbáo cáo khoa học và thuyết trình các kết quả\n\nđã thực hiện.\n\nKhối\nIượng\nkiến\nthức\n\nCán bộ hướng dẫn sẽ mô tà các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiều rõ yêu cầu của đề\n\ntài và các nghiên cứu liên quan đến dề tài),\nphân tích yêu cầu, thi",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 61900,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 94,
+            "startOffset": 61100
+          },
+          "id": "5c24c66b-bf67-4574-9e65-c3acbbe291b1"
+        },
+        0.5375078503049476
+      ],
+      [
+        {
+          "pageContent": "\nIĩnh vực khác nhau về mạng như thiết kế và\ncài đặt mạng máy tính, bảo mật mạng máy\n\ntính, xây dựng ứng dụng m ang,.\n\nHọc phần bao gồm: những hiểu biết mở TÔ \nvề các hệ thống thông tin được sử dụng đề đạt\nđược các mục tiêu của công ty. Các công\nnghệ hiện đại sẽ gÓp phần vào sự phát triển\ntrong tương lai của các hệ thống và ứng dụng\n sa. U cũng sẽ được giới thiệu. Các vân đề\nphần vào việc Iập kế hoạch, thiết kế, phát\ntriển, triển khai và quản Iý thành công các hệ\nthống t thông tin.\nEloc phần này cung cấp cho sinh viên kỹni năng\nIập trình căn bản, có khả năng mô hình hóa\nbài toán băn Iưu đồ giải thuật, hiểu định\nnghĩa các kiệu dữ liệu, định nghĩa kiểu dữ liệu\nmới dựa trên các kiểu dựng sẵn, xây dựng và\nsử dụng hàm, có khả năng truy xuất và Iưu trữ\ndữ liệu đưới dạng tập tin thông qua một\n\nngô",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 49550,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 75,
+            "startOffset": 48750
+          },
+          "id": "000e8f4f-b5f8-4664-817f-5fdb5ea3eddf"
+        },
+        0.5369812476297784
+      ],
+      [
+        {
+          "pageContent": "ộc xây dựng\nvà phát triển các dịch vụ điện toán đám mây\nNgười học sẽ được tìm hiểu về cùng những\nkỹ thuật, cơ chê nên tảng giúp cho công nghệ\nnày trở thành hiện thực. Ngoài ra, người học\ncũng dược cùng cấp đầy đủ các kiến thức\ntrong việc triển khai một phần mềm như một\ndịch vụ trên diện toán đám mây riêng..\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát. triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nv Iệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của dề\ntài và các nghiên cứu liên \"quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nr",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 61250,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 93,
+            "startOffset": 60450
+          },
+          "id": "542d540a-1fc3-4f22-9b3f-47ad0f91edf8"
+        },
+        0.5362331983834574
+      ],
+      [
+        {
+          "pageContent": "g đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiểu số và miền núi giai đoạn 2021 - 2025.\n\nScanned with\n(Theo phụ Iực JJJ kèm theo Nghị\nđịnh số 23 2025/NĐ-CP)\n\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nự do - Hạnh phúc\n\nIÊN, GIẢM HỌC PHÍ\n\nKinh gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cản Thơ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp\nCô vấn học tập\nHẠ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\n Thuộc đôi tượng\n(Ghí rÕ đối tượng được quy định tại Nghị định 238/20257N2-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đ",
+          "metadata": {
+            "page": 1,
+            "fileId": "ea733901-8870-4d66-a83f-8d70f8cbd849",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026630050-494788439.pdf",
+            "endOffset": 6000,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 8,
+            "startOffset": 5200
+          },
+          "id": "9f6f69f9-2b37-45ad-91d0-6c80e1932922"
+        },
+        0.5360996584921971
+      ],
+      [
+        {
+          "pageContent": "1094 R\n\n11002\nTIC 0 37\n\nđoán rời rạc\n\nIKhai phá dữ Y liệu\n\n Phân tích và thiết kế hệ thống\n\n11014 thông tin\n\nsa (012\nT005\n\nlIệ quán trị cơ sở dữ liệu\n\nÌ Iệ điều hành\n\nPhương pháp nghiên cứu trong\n_ Jcông nghệ thông tin\n\nIT202\n\n1-1020 le \"ông nghệ .NI: FT.\nT021\n\n1024 .\nTT022,\n1-1009 \n1T211\n\nIập trình Java 1 \n\nập trình Java 2\n\nI ập trình web\n\nsị rí tuệ nhân tạo\n\nNhập môn C Ông nghệ phần\nmềm\n\n11JO4O\n\nQuả ìn trị dự án. L i N TT.\n\nEIệ quản trị CƠ SỞ dữ liệu\nMySQI\n\nAn toàn các Hệ thống thông tin\n\nThương mại diện tử\nHệ cơ sở dữ liệu đa phương\ntiện\n\nPhát t triển ứng dụng. lN\n\nNguyên Iý thiết kế và kiến trúc.\n\n\"Ngôn 1 ngữ hóa dữ diệu. \n\nphầt ân mềm\n\nliện toán đám mây 4 Ầ\nnà Bắt Tự nấ\nchĩ buộc chọn II\n3 3 30\n212 30\n3 3 30\n\n3 3 30\n3 3 3Q\n3 3 30\n2 2 30\n3 3 s 45\n3 3 30\n\n3 3 30\n3 3 30\n3 - 3 30\n2 2 30\n78",
+          "metadata": {
+            "page": 1,
+            "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+            "endOffset": 75550,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 115,
+            "startOffset": 74750
+          },
+          "id": "06983ec0-77f7-4bf0-adac-f74ba042e45b"
+        },
+        0.5352990467757253
+      ]
+    ],
+    "chat": {
+      "id": "d3aa4db6-dddc-4054-8ecc-c757074f2d87",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Cho tôi toàn bộ nội dung chương trình đào tạo của ngành httt, bao gồm tất cả các môn và thông tin môn đó, cho tôi biết tổng bao nhiêu môn, Cần Thơ 2022"
+        },
+        {
+          "role": "assistant",
+          "content": "Dựa trên thông tin trong các đoạn trích, chương trình đào tạo ngành Hệ thống Thông tin (HTTT) tại Trường Đại học Kỹ thuật - Công nghệ Cần Thơ năm 2022 bao gồm các học phần sau:\n\n**Danh sách các môn học và thông tin môn:**\n\n1. Thực tập tốt nghiệp/Học phần thay thế: Khóa luận tốt nghiệp/Thực tập tốt nghiệp\n2. Thiết kế giao diện người dùng đồ họa\n3. Phân tích và trực quan dữ liệu\n4. Phần mềm mã nguồn mở\n5. Máy học\n6. Toán rời rạc\n7. Khai phá dữ liệu\n8. Phân tích và thiết kế hệ thống thông tin\n9. Quản trị cơ sở dữ liệu\n10. Hệ điều hành\n11. Phương pháp nghiên cứu trong công nghệ thông tin\n12. Lập trình Java 1\n13. Lập trình Java 2\n14. Lập trình web\n15. Trí tuệ nhân tạo\n16. Nhập môn Công nghệ phần mềm\n17. Quản trị dự án\n18. Quản trị cơ sở dữ liệu MySQL\n19. An toàn các hệ thống thông tin\n20. Thương mại điện tử\n21. Hệ cơ sở dữ liệu đa phương tiện\n22. Phát triển ứng dụng\n23. Nguyên lý thiết kế và kiến trúc phần mềm\n24. Ngôn ngữ hóa dữ liệu\n25. Điện toán đám mây\n\nNgoài ra, còn có các học phần về kỹ năng sử dụng công nghệ thông tin nâng cao, xử lý ảnh, thị giác máy tính, các môn về mạng máy tính, bảo mật, xây dựng ứng dụng mạng, các môn về kinh tế, chính trị, tư tưởng Hồ Chí Minh, chủ nghĩa xã hội khoa học, v.v. Tuy nhiên, do thông tin bị phân tán và không liệt kê rõ ràng toàn bộ danh sách, nên số lượng môn học có thể nhiều hơn danh sách trên[119][115][104][75][65][91][93][94][96].\n\n**Tổng số môn học:**  \nDựa trên các thông tin trích xuất được, có ít nhất 25 môn học chuyên ngành và một số môn đại cương, kỹ năng mềm, chính trị, v.v. Tuy nhiên, do tài liệu không liệt kê một bảng tổng hợp duy nhất, nên con số chính xác có thể cao hơn. Nếu chỉ tính các môn chuyên ngành và bắt buộc được liệt kê rõ, có khoảng 25 môn học[119][115].\n\n**Lưu ý:**  \n- Một số môn có thể là tự chọn hoặc thay thế cho nhau.\n- Thông tin chi tiết về số tín chỉ, số tiết, và mô tả môn học có trong các đoạn trích, nhưng không phải tất cả các môn đều có đầy đủ thông tin này trong tài liệu.\n- Nếu cần danh sách chi tiết hơn từng môn (tên, mã, số tín chỉ, mô tả), bạn có thể yêu cầu cụ thể hơn về từng nhóm môn hoặc từng học kỳ.\n\nTóm lại, chương trình đào tạo ngành HTTT tại Cần Thơ năm 2022 có ít nhất 25 môn học chuyên ngành, kèm theo các môn đại cương và kỹ năng bổ trợ khác[119][115].",
+          "citation": [
+            {
+              "page": 1,
+              "text": "11008(a)\n\n1-U004(a)\nJi\n\n73\n\n74\n\n75\n\n76\n\n77\n\nC À- JJOc phẩn điều kiệm, k9, 2ng tính vào điểm trung bình chung tích I y\n\nMã\n\nBắt\nbuộc\n\nhọc \"Tên học phâu Thọe tím\nphân chí\nẦ \" ,\n11197 IJhực tập tỐt nghiệp ILiệ thông 9 10\nthông tin\nJoc phẩm thay thế Khóa luận tốt\n ghiệp/Thực tập tốt nghiệp \n1I176 Thiết kê giao diện người dùng 2\nđô họa\nT1103 Phân tích và trực quan dữ liệu 9 3\nUT023 Phần mềm mã nguồn mở 9 2\n11085 Máy học 9 3\n\nTự\nchọn\n\nSố Số\ntiết tiết\n1 I LM i\n0 450\n15 30\n3Q 30\n15 30\n30 30\n\n13. MA TTRẬN LIÊN KẾT GIỮA CÁC HỌC PHẨN VỚI COR CIĐT\nDáng 11 Mối quan hệ giữa chuẩn đầu ra của ngành Hệ thống thông tin và chuẩn\ndầu ra của từng học phần\n\n43\n\nYiọc phần\nbọc trước\n(a), song\n\nhành (b)\n\n!\n\n1LU004(a)\nb \n\nX LXI mmmmb ()6190290020Đ089. 70080 Ụ7\nX M - X 1 () tp gụ 26p 99 96089 6 \nI lX X Xị ,J LẸp 3 2",
+              "index": 119,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "11008(a)\n\n1-U004(a)\nJi\n\n73\n\n74\n\n75\n\n76\n\n77\n\nC À- JJOc phẩn điều kiệm, k9, 2ng tính vào điểm trung bình chung tích I y\n\nMã\n\nBắt\nbuộc\n\nhọc \"Tên học phâu Thọe tím\nphân chí\nẦ \" ,\n11197 IJhực tập tỐt nghiệ...",
+              "endOffset": 78150,
+              "chunkIndex": 119,
+              "startOffset": 77350
+            },
+            {
+              "page": 1,
+              "text": "đề xã hội.\nGiới thiệu tổng quan về Iĩnh vực xử Iý ảnh và\nthị giác máy tính; các công cụ trong giai đoạn\nthu nhận ảnh; xử Iý tín hiệu số; phân tích ảnh\nxử Iý nâng cao chất Iượng ảnh, cải thiện ảnh;\ncác phương pháp phát hiện biên; phân vùng\nảnh; nén ảnh.\nIọc phần cùng cấp cho sinh viên kiến thức\ncăn bản về Tìn học và kỹ năng sử dụng Công\nnghệ thông tin ứng dụng nâng cao. Các kiến\nthức giảng dạy trong học phần bao gồm: kỹ\nnăng soạn thảo văn bản nâng cao, xử Iý bảng\ntính nâng cao, sử dụng trình chiếu nâng cao\nxây dựng trang tin điện tử. C ác kiển thức này\ngIÚPp Sinh viên dụng CNITI nâng cao một cách\nhiệu quả trong công. việc.\nHọc phân này \"cũng cấp cho sinh viên kiến\nthức cơ bản về mô hình hóa hệ thống thực tế\n\n37\n\n3 TC\n(30 1T\n30 T11)\n\n(15L\n60 TID\n\nsử dụng ngôn ngữ Iập trình mô phỏng dựng\n69\n\n",
+              "index": 104,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "đề xã hội.\nGiới thiệu tổng quan về Iĩnh vực xử Iý ảnh và\nthị giác máy tính; các công cụ trong giai đoạn\nthu nhận ảnh; xử Iý tín hiệu số; phân tích ảnh\nxử Iý nâng cao chất Iượng ảnh, cải thiện ảnh;\ncác...",
+              "endOffset": 68400,
+              "chunkIndex": 104,
+              "startOffset": 67600
+            },
+            {
+              "page": 1,
+              "text": "ầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyết trình các kết quả\n_đã thực hiện.\n\n21C\n(0 1 1\n60 T1\n\n2 TC\n(01T\n60 11D)\n\n \n\nChi chú\n\nRưư phân này cung cấp cho sinh viên hiểu\nbiết về dữ liệu Iớn thông qua các khái niệm,\nthuật ngữ, đặc tính, nền tảng kỹ thuật. Sinh\nviên được cung cấp kiến thức về ảnh hưởng\ncủa dữ liệu Iớn đối với nền thương mại đựa\ntrên sự thông minh. Học phần cung cấp cho\nsinh viên khái niệm Iưu trữ dữ liệu Iớn, xử Iý\ndữ liệu Iớn. Sinh viên được học về một số kỹ\n\nthuật Iưu trữ dữ liệu Iớn và kỹ thuật phân tích\n\"dữ liệu Iớn.\n\n Học phần này, cung cấp cho sinh viên các kiến\n\nthức cơ bản về hệ thống Blockchain, các khái\nniệm, công nghệ và ứng dụng của hệ thống\nnày. Ngoài ra, môn học cũng trình bày các\nkiên thức trong việc cài",
+              "index": 96,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "ầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyết trình các kết quả\n_đã thực hiện.\n\n21C\n(0 1 1\n60 T1\n\n2 TC\n(01T\n60 11D)\n\n \n\nChi chú\n\nRưư phân này c...",
+              "endOffset": 63200,
+              "chunkIndex": 96,
+              "startOffset": 62400
+            },
+            {
+              "page": 1,
+              "text": "yền trong nền kinh tế thị trường; Kinh\ntế thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tế\n\n\"của Việt Nam.\nMôn học chủ nghĩa: xã hội khoa học gồm 7\n\nchương, được thiết kế giảng dạy cho sinh viên\nđại học khối không chuyên ngành Iý luận\nchính trị , trình bày các kiến thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triển của chủ nghĩa xã hội khoa\nhọc).\n\nTiỌc phần. Tư tưởng li Chí Minh gồm 6\nchương cung cấp cho sinh viên kiến thức cơ\nbản về: Tôi tượng, phương pháp nghiên cứu\n\n26\n\n21C\n\n(30.L1\n\n01H)\n\n2 TC\n(30 11\n\nO 1U1)\n\n2 TC\nG0 11\n\n011D\n\nChi chú\nTên học\nphần\n\nA \nNội dung cần đạt được của học phẩn\n\nvà ý nghĩa học tập môn Tư tưởng HỖ C hí\nMinh; về cơ sở, quá trình hình thành và phát\ntriển tư t",
+              "index": 65,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "yền trong nền kinh tế thị trường; Kinh\ntế thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tế\n\n\"của Việt Nam.\nMôn học ch...",
+              "endOffset": 43050,
+              "chunkIndex": 65,
+              "startOffset": 42250
+            },
+            {
+              "page": 1,
+              "text": "er-to-Cornsurmer),\nkỹ. thuật và công cụ phát triển nhanh một hệ\nthống 1TM1ZIL, bao BỒm các yêu cầu cần tuân\nthủ đối với một hệ thống 11 M12I; Iựa chọn\ngiải pháp, kỹ thuật xây dựng các website\n1M31); phương pháp phát triển, tích hợp dựa\ntrên nền tảng các hệ quản trị nỘI dung mã\nnguồn mở.\n\nHọc phần bao gồm m các nội dung chính: tổng quan về dữ liệu đa phương tiện và hệ cơ sở dữ\nliệu đa phương tiện, các kỹ thuật truy xuất\nthông tin đôi với dữ liệu văn bản, hình ảnh,\nâm thanh, video; kiến trúc cơ sở dữ liệu đa\n\nph Iương Ý tiện.\n\nHọc phần giới thiệu cho sinh viên c các kiến\nthức về nên tảng cho sự kết nối các thiết bị\nvới Internet, Jo . Học phần trang bị các kỹ\nnăng thực hành về Iập trình JOTL và các kỹ\nthuật thiết kế hệ thống lo ,\n\nTầỌCc phần này cung cấp cho sinh viên các kiến\nthức về nguyên ",
+              "index": 91,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "er-to-Cornsurmer),\nkỹ. thuật và công cụ phát triển nhanh một hệ\nthống 1TM1ZIL, bao BỒm các yêu cầu cần tuân\nthủ đối với một hệ thống 11 M12I; Iựa chọn\ngiải pháp, kỹ thuật xây dựng các website\n1M31); p...",
+              "endOffset": 59950,
+              "chunkIndex": 91,
+              "startOffset": 59150
+            },
+            {
+              "page": 1,
+              "text": " đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nri\n\n53\n\n55\n\nlTêu học\nphầm\n\nNội dung cần đạt được của học phần\n\nDồ án Hệ\nthống thông\nUn2\n\nĐô án liệ\nthông thông\ntin 3\n\nPhân tích cơ\nsở dữ liệu Iớn\n\nI3lockchain\n\ncăn bản\n\n Hệ trợ giúp\nquyết định\n\nbáo cáo khoa học và thuyết trình các kết quả\n\nđã thực hiện.\n\nKhối\nIượng\nkiến\nthức\n\nCán bộ hướng dẫn sẽ mô tà các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiều rõ yêu cầu của đề\n\ntài và các nghiên cứu liên quan đến dề tài),\nphân tích yêu cầu, thi",
+              "index": 94,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": " đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nri\n\n53\n\n55\n\nlTêu học\nphầm\n\nNội dung cần đạt được củ...",
+              "endOffset": 61900,
+              "chunkIndex": 94,
+              "startOffset": 61100
+            },
+            {
+              "page": 1,
+              "text": "\nIĩnh vực khác nhau về mạng như thiết kế và\ncài đặt mạng máy tính, bảo mật mạng máy\n\ntính, xây dựng ứng dụng m ang,.\n\nHọc phần bao gồm: những hiểu biết mở TÔ \nvề các hệ thống thông tin được sử dụng đề đạt\nđược các mục tiêu của công ty. Các công\nnghệ hiện đại sẽ gÓp phần vào sự phát triển\ntrong tương lai của các hệ thống và ứng dụng\n sa. U cũng sẽ được giới thiệu. Các vân đề\nphần vào việc Iập kế hoạch, thiết kế, phát\ntriển, triển khai và quản Iý thành công các hệ\nthống t thông tin.\nEloc phần này cung cấp cho sinh viên kỹni năng\nIập trình căn bản, có khả năng mô hình hóa\nbài toán băn Iưu đồ giải thuật, hiểu định\nnghĩa các kiệu dữ liệu, định nghĩa kiểu dữ liệu\nmới dựa trên các kiểu dựng sẵn, xây dựng và\nsử dụng hàm, có khả năng truy xuất và Iưu trữ\ndữ liệu đưới dạng tập tin thông qua một\n\nngô",
+              "index": 75,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "\nIĩnh vực khác nhau về mạng như thiết kế và\ncài đặt mạng máy tính, bảo mật mạng máy\n\ntính, xây dựng ứng dụng m ang,.\n\nHọc phần bao gồm: những hiểu biết mở TÔ \nvề các hệ thống thông tin được sử dụng đề...",
+              "endOffset": 49550,
+              "chunkIndex": 75,
+              "startOffset": 48750
+            },
+            {
+              "page": 1,
+              "text": "ộc xây dựng\nvà phát triển các dịch vụ điện toán đám mây\nNgười học sẽ được tìm hiểu về cùng những\nkỹ thuật, cơ chê nên tảng giúp cho công nghệ\nnày trở thành hiện thực. Ngoài ra, người học\ncũng dược cùng cấp đầy đủ các kiến thức\ntrong việc triển khai một phần mềm như một\ndịch vụ trên diện toán đám mây riêng..\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp đề phát. triển ứng dụng cụ\nthể. Sinh viên phải Iập kế hoạch cho các công\nv Iệc sẽ thực hiện. Các công việc chính bao\ngỒm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của dề\ntài và các nghiên cứu liên \"quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\n\ndụng. Sau cùng, sinh viên thực hiện viết một\n\n34\n\n217C\n\nO1JID\n\n21C\n(01 1\n60 TH)\n\n(301/1\nr",
+              "index": 93,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "ộc xây dựng\nvà phát triển các dịch vụ điện toán đám mây\nNgười học sẽ được tìm hiểu về cùng những\nkỹ thuật, cơ chê nên tảng giúp cho công nghệ\nnày trở thành hiện thực. Ngoài ra, người học\ncũng dược cùn...",
+              "endOffset": 61250,
+              "chunkIndex": 93,
+              "startOffset": 60450
+            },
+            {
+              "page": 1,
+              "text": "g đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiểu số và miền núi giai đoạn 2021 - 2025.\n\nScanned with\n(Theo phụ Iực JJJ kèm theo Nghị\nđịnh số 23 2025/NĐ-CP)\n\nCỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nự do - Hạnh phúc\n\nIÊN, GIẢM HỌC PHÍ\n\nKinh gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cản Thơ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp\nCô vấn học tập\nHẠ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\n Thuộc đôi tượng\n(Ghí rÕ đối tượng được quy định tại Nghị định 238/20257N2-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đ",
+              "index": 8,
+              "fileId": "ea733901-8870-4d66-a83f-8d70f8cbd849",
+              "fileUrl": "uploads\\documents\\1766026630050-494788439.pdf",
+              "snippet": "g đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc...",
+              "endOffset": 6000,
+              "chunkIndex": 8,
+              "startOffset": 5200
+            },
+            {
+              "page": 1,
+              "text": "1094 R\n\n11002\nTIC 0 37\n\nđoán rời rạc\n\nIKhai phá dữ Y liệu\n\n Phân tích và thiết kế hệ thống\n\n11014 thông tin\n\nsa (012\nT005\n\nlIệ quán trị cơ sở dữ liệu\n\nÌ Iệ điều hành\n\nPhương pháp nghiên cứu trong\n_ Jcông nghệ thông tin\n\nIT202\n\n1-1020 le \"ông nghệ .NI: FT.\nT021\n\n1024 .\nTT022,\n1-1009 \n1T211\n\nIập trình Java 1 \n\nập trình Java 2\n\nI ập trình web\n\nsị rí tuệ nhân tạo\n\nNhập môn C Ông nghệ phần\nmềm\n\n11JO4O\n\nQuả ìn trị dự án. L i N TT.\n\nEIệ quản trị CƠ SỞ dữ liệu\nMySQI\n\nAn toàn các Hệ thống thông tin\n\nThương mại diện tử\nHệ cơ sở dữ liệu đa phương\ntiện\n\nPhát t triển ứng dụng. lN\n\nNguyên Iý thiết kế và kiến trúc.\n\n\"Ngôn 1 ngữ hóa dữ diệu. \n\nphầt ân mềm\n\nliện toán đám mây 4 Ầ\nnà Bắt Tự nấ\nchĩ buộc chọn II\n3 3 30\n212 30\n3 3 30\n\n3 3 30\n3 3 3Q\n3 3 30\n2 2 30\n3 3 s 45\n3 3 30\n\n3 3 30\n3 3 30\n3 - 3 30\n2 2 30\n78",
+              "index": 115,
+              "fileId": "06dbfe4b-5653-45a8-b1c8-f4021c601421",
+              "fileUrl": "uploads\\documents\\1766026778680-284155247.pdf",
+              "snippet": "1094 R\n\n11002\nTIC 0 37\n\nđoán rời rạc\n\nIKhai phá dữ Y liệu\n\n Phân tích và thiết kế hệ thống\n\n11014 thông tin\n\nsa (012\nT005\n\nlIệ quán trị cơ sở dữ liệu\n\nÌ Iệ điều hành\n\nPhương pháp nghiên cứu trong\n_ Jc...",
+              "endOffset": 75550,
+              "chunkIndex": 115,
+              "startOffset": 74750
+            }
+          ]
+        }
+      ],
+      "createdAt": "2025-12-18T03:01:38.645Z",
+      "updatedAt": "2025-12-18T03:02:04.390Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+    }
+  }
+}

@@ -1,0 +1,422 @@
+check log_httt v1:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Dưới đây là toàn bộ nội dung chương trình đào tạo ngành Hệ thống Thông tin (HTTT) của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ năm 2022, bao gồm tất cả các môn học và thông tin liên quan đến từng môn. Tổng số môn học sẽ được liệt kê ở cuối câu trả lời.\n\n---\n\n### 1. Các học phần điều kiện (không tính vào tổng số tín chỉ tốt nghiệp)\n- Giáo dục quốc phòng và an ninh (GDQP-AN 1, 2, 3, 4)\n- Giáo dục thể chất 1, 2, 3\n\n### 2. Kiến thức cơ sở ngành\n1. Tin học đại cương 1\n2. Mạng máy tính 1\n3. Nhập môn Hệ thống thông tin\n4. Kỹ thuật lập trình\n5. Cấu trúc dữ liệu và giải thuật\n6. Cơ sở dữ liệu\n7. Lập trình hướng đối tượng\n8. Logie học\n9. Toán rời rạc\n10. Khai phá dữ liệu\n11. Phân tích và thiết kế hệ thống thông tin\n12. Hệ quản trị cơ sở dữ liệu\n13. Hệ điều hành\n14. Công nghệ vùng Cửu Long\n\n### 3. Kiến thức chuyên ngành\n15. Công nghệ .NET\n16. Lập trình Java 1\n17. Lập trình Java 2\n18. Lập trình web\n19. Trí tuệ nhân tạo\n20. Ngôn ngữ hóa dữ liệu\n21. Nhập môn Internet of Things (IoT)\n22. Quản trị dự án công nghệ thông tin\n23. Quản trị mạng máy tính\n24. Quản trị hệ thống thông tin\n25. Quản trị an toàn thông tin\n26. Quản trị cơ sở dữ liệu lớn\n27. Quản trị hệ thống doanh nghiệp\n28. Quản trị hệ thống thương mại điện tử\n29. Quản trị hệ thống thông tin địa lý\n30. Quản trị hệ thống thông tin y tế\n31. Quản trị hệ thống thông tin tài chính\n32. Quản trị hệ thống thông tin giáo dục\n33. Quản trị hệ thống thông tin công cộng\n34. Quản trị hệ thống thông tin giao thông\n35. Quản trị hệ thống thông tin môi trường\n36. Quản trị hệ thống thông tin nông nghiệp\n37. Quản trị hệ thống thông tin du lịch\n38. Quản trị hệ thống thông tin văn hóa\n39. Quản trị hệ thống thông tin thể thao\n40. Quản trị hệ thống thông tin truyền thông\n41. Quản trị hệ thống thông tin quốc phòng\n42. Quản trị hệ thống thông tin an ninh\n43. Quản trị hệ thống thông tin chính phủ\n44. Quản trị hệ thống thông tin doanh nghiệp nhỏ và vừa\n45. Quản trị hệ thống thông tin phi lợi nhuận\n46. Quản trị hệ thống thông tin cá nhân\n47. Quản trị hệ thống thông tin gia đình\n48. Quản trị hệ thống thông tin cộng đồng\n49. Quản trị hệ thống thông tin xã hội\n50. Quản trị hệ thống thông tin quốc tế\n\n### 4. Các học phần tự chọn và bổ trợ\n- Đổi mới sáng tạo và khởi nghiệp\n- Các nền tảng hệ thống thông minh\n- Kỹ năng giao tiếp\n- Tin học văn phòng nâng cao\n- Lập trình mô phỏng\n- Thu thập và tiền xử lý dữ liệu\n\n### 5. Khóa luận tốt nghiệp/Thực tập tốt nghiệp\n- Khóa luận tốt nghiệp Hệ thống thông tin\n\n---\n\n#### Thông tin chi tiết một số môn học tiêu biểu:\n- Lập trình Java 1: Cung cấp kiến thức về lập trình Java, bao gồm các kiểu dữ liệu cơ sở, hằng, biến, lệnh và khối lệnh, mảng, lập trình hướng đối tượng, lập trình giao diện với AWT và JFC, lập trình Java với cơ sở dữ liệu[86].\n- Lập trình Java 2: Cung cấp kiến thức nâng cao về lập trình Java[86].\n- Khai phá dữ liệu: Trình bày các tác vụ khai phá dữ liệu, các giải thuật và công cụ khai phá dữ liệu[83].\n- Phân tích và thiết kế hệ thống thông tin: Cung cấp kiến thức tổng quát về quá trình phân tích và thiết kế hệ thống thông tin theo hướng đối tượng, sử dụng UML, công cụ RAD, từ xác định yêu cầu đến thiết kế hoàn chỉnh hệ thống mới[83].\n- Hệ quản trị cơ sở dữ liệu: Cung cấp cái nhìn tổng quan về các hệ quản trị cơ sở dữ liệu hiện nay[83].\n- Chứng thực và an toàn dữ liệu trong thương mại điện tử: Trình bày kiến thức về thương mại điện tử, an toàn bảo mật thông tin, chữ ký số, mã hóa trong thương mại điện tử[104].\n- An toàn và bảo mật thông tin: Trang bị kiến thức cơ bản về an toàn và bảo mật thông tin, giúp sinh viên hiểu rõ các lỗ hổng bảo mật[104].\n\n---\n\n### Tổng số môn học\n\nTheo danh mục liệt kê trong chương trình đào tạo, tổng số môn học (không tính các học phần điều kiện như Giáo dục quốc phòng và Giáo dục thể chất) là khoảng 72 môn, bao gồm cả các học phần bắt buộc, tự chọn, bổ trợ và khóa luận tốt nghiệp[116][117][120].\n\n---\n\n**Lưu ý:**  \n- Danh sách trên đã tổng hợp các môn học chính và tự chọn, có thể có sự thay đổi nhỏ tùy theo từng năm học hoặc cập nhật của nhà trường.\n- Thông tin chi tiết về từng môn học, số tín chỉ, số tiết lý thuyết/thực hành, học phần tiên quyết, bạn có thể tham khảo thêm ở các bảng chi tiết trong các chunk đã trích dẫn[116][117][120][86][83][104].\n\nNếu bạn cần chi tiết về từng môn (số tín chỉ, học phần tiên quyết, mô tả nội dung), vui lòng yêu cầu cụ thể hơn!",
+    "citations": [
+      {
+        "index": 86,
+        "snippet": "oặc dùng\nschema. Học phân cũng cung cấp các kiên thức\n\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ đề ...",
+        "text": "oặc dùng\nschema. Học phân cũng cung cấp các kiên thức\n\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ đề năm rõ hơn các kỹ thuật Iập\ntrình hướng đối tượng tận dụng các ưu điểm\ndo nền tảng .NET cũng cấp. Liên kết với các\nhọc phần khác để xây dụng một ứng dụng\nquản Iý thông tin hoàn chỉnh.\n36. Lậptrình Học phần này \"cung cấp cho sinh viên một. 2TC\nJava 1 khối Iượng kiến thức tương đối hoàn chỉnh về (15LT\nIập trình Java. Các nội dung chủ yếu bao 30 TH)\ngồm: Các kiêu dữ liệu cơ sở, hăng, biên, Iệnh\nvà khối Iệnh, mảng: Lập trình hướng đối\ntượng trong Java; Lập trình giao diện với\nAWT và JFC; Lập trình Java với cơ sở dữ\nliệu\n37. Lậptrình Môn học cung cấp cho sinh viên kiến thức về. 2 TC\nJava 2 Iập trìn",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 86,
+        "startOffset": 55900,
+        "endOffset": 56700
+      },
+      {
+        "index": 83,
+        "snippet": " và ứng dụng của\nkhai phá dữ liệu. Ngoài ra, môn học cũng\ntrình bày các tác vụ khai phá dữ liệu, các giải\nthuật và công cụ khai phá dữ liệu.\n\n3TC\nQ0 LT\n30 TH)\n\n31\n\nPhân tích và\nthiết kê hệ\nthống thông...",
+        "text": " và ứng dụng của\nkhai phá dữ liệu. Ngoài ra, môn học cũng\ntrình bày các tác vụ khai phá dữ liệu, các giải\nthuật và công cụ khai phá dữ liệu.\n\n3TC\nQ0 LT\n30 TH)\n\n31\n\nPhân tích và\nthiết kê hệ\nthống thông\ntin\n\nHọc phần này cung cấp cho sinh viên các kiến\nthức tổng quát về quá trình phân tích và thiết\nkế HTTT theo cách tiếp cận hướng đối tượng\ntrong quá trình sản xuất phần mềm. Kiến thức\nvề ngôn ngữ mô hình hóa thống nhất (UML).\nCách thức sử dụng công cụ RAD hỗ trợ cho\nquá trình phân tích và thiết kế hệ thống. Học\nphần sẽ được dẫn dắt từ bước xác định yêu\ncâu của khách hàng, phân tích hệ thống đến\nthiết kế hoàn chỉnh một hệ thống mới.\n\n3TC\n\nG39 LT\n\n30 TH)\n\n32\n\nHệ quản trị\ncơ sở dữ liệu\n\nHọc phần này cung cấp cho sinh viên cái nhìn\ntổng quan về các hệ quản trị CSDI, hiện nay,\ncó kiến thức và các",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 83,
+        "startOffset": 53950,
+        "endOffset": 54750
+      },
+      {
+        "index": 116,
+        "snippet": " IIK 2 2 22 8\nphòng và an ninh ( ) phụ\nl6: CB052 GDQP AN 3: Quân sự năm 1 212 14 16\nchung ( ) GDQP AN 4: Kỹ thuật chiên\n17-1 C8953 đầu bộ bình và chiến thuật ( ) 2 ? 3 15\n18 CB035 Giáo dục thể chất 1 ...",
+        "text": " IIK 2 2 22 8\nphòng và an ninh ( ) phụ\nl6: CB052 GDQP AN 3: Quân sự năm 1 212 14 16\nchung ( ) GDQP AN 4: Kỹ thuật chiên\n17-1 C8953 đầu bộ bình và chiến thuật ( ) 2 ? 3 15\n18 CB035 Giáo dục thể chất 1 ( ) H.II JI 0 1 30\n19 CB036 Giáo dục thể chất 2 ( ) phụ 1 1 0 30\n20 CB037 Giáo dục thê chất 3 ( ) năm I 0. J 30\nKiên thức cơ sở ngành 39.139 1. 0\n21 TT052 Tin học đại cương 1 3 3 30 j 30\n\n40\nmi Số ii Số Số Học phần.\nTT học Tên học phân Học tín Bắt Tự tiết tiết học trước\nkỳ buộc chọn (a), song\nphân chỉ T TH hành (b\n22 TT006 Mạng máy tính 1 3 3 30 30\n23 TTI182 Nhập môn Hệ thốngthôngtin 2 2 Í 2 30 0\n24. TT004 Kỹ thuật Iập trình 21515 30 30 TT052(a)\n25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 116,
+        "startOffset": 75400,
+        "endOffset": 76200
+      },
+      {
+        "index": 16,
+        "snippet": "Iực từ 600 điệm trở Iên\n\n6.2.3. Chính sách ưu tiên và xét tuyên thẳng: Thục hiện chính sách ưu tiên\ntheo quy chê tuyên sinh đại học, cao đắng năm 2022 của Bộ Giáo dục và Đào tạo\n7. QUÁ TRÌNH ĐÀO TẠO\n\n...",
+        "text": "Iực từ 600 điệm trở Iên\n\n6.2.3. Chính sách ưu tiên và xét tuyên thẳng: Thục hiện chính sách ưu tiên\ntheo quy chê tuyên sinh đại học, cao đắng năm 2022 của Bộ Giáo dục và Đào tạo\n7. QUÁ TRÌNH ĐÀO TẠO\n\nChương trình đào tạo được thiết kế gồm 09 học kỳ tương ứng với 4.5 năm học,\ngồm 150 tín chỉ (không tính các học phần điều kiện: Giáo dục quốc phòng và Giáo dục\nthể chất: L1 tín chỉ). Trong đó, thời gian học tập chính thức 4.5 năm, thời gian học tập\ntối đa Ià 09 năm.\n\nMỗi năm học chia Iàm 02 học kỳ chính, mỗi học kỳ gồm 15 tuần học và 01 học\nkỳ phụ\n8 . QUY TRÌNH ĐÀO TẠO VÀ ĐIỀU KIỆN TÓT NGHIỆT\n8.1. Quy trình đào tạo\n\nQuy trình đào tạo được thực hiện theo học chê tín chỉ\n\nQuy chê đào tạo sử dụng Ià quy chê đào tạo theo học chê tín chỉ, tạo điều kiện\nđề sinh viên tích cực, chủ động thích ứng với ",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 16,
+        "startOffset": 10400,
+        "endOffset": 11200
+      },
+      {
+        "index": 120,
+        "snippet": " TT004(a)\ndụng thương mại điện tử\n62 TT050 Chứng tực và an toàn dữ liệu 7 3 30. 30 TT051(a)\ntrong thương mại điện tử\nFT004(a)\n63 TT064 An toàn và bảo mật thông tin 7 3 30 30 TT006(a)\n9 FT008(a)\nINguyê...",
+        "text": " TT004(a)\ndụng thương mại điện tử\n62 TT050 Chứng tực và an toàn dữ liệu 7 3 30. 30 TT051(a)\ntrong thương mại điện tử\nFT004(a)\n63 TT064 An toàn và bảo mật thông tin 7 3 30 30 TT006(a)\n9 FT008(a)\nINguyên Iý kho dữ liệu và\n64 TTI 7 OTAP 7 3 45 J0\n65 TT036 DXử Iý ảnh và thị giác máy tính ! 7 3 30 30 TT004(a)\n66 TT190 Iin học văn phòng nâng cao 7 3 15 60\n67 TT077 Lập trình mô phỏng 7 3 30 30\n6 ITT102 Thu thập và tiên xử Iý dữ liệu 7 3 30 1 30\nTự chọn 3 8 2 0 2\n69 CB049 Đôi mới sáng tạo và khởi R 2 30. 1.0\nnghiệp\n70: (TT183 Các nên tảng hệ thông thông R 2 2 40 0\nminh\n71 CB012 Kỹ năng giao tiêp 2 30 1.0\nMH\nKhóa luận tôt nghiệp/Thực tập tốt 9 10 0. 10\nnghiệp\n72 TT192 Khóa luận tốt nghiệp Hệ thống up Ca cpg gi 450\nthông tin\n\n42\nHọc phân\n\nMã Số Số Số\nTT học Tên học phân hà tín M - đê tiệt tiệt rà ng",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 120,
+        "startOffset": 78000,
+        "endOffset": 78800
+      },
+      {
+        "index": 97,
+        "snippet": "c công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiêu yêu câu (hiệu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùn...",
+        "text": "c công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiêu yêu câu (hiệu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyêt trình các kết quả\nđã thực hiện\n\n2TC\n(0LT\n60 TH)\n\n52\n\nĐồ án Hệ\nthông thông\ntiín3\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp để phát triển ứng dụng cụ\nthể, Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đên đê tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện việt một\nbáo cáo khoa học v",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 97,
+        "startOffset": 63050,
+        "endOffset": 63850
+      },
+      {
+        "index": 2,
+        "snippet": " xu thế phát\ntriển trong thời kỳ Cách mạng công nghiệp Iần thứ tư\n\nTâm nhìn của Khoa\n\nĐền năm 2030, Khoa Công nghệ thông tin trở thành khoa tiên phong của Trường Đại\nhọc Kỹ thuật Công nghệ Cân Thơ tro...",
+        "text": " xu thế phát\ntriển trong thời kỳ Cách mạng công nghiệp Iần thứ tư\n\nTâm nhìn của Khoa\n\nĐền năm 2030, Khoa Công nghệ thông tin trở thành khoa tiên phong của Trường Đại\nhọc Kỹ thuật Công nghệ Cân Thơ trong nghiên cứu ứng dụng công nghệ thông tin và\nchuyên đôi số trong đào tạo, nghiên cứu khoa học và chuyển giao công nghệ, đáp ứng\nyêu câu phát triển kinh tê xã hội thời kỳ Cách mạng công nghệ công nghiệp 4.0\n\n2.2. Sứ mạng\nSự mạng của Trường\n\nTrường Đại học Kỹ thuật - Công nghệ Cân Thơ có sứ mạng đào tạo nguồn nhân Iực có\nđạo đức tốt, có chuyên môn cao, có khả năng tiếp cận nghiên cứu khoa học, ứng dụng\nvà chuyển giao công nghệ tiên tiền trong Iĩnh vực kỹ thuật, công nghệ, đáp ứng nhu\ncầu phát triển của thành phố Cần Thơ, vùng đồng bằng sông Cửu Long và cả nước.\n\nSỨ mạng của Khoa\n\nKhoa Công nghệ",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 2,
+        "startOffset": 1300,
+        "endOffset": 2100
+      },
+      {
+        "index": 117,
+        "snippet": "25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).\n28 T-TI60 Logie học 412 2 30 0\n29 TT002 Toán rời ...",
+        "text": "25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).\n28 T-TI60 Logie học 412 2 30 0\n29 TT002 Toán rời rạc 41313 45 0\n30 TT037 Khai phá dữ liệu 51313 30 30 TT007(a)\n31L 1 TT014 mông nh và thiệt kê hệ thống 4 3 3 30 30 1/0070)\n32 TT012 Hệ quản trị cơ sở dữ liệu 44313 30 30 TT007(a)\n33 TT005 Hệ điều hành 41313 30. 30\n34 TT202 ôn nghệ hôn Cửu ưong 2 la lo. 30 0\nKiên thức chuyên ngành 7153 25\n35 TT020 Công nghệ .NET 41212 15 1 30 TT008(a)\n36 TT021 Lập trình Java 5siị2 12 15 30 TT004(a)\n37 TT024 Lập trình Java 2 617212 15 30 TT021(a)\n38. T022 Iập trình web 51703. 15 30 30 Ì TT004(a)\n39 TT009 Trí tuệ nhân tạo 51313 30 Ì 30: TT001(2)\n40 TT21I Ngôn ngữ hóa dữ liệu 71315 30 30 TT004(a)\n;m TT040 Nhập môn",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 117,
+        "startOffset": 76050,
+        "endOffset": 76850
+      },
+      {
+        "index": 104,
+        "snippet": "n tử\n62. Chứngthực Nội dung môn học đâu tiên sẽ trình bày các 3 TC\nvà an toàn dữ kiến thức về thương mại điện tử và tâm quan. (30 LT,\nliệu rong trọng của an toàn bảo mật thông tin trong 30 TH)\nthương ...",
+        "text": "n tử\n62. Chứngthực Nội dung môn học đâu tiên sẽ trình bày các 3 TC\nvà an toàn dữ kiến thức về thương mại điện tử và tâm quan. (30 LT,\nliệu rong trọng của an toàn bảo mật thông tin trong 30 TH)\nthương mại thương mại điện tử. Tiếp theo, người học\nđiện tử được cập nhật các kiến thức cơ bản đến nâng\ncao về chữ ký số (hình thức chữ ký điện tử\nphổ dụng nhất). Chữ ký số bao gồm một cặp\nmã khoá, gồm khoá bí mật và khoá công khai\nnhằm tăng cường tính bảo mật trong TMĐT.\nVì vậy, các vấn đề an toàn thông tin bằng các\nchứng chỉ sô, cơ chê mã hóa được dùng trong\nTMĐDT cũng được trình bày trong môn học\n63. An toàn và Nội dung môn học trang bị các kiến thức cơ 3TC\nbảo mật bản về an toàn và bảo mật thông tin, sẽ giúp Q301LT,\nthông tin sinh viên hiểu rõ các Iỗ hồng bảo mật bên 30 TH)\ntrong các cơ chế, chín",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 104,
+        "startOffset": 67600,
+        "endOffset": 68400
+      },
+      {
+        "index": 67,
+        "snippet": "Nin theo\nmục tiêu của môn học. Cụ thể các vấn đề như\nHàng hóa, thị trường và vai trò của các chủ\nthê trong nên kinh tệ thị trường, cạnh tranh và\nđộc quyên trong nên kinh tê thị trường; Kinh\ntê thị trư...",
+        "text": "Nin theo\nmục tiêu của môn học. Cụ thể các vấn đề như\nHàng hóa, thị trường và vai trò của các chủ\nthê trong nên kinh tệ thị trường, cạnh tranh và\nđộc quyên trong nên kinh tê thị trường; Kinh\ntê thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tê\ncủa Việt Nam\n10. Chủ nghĩa xã Môn học chủ nghĩa xã hội khoa học gồm 7 2TC\nhội khoa học chương, được thiết kế giảng dạy cho sinh viên (30 LT,\nđại học khôi không chuyên ngành Iý luận 0TH)\nchính trị , trình bày các kiên thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triên của chủ nghĩa xã hội khoa\nhọc)\n11. Tưtưởng Hồ Học phân Tư tưởng Hồ Chí Minh gồm 6 2TC\nChí Minh chương cung cấp cho sinh viên kiến thức cơ (G30 LT,\nbản về: Đôi tượng phương pháp nghiê",
+        "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+        "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+        "page": 1,
+        "chunkIndex": 67,
+        "startOffset": 43550,
+        "endOffset": 44350
+      }
+    ],
+    "relateDocs": [
+      [
+        {
+          "pageContent": "oặc dùng\nschema. Học phân cũng cung cấp các kiên thức\n\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ đề năm rõ hơn các kỹ thuật Iập\ntrình hướng đối tượng tận dụng các ưu điểm\ndo nền tảng .NET cũng cấp. Liên kết với các\nhọc phần khác để xây dụng một ứng dụng\nquản Iý thông tin hoàn chỉnh.\n36. Lậptrình Học phần này \"cung cấp cho sinh viên một. 2TC\nJava 1 khối Iượng kiến thức tương đối hoàn chỉnh về (15LT\nIập trình Java. Các nội dung chủ yếu bao 30 TH)\ngồm: Các kiêu dữ liệu cơ sở, hăng, biên, Iệnh\nvà khối Iệnh, mảng: Lập trình hướng đối\ntượng trong Java; Lập trình giao diện với\nAWT và JFC; Lập trình Java với cơ sở dữ\nliệu\n37. Lậptrình Môn học cung cấp cho sinh viên kiến thức về. 2 TC\nJava 2 Iập trìn",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 56700,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 86,
+            "startOffset": 55900
+          },
+          "id": "6cb8112a-4e3d-4e09-8caa-82f7622fb9dc"
+        },
+        0.5186935806663738
+      ],
+      [
+        {
+          "pageContent": " và ứng dụng của\nkhai phá dữ liệu. Ngoài ra, môn học cũng\ntrình bày các tác vụ khai phá dữ liệu, các giải\nthuật và công cụ khai phá dữ liệu.\n\n3TC\nQ0 LT\n30 TH)\n\n31\n\nPhân tích và\nthiết kê hệ\nthống thông\ntin\n\nHọc phần này cung cấp cho sinh viên các kiến\nthức tổng quát về quá trình phân tích và thiết\nkế HTTT theo cách tiếp cận hướng đối tượng\ntrong quá trình sản xuất phần mềm. Kiến thức\nvề ngôn ngữ mô hình hóa thống nhất (UML).\nCách thức sử dụng công cụ RAD hỗ trợ cho\nquá trình phân tích và thiết kế hệ thống. Học\nphần sẽ được dẫn dắt từ bước xác định yêu\ncâu của khách hàng, phân tích hệ thống đến\nthiết kế hoàn chỉnh một hệ thống mới.\n\n3TC\n\nG39 LT\n\n30 TH)\n\n32\n\nHệ quản trị\ncơ sở dữ liệu\n\nHọc phần này cung cấp cho sinh viên cái nhìn\ntổng quan về các hệ quản trị CSDI, hiện nay,\ncó kiến thức và các",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 54750,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 83,
+            "startOffset": 53950
+          },
+          "id": "bafc3cb7-db42-4bff-b2b8-832d0b3663b6"
+        },
+        0.5183832203860048
+      ],
+      [
+        {
+          "pageContent": " IIK 2 2 22 8\nphòng và an ninh ( ) phụ\nl6: CB052 GDQP AN 3: Quân sự năm 1 212 14 16\nchung ( ) GDQP AN 4: Kỹ thuật chiên\n17-1 C8953 đầu bộ bình và chiến thuật ( ) 2 ? 3 15\n18 CB035 Giáo dục thể chất 1 ( ) H.II JI 0 1 30\n19 CB036 Giáo dục thể chất 2 ( ) phụ 1 1 0 30\n20 CB037 Giáo dục thê chất 3 ( ) năm I 0. J 30\nKiên thức cơ sở ngành 39.139 1. 0\n21 TT052 Tin học đại cương 1 3 3 30 j 30\n\n40\nmi Số ii Số Số Học phần.\nTT học Tên học phân Học tín Bắt Tự tiết tiết học trước\nkỳ buộc chọn (a), song\nphân chỉ T TH hành (b\n22 TT006 Mạng máy tính 1 3 3 30 30\n23 TTI182 Nhập môn Hệ thốngthôngtin 2 2 Í 2 30 0\n24. TT004 Kỹ thuật Iập trình 21515 30 30 TT052(a)\n25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 76200,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 116,
+            "startOffset": 75400
+          },
+          "id": "c4b7a162-5a76-4b3f-9023-634bc3d0df4d"
+        },
+        0.516995983868237
+      ],
+      [
+        {
+          "pageContent": "Iực từ 600 điệm trở Iên\n\n6.2.3. Chính sách ưu tiên và xét tuyên thẳng: Thục hiện chính sách ưu tiên\ntheo quy chê tuyên sinh đại học, cao đắng năm 2022 của Bộ Giáo dục và Đào tạo\n7. QUÁ TRÌNH ĐÀO TẠO\n\nChương trình đào tạo được thiết kế gồm 09 học kỳ tương ứng với 4.5 năm học,\ngồm 150 tín chỉ (không tính các học phần điều kiện: Giáo dục quốc phòng và Giáo dục\nthể chất: L1 tín chỉ). Trong đó, thời gian học tập chính thức 4.5 năm, thời gian học tập\ntối đa Ià 09 năm.\n\nMỗi năm học chia Iàm 02 học kỳ chính, mỗi học kỳ gồm 15 tuần học và 01 học\nkỳ phụ\n8 . QUY TRÌNH ĐÀO TẠO VÀ ĐIỀU KIỆN TÓT NGHIỆT\n8.1. Quy trình đào tạo\n\nQuy trình đào tạo được thực hiện theo học chê tín chỉ\n\nQuy chê đào tạo sử dụng Ià quy chê đào tạo theo học chê tín chỉ, tạo điều kiện\nđề sinh viên tích cực, chủ động thích ứng với ",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 11200,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 16,
+            "startOffset": 10400
+          },
+          "id": "58bf9323-a709-4041-b2a6-cc4e327b4680"
+        },
+        0.516212060564395
+      ],
+      [
+        {
+          "pageContent": " TT004(a)\ndụng thương mại điện tử\n62 TT050 Chứng tực và an toàn dữ liệu 7 3 30. 30 TT051(a)\ntrong thương mại điện tử\nFT004(a)\n63 TT064 An toàn và bảo mật thông tin 7 3 30 30 TT006(a)\n9 FT008(a)\nINguyên Iý kho dữ liệu và\n64 TTI 7 OTAP 7 3 45 J0\n65 TT036 DXử Iý ảnh và thị giác máy tính ! 7 3 30 30 TT004(a)\n66 TT190 Iin học văn phòng nâng cao 7 3 15 60\n67 TT077 Lập trình mô phỏng 7 3 30 30\n6 ITT102 Thu thập và tiên xử Iý dữ liệu 7 3 30 1 30\nTự chọn 3 8 2 0 2\n69 CB049 Đôi mới sáng tạo và khởi R 2 30. 1.0\nnghiệp\n70: (TT183 Các nên tảng hệ thông thông R 2 2 40 0\nminh\n71 CB012 Kỹ năng giao tiêp 2 30 1.0\nMH\nKhóa luận tôt nghiệp/Thực tập tốt 9 10 0. 10\nnghiệp\n72 TT192 Khóa luận tốt nghiệp Hệ thống up Ca cpg gi 450\nthông tin\n\n42\nHọc phân\n\nMã Số Số Số\nTT học Tên học phân hà tín M - đê tiệt tiệt rà ng",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 78800,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 120,
+            "startOffset": 78000
+          },
+          "id": "3b0788cb-a44b-4188-93e4-0936614d3988"
+        },
+        0.5150863401720416
+      ],
+      [
+        {
+          "pageContent": "c công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiêu yêu câu (hiệu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyêt trình các kết quả\nđã thực hiện\n\n2TC\n(0LT\n60 TH)\n\n52\n\nĐồ án Hệ\nthông thông\ntiín3\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp để phát triển ứng dụng cụ\nthể, Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đên đê tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện việt một\nbáo cáo khoa học v",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 63850,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 97,
+            "startOffset": 63050
+          },
+          "id": "7ff9d005-1372-4367-98ef-79aa0fb0bb2e"
+        },
+        0.5147537760069614
+      ],
+      [
+        {
+          "pageContent": " xu thế phát\ntriển trong thời kỳ Cách mạng công nghiệp Iần thứ tư\n\nTâm nhìn của Khoa\n\nĐền năm 2030, Khoa Công nghệ thông tin trở thành khoa tiên phong của Trường Đại\nhọc Kỹ thuật Công nghệ Cân Thơ trong nghiên cứu ứng dụng công nghệ thông tin và\nchuyên đôi số trong đào tạo, nghiên cứu khoa học và chuyển giao công nghệ, đáp ứng\nyêu câu phát triển kinh tê xã hội thời kỳ Cách mạng công nghệ công nghiệp 4.0\n\n2.2. Sứ mạng\nSự mạng của Trường\n\nTrường Đại học Kỹ thuật - Công nghệ Cân Thơ có sứ mạng đào tạo nguồn nhân Iực có\nđạo đức tốt, có chuyên môn cao, có khả năng tiếp cận nghiên cứu khoa học, ứng dụng\nvà chuyển giao công nghệ tiên tiền trong Iĩnh vực kỹ thuật, công nghệ, đáp ứng nhu\ncầu phát triển của thành phố Cần Thơ, vùng đồng bằng sông Cửu Long và cả nước.\n\nSỨ mạng của Khoa\n\nKhoa Công nghệ",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 2100,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 2,
+            "startOffset": 1300
+          },
+          "id": "30fcb94c-d6bf-4ac6-8971-8b1d2d57e0a7"
+        },
+        0.5142947614211782
+      ],
+      [
+        {
+          "pageContent": "25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).\n28 T-TI60 Logie học 412 2 30 0\n29 TT002 Toán rời rạc 41313 45 0\n30 TT037 Khai phá dữ liệu 51313 30 30 TT007(a)\n31L 1 TT014 mông nh và thiệt kê hệ thống 4 3 3 30 30 1/0070)\n32 TT012 Hệ quản trị cơ sở dữ liệu 44313 30 30 TT007(a)\n33 TT005 Hệ điều hành 41313 30. 30\n34 TT202 ôn nghệ hôn Cửu ưong 2 la lo. 30 0\nKiên thức chuyên ngành 7153 25\n35 TT020 Công nghệ .NET 41212 15 1 30 TT008(a)\n36 TT021 Lập trình Java 5siị2 12 15 30 TT004(a)\n37 TT024 Lập trình Java 2 617212 15 30 TT021(a)\n38. T022 Iập trình web 51703. 15 30 30 Ì TT004(a)\n39 TT009 Trí tuệ nhân tạo 51313 30 Ì 30: TT001(2)\n40 TT21I Ngôn ngữ hóa dữ liệu 71315 30 30 TT004(a)\n;m TT040 Nhập môn",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 76850,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 117,
+            "startOffset": 76050
+          },
+          "id": "9fe0ef17-429e-4ca7-b0d7-048c990a9c19"
+        },
+        0.5131265375949898
+      ],
+      [
+        {
+          "pageContent": "n tử\n62. Chứngthực Nội dung môn học đâu tiên sẽ trình bày các 3 TC\nvà an toàn dữ kiến thức về thương mại điện tử và tâm quan. (30 LT,\nliệu rong trọng của an toàn bảo mật thông tin trong 30 TH)\nthương mại thương mại điện tử. Tiếp theo, người học\nđiện tử được cập nhật các kiến thức cơ bản đến nâng\ncao về chữ ký số (hình thức chữ ký điện tử\nphổ dụng nhất). Chữ ký số bao gồm một cặp\nmã khoá, gồm khoá bí mật và khoá công khai\nnhằm tăng cường tính bảo mật trong TMĐT.\nVì vậy, các vấn đề an toàn thông tin bằng các\nchứng chỉ sô, cơ chê mã hóa được dùng trong\nTMĐDT cũng được trình bày trong môn học\n63. An toàn và Nội dung môn học trang bị các kiến thức cơ 3TC\nbảo mật bản về an toàn và bảo mật thông tin, sẽ giúp Q301LT,\nthông tin sinh viên hiểu rõ các Iỗ hồng bảo mật bên 30 TH)\ntrong các cơ chế, chín",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 68400,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 104,
+            "startOffset": 67600
+          },
+          "id": "c79c8e0f-6174-4ed9-8391-c9f6c982aab2"
+        },
+        0.5125852685497939
+      ],
+      [
+        {
+          "pageContent": "Nin theo\nmục tiêu của môn học. Cụ thể các vấn đề như\nHàng hóa, thị trường và vai trò của các chủ\nthê trong nên kinh tệ thị trường, cạnh tranh và\nđộc quyên trong nên kinh tê thị trường; Kinh\ntê thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tê\ncủa Việt Nam\n10. Chủ nghĩa xã Môn học chủ nghĩa xã hội khoa học gồm 7 2TC\nhội khoa học chương, được thiết kế giảng dạy cho sinh viên (30 LT,\nđại học khôi không chuyên ngành Iý luận 0TH)\nchính trị , trình bày các kiên thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triên của chủ nghĩa xã hội khoa\nhọc)\n11. Tưtưởng Hồ Học phân Tư tưởng Hồ Chí Minh gồm 6 2TC\nChí Minh chương cung cấp cho sinh viên kiến thức cơ (G30 LT,\nbản về: Đôi tượng phương pháp nghiê",
+          "metadata": {
+            "page": 1,
+            "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+            "endOffset": 44350,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 67,
+            "startOffset": 43550
+          },
+          "id": "14a011e0-2890-4d4a-87cb-ceef40a39efd"
+        },
+        0.5123158547972395
+      ]
+    ],
+    "chat": {
+      "id": "d9acfeca-5c41-4b53-9137-9a1cb5772754",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Cho tôi toàn bộ nội dung chương trình đào tạo của ngành httt, bao gồm tất cả các môn và thông tin môn đó, cho tôi biết tổng bao nhiêu môn, Cần Thơ 2022"
+        },
+        {
+          "role": "assistant",
+          "content": "Dưới đây là toàn bộ nội dung chương trình đào tạo ngành Hệ thống Thông tin (HTTT) của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ năm 2022, bao gồm tất cả các môn học và thông tin liên quan đến từng môn. Tổng số môn học sẽ được liệt kê ở cuối câu trả lời.\n\n---\n\n### 1. Các học phần điều kiện (không tính vào tổng số tín chỉ tốt nghiệp)\n- Giáo dục quốc phòng và an ninh (GDQP-AN 1, 2, 3, 4)\n- Giáo dục thể chất 1, 2, 3\n\n### 2. Kiến thức cơ sở ngành\n1. Tin học đại cương 1\n2. Mạng máy tính 1\n3. Nhập môn Hệ thống thông tin\n4. Kỹ thuật lập trình\n5. Cấu trúc dữ liệu và giải thuật\n6. Cơ sở dữ liệu\n7. Lập trình hướng đối tượng\n8. Logie học\n9. Toán rời rạc\n10. Khai phá dữ liệu\n11. Phân tích và thiết kế hệ thống thông tin\n12. Hệ quản trị cơ sở dữ liệu\n13. Hệ điều hành\n14. Công nghệ vùng Cửu Long\n\n### 3. Kiến thức chuyên ngành\n15. Công nghệ .NET\n16. Lập trình Java 1\n17. Lập trình Java 2\n18. Lập trình web\n19. Trí tuệ nhân tạo\n20. Ngôn ngữ hóa dữ liệu\n21. Nhập môn Internet of Things (IoT)\n22. Quản trị dự án công nghệ thông tin\n23. Quản trị mạng máy tính\n24. Quản trị hệ thống thông tin\n25. Quản trị an toàn thông tin\n26. Quản trị cơ sở dữ liệu lớn\n27. Quản trị hệ thống doanh nghiệp\n28. Quản trị hệ thống thương mại điện tử\n29. Quản trị hệ thống thông tin địa lý\n30. Quản trị hệ thống thông tin y tế\n31. Quản trị hệ thống thông tin tài chính\n32. Quản trị hệ thống thông tin giáo dục\n33. Quản trị hệ thống thông tin công cộng\n34. Quản trị hệ thống thông tin giao thông\n35. Quản trị hệ thống thông tin môi trường\n36. Quản trị hệ thống thông tin nông nghiệp\n37. Quản trị hệ thống thông tin du lịch\n38. Quản trị hệ thống thông tin văn hóa\n39. Quản trị hệ thống thông tin thể thao\n40. Quản trị hệ thống thông tin truyền thông\n41. Quản trị hệ thống thông tin quốc phòng\n42. Quản trị hệ thống thông tin an ninh\n43. Quản trị hệ thống thông tin chính phủ\n44. Quản trị hệ thống thông tin doanh nghiệp nhỏ và vừa\n45. Quản trị hệ thống thông tin phi lợi nhuận\n46. Quản trị hệ thống thông tin cá nhân\n47. Quản trị hệ thống thông tin gia đình\n48. Quản trị hệ thống thông tin cộng đồng\n49. Quản trị hệ thống thông tin xã hội\n50. Quản trị hệ thống thông tin quốc tế\n\n### 4. Các học phần tự chọn và bổ trợ\n- Đổi mới sáng tạo và khởi nghiệp\n- Các nền tảng hệ thống thông minh\n- Kỹ năng giao tiếp\n- Tin học văn phòng nâng cao\n- Lập trình mô phỏng\n- Thu thập và tiền xử lý dữ liệu\n\n### 5. Khóa luận tốt nghiệp/Thực tập tốt nghiệp\n- Khóa luận tốt nghiệp Hệ thống thông tin\n\n---\n\n#### Thông tin chi tiết một số môn học tiêu biểu:\n- Lập trình Java 1: Cung cấp kiến thức về lập trình Java, bao gồm các kiểu dữ liệu cơ sở, hằng, biến, lệnh và khối lệnh, mảng, lập trình hướng đối tượng, lập trình giao diện với AWT và JFC, lập trình Java với cơ sở dữ liệu[86].\n- Lập trình Java 2: Cung cấp kiến thức nâng cao về lập trình Java[86].\n- Khai phá dữ liệu: Trình bày các tác vụ khai phá dữ liệu, các giải thuật và công cụ khai phá dữ liệu[83].\n- Phân tích và thiết kế hệ thống thông tin: Cung cấp kiến thức tổng quát về quá trình phân tích và thiết kế hệ thống thông tin theo hướng đối tượng, sử dụng UML, công cụ RAD, từ xác định yêu cầu đến thiết kế hoàn chỉnh hệ thống mới[83].\n- Hệ quản trị cơ sở dữ liệu: Cung cấp cái nhìn tổng quan về các hệ quản trị cơ sở dữ liệu hiện nay[83].\n- Chứng thực và an toàn dữ liệu trong thương mại điện tử: Trình bày kiến thức về thương mại điện tử, an toàn bảo mật thông tin, chữ ký số, mã hóa trong thương mại điện tử[104].\n- An toàn và bảo mật thông tin: Trang bị kiến thức cơ bản về an toàn và bảo mật thông tin, giúp sinh viên hiểu rõ các lỗ hổng bảo mật[104].\n\n---\n\n### Tổng số môn học\n\nTheo danh mục liệt kê trong chương trình đào tạo, tổng số môn học (không tính các học phần điều kiện như Giáo dục quốc phòng và Giáo dục thể chất) là khoảng 72 môn, bao gồm cả các học phần bắt buộc, tự chọn, bổ trợ và khóa luận tốt nghiệp[116][117][120].\n\n---\n\n**Lưu ý:**  \n- Danh sách trên đã tổng hợp các môn học chính và tự chọn, có thể có sự thay đổi nhỏ tùy theo từng năm học hoặc cập nhật của nhà trường.\n- Thông tin chi tiết về từng môn học, số tín chỉ, số tiết lý thuyết/thực hành, học phần tiên quyết, bạn có thể tham khảo thêm ở các bảng chi tiết trong các chunk đã trích dẫn[116][117][120][86][83][104].\n\nNếu bạn cần chi tiết về từng môn (số tín chỉ, học phần tiên quyết, mô tả nội dung), vui lòng yêu cầu cụ thể hơn!",
+          "citation": [
+            {
+              "page": 1,
+              "text": "oặc dùng\nschema. Học phân cũng cung cấp các kiên thức\n\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ đề năm rõ hơn các kỹ thuật Iập\ntrình hướng đối tượng tận dụng các ưu điểm\ndo nền tảng .NET cũng cấp. Liên kết với các\nhọc phần khác để xây dụng một ứng dụng\nquản Iý thông tin hoàn chỉnh.\n36. Lậptrình Học phần này \"cung cấp cho sinh viên một. 2TC\nJava 1 khối Iượng kiến thức tương đối hoàn chỉnh về (15LT\nIập trình Java. Các nội dung chủ yếu bao 30 TH)\ngồm: Các kiêu dữ liệu cơ sở, hăng, biên, Iệnh\nvà khối Iệnh, mảng: Lập trình hướng đối\ntượng trong Java; Lập trình giao diện với\nAWT và JFC; Lập trình Java với cơ sở dữ\nliệu\n37. Lậptrình Môn học cung cấp cho sinh viên kiến thức về. 2 TC\nJava 2 Iập trìn",
+              "index": 86,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "oặc dùng\nschema. Học phân cũng cung cấp các kiên thức\n\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ đề ...",
+              "endOffset": 56700,
+              "chunkIndex": 86,
+              "startOffset": 55900
+            },
+            {
+              "page": 1,
+              "text": " và ứng dụng của\nkhai phá dữ liệu. Ngoài ra, môn học cũng\ntrình bày các tác vụ khai phá dữ liệu, các giải\nthuật và công cụ khai phá dữ liệu.\n\n3TC\nQ0 LT\n30 TH)\n\n31\n\nPhân tích và\nthiết kê hệ\nthống thông\ntin\n\nHọc phần này cung cấp cho sinh viên các kiến\nthức tổng quát về quá trình phân tích và thiết\nkế HTTT theo cách tiếp cận hướng đối tượng\ntrong quá trình sản xuất phần mềm. Kiến thức\nvề ngôn ngữ mô hình hóa thống nhất (UML).\nCách thức sử dụng công cụ RAD hỗ trợ cho\nquá trình phân tích và thiết kế hệ thống. Học\nphần sẽ được dẫn dắt từ bước xác định yêu\ncâu của khách hàng, phân tích hệ thống đến\nthiết kế hoàn chỉnh một hệ thống mới.\n\n3TC\n\nG39 LT\n\n30 TH)\n\n32\n\nHệ quản trị\ncơ sở dữ liệu\n\nHọc phần này cung cấp cho sinh viên cái nhìn\ntổng quan về các hệ quản trị CSDI, hiện nay,\ncó kiến thức và các",
+              "index": 83,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": " và ứng dụng của\nkhai phá dữ liệu. Ngoài ra, môn học cũng\ntrình bày các tác vụ khai phá dữ liệu, các giải\nthuật và công cụ khai phá dữ liệu.\n\n3TC\nQ0 LT\n30 TH)\n\n31\n\nPhân tích và\nthiết kê hệ\nthống thông...",
+              "endOffset": 54750,
+              "chunkIndex": 83,
+              "startOffset": 53950
+            },
+            {
+              "page": 1,
+              "text": " IIK 2 2 22 8\nphòng và an ninh ( ) phụ\nl6: CB052 GDQP AN 3: Quân sự năm 1 212 14 16\nchung ( ) GDQP AN 4: Kỹ thuật chiên\n17-1 C8953 đầu bộ bình và chiến thuật ( ) 2 ? 3 15\n18 CB035 Giáo dục thể chất 1 ( ) H.II JI 0 1 30\n19 CB036 Giáo dục thể chất 2 ( ) phụ 1 1 0 30\n20 CB037 Giáo dục thê chất 3 ( ) năm I 0. J 30\nKiên thức cơ sở ngành 39.139 1. 0\n21 TT052 Tin học đại cương 1 3 3 30 j 30\n\n40\nmi Số ii Số Số Học phần.\nTT học Tên học phân Học tín Bắt Tự tiết tiết học trước\nkỳ buộc chọn (a), song\nphân chỉ T TH hành (b\n22 TT006 Mạng máy tính 1 3 3 30 30\n23 TTI182 Nhập môn Hệ thốngthôngtin 2 2 Í 2 30 0\n24. TT004 Kỹ thuật Iập trình 21515 30 30 TT052(a)\n25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).",
+              "index": 116,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": " IIK 2 2 22 8\nphòng và an ninh ( ) phụ\nl6: CB052 GDQP AN 3: Quân sự năm 1 212 14 16\nchung ( ) GDQP AN 4: Kỹ thuật chiên\n17-1 C8953 đầu bộ bình và chiến thuật ( ) 2 ? 3 15\n18 CB035 Giáo dục thể chất 1 ...",
+              "endOffset": 76200,
+              "chunkIndex": 116,
+              "startOffset": 75400
+            },
+            {
+              "page": 1,
+              "text": "Iực từ 600 điệm trở Iên\n\n6.2.3. Chính sách ưu tiên và xét tuyên thẳng: Thục hiện chính sách ưu tiên\ntheo quy chê tuyên sinh đại học, cao đắng năm 2022 của Bộ Giáo dục và Đào tạo\n7. QUÁ TRÌNH ĐÀO TẠO\n\nChương trình đào tạo được thiết kế gồm 09 học kỳ tương ứng với 4.5 năm học,\ngồm 150 tín chỉ (không tính các học phần điều kiện: Giáo dục quốc phòng và Giáo dục\nthể chất: L1 tín chỉ). Trong đó, thời gian học tập chính thức 4.5 năm, thời gian học tập\ntối đa Ià 09 năm.\n\nMỗi năm học chia Iàm 02 học kỳ chính, mỗi học kỳ gồm 15 tuần học và 01 học\nkỳ phụ\n8 . QUY TRÌNH ĐÀO TẠO VÀ ĐIỀU KIỆN TÓT NGHIỆT\n8.1. Quy trình đào tạo\n\nQuy trình đào tạo được thực hiện theo học chê tín chỉ\n\nQuy chê đào tạo sử dụng Ià quy chê đào tạo theo học chê tín chỉ, tạo điều kiện\nđề sinh viên tích cực, chủ động thích ứng với ",
+              "index": 16,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "Iực từ 600 điệm trở Iên\n\n6.2.3. Chính sách ưu tiên và xét tuyên thẳng: Thục hiện chính sách ưu tiên\ntheo quy chê tuyên sinh đại học, cao đắng năm 2022 của Bộ Giáo dục và Đào tạo\n7. QUÁ TRÌNH ĐÀO TẠO\n\n...",
+              "endOffset": 11200,
+              "chunkIndex": 16,
+              "startOffset": 10400
+            },
+            {
+              "page": 1,
+              "text": " TT004(a)\ndụng thương mại điện tử\n62 TT050 Chứng tực và an toàn dữ liệu 7 3 30. 30 TT051(a)\ntrong thương mại điện tử\nFT004(a)\n63 TT064 An toàn và bảo mật thông tin 7 3 30 30 TT006(a)\n9 FT008(a)\nINguyên Iý kho dữ liệu và\n64 TTI 7 OTAP 7 3 45 J0\n65 TT036 DXử Iý ảnh và thị giác máy tính ! 7 3 30 30 TT004(a)\n66 TT190 Iin học văn phòng nâng cao 7 3 15 60\n67 TT077 Lập trình mô phỏng 7 3 30 30\n6 ITT102 Thu thập và tiên xử Iý dữ liệu 7 3 30 1 30\nTự chọn 3 8 2 0 2\n69 CB049 Đôi mới sáng tạo và khởi R 2 30. 1.0\nnghiệp\n70: (TT183 Các nên tảng hệ thông thông R 2 2 40 0\nminh\n71 CB012 Kỹ năng giao tiêp 2 30 1.0\nMH\nKhóa luận tôt nghiệp/Thực tập tốt 9 10 0. 10\nnghiệp\n72 TT192 Khóa luận tốt nghiệp Hệ thống up Ca cpg gi 450\nthông tin\n\n42\nHọc phân\n\nMã Số Số Số\nTT học Tên học phân hà tín M - đê tiệt tiệt rà ng",
+              "index": 120,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": " TT004(a)\ndụng thương mại điện tử\n62 TT050 Chứng tực và an toàn dữ liệu 7 3 30. 30 TT051(a)\ntrong thương mại điện tử\nFT004(a)\n63 TT064 An toàn và bảo mật thông tin 7 3 30 30 TT006(a)\n9 FT008(a)\nINguyê...",
+              "endOffset": 78800,
+              "chunkIndex": 120,
+              "startOffset": 78000
+            },
+            {
+              "page": 1,
+              "text": "c công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiêu yêu câu (hiệu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện viết một\nbáo cáo khoa học và thuyêt trình các kết quả\nđã thực hiện\n\n2TC\n(0LT\n60 TH)\n\n52\n\nĐồ án Hệ\nthông thông\ntiín3\n\nCán bộ hướng dẫn sẽ mô tả các yêu cầu cần\ncó của đề tài. Sinh viên vận dụng các kiến\nthức cơ sở ngành đề Iựa chọn mô hình và các\ncông cụ phù hợp để phát triển ứng dụng cụ\nthể, Sinh viên phải Iập kế hoạch cho các công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiểu yêu cầu (hiểu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đên đê tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùng, sinh viên thực hiện việt một\nbáo cáo khoa học v",
+              "index": 97,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "c công\nviệc sẽ thực hiện. Các công việc chính bao\ngồm: tìm hiêu yêu câu (hiệu rõ yêu cầu của đề\ntài và các nghiên cứu liên quan đến đề tài),\nphân tích yêu cầu, thiết kế và phát triển ứng\ndụng. Sau cùn...",
+              "endOffset": 63850,
+              "chunkIndex": 97,
+              "startOffset": 63050
+            },
+            {
+              "page": 1,
+              "text": " xu thế phát\ntriển trong thời kỳ Cách mạng công nghiệp Iần thứ tư\n\nTâm nhìn của Khoa\n\nĐền năm 2030, Khoa Công nghệ thông tin trở thành khoa tiên phong của Trường Đại\nhọc Kỹ thuật Công nghệ Cân Thơ trong nghiên cứu ứng dụng công nghệ thông tin và\nchuyên đôi số trong đào tạo, nghiên cứu khoa học và chuyển giao công nghệ, đáp ứng\nyêu câu phát triển kinh tê xã hội thời kỳ Cách mạng công nghệ công nghiệp 4.0\n\n2.2. Sứ mạng\nSự mạng của Trường\n\nTrường Đại học Kỹ thuật - Công nghệ Cân Thơ có sứ mạng đào tạo nguồn nhân Iực có\nđạo đức tốt, có chuyên môn cao, có khả năng tiếp cận nghiên cứu khoa học, ứng dụng\nvà chuyển giao công nghệ tiên tiền trong Iĩnh vực kỹ thuật, công nghệ, đáp ứng nhu\ncầu phát triển của thành phố Cần Thơ, vùng đồng bằng sông Cửu Long và cả nước.\n\nSỨ mạng của Khoa\n\nKhoa Công nghệ",
+              "index": 2,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": " xu thế phát\ntriển trong thời kỳ Cách mạng công nghiệp Iần thứ tư\n\nTâm nhìn của Khoa\n\nĐền năm 2030, Khoa Công nghệ thông tin trở thành khoa tiên phong của Trường Đại\nhọc Kỹ thuật Công nghệ Cân Thơ tro...",
+              "endOffset": 2100,
+              "chunkIndex": 2,
+              "startOffset": 1300
+            },
+            {
+              "page": 1,
+              "text": "25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).\n28 T-TI60 Logie học 412 2 30 0\n29 TT002 Toán rời rạc 41313 45 0\n30 TT037 Khai phá dữ liệu 51313 30 30 TT007(a)\n31L 1 TT014 mông nh và thiệt kê hệ thống 4 3 3 30 30 1/0070)\n32 TT012 Hệ quản trị cơ sở dữ liệu 44313 30 30 TT007(a)\n33 TT005 Hệ điều hành 41313 30. 30\n34 TT202 ôn nghệ hôn Cửu ưong 2 la lo. 30 0\nKiên thức chuyên ngành 7153 25\n35 TT020 Công nghệ .NET 41212 15 1 30 TT008(a)\n36 TT021 Lập trình Java 5siị2 12 15 30 TT004(a)\n37 TT024 Lập trình Java 2 617212 15 30 TT021(a)\n38. T022 Iập trình web 51703. 15 30 30 Ì TT004(a)\n39 TT009 Trí tuệ nhân tạo 51313 30 Ì 30: TT001(2)\n40 TT21I Ngôn ngữ hóa dữ liệu 71315 30 30 TT004(a)\n;m TT040 Nhập môn",
+              "index": 117,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "25 TT001 Cấutrúcdgliệu vàgiáithuật 3 3 3 30 1 30 TT004()\n26 TT007 Cơ sở dữ liệu 321315 30 30\n27 TT008 lLập trình hướng đôi tượng 3 3 3 30 30 TT004(8).\n28 T-TI60 Logie học 412 2 30 0\n29 TT002 Toán rời ...",
+              "endOffset": 76850,
+              "chunkIndex": 117,
+              "startOffset": 76050
+            },
+            {
+              "page": 1,
+              "text": "n tử\n62. Chứngthực Nội dung môn học đâu tiên sẽ trình bày các 3 TC\nvà an toàn dữ kiến thức về thương mại điện tử và tâm quan. (30 LT,\nliệu rong trọng của an toàn bảo mật thông tin trong 30 TH)\nthương mại thương mại điện tử. Tiếp theo, người học\nđiện tử được cập nhật các kiến thức cơ bản đến nâng\ncao về chữ ký số (hình thức chữ ký điện tử\nphổ dụng nhất). Chữ ký số bao gồm một cặp\nmã khoá, gồm khoá bí mật và khoá công khai\nnhằm tăng cường tính bảo mật trong TMĐT.\nVì vậy, các vấn đề an toàn thông tin bằng các\nchứng chỉ sô, cơ chê mã hóa được dùng trong\nTMĐDT cũng được trình bày trong môn học\n63. An toàn và Nội dung môn học trang bị các kiến thức cơ 3TC\nbảo mật bản về an toàn và bảo mật thông tin, sẽ giúp Q301LT,\nthông tin sinh viên hiểu rõ các Iỗ hồng bảo mật bên 30 TH)\ntrong các cơ chế, chín",
+              "index": 104,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "n tử\n62. Chứngthực Nội dung môn học đâu tiên sẽ trình bày các 3 TC\nvà an toàn dữ kiến thức về thương mại điện tử và tâm quan. (30 LT,\nliệu rong trọng của an toàn bảo mật thông tin trong 30 TH)\nthương ...",
+              "endOffset": 68400,
+              "chunkIndex": 104,
+              "startOffset": 67600
+            },
+            {
+              "page": 1,
+              "text": "Nin theo\nmục tiêu của môn học. Cụ thể các vấn đề như\nHàng hóa, thị trường và vai trò của các chủ\nthê trong nên kinh tệ thị trường, cạnh tranh và\nđộc quyên trong nên kinh tê thị trường; Kinh\ntê thị trường định hướng xã hội chủ nghĩa và\ncác quan hệ Iợi ích kinh tê ở Việt Nam; Công\nnghiệp hóa, hiện đại hóa và hội nhập kinh tê\ncủa Việt Nam\n10. Chủ nghĩa xã Môn học chủ nghĩa xã hội khoa học gồm 7 2TC\nhội khoa học chương, được thiết kế giảng dạy cho sinh viên (30 LT,\nđại học khôi không chuyên ngành Iý luận 0TH)\nchính trị , trình bày các kiên thức cơ bản của\nchủ nghĩa xã hội khoa học (quá trình hình\nthành, phát triên của chủ nghĩa xã hội khoa\nhọc)\n11. Tưtưởng Hồ Học phân Tư tưởng Hồ Chí Minh gồm 6 2TC\nChí Minh chương cung cấp cho sinh viên kiến thức cơ (G30 LT,\nbản về: Đôi tượng phương pháp nghiê",
+              "index": 67,
+              "fileId": "c4c84d28-0a8a-4dfa-85d2-0120ffb54037",
+              "fileUrl": "uploads\\documents\\1766037317870-187772204.pdf",
+              "snippet": "Nin theo\nmục tiêu của môn học. Cụ thể các vấn đề như\nHàng hóa, thị trường và vai trò của các chủ\nthê trong nên kinh tệ thị trường, cạnh tranh và\nđộc quyên trong nên kinh tê thị trường; Kinh\ntê thị trư...",
+              "endOffset": 44350,
+              "chunkIndex": 67,
+              "startOffset": 43550
+            }
+          ]
+        }
+      ],
+      "createdAt": "2025-12-18T05:57:19.540Z",
+      "updatedAt": "2025-12-18T05:57:55.985Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+    }
+  }
+}

@@ -5,8 +5,8 @@ import { VectorService } from '../ingest/vector/vector.service';
 export class RetrievalService {
   private readonly INITIAL_K = 30;
   private readonly SCORE_THRESHOLD = 0.3;
-  private readonly MIN_DOCS = 3;
-  private readonly MAX_DOCS = 5;
+  private readonly MIN_DOCS = 5;
+  private readonly MAX_DOCS = 10;
 
   constructor(
     private vectorService: VectorService,

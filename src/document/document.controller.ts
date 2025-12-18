@@ -30,7 +30,7 @@ export class DocumentController {
     FilesInterceptor('files', 10, {
       dest: 'uploads/documents',
       storage: storage,
-      limits: { fileSize: 20 * 1024 * 1024 },
+      limits: { fileSize: 2000 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         const extName = path.extname(file.originalname).toLowerCase();
         const allowedExts = [
