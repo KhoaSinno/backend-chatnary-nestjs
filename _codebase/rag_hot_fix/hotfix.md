@@ -597,14 +597,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Req() req: { user: JwtPayloadWithRt },
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = req.user.userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -907,8 +907,8 @@ export class ChatService {
     };
   }
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 

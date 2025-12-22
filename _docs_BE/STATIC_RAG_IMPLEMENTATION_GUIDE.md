@@ -1236,7 +1236,7 @@ export class ChatService {
   }
 
   // Rest of the methods remain the same...
-  async chatLite(chatDto: ChatDto) {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 

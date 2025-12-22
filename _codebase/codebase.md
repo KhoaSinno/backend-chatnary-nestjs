@@ -281,7 +281,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
-http://localhost:8000/api/v1
+
+<http://localhost:8000/api/v1>
+
 ```
 
 ---
@@ -2243,26 +2245,26 @@ GS_PATH := /c/Program Files/gs/gs10.03.1/bin
 
 ## 🚀 Start development mode (hot reload)
 dev:
-	@echo "🚀 Starting DEV (hot reload)..."
-	docker compose -f $(COMPOSE_DEV) up --build
-	@echo "⚡ DEV mode running!"
+ @echo "🚀 Starting DEV (hot reload)..."
+ docker compose -f $(COMPOSE_DEV) up --build
+ @echo "⚡ DEV mode running!"
 
 ## 🔄 Rebuild dev containers (when adding new packages)
 dev-rebuild:
-	@echo "🔨 Rebuilding DEV containers..."
-	docker compose -f $(COMPOSE_DEV) build --no-cache
-	docker compose -f $(COMPOSE_DEV) up -d
-	@echo "✅ DEV rebuild complete!"
+ @echo "🔨 Rebuilding DEV containers..."
+ docker compose -f $(COMPOSE_DEV) build --no-cache
+ docker compose -f $(COMPOSE_DEV) up -d
+ @echo "✅ DEV rebuild complete!"
 
 ## 🔄 Restart only the API dev container
 dev-restart:
-	@echo "♻ Restarting DEV API..."
-	docker compose -f $(COMPOSE_DEV) restart api
+ @echo "♻ Restarting DEV API..."
+ docker compose -f $(COMPOSE_DEV) restart api
 
 ## 🛑 Stop dev containers
 dev-down:
-	@echo "🛑 Stopping DEV containers..."
-	docker compose -f $(COMPOSE_DEV) down
+ @echo "🛑 Stopping DEV containers..."
+ docker compose -f $(COMPOSE_DEV) down
 
 # ============================
 # 🖼️ WINDOWS OCR DEPENDENCIES
@@ -2270,106 +2272,106 @@ dev-down:
 
 ## 🔧 Install GraphicsMagick + Ghostscript on Windows
 setup-ocr-win:
-	@echo "📦 Downloading GraphicsMagick..."
-	@curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
-	@echo "📦 Downloading Ghostscript..."
-	@powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
-	@echo ""
-	@echo "✅ Installers downloaded!"
-	@echo "⚠️  Please run these installers manually:"
-	@echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
-	@echo "   2. gs-installer.exe"
-	@echo ""
-	@echo "After installation, run: make configure-ocr-path"
+ @echo "📦 Downloading GraphicsMagick..."
+ @curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+ @echo "📦 Downloading Ghostscript..."
+ @powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+ @echo ""
+ @echo "✅ Installers downloaded!"
+ @echo "⚠️  Please run these installers manually:"
+ @echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+ @echo "   2. gs-installer.exe"
+ @echo ""
+ @echo "After installation, run: make configure-ocr-path"
 
 ## ⚙️ Configure OCR tools PATH
 configure-ocr-path:
-	@echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
-	@echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
-	@echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
-	@echo "✅ PATH configured in ~/.bashrc"
-	@echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+ @echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+ @echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+ @echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+ @echo "✅ PATH configured in ~/.bashrc"
+ @echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
 
 ## ✅ Verify OCR installation
 verify-ocr:
-	@echo "🔍 Verifying OCR dependencies..."
-	@echo -n "GraphicsMagick: "
-	@gm version | head -n 1 || echo "❌ Not found"
-	@echo -n "Ghostscript: "
-	@gswin64c --version || echo "❌ Not found"
-	@echo ""
-	@echo "✅ All OCR dependencies verified!"
+ @echo "🔍 Verifying OCR dependencies..."
+ @echo -n "GraphicsMagick: "
+ @gm version | head -n 1 || echo "❌ Not found"
+ @echo -n "Ghostscript: "
+ @gswin64c --version || echo "❌ Not found"
+ @echo ""
+ @echo "✅ All OCR dependencies verified!"
 
 # === MAIN TASKS ===
 
 ## 🧱 Rebuild toàn bộ project (build nhanh, sạch rác)
 rebuild:
-	@echo "🧱 Cleaning & rebuilding project..."
-	docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
-	docker compose -f $(COMPOSE_FILE) up -d
-	docker image prune -f
-	@echo "✅ Done! Containers running."
-	@docker compose -f $(COMPOSE_FILE) ps
+ @echo "🧱 Cleaning & rebuilding project..."
+ docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
+ docker compose -f $(COMPOSE_FILE) up -d
+ docker image prune -f
+ @echo "✅ Done! Containers running."
+ @docker compose -f $(COMPOSE_FILE) ps
 
 ## 🧼 Dọn rác toàn hệ thống (deep clean)
 clean:
-	@echo "🧹 Removing all containers, images, and volumes..."
-	docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
-	docker system prune -af --volumes
-	@echo "✅ Clean complete."
+ @echo "🧹 Removing all containers, images, and volumes..."
+ docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+ docker system prune -af --volumes
+ @echo "✅ Clean complete."
 
 ## 🐍 Restart API only
 restart-api:
-	@echo "♻️ Restarting API service..."
-	docker compose -f $(COMPOSE_FILE) restart api
-	@docker compose -f $(COMPOSE_FILE) logs -f api
+ @echo "♻️ Restarting API service..."
+ docker compose -f $(COMPOSE_FILE) restart api
+ @docker compose -f $(COMPOSE_FILE) logs -f api
 
 ## 📚 Chạy ingest thủ công
 ingest:
-	@echo "📘 Running ingest process manually..."
-	docker compose -f $(COMPOSE_FILE) run --rm ingest
+ @echo "📘 Running ingest process manually..."
+ docker compose -f $(COMPOSE_FILE) run --rm ingest
 
 ## 🔍 Xem log
 logs:
-	@docker compose -f $(COMPOSE_FILE) logs -f --tail=50
+ @docker compose -f $(COMPOSE_FILE) logs -f --tail=50
 
 ## 🔍 Trạng thái container
 ps:
-	@docker compose -f $(COMPOSE_FILE) ps
+ @docker compose -f $(COMPOSE_FILE) ps
 
 # Prisma generate + db push local - no docker:
 .PHONY: prisma
 prisma:
-	@echo "🔧 Generating Prisma client and pushing DB schema..."
-	npx prisma generate
-	npx prisma db push
-	@echo "✅ Prisma setup complete!"
-	
+ @echo "🔧 Generating Prisma client and pushing DB schema..."
+ npx prisma generate
+ npx prisma db push
+ @echo "✅ Prisma setup complete!"
+ 
 ## 🆘 Hiển thị hướng dẫn
 help:
-	@echo ""
-	@echo "✨ Available commands:"
-	@echo ""
-	@echo "📦 PRODUCTION:"
-	@echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
-	@echo "  make clean        - Dọn sạch tất cả container, volume, image"
-	@echo "  make restart-api  - Restart container API (production)"
-	@echo ""
-	@echo "🔧 DEVELOPMENT:"
-	@echo "  make dev          - Chạy dev mode với hot reload"
-	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
-	@echo "  make dev-restart  - Restart API dev container"
-	@echo "  make dev-down     - Dừng tất cả dev containers"
-	@echo ""
-	@echo "🖼️ WINDOWS OCR SETUP:"
-	@echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
-	@echo "  make configure-ocr-path - Add OCR tools to PATH"
-	@echo "  make verify-ocr         - Verify OCR dependencies installation"
-	@echo ""
-	@echo "📊 MONITORING:"
-	@echo "  make logs         - Xem log realtime"
-	@echo "  make ps           - Liệt kê container đang chạy"
-	@echo ""
+ @echo ""
+ @echo "✨ Available commands:"
+ @echo ""
+ @echo "📦 PRODUCTION:"
+ @echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
+ @echo "  make clean        - Dọn sạch tất cả container, volume, image"
+ @echo "  make restart-api  - Restart container API (production)"
+ @echo ""
+ @echo "🔧 DEVELOPMENT:"
+ @echo "  make dev          - Chạy dev mode với hot reload"
+ @echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+ @echo "  make dev-restart  - Restart API dev container"
+ @echo "  make dev-down     - Dừng tất cả dev containers"
+ @echo ""
+ @echo "🖼️ WINDOWS OCR SETUP:"
+ @echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+ @echo "  make configure-ocr-path - Add OCR tools to PATH"
+ @echo "  make verify-ocr         - Verify OCR dependencies installation"
+ @echo ""
+ @echo "📊 MONITORING:"
+ @echo "  make logs         - Xem log realtime"
+ @echo "  make ps           - Liệt kê container đang chạy"
+ @echo ""
 
 ```
 
@@ -11224,6 +11226,7 @@ main()
 ### High-Level Overview
 
 ```
+
 ┌─────────────────────┐
 │      Client App      │
 └──────────┬──────────┘
@@ -11245,6 +11248,7 @@ main()
 │ PostgreSQL + PGVector      │
 │ Files | Chunks | Embedding │
 └────────────────────────────┘
+
 ```
 
 ---
@@ -11252,6 +11256,7 @@ main()
 ## 🧬 Module Structure
 
 ```
+
 src/
  ├── project/        # Workspace CRUD
  ├── document/       # Upload, OCR, ingest
@@ -11261,6 +11266,7 @@ src/
  ├── database/        # PrismaModule + Service
  ├── common/          # Filters, DTOs, utils
  └── main.ts
+
 ```
 
 ---
@@ -12231,14 +12237,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Req() req: { user: JwtPayloadWithRt },
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = req.user.userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -12541,8 +12547,8 @@ export class ChatService {
     };
   }
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 
@@ -14632,6 +14638,7 @@ describe('AppController (e2e)', () => {
 ## Folder Structure
 
 ```
+
 .dockerignore
 .env.example
 .gitignore
@@ -14904,7 +14911,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
-http://localhost:8000/api/v1
+
+<http://localhost:8000/api/v1>
+
 ```
 
 ---
@@ -16866,26 +16875,26 @@ GS_PATH := /c/Program Files/gs/gs10.03.1/bin
 
 ## 🚀 Start development mode (hot reload)
 dev:
-	@echo "🚀 Starting DEV (hot reload)..."
-	docker compose -f $(COMPOSE_DEV) up --build
-	@echo "⚡ DEV mode running!"
+ @echo "🚀 Starting DEV (hot reload)..."
+ docker compose -f $(COMPOSE_DEV) up --build
+ @echo "⚡ DEV mode running!"
 
 ## 🔄 Rebuild dev containers (when adding new packages)
 dev-rebuild:
-	@echo "🔨 Rebuilding DEV containers..."
-	docker compose -f $(COMPOSE_DEV) build --no-cache
-	docker compose -f $(COMPOSE_DEV) up -d
-	@echo "✅ DEV rebuild complete!"
+ @echo "🔨 Rebuilding DEV containers..."
+ docker compose -f $(COMPOSE_DEV) build --no-cache
+ docker compose -f $(COMPOSE_DEV) up -d
+ @echo "✅ DEV rebuild complete!"
 
 ## 🔄 Restart only the API dev container
 dev-restart:
-	@echo "♻ Restarting DEV API..."
-	docker compose -f $(COMPOSE_DEV) restart api
+ @echo "♻ Restarting DEV API..."
+ docker compose -f $(COMPOSE_DEV) restart api
 
 ## 🛑 Stop dev containers
 dev-down:
-	@echo "🛑 Stopping DEV containers..."
-	docker compose -f $(COMPOSE_DEV) down
+ @echo "🛑 Stopping DEV containers..."
+ docker compose -f $(COMPOSE_DEV) down
 
 # ============================
 # 🖼️ WINDOWS OCR DEPENDENCIES
@@ -16893,106 +16902,106 @@ dev-down:
 
 ## 🔧 Install GraphicsMagick + Ghostscript on Windows
 setup-ocr-win:
-	@echo "📦 Downloading GraphicsMagick..."
-	@curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
-	@echo "📦 Downloading Ghostscript..."
-	@powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
-	@echo ""
-	@echo "✅ Installers downloaded!"
-	@echo "⚠️  Please run these installers manually:"
-	@echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
-	@echo "   2. gs-installer.exe"
-	@echo ""
-	@echo "After installation, run: make configure-ocr-path"
+ @echo "📦 Downloading GraphicsMagick..."
+ @curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+ @echo "📦 Downloading Ghostscript..."
+ @powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+ @echo ""
+ @echo "✅ Installers downloaded!"
+ @echo "⚠️  Please run these installers manually:"
+ @echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+ @echo "   2. gs-installer.exe"
+ @echo ""
+ @echo "After installation, run: make configure-ocr-path"
 
 ## ⚙️ Configure OCR tools PATH
 configure-ocr-path:
-	@echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
-	@echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
-	@echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
-	@echo "✅ PATH configured in ~/.bashrc"
-	@echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+ @echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+ @echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+ @echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+ @echo "✅ PATH configured in ~/.bashrc"
+ @echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
 
 ## ✅ Verify OCR installation
 verify-ocr:
-	@echo "🔍 Verifying OCR dependencies..."
-	@echo -n "GraphicsMagick: "
-	@gm version | head -n 1 || echo "❌ Not found"
-	@echo -n "Ghostscript: "
-	@gswin64c --version || echo "❌ Not found"
-	@echo ""
-	@echo "✅ All OCR dependencies verified!"
+ @echo "🔍 Verifying OCR dependencies..."
+ @echo -n "GraphicsMagick: "
+ @gm version | head -n 1 || echo "❌ Not found"
+ @echo -n "Ghostscript: "
+ @gswin64c --version || echo "❌ Not found"
+ @echo ""
+ @echo "✅ All OCR dependencies verified!"
 
 # === MAIN TASKS ===
 
 ## 🧱 Rebuild toàn bộ project (build nhanh, sạch rác)
 rebuild:
-	@echo "🧱 Cleaning & rebuilding project..."
-	docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
-	docker compose -f $(COMPOSE_FILE) up -d
-	docker image prune -f
-	@echo "✅ Done! Containers running."
-	@docker compose -f $(COMPOSE_FILE) ps
+ @echo "🧱 Cleaning & rebuilding project..."
+ docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
+ docker compose -f $(COMPOSE_FILE) up -d
+ docker image prune -f
+ @echo "✅ Done! Containers running."
+ @docker compose -f $(COMPOSE_FILE) ps
 
 ## 🧼 Dọn rác toàn hệ thống (deep clean)
 clean:
-	@echo "🧹 Removing all containers, images, and volumes..."
-	docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
-	docker system prune -af --volumes
-	@echo "✅ Clean complete."
+ @echo "🧹 Removing all containers, images, and volumes..."
+ docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+ docker system prune -af --volumes
+ @echo "✅ Clean complete."
 
 ## 🐍 Restart API only
 restart-api:
-	@echo "♻️ Restarting API service..."
-	docker compose -f $(COMPOSE_FILE) restart api
-	@docker compose -f $(COMPOSE_FILE) logs -f api
+ @echo "♻️ Restarting API service..."
+ docker compose -f $(COMPOSE_FILE) restart api
+ @docker compose -f $(COMPOSE_FILE) logs -f api
 
 ## 📚 Chạy ingest thủ công
 ingest:
-	@echo "📘 Running ingest process manually..."
-	docker compose -f $(COMPOSE_FILE) run --rm ingest
+ @echo "📘 Running ingest process manually..."
+ docker compose -f $(COMPOSE_FILE) run --rm ingest
 
 ## 🔍 Xem log
 logs:
-	@docker compose -f $(COMPOSE_FILE) logs -f --tail=50
+ @docker compose -f $(COMPOSE_FILE) logs -f --tail=50
 
 ## 🔍 Trạng thái container
 ps:
-	@docker compose -f $(COMPOSE_FILE) ps
+ @docker compose -f $(COMPOSE_FILE) ps
 
 # Prisma generate + db push local - no docker:
 .PHONY: prisma
 prisma:
-	@echo "🔧 Generating Prisma client and pushing DB schema..."
-	npx prisma generate
-	npx prisma db push
-	@echo "✅ Prisma setup complete!"
-	
+ @echo "🔧 Generating Prisma client and pushing DB schema..."
+ npx prisma generate
+ npx prisma db push
+ @echo "✅ Prisma setup complete!"
+ 
 ## 🆘 Hiển thị hướng dẫn
 help:
-	@echo ""
-	@echo "✨ Available commands:"
-	@echo ""
-	@echo "📦 PRODUCTION:"
-	@echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
-	@echo "  make clean        - Dọn sạch tất cả container, volume, image"
-	@echo "  make restart-api  - Restart container API (production)"
-	@echo ""
-	@echo "🔧 DEVELOPMENT:"
-	@echo "  make dev          - Chạy dev mode với hot reload"
-	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
-	@echo "  make dev-restart  - Restart API dev container"
-	@echo "  make dev-down     - Dừng tất cả dev containers"
-	@echo ""
-	@echo "🖼️ WINDOWS OCR SETUP:"
-	@echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
-	@echo "  make configure-ocr-path - Add OCR tools to PATH"
-	@echo "  make verify-ocr         - Verify OCR dependencies installation"
-	@echo ""
-	@echo "📊 MONITORING:"
-	@echo "  make logs         - Xem log realtime"
-	@echo "  make ps           - Liệt kê container đang chạy"
-	@echo ""
+ @echo ""
+ @echo "✨ Available commands:"
+ @echo ""
+ @echo "📦 PRODUCTION:"
+ @echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
+ @echo "  make clean        - Dọn sạch tất cả container, volume, image"
+ @echo "  make restart-api  - Restart container API (production)"
+ @echo ""
+ @echo "🔧 DEVELOPMENT:"
+ @echo "  make dev          - Chạy dev mode với hot reload"
+ @echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+ @echo "  make dev-restart  - Restart API dev container"
+ @echo "  make dev-down     - Dừng tất cả dev containers"
+ @echo ""
+ @echo "🖼️ WINDOWS OCR SETUP:"
+ @echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+ @echo "  make configure-ocr-path - Add OCR tools to PATH"
+ @echo "  make verify-ocr         - Verify OCR dependencies installation"
+ @echo ""
+ @echo "📊 MONITORING:"
+ @echo "  make logs         - Xem log realtime"
+ @echo "  make ps           - Liệt kê container đang chạy"
+ @echo ""
 
 ```
 
@@ -25847,6 +25856,7 @@ main()
 ### High-Level Overview
 
 ```
+
 ┌─────────────────────┐
 │      Client App      │
 └──────────┬──────────┘
@@ -25868,6 +25878,7 @@ main()
 │ PostgreSQL + PGVector      │
 │ Files | Chunks | Embedding │
 └────────────────────────────┘
+
 ```
 
 ---
@@ -25875,6 +25886,7 @@ main()
 ## 🧬 Module Structure
 
 ```
+
 src/
  ├── project/        # Workspace CRUD
  ├── document/       # Upload, OCR, ingest
@@ -25884,6 +25896,7 @@ src/
  ├── database/        # PrismaModule + Service
  ├── common/          # Filters, DTOs, utils
  └── main.ts
+
 ```
 
 ---
@@ -26854,14 +26867,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Req() req: { user: JwtPayloadWithRt },
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = req.user.userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -27164,8 +27177,8 @@ export class ChatService {
     };
   }
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 
@@ -29138,6 +29151,7 @@ describe('AppController (e2e)', () => {
 ## Folder Structure
 
 ```
+
 .dockerignore
 .env.example
 .gitignore
@@ -29405,7 +29419,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
-http://localhost:8000
+
+<http://localhost:8000>
+
 ```
 
 ---
@@ -31205,26 +31221,26 @@ GS_PATH := /c/Program Files/gs/gs10.03.1/bin
 
 ## 🚀 Start development mode (hot reload)
 dev:
-	@echo "🚀 Starting DEV (hot reload)..."
-	docker compose -f $(COMPOSE_DEV) up --build
-	@echo "⚡ DEV mode running!"
+ @echo "🚀 Starting DEV (hot reload)..."
+ docker compose -f $(COMPOSE_DEV) up --build
+ @echo "⚡ DEV mode running!"
 
 ## 🔄 Rebuild dev containers (when adding new packages)
 dev-rebuild:
-	@echo "🔨 Rebuilding DEV containers..."
-	docker compose -f $(COMPOSE_DEV) build --no-cache
-	docker compose -f $(COMPOSE_DEV) up -d
-	@echo "✅ DEV rebuild complete!"
+ @echo "🔨 Rebuilding DEV containers..."
+ docker compose -f $(COMPOSE_DEV) build --no-cache
+ docker compose -f $(COMPOSE_DEV) up -d
+ @echo "✅ DEV rebuild complete!"
 
 ## 🔄 Restart only the API dev container
 dev-restart:
-	@echo "♻ Restarting DEV API..."
-	docker compose -f $(COMPOSE_DEV) restart api
+ @echo "♻ Restarting DEV API..."
+ docker compose -f $(COMPOSE_DEV) restart api
 
 ## 🛑 Stop dev containers
 dev-down:
-	@echo "🛑 Stopping DEV containers..."
-	docker compose -f $(COMPOSE_DEV) down
+ @echo "🛑 Stopping DEV containers..."
+ docker compose -f $(COMPOSE_DEV) down
 
 # ============================
 # 🖼️ WINDOWS OCR DEPENDENCIES
@@ -31232,106 +31248,106 @@ dev-down:
 
 ## 🔧 Install GraphicsMagick + Ghostscript on Windows
 setup-ocr-win:
-	@echo "📦 Downloading GraphicsMagick..."
-	@curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
-	@echo "📦 Downloading Ghostscript..."
-	@powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
-	@echo ""
-	@echo "✅ Installers downloaded!"
-	@echo "⚠️  Please run these installers manually:"
-	@echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
-	@echo "   2. gs-installer.exe"
-	@echo ""
-	@echo "After installation, run: make configure-ocr-path"
+ @echo "📦 Downloading GraphicsMagick..."
+ @curl -L "$(GM_URL)" -o GraphicsMagick-installer.exe || echo "❌ GraphicsMagick download failed"
+ @echo "📦 Downloading Ghostscript..."
+ @powershell.exe -Command "Invoke-WebRequest -Uri '$(GS_URL)' -OutFile 'gs-installer.exe'" || echo "❌ Ghostscript download failed"
+ @echo ""
+ @echo "✅ Installers downloaded!"
+ @echo "⚠️  Please run these installers manually:"
+ @echo "   1. GraphicsMagick-installer.exe (tick 'Add to PATH')"
+ @echo "   2. gs-installer.exe"
+ @echo ""
+ @echo "After installation, run: make configure-ocr-path"
 
 ## ⚙️ Configure OCR tools PATH
 configure-ocr-path:
-	@echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
-	@echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
-	@echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
-	@echo "✅ PATH configured in ~/.bashrc"
-	@echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
+ @echo "🔧 Adding GraphicsMagick and Ghostscript to PATH..."
+ @echo 'export PATH="$(GM_PATH):$$PATH"' >> ~/.bashrc
+ @echo 'export PATH="$(GS_PATH):$$PATH"' >> ~/.bashrc
+ @echo "✅ PATH configured in ~/.bashrc"
+ @echo "⚠️  Run: source ~/.bashrc  (or restart terminal)"
 
 ## ✅ Verify OCR installation
 verify-ocr:
-	@echo "🔍 Verifying OCR dependencies..."
-	@echo -n "GraphicsMagick: "
-	@gm version | head -n 1 || echo "❌ Not found"
-	@echo -n "Ghostscript: "
-	@gswin64c --version || echo "❌ Not found"
-	@echo ""
-	@echo "✅ All OCR dependencies verified!"
+ @echo "🔍 Verifying OCR dependencies..."
+ @echo -n "GraphicsMagick: "
+ @gm version | head -n 1 || echo "❌ Not found"
+ @echo -n "Ghostscript: "
+ @gswin64c --version || echo "❌ Not found"
+ @echo ""
+ @echo "✅ All OCR dependencies verified!"
 
 # === MAIN TASKS ===
 
 ## 🧱 Rebuild toàn bộ project (build nhanh, sạch rác)
 rebuild:
-	@echo "🧱 Cleaning & rebuilding project..."
-	docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
-	docker compose -f $(COMPOSE_FILE) up -d
-	docker image prune -f
-	@echo "✅ Done! Containers running."
-	@docker compose -f $(COMPOSE_FILE) ps
+ @echo "🧱 Cleaning & rebuilding project..."
+ docker compose -f $(COMPOSE_FILE) build --pull --compress --parallel
+ docker compose -f $(COMPOSE_FILE) up -d
+ docker image prune -f
+ @echo "✅ Done! Containers running."
+ @docker compose -f $(COMPOSE_FILE) ps
 
 ## 🧼 Dọn rác toàn hệ thống (deep clean)
 clean:
-	@echo "🧹 Removing all containers, images, and volumes..."
-	docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
-	docker system prune -af --volumes
-	@echo "✅ Clean complete."
+ @echo "🧹 Removing all containers, images, and volumes..."
+ docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+ docker system prune -af --volumes
+ @echo "✅ Clean complete."
 
 ## 🐍 Restart API only
 restart-api:
-	@echo "♻️ Restarting API service..."
-	docker compose -f $(COMPOSE_FILE) restart api
-	@docker compose -f $(COMPOSE_FILE) logs -f api
+ @echo "♻️ Restarting API service..."
+ docker compose -f $(COMPOSE_FILE) restart api
+ @docker compose -f $(COMPOSE_FILE) logs -f api
 
 ## 📚 Chạy ingest thủ công
 ingest:
-	@echo "📘 Running ingest process manually..."
-	docker compose -f $(COMPOSE_FILE) run --rm ingest
+ @echo "📘 Running ingest process manually..."
+ docker compose -f $(COMPOSE_FILE) run --rm ingest
 
 ## 🔍 Xem log
 logs:
-	@docker compose -f $(COMPOSE_FILE) logs -f --tail=50
+ @docker compose -f $(COMPOSE_FILE) logs -f --tail=50
 
 ## 🔍 Trạng thái container
 ps:
-	@docker compose -f $(COMPOSE_FILE) ps
+ @docker compose -f $(COMPOSE_FILE) ps
 
 # Prisma generate + db push local - no docker:
 .PHONY: prisma
 prisma:
-	@echo "🔧 Generating Prisma client and pushing DB schema..."
-	npx prisma generate
-	npx prisma db push
-	@echo "✅ Prisma setup complete!"
-	
+ @echo "🔧 Generating Prisma client and pushing DB schema..."
+ npx prisma generate
+ npx prisma db push
+ @echo "✅ Prisma setup complete!"
+ 
 ## 🆘 Hiển thị hướng dẫn
 help:
-	@echo ""
-	@echo "✨ Available commands:"
-	@echo ""
-	@echo "📦 PRODUCTION:"
-	@echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
-	@echo "  make clean        - Dọn sạch tất cả container, volume, image"
-	@echo "  make restart-api  - Restart container API (production)"
-	@echo ""
-	@echo "🔧 DEVELOPMENT:"
-	@echo "  make dev          - Chạy dev mode với hot reload"
-	@echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
-	@echo "  make dev-restart  - Restart API dev container"
-	@echo "  make dev-down     - Dừng tất cả dev containers"
-	@echo ""
-	@echo "🖼️ WINDOWS OCR SETUP:"
-	@echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
-	@echo "  make configure-ocr-path - Add OCR tools to PATH"
-	@echo "  make verify-ocr         - Verify OCR dependencies installation"
-	@echo ""
-	@echo "📊 MONITORING:"
-	@echo "  make logs         - Xem log realtime"
-	@echo "  make ps           - Liệt kê container đang chạy"
-	@echo ""
+ @echo ""
+ @echo "✨ Available commands:"
+ @echo ""
+ @echo "📦 PRODUCTION:"
+ @echo "  make rebuild      - Build + chạy lại toàn hệ thống (production)"
+ @echo "  make clean        - Dọn sạch tất cả container, volume, image"
+ @echo "  make restart-api  - Restart container API (production)"
+ @echo ""
+ @echo "🔧 DEVELOPMENT:"
+ @echo "  make dev          - Chạy dev mode với hot reload"
+ @echo "  make dev-rebuild  - Rebuild dev containers (khi cài package mới)"
+ @echo "  make dev-restart  - Restart API dev container"
+ @echo "  make dev-down     - Dừng tất cả dev containers"
+ @echo ""
+ @echo "🖼️ WINDOWS OCR SETUP:"
+ @echo "  make setup-ocr-win      - Download GraphicsMagick + Ghostscript installers"
+ @echo "  make configure-ocr-path - Add OCR tools to PATH"
+ @echo "  make verify-ocr         - Verify OCR dependencies installation"
+ @echo ""
+ @echo "📊 MONITORING:"
+ @echo "  make logs         - Xem log realtime"
+ @echo "  make ps           - Liệt kê container đang chạy"
+ @echo ""
 
 ```
 
@@ -40126,6 +40142,7 @@ main()
 ### High-Level Overview
 
 ```
+
 ┌─────────────────────┐
 │      Client App      │
 └──────────┬──────────┘
@@ -40147,6 +40164,7 @@ main()
 │ PostgreSQL + PGVector      │
 │ Files | Chunks | Embedding │
 └────────────────────────────┘
+
 ```
 
 ---
@@ -40154,6 +40172,7 @@ main()
 ## 🧬 Module Structure
 
 ```
+
 src/
  ├── project/        # Workspace CRUD
  ├── document/       # Upload, OCR, ingest
@@ -40163,6 +40182,7 @@ src/
  ├── database/        # PrismaModule + Service
  ├── common/          # Filters, DTOs, utils
  └── main.ts
+
 ```
 
 ---
@@ -41035,14 +41055,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Headers('x-client-id') userId: string,
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -41345,8 +41365,8 @@ export class ChatService {
     };
   }
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 
@@ -43272,6 +43292,7 @@ describe('AppController (e2e)', () => {
 ## Folder Structure
 
 ```
+
 .dockerignore
 .env.example
 .gitignore
@@ -43513,6 +43534,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
+
 <http://localhost:8000>
 
 ```
@@ -54459,14 +54481,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Headers('x-client-id') userId: string,
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -54769,8 +54791,8 @@ export class ChatService {
     };
   }
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 
@@ -56777,6 +56799,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
+
 <http://localhost:9000>
 
 ```
@@ -66669,9 +66692,9 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
   // -- CHAT LITE --
   @Post('/lite')
-  chatLite(@Headers('x-client-id') userId: string, @Body() ChatDto: ChatDto) {
+  chatGlobal(@Headers('x-client-id') userId: string, @Body() ChatDto: ChatDto) {
     ChatDto.userId = userId;
-    return this.chatService.chatLite(ChatDto);
+    return this.chatService.chatGlobal(ChatDto);
   }
   // -- CHAT HISTORY --
   @Post('/')
@@ -66756,8 +66779,8 @@ export class ChatService {
     private prisma: PrismaService,
   ) {}
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     // TODO: Upgrade with flexible topK ~ Score threshold
     const topK = 5;
 
@@ -68650,6 +68673,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ## Base URL
 
 ```
+
 <http://localhost:9000>
 
 ```
@@ -78448,8 +78472,8 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
   // -- CHAT LITE --
   @Post('/lite')
-  chatLite(@Body() ChatDto: ChatDto) {
-    return this.chatService.chatLite(ChatDto);
+  chatGlobal(@Body() ChatDto: ChatDto) {
+    return this.chatService.chatGlobal(ChatDto);
   }
   // -- CHAT HISTORY --
   @Post('/')
@@ -78533,8 +78557,8 @@ export class ChatService {
     private prisma: PrismaService,
   ) {}
 
-  // async chatLite(chatDto: ChatDto): Promise<BaseMessage> {
-  async chatLite(chatDto: ChatDto) {
+  // async chatGlobal(chatDto: ChatDto): Promise<BaseMessage> {
+  async chatGlobal(chatDto: ChatDto) {
     // TODO: Upgrade with flexible topK ~ Score threshold
     const topK = 5;
 
@@ -92422,9 +92446,11 @@ Database trên server (NeonDB) đã có tables và data, cần đồng bộ Pris
 ## ⚠️ Lỗi thường gặp
 
 ```
+
 Drift detected: Your database schema is not in sync with your migration history.
 We need to reset the "public" schema...
 All data will be lost.
+
 ```
 
 ## ✅ Giải pháp (Baselining)
@@ -95892,6 +95918,7 @@ REDIS_PASSWORD=your-access-key
 **Đây là kiến trúc chính thức, đã được tinh gọn cho RAG + Prisma + Ingest + Chat.**
 
 ```
+
 src/
  ├── app.module.ts
  │
@@ -95942,6 +95969,7 @@ src/
  │    └── uploads/                    # <projectId>/<fileId>_filename.ext
  │
  └── main.ts
+
 ```
 
 ---
@@ -96102,9 +96130,9 @@ volumes:
 
 **Nhẹ vì:**
 
-* Postgres dùng alpine
-* Node chỉ chạy API
-* Không dùng queue nặng (BullMQ tùy chọn thêm)
+- Postgres dùng alpine
+- Node chỉ chạy API
+- Không dùng queue nặng (BullMQ tùy chọn thêm)
 
 ---
 
@@ -96153,24 +96181,24 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 ### **1️⃣ Bạn muốn dùng dịch vụ embedding nào?**
 
-* OpenAI (text-embedding-3-large / small)
-* Cohere (multilingual tốt tiếng Việt)
-* Voyage AI
-* Local model (nếu dùng)
+- OpenAI (text-embedding-3-large / small)
+- Cohere (multilingual tốt tiếng Việt)
+- Voyage AI
+- Local model (nếu dùng)
 
 ### **2️⃣ OCR bạn muốn:**
 
-* Tesseract local
-* Google OCR
-* Gemini OCR (Vision)
-* Không cần OCR
+- Tesseract local
+- Google OCR
+- Gemini OCR (Vision)
+- Không cần OCR
 
 ### **3️⃣ Chat LLM bạn muốn dùng:**
 
-* OpenAI GPT-4o / mini
-* Gemini 1.5
-* Groq + Llama3
-* DeepSeek
+- OpenAI GPT-4o / mini
+- Gemini 1.5
+- Groq + Llama3
+- DeepSeek
 
 ---
 
@@ -96178,14 +96206,14 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 Mình sẽ generate **toàn bộ project NestJS scaffold** cho bạn (copy chạy ngay), gồm:
 
-* 50+ file NestJS hoàn chỉnh
-* Prisma schema + migrations
-* Docker Compose
-* Full routers
-* Services
-* Pipelines
-* RagService với LangChainJS
-* Auto-ingest pipeline hoạt động ngay
+- 50+ file NestJS hoàn chỉnh
+- Prisma schema + migrations
+- Docker Compose
+- Full routers
+- Services
+- Pipelines
+- RagService với LangChainJS
+- Auto-ingest pipeline hoạt động ngay
 
 Chỉ cần bạn trả lời 3 câu đó.
 
@@ -96926,9 +96954,11 @@ Database trên server (NeonDB) đã có tables và data, cần đồng bộ Pris
 ## ⚠️ Lỗi thường gặp
 
 ```
+
 Drift detected: Your database schema is not in sync with your migration history.
 We need to reset the "public" schema...
 All data will be lost.
+
 ```
 
 ## ✅ Giải pháp (Baselining)
@@ -100396,6 +100426,7 @@ REDIS_PASSWORD=your-access-key
 **Đây là kiến trúc chính thức, đã được tinh gọn cho RAG + Prisma + Ingest + Chat.**
 
 ```
+
 src/
  ├── app.module.ts
  │
@@ -100446,6 +100477,7 @@ src/
  │    └── uploads/                    # <projectId>/<fileId>_filename.ext
  │
  └── main.ts
+
 ```
 
 ---
@@ -100606,9 +100638,9 @@ volumes:
 
 **Nhẹ vì:**
 
-* Postgres dùng alpine
-* Node chỉ chạy API
-* Không dùng queue nặng (BullMQ tùy chọn thêm)
+- Postgres dùng alpine
+- Node chỉ chạy API
+- Không dùng queue nặng (BullMQ tùy chọn thêm)
 
 ---
 
@@ -100657,24 +100689,24 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 ### **1️⃣ Bạn muốn dùng dịch vụ embedding nào?**
 
-* OpenAI (text-embedding-3-large / small)
-* Cohere (multilingual tốt tiếng Việt)
-* Voyage AI
-* Local model (nếu dùng)
+- OpenAI (text-embedding-3-large / small)
+- Cohere (multilingual tốt tiếng Việt)
+- Voyage AI
+- Local model (nếu dùng)
 
 ### **2️⃣ OCR bạn muốn:**
 
-* Tesseract local
-* Google OCR
-* Gemini OCR (Vision)
-* Không cần OCR
+- Tesseract local
+- Google OCR
+- Gemini OCR (Vision)
+- Không cần OCR
 
 ### **3️⃣ Chat LLM bạn muốn dùng:**
 
-* OpenAI GPT-4o / mini
-* Gemini 1.5
-* Groq + Llama3
-* DeepSeek
+- OpenAI GPT-4o / mini
+- Gemini 1.5
+- Groq + Llama3
+- DeepSeek
 
 ---
 
@@ -100682,14 +100714,14 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 Mình sẽ generate **toàn bộ project NestJS scaffold** cho bạn (copy chạy ngay), gồm:
 
-* 50+ file NestJS hoàn chỉnh
-* Prisma schema + migrations
-* Docker Compose
-* Full routers
-* Services
-* Pipelines
-* RagService với LangChainJS
-* Auto-ingest pipeline hoạt động ngay
+- 50+ file NestJS hoàn chỉnh
+- Prisma schema + migrations
+- Docker Compose
+- Full routers
+- Services
+- Pipelines
+- RagService với LangChainJS
+- Auto-ingest pipeline hoạt động ngay
 
 Chỉ cần bạn trả lời 3 câu đó.
 
@@ -101983,9 +102015,11 @@ Database trên server (NeonDB) đã có tables và data, cần đồng bộ Pris
 ## ⚠️ Lỗi thường gặp
 
 ```
+
 Drift detected: Your database schema is not in sync with your migration history.
 We need to reset the "public" schema...
 All data will be lost.
+
 ```
 
 ## ✅ Giải pháp (Baselining)
@@ -105453,6 +105487,7 @@ REDIS_PASSWORD=your-access-key
 **Đây là kiến trúc chính thức, đã được tinh gọn cho RAG + Prisma + Ingest + Chat.**
 
 ```
+
 src/
  ├── app.module.ts
  │
@@ -105503,6 +105538,7 @@ src/
  │    └── uploads/                    # <projectId>/<fileId>_filename.ext
  │
  └── main.ts
+
 ```
 
 ---
@@ -105663,9 +105699,9 @@ volumes:
 
 **Nhẹ vì:**
 
-* Postgres dùng alpine
-* Node chỉ chạy API
-* Không dùng queue nặng (BullMQ tùy chọn thêm)
+- Postgres dùng alpine
+- Node chỉ chạy API
+- Không dùng queue nặng (BullMQ tùy chọn thêm)
 
 ---
 
@@ -105714,24 +105750,24 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 ### **1️⃣ Bạn muốn dùng dịch vụ embedding nào?**
 
-* OpenAI (text-embedding-3-large / small)
-* Cohere (multilingual tốt tiếng Việt)
-* Voyage AI
-* Local model (nếu dùng)
+- OpenAI (text-embedding-3-large / small)
+- Cohere (multilingual tốt tiếng Việt)
+- Voyage AI
+- Local model (nếu dùng)
 
 ### **2️⃣ OCR bạn muốn:**
 
-* Tesseract local
-* Google OCR
-* Gemini OCR (Vision)
-* Không cần OCR
+- Tesseract local
+- Google OCR
+- Gemini OCR (Vision)
+- Không cần OCR
 
 ### **3️⃣ Chat LLM bạn muốn dùng:**
 
-* OpenAI GPT-4o / mini
-* Gemini 1.5
-* Groq + Llama3
-* DeepSeek
+- OpenAI GPT-4o / mini
+- Gemini 1.5
+- Groq + Llama3
+- DeepSeek
 
 ---
 
@@ -105739,14 +105775,14 @@ Hiện mình cần bạn xác nhận 3 điều để xuất **FULL CODE skeleton
 
 Mình sẽ generate **toàn bộ project NestJS scaffold** cho bạn (copy chạy ngay), gồm:
 
-* 50+ file NestJS hoàn chỉnh
-* Prisma schema + migrations
-* Docker Compose
-* Full routers
-* Services
-* Pipelines
-* RagService với LangChainJS
-* Auto-ingest pipeline hoạt động ngay
+- 50+ file NestJS hoàn chỉnh
+- Prisma schema + migrations
+- Docker Compose
+- Full routers
+- Services
+- Pipelines
+- RagService với LangChainJS
+- Auto-ingest pipeline hoạt động ngay
 
 Chỉ cần bạn trả lời 3 câu đó.
 
@@ -105795,6 +105831,7 @@ Think of it like this:
 ### 📊 Visual Flow
 
 ```
+
 ┌─────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────┐
 │   User      │────►│  Vector Search  │────►│  Build Prompt   │────►│    LLM      │
 │   Query     │     │  (k=5 fixed)    │     │  with Context   │     │  Response   │
@@ -105805,6 +105842,7 @@ Think of it like this:
                     │  PGVector DB    │
                     │  (Your Docs)    │
                     └─────────────────┘
+
 ```
 
 ---
@@ -105847,6 +105885,7 @@ Think of it like this:
 ### 📁 Your Existing Files (Already Working!)
 
 ```
+
 src/
 ├── chat/
 │   └── chat.service.ts      ← Main RAG logic lives here (chatUtil method)
@@ -105863,6 +105902,7 @@ src/
 └── llm/
     └── openai/
         └── openai.service.ts ← OpenAI client wrapper
+
 ```
 
 ### 🔍 Current Implementation Analysis
@@ -106993,7 +107033,7 @@ export class ChatService {
   }
 
   // Rest of the methods remain the same...
-  async chatLite(chatDto: ChatDto) {
+  async chatGlobal(chatDto: ChatDto) {
     return await this.chatUtil(chatDto);
   }
 

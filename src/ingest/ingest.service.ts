@@ -40,15 +40,24 @@ export class IngestService {
 
     // 2. Split text into chunks
     const chunks = this.textSplitterService.splitPdfPages(pagesToSplit);
+
+    const metadata = {
+      fileId,
+      projectId,
+      userId,
+      fileUrl: filePath,
+    };
+
+    console.log(
+      '💾 Saving to vector store with metadata:',
+      JSON.stringify(metadata),
+    );
+    console.log('📦 Total chunks:', chunks.length);
+
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
       chunks,
-      metadata: {
-        fileId,
-        projectId,
-        userId,
-        fileUrl: filePath,
-      },
+      metadata,
     });
 
     // Return number of chunks processed
