@@ -20,6 +20,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { RetrievalModule } from './retrieval/retrieval.module';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file'; // Import if using rotation
 
 @Module({
   imports: [
@@ -38,6 +41,55 @@ import { RetrievalModule } from './retrieval/retrieval.module';
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().optional(),
       }),
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        // 1. Log to Console (so you can still see them while developing)
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.ms(),
+            winston.format.colorize(), // Add colors for console
+            winston.format.printf(
+              ({ timestamp, level, message, context, ms }: any) => {
+                return `${timestamp} [${context || 'Application'}] ${level}: ${message} ${ms}`;
+              },
+            ),
+          ),
+        }),
+
+        // 2. Save Errors to a separate file
+        new winston.transports.File({
+          filename: 'logs/error.log',
+          level: 'error',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(), // JSON format is better for parsing later
+          ),
+        }),
+
+        // 2.1 Save log dev to a separate file
+        new winston.transports.File({
+          filename: 'logs/dev.log',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(), // JSON format is better for parsing later
+          ),
+        }),
+
+        // 3. Save ALL logs (info, debug, error) to a daily rotating file
+        new winston.transports.DailyRotateFile({
+          filename: 'logs/application-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true, // Zip old logs to save space
+          maxSize: '20m',
+          maxFiles: '14d', // Keep logs for 14 days
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(),
+          ),
+        }),
+      ],
     }),
     // Application modules
     IngestModule,
