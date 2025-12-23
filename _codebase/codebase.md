@@ -12883,7 +12883,7 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { project_documents } from '@prisma/client';
+import { documents } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
 
 @Injectable()
@@ -12902,7 +12902,7 @@ export class DocumentService {
     projectId?: string,
   ): Promise<void> {
     for (const file of files) {
-      let document: project_documents | null = null;
+      let document: documents | null = null;
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
@@ -12951,7 +12951,7 @@ export class DocumentService {
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     // Check doc exists
-    const document = await this.prisma.project_documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -12969,8 +12969,8 @@ export class DocumentService {
       throw new NotFoundException('Delete file uploads error');
     }
 
-    // project_documents
-    return await this.prisma.project_documents.delete({
+    // documents
+    return await this.prisma.documents.delete({
       where: { id: fileId },
     });
   }
@@ -12978,7 +12978,7 @@ export class DocumentService {
   // Remove all documents in a project
   async removeDocumentInProject(projectId: string, userId: string) {
     // Get all documents in project
-    const documents = await this.prisma.project_documents.findMany({
+    const documents = await this.prisma.documents.findMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -13015,7 +13015,7 @@ export class DocumentService {
     }
 
     // Delete all document records from DB
-    const deleteResult = await this.prisma.project_documents.deleteMany({
+    const deleteResult = await this.prisma.documents.deleteMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -13031,7 +13031,7 @@ export class DocumentService {
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
-    return await this.prisma.project_documents.create({
+    return await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,
@@ -13048,7 +13048,7 @@ export class DocumentService {
   async getDocumentsInProject(projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: { projectId: projectId },
       omit: {
         projectId: true,
@@ -13059,7 +13059,7 @@ export class DocumentService {
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: {
         userId: userId,
       },
@@ -13079,7 +13079,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.project_documents.findFirst({
+    return await this.prisma.documents.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -13100,7 +13100,7 @@ export class DocumentService {
 
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         name: updateDocumentDto.name,
@@ -13114,7 +13114,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         status: status,
@@ -27501,7 +27501,7 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { project_documents } from '@prisma/client';
+import { documents } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
 
 @Injectable()
@@ -27520,7 +27520,7 @@ export class DocumentService {
     projectId?: string,
   ): Promise<void> {
     for (const file of files) {
-      let document: project_documents | null = null;
+      let document: documents | null = null;
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
@@ -27569,7 +27569,7 @@ export class DocumentService {
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     // Check doc exists
-    const document = await this.prisma.project_documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -27587,8 +27587,8 @@ export class DocumentService {
       throw new NotFoundException('Delete file uploads error');
     }
 
-    // project_documents
-    return await this.prisma.project_documents.delete({
+    // documents
+    return await this.prisma.documents.delete({
       where: { id: fileId },
     });
   }
@@ -27596,7 +27596,7 @@ export class DocumentService {
   // Remove all documents in a project
   async removeDocumentInProject(projectId: string, userId: string) {
     // Get all documents in project
-    const documents = await this.prisma.project_documents.findMany({
+    const documents = await this.prisma.documents.findMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -27633,7 +27633,7 @@ export class DocumentService {
     }
 
     // Delete all document records from DB
-    const deleteResult = await this.prisma.project_documents.deleteMany({
+    const deleteResult = await this.prisma.documents.deleteMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -27649,7 +27649,7 @@ export class DocumentService {
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
-    return await this.prisma.project_documents.create({
+    return await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,
@@ -27666,7 +27666,7 @@ export class DocumentService {
   async getDocumentsInProject(projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: { projectId: projectId },
       omit: {
         projectId: true,
@@ -27677,7 +27677,7 @@ export class DocumentService {
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: {
         userId: userId,
       },
@@ -27697,7 +27697,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.project_documents.findFirst({
+    return await this.prisma.documents.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -27718,7 +27718,7 @@ export class DocumentService {
 
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         name: updateDocumentDto.name,
@@ -27732,7 +27732,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         status: status,
@@ -41672,7 +41672,7 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { project_documents } from '@prisma/client';
+import { documents } from '@prisma/client';
 
 @Injectable()
 export class DocumentService {
@@ -41690,7 +41690,7 @@ export class DocumentService {
     projectId?: string,
   ): Promise<void> {
     for (const file of files) {
-      let document: project_documents | null = null;
+      let document: documents | null = null;
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
@@ -41737,7 +41737,7 @@ export class DocumentService {
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     // Check doc exists
-    const document = await this.prisma.project_documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -41755,8 +41755,8 @@ export class DocumentService {
       throw new NotFoundException('Delete file uploads error');
     }
 
-    // project_documents
-    return await this.prisma.project_documents.delete({
+    // documents
+    return await this.prisma.documents.delete({
       where: { id: fileId },
     });
   }
@@ -41764,7 +41764,7 @@ export class DocumentService {
   // Remove all documents in a project
   async removeDocumentInProject(projectId: string, userId: string) {
     // Get all documents in project
-    const documents = await this.prisma.project_documents.findMany({
+    const documents = await this.prisma.documents.findMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -41801,7 +41801,7 @@ export class DocumentService {
     }
 
     // Delete all document records from DB
-    const deleteResult = await this.prisma.project_documents.deleteMany({
+    const deleteResult = await this.prisma.documents.deleteMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -41817,7 +41817,7 @@ export class DocumentService {
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
-    return await this.prisma.project_documents.create({
+    return await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,
@@ -41834,7 +41834,7 @@ export class DocumentService {
   async getDocumentsInProject(projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: { projectId: projectId },
       omit: {
         projectId: true,
@@ -41845,7 +41845,7 @@ export class DocumentService {
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: {
         userId: userId,
       },
@@ -41865,7 +41865,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.project_documents.findFirst({
+    return await this.prisma.documents.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -41886,7 +41886,7 @@ export class DocumentService {
 
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         name: updateDocumentDto.name,
@@ -41900,7 +41900,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         status: status,
@@ -55086,7 +55086,7 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { project_documents } from '@prisma/client';
+import { documents } from '@prisma/client';
 
 @Injectable()
 export class DocumentService {
@@ -55104,7 +55104,7 @@ export class DocumentService {
     projectId?: string,
   ): Promise<void> {
     for (const file of files) {
-      let document: project_documents | null = null;
+      let document: documents | null = null;
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
@@ -55151,7 +55151,7 @@ export class DocumentService {
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     // Check doc exists
-    const document = await this.prisma.project_documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -55169,8 +55169,8 @@ export class DocumentService {
       throw new NotFoundException('Delete file uploads error');
     }
 
-    // project_documents
-    return await this.prisma.project_documents.delete({
+    // documents
+    return await this.prisma.documents.delete({
       where: { id: fileId },
     });
   }
@@ -55178,7 +55178,7 @@ export class DocumentService {
   // Remove all documents in a project
   async removeDocumentInProject(projectId: string, userId: string) {
     // Get all documents in project
-    const documents = await this.prisma.project_documents.findMany({
+    const documents = await this.prisma.documents.findMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -55215,7 +55215,7 @@ export class DocumentService {
     }
 
     // Delete all document records from DB
-    const deleteResult = await this.prisma.project_documents.deleteMany({
+    const deleteResult = await this.prisma.documents.deleteMany({
       where: { projectId: projectId, userId: userId },
     });
 
@@ -55231,7 +55231,7 @@ export class DocumentService {
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
-    return await this.prisma.project_documents.create({
+    return await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,
@@ -55248,7 +55248,7 @@ export class DocumentService {
   async getDocumentsInProject(projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: { projectId: projectId },
       omit: {
         projectId: true,
@@ -55259,7 +55259,7 @@ export class DocumentService {
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: {
         userId: userId,
       },
@@ -55279,7 +55279,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.project_documents.findFirst({
+    return await this.prisma.documents.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -55300,7 +55300,7 @@ export class DocumentService {
 
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         name: updateDocumentDto.name,
@@ -55314,7 +55314,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         status: status,
@@ -67208,7 +67208,7 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { project_documents } from '@prisma/client';
+import { documents } from '@prisma/client';
 
 @Injectable()
 export class DocumentService {
@@ -67226,7 +67226,7 @@ export class DocumentService {
     projectId?: string,
   ): Promise<void> {
     for (const file of files) {
-      let document: project_documents | null = null;
+      let document: documents | null = null;
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
@@ -67273,7 +67273,7 @@ export class DocumentService {
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     // Check doc exists
-    const document = await this.prisma.project_documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -67291,15 +67291,15 @@ export class DocumentService {
       throw new NotFoundException('Delete file uploads error');
     }
 
-    // project_documents
-    return await this.prisma.project_documents.delete({
+    // documents
+    return await this.prisma.documents.delete({
       where: { id: fileId },
     });
   }
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
-    return await this.prisma.project_documents.create({
+    return await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,
@@ -67316,14 +67316,14 @@ export class DocumentService {
   async getDocumentsInProject(projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: { projectId: projectId },
     });
   }
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.project_documents.findMany({
+    return await this.prisma.documents.findMany({
       where: {
         userId: userId,
       },
@@ -67332,7 +67332,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.project_documents.findFirst({
+    return await this.prisma.documents.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -67342,7 +67342,7 @@ export class DocumentService {
 
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         name: updateDocumentDto.name,
@@ -67356,7 +67356,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.project_documents.update({
+    return await this.prisma.documents.update({
       where: { id: id },
       data: {
         status: status,
@@ -79030,7 +79030,7 @@ export class DocumentService {
   // status    String // uploading | processing | done | error
   // createdAt DateTime @default(now())
   async createDocument(documentDto: CreateDocumentDto) {
-    await this.prisma.project_documents.create({
+    await this.prisma.documents.create({
       data: {
         projectId: documentDto.projectId,
         name: documentDto.name,

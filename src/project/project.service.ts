@@ -94,8 +94,8 @@ export class ProjectService {
       throw new NotFoundException('Project not found');
     }
 
-    // Delete: Vector + Disk files FIRST (before cascade delete)
-    await this.documentService.removeDocumentInProject(id, project.userId);
+    // Unlink all documents in project
+    await this.documentService.unlinkAllDocumentsInProject(id);
 
     // Then delete project (cascade will delete DB records)
     const projectDel = await this.prisma.projects.delete({

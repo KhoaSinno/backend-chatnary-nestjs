@@ -55,7 +55,7 @@ export class VectorService {
   // -- RETRIEVE SIMILAR WITH SCORE --
   async getRetrievalsWithScore(
     query: string,
-    k = 20,
+    k = 30,
     userId: string,
     projectId?: string,
   ) {

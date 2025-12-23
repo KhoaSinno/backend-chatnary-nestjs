@@ -121,7 +121,6 @@ export class ChatService {
       // TODO: Fallback fileName:
       const fileName =
         doc.metadata['originalFileName'] ||
-        doc.metadata['title'] ||
         `File_${fileId?.substring(0, 5) ?? 'Unknown'}`;
       const chunkIndex = doc.metadata.chunkIndex as number;
       const score = doc.finalScore || 0;

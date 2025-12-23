@@ -23,6 +23,7 @@ export class IngestService {
     fileId: string,
     userId: string,
     projectId?: string,
+    originalFileName?: string,
   ) {
     const pdfPages = await this.pdfService.load(filePath);
 
@@ -46,6 +47,7 @@ export class IngestService {
       projectId,
       userId,
       fileUrl: filePath,
+      originalFileName,
     };
 
     console.log(

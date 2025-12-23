@@ -10,24 +10,11 @@ import {
 import { AccessLevelDoc } from '../../constant/index.constant';
 
 export class CreateDocumentDto {
+  // Out info
   @IsString({ message: 'projectId must be a string' })
-  projectId: string;
+  projectId?: string;
 
-  @IsString({ message: 'name must be a string' })
-  @MinLength(1, { message: 'name must not be empty' })
-  name: string;
-
-  @IsString({ message: 'filePath must be a string' })
-  filePath: string;
-
-  @IsString({ message: 'originalFileName must be a string' })
-  mimeType?: string;
-
-  @IsInt({ message: 'size must be an integer' })
-  size?: number;
-
-  @IsString({ message: 'status must be a string' })
-  status: string;
+  // Basic Info
 
   @IsString({ message: 'userId must be a string' })
   userId: string;
@@ -72,11 +59,32 @@ export class CreateDocumentDto {
   @IsEnum(AccessLevelDoc, { message: 'accessLevel must be a valid enum value' })
   accessLevel: AccessLevelDoc;
 
+  //
+  @IsString({ message: 'originalName must be a string' })
+  @MinLength(1, { message: 'originalName must not be empty' })
+  originalName: string;
+
+  @IsString({ message: 'filePath must be a string' })
+  filePath: string;
+
+  @IsString({ message: 'originalFileName must be a string' })
+  mimeType?: string;
+
+  @IsInt({ message: 'size must be an integer' })
+  size?: number;
+
+  @IsInt({ message: 'pageCount must be an integer' })
+  pageCount?: number;
+
+  // More Info
+  @IsString({ message: 'status must be a string' })
+  status: string;
+
+  @IsInt({ message: 'viewCount must be an integer' })
+  viewCount: number;
+
   metadata?: any;
 
   @IsDate({ message: 'indexedAt must be a valid date' })
   indexedAt?: Date;
-
-  @IsInt({ message: 'viewCount must be an integer' })
-  viewCount: number;
 }

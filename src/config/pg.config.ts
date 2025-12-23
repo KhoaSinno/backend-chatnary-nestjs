@@ -11,7 +11,7 @@ export const pgConfig = {
     password: process.env.POSTGRES_PASSWORD || '123123',
     database: process.env.POSTGRES_DB || 'api',
   } as PoolConfig,
-  tableName: 'documents',
+  tableName: 'embeddings',
   //   columns: {
   //     idColumnName: 'id',
   //     vectorColumnName: 'vector',
@@ -30,6 +30,6 @@ export const getPgConfigNeon = () => ({
       rejectUnauthorized: false,
     },
   } as PoolConfig,
-  tableName: 'documents',
+  tableName: 'embeddings',
   distanceStrategy: 'cosine' as DistanceStrategy,
 });
