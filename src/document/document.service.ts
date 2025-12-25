@@ -168,6 +168,65 @@ export class DocumentService {
     return document;
   }
 
+  /**
+    1. Check Project exists AND belongs to User
+    2. Validate Documents (Security Check)
+    3. Prepare data for bulk insert
+    4. Create links
+   */
+  async addDocumentsToProject(
+    userId: string,
+    projectId: string,
+    documentIds: string[],
+  ) {
+    // 1. Check Project exists AND belongs to User
+    const project = await this.prisma.projects.findFirst({
+      where: {
+        id: projectId,
+        userId: userId,
+      },
+    });
+
+    if (!project) {
+      throw new NotFoundException(
+        'Project not found or you do not have permission to access it',
+      );
+    }
+
+    // 2. Validate Documents (Security Check)
+    const validDocuments = await this.prisma.documents.findMany({
+      where: {
+        id: { in: documentIds },
+        OR: [
+          { userId: userId }, // Của mình
+          { accessLevel: AccessLevelDoc.PUBLIC }, // Hoặc thư viện công cộng
+        ],
+      },
+      select: { id: true }, // Chỉ select ID cho nhẹ query
+    });
+
+    const validDocIds = validDocuments.map((doc) => doc.id);
+
+    if (validDocIds.length === 0) {
+      throw new NotFoundException(
+        'No valid documents found to add (Check ownership or ID)',
+      );
+    }
+
+    // 3. Prepare data for bulk insert
+    const dataToInput = validDocIds.map((docId) => ({
+      projectId: projectId,
+      documentId: docId,
+      isSelected: true,
+    }));
+
+    // 4. Create links
+    return await this.prisma.project_resources.createMany({
+      data: dataToInput,
+      skipDuplicates: true,
+    });
+  }
+
   // -- Unlink ALL DOCUMENTS IN PROJECT --
   async unlinkAllDocumentsInProject(projectId: string) {
     return await this.prisma.project_resources.deleteMany({
@@ -178,16 +237,56 @@ export class DocumentService {
   }
 
   // -- GET DOCUMENT IN PROJECT --
-  async getDocumentsInProject(projectId: string) {
+  async getDocumentsInProject(userId: string, projectId: string) {
     // Check exist project
 
-    return await this.prisma.project_resources.findMany({
-      where: { projectId: projectId },
+    const docsRaw = await this.prisma.project_resources.findMany({
+      where: { projectId: projectId, document: { userId: userId } },
       include: {
-        document: true,
+        document: {
+          omit: { userId: true, indexedAt: true },
+        },
       },
       orderBy: {
         addedAt: 'desc',
+      },
+    });
+
+    console.log(docsRaw);
+    // return docsRaw;
+    return docsRaw.map((item) => {
+      return {
+        // 1. Các trường từ bảng trung gian (project_resources)
+        addedAt: item.addedAt,
+        isSelected: item.isSelected,
+        linkId: item.id, //  sau này dùng chức năng "Unlink"
+
+        // 2. Spread trực tiếp các trường của document ra ngoài
+        ...item.document,
+      };
+    });
+  }
+
+  // -- GET DOCUMENT NOT IN PROJECT --
+  async getDocumentsNotInProject(userId: string, projectId: string) {
+    return await this.prisma.documents.findMany({
+      where: {
+        OR: [{ userId: userId }, { accessLevel: AccessLevelDoc.PUBLIC }],
+        NOT: {
+          linkedProjects: {
+            some: { projectId: projectId },
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        originalName: true,
+        createdAt: true,
+        mimeType: true,
+      },
+      orderBy: {
+        createdAt: 'desc', // Mới nhất lên đầu
       },
     });
   }

@@ -18,6 +18,7 @@ export class ProjectService {
   async createNewProject(createProjectDto: CreateProjectDto) {
     return await this.prisma.projects.create({
       data: createProjectDto,
+      omit: { userId: true },
     });
   }
 
@@ -25,6 +26,7 @@ export class ProjectService {
   async findByUserId(userId: string) {
     return await this.prisma.projects.findMany({
       where: { userId: userId },
+      omit: { userId: true },
     });
   }
 
@@ -42,6 +44,8 @@ export class ProjectService {
 
     return await this.prisma.chats.findMany({
       where: { projectId: projectId },
+      omit: { userId: true, projectId: true, messages: true },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -53,7 +57,8 @@ export class ProjectService {
   ) {
     // TODO: CHECK EXISTED
     return await this.prisma.chats.findUnique({
-      where: { id: chatId },
+      where: { id: chatId, userId: userId, projectId: projectId },
+      omit: { userId: true, projectId: true },
     });
   }
 
@@ -68,7 +73,7 @@ export class ProjectService {
         'Project not found or does not belong to user',
       );
 
-    return await this.documentService.getDocumentsInProject(projectId);
+    return await this.documentService.getDocumentsInProject(userId, projectId);
   }
 
   // -- POST CHAT IN PROJECTS --

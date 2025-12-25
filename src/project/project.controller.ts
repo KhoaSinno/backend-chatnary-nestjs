@@ -15,10 +15,15 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ChatDto } from '../chat/dto/chat.dto';
 import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
+import { DocumentService } from '../document/document.service';
+import { AddDocumentToProjectDto } from '../document/dto/add-doc2pj.dto';
 
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly documentService: DocumentService,
+  ) {}
 
   // -- CREATE --
   @Post()
@@ -28,6 +33,20 @@ export class ProjectController {
   ) {
     createProjectDto.userId = req.user.userId;
     return this.projectService.createNewProject(createProjectDto);
+  }
+
+  // -- ADD DOCUMENTS TO PROJECT --
+  @Post('/:projectId/documents')
+  async addDocumentsToProject(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('projectId') projectId: string,
+    @Body() dto: AddDocumentToProjectDto,
+  ) {
+    return await this.documentService.addDocumentsToProject(
+      req.user.userId,
+      projectId,
+      dto.documentIds,
+    );
   }
 
   // -- READ BY USERID --

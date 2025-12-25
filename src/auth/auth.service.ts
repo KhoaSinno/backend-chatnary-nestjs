@@ -14,6 +14,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private config: ConfigService,
   ) {}
 
   // -- REGISTER --
@@ -137,11 +138,11 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: jwtSecret,
-        expiresIn: '15m',
+        expiresIn: this.config.get('jwt.expiresIn'),
       }),
       this.jwtService.signAsync(payload, {
         secret: jwtRefreshSecret,
-        expiresIn: '7d',
+        expiresIn: this.config.get('jwtRefresh.expiresIn'),
       }),
     ]);
 
