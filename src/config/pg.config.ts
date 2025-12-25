@@ -12,12 +12,12 @@ export const pgConfig = {
     database: process.env.POSTGRES_DB || 'api',
   } as PoolConfig,
   tableName: 'embeddings',
-  //   columns: {
-  //     idColumnName: 'id',
-  //     vectorColumnName: 'vector',
-  //     contentColumnName: 'content',
-  //     metadataColumnName: 'metadata',
-  //   },
+  columns: {
+    idColumnName: 'id',
+    vectorColumnName: 'embedding',
+    contentColumnName: 'content',
+    metadataColumnName: 'metadata',
+  },
   // supported distance strategies: cosine (default), innerProduct, or euclidean
   distanceStrategy: 'cosine' as DistanceStrategy,
 };
@@ -31,5 +31,11 @@ export const getPgConfigNeon = () => ({
     },
   } as PoolConfig,
   tableName: 'embeddings',
+  columns: {
+    idColumnName: 'id',
+    vectorColumnName: 'embedding',
+    contentColumnName: 'content',
+    metadataColumnName: 'metadata',
+  },
   distanceStrategy: 'cosine' as DistanceStrategy,
 });

@@ -29,7 +29,7 @@ export class DocumentService {
       try {
         // Pre create document record with 'processing' status
         document = await this.createDocument({
-          projectId: projectId as string,
+          projectId: projectId,
           originalName: file.originalname,
           filePath: file.path,
           mimeType: file.mimetype,
@@ -121,6 +121,18 @@ export class DocumentService {
 
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
+    // Validate project exists if projectId provided
+    if (documentDto.projectId) {
+      const projectExists = await this.prisma.projects.findUnique({
+        where: { id: documentDto.projectId },
+      });
+      if (!projectExists) {
+        throw new NotFoundException(
+          `Project with id ${documentDto.projectId} not found`,
+        );
+      }
+    }
+
     const document = await this.prisma.documents.create({
       data: {
         userId: documentDto.userId,

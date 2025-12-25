@@ -63,7 +63,7 @@ export class AuthService {
 
     // User no password in response
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userSafe } = user;
+    const { password: _, storageUsed, storageLimit, ...userSafe } = user;
 
     // Sign JWT
     const tokens = await this.getTokens(
@@ -74,7 +74,14 @@ export class AuthService {
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
-    return { ...tokens, user: userSafe };
+    return {
+      ...tokens,
+      user: {
+        ...userSafe,
+        storageUsed: Number(storageUsed),
+        storageLimit: Number(storageLimit),
+      } as any,
+    };
   }
 
   // -- LOGOUT --
