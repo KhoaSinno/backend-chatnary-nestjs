@@ -37,6 +37,12 @@ enum AccessLevelDoc {
   RESTRICTED
 }
 
+enum DocumentStatus {
+  PROCESSING
+  DONE
+  ERROR
+}
+
 model users {
   id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email        String  @unique
@@ -94,7 +100,7 @@ model documents {
   pageCount    Int?
 
   // Processing Status (Pipeline: Upload -> OCR -> Embedding)
-  status String @default("processing") // processing | done | error
+  status DocumentStatus @default(PROCESSING) // processing | done | error
 
   // ===== Dynamic metadata & Stat =====
   metadata  Json? // expandable unstable fields 

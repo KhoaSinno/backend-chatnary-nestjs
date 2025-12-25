@@ -6,8 +6,9 @@ import { deleteFile } from './oss';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { documents } from '@prisma/client';
+import { documents, DocumentStatus } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
+import { UploadMetadataDto } from './dto/upload-document.dto';
 
 @Injectable()
 export class DocumentService {
@@ -23,6 +24,7 @@ export class DocumentService {
     userId: string,
     files: Express.Multer.File[],
     projectId?: string,
+    metadata?: UploadMetadataDto,
   ): Promise<void> {
     for (const file of files) {
       let document: documents | null = null;
@@ -34,17 +36,17 @@ export class DocumentService {
           filePath: file.path,
           mimeType: file.mimetype,
           size: file.size,
-          status: 'processing',
+          status: DocumentStatus.PROCESSING,
           userId: userId,
-          accessLevel: AccessLevelDoc.PRIVATE,
-          viewCount: 0,
-          pageCount: 0,
-          authors: [],
-          description: '',
-          // publishedYear: null,
-          subjects: [],
-          tags: [],
-          title: file.originalname,
+          accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
+          viewCount: 0, // TODO: default 0
+          pageCount: 0, // TODO: get real page count after OCR
+          authors: metadata?.authors || [],
+          description: metadata?.description || '',
+          publishedYear: metadata?.publishedYear || undefined,
+          subjects: metadata?.subjects || [],
+          tags: metadata?.tags || [],
+          title: metadata?.title || file.originalname,
           documentType: 'unknown',
         });
 
@@ -63,7 +65,7 @@ export class DocumentService {
         // If ingestion successful (has chunks), save document record in DB
         if (chunksCount > 0) {
           // update 'done' status
-          await this.updateDocumentStatus(document.id, 'done');
+          await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
 
           this.logger.log(
             `📝 Document record created for: ${file.originalname}`,
@@ -75,7 +77,7 @@ export class DocumentService {
         this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
         // Optionally update 'error' status
         if (document) {
-          await this.updateDocumentStatus(document.id, 'error');
+          await this.updateDocumentStatus(document.id, DocumentStatus.ERROR);
         }
       }
     }
@@ -122,16 +124,6 @@ export class DocumentService {
   // -- CREATE DOCUMENT MAPPING --
   async createDocument(documentDto: CreateDocumentDto) {
     // Validate project exists if projectId provided
-    if (documentDto.projectId) {
-      const projectExists = await this.prisma.projects.findUnique({
-        where: { id: documentDto.projectId },
-      });
-      if (!projectExists) {
-        throw new NotFoundException(
-          `Project with id ${documentDto.projectId} not found`,
-        );
-      }
-    }
 
     const document = await this.prisma.documents.create({
       data: {
@@ -348,9 +340,9 @@ export class DocumentService {
     });
   }
   // -- UPDATE DOCUMENT STATUS --
-  async updateDocumentStatus(id: string, status: string) {
+  async updateDocumentStatus(id: string, status: DocumentStatus) {
     // Validate status
-    if (!['processing', 'done', 'error'].includes(status)) {
+    if (!Object.values(DocumentStatus).includes(status)) {
       throw new Error('Invalid status value');
     }
 

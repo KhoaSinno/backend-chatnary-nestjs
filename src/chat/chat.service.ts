@@ -299,6 +299,7 @@ export class ChatService {
     return await this.prisma.chats.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId },
+      omit: { messages: true, userId: true },
     });
   }
 
@@ -307,6 +308,7 @@ export class ChatService {
     return await this.prisma.chats.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
+      omit: { messages: true, userId: true },
     });
   }
 

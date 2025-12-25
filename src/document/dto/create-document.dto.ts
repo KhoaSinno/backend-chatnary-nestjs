@@ -2,12 +2,14 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsOptional,
   IsString,
   Length,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { AccessLevelDoc } from '../../constant/index.constant';
+import { DocumentStatus } from '@prisma/client';
 
 export class CreateDocumentDto {
   // Out info
@@ -77,8 +79,9 @@ export class CreateDocumentDto {
   pageCount?: number;
 
   // More Info
-  @IsString({ message: 'status must be a string' })
-  status: string;
+  @IsOptional()
+  @IsEnum(DocumentStatus)
+  status?: DocumentStatus = DocumentStatus.PROCESSING;
 
   @IsInt({ message: 'viewCount must be an integer' })
   viewCount: number;
