@@ -6,7 +6,6 @@ import {
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { ChatDto } from './dto/chat.dto';
-import { VectorService } from '../ingest/vector/vector.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ContentBlock } from '@langchain/core/messages';
 import { JsonValue } from '@prisma/client/runtime/library';
@@ -65,26 +64,94 @@ type FileGroup = {
 export class ChatService {
   constructor(
     private readonly openaiService: OpenaiService,
-    private readonly vectorService: VectorService,
     private prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
   ) {}
 
   // -- PRIVATE CHAT FUNC --
 
+  private async createStandaloneQuestion(
+    chatHistory: MessageType[],
+    question: string,
+  ) {
+    if (!chatHistory || chatHistory.length === 0) return question;
+
+    const historyContext = chatHistory
+      .map((msg) => `${msg.role}: ${msg.content}`)
+      .join('\n');
+
+    const rephrasePrompt = `
+    Dựa trên lịch sử trò chuyện và câu hỏi mới nhất của người dùng, hãy viết lại câu hỏi mới sao cho nó trở thành một câu hỏi ĐỘC LẬP, đầy đủ ngữ nghĩa mà không cần đọc lịch sử vẫn hiểu được.
+    KHÔNG trả lời câu hỏi, chỉ viết lại hoặc giữ nguyên nếu đã rõ ràng.
+    Ví dụ: 
+    - History: "Ai là hiệu trưởng?" -> Current: "Ông ấy bao nhiêu tuổi?" -> Output: "Hiệu trưởng trường hiện tại bao nhiêu tuổi?"
+    `;
+
+    // Call llm
+    const messages = [
+      { role: 'system', content: rephrasePrompt.trim() },
+      {
+        role: 'user',
+        content: `HISTORY:\n${historyContext}\n\nCURRENT QUESTION:\n${question}`,
+      },
+    ];
+
+    const rewrittenQuestion = await this.openaiService
+      .getRewriteModel()
+      .invoke(messages)
+      .then((res) => res.content as string);
+
+    return rewrittenQuestion;
+  }
+
   private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
     // -- VALIDATIONS -- TODO: update with joi
     console.log('ChatDto', JSON.stringify(chatDto));
 
     const historyNum = 6;
+    let chatId = chatDto.chatId;
+    let finalQuestion = chatDto.message;
+    // Ensure chat exists or create it
+    if (!chatId) {
+      // ... Logic tạo chat mới ...
+      const created = await this.prisma.chats.create({
+        data: {
+          messages: [],
+          userId: chatDto.userId as string,
+          projectId: chatDto.projectId as string,
+        },
+      });
+      chatId = created.id;
+    }
 
     // ---------------------------------------------------------
     // 1. RETRIEVAL & RERANK
     // ---------------------------------------------------------
+
+    // Rewrite question to standalone if chatId provided
+    const historyMessages = await this.prisma.chats.findUnique({
+      where: { id: chatId },
+      select: { messages: true },
+    });
+
+    const contentHistory: MessageType[] = (
+      (historyMessages?.messages ?? []) as MessageType[]
+    )
+      .slice(-historyNum)
+      .filter((m) => m.role && m.content)
+      .map((m) => ({ role: m.role, content: m.content }));
+
+    if (contentHistory.length > 0) {
+      finalQuestion = await this.createStandaloneQuestion(
+        contentHistory,
+        chatDto.message,
+      );
+    }
+
     // Gọi hàm mới retrieveAndRerank
     const scoredDocs: ScoredDocument[] =
       await this.retrievalService.retrieveAndRerank(
-        chatDto.message,
+        finalQuestion,
         chatDto.userId as string,
         chatDto.projectId,
       );
@@ -183,8 +250,10 @@ export class ChatService {
       2. **Tổng hợp**: Nếu thông tin nằm rải rác ở nhiều tài liệu, hãy tổng hợp lại một cách mạch lạc.
       3. **Mâu thuẫn**: Nếu các tài liệu mâu thuẫn nhau, hãy tin tưởng tài liệu có "Độ phù hợp" cao hơn (nằm trên cùng).
       4. **Trung thực**: Nếu không tìm thấy thông tin để trả lời, hãy nói "Tài liệu hiện tại không chứa thông tin về vấn đề này". Đừng bịa đặt.
+      5. Nếu câu hỏi độc lập (rephrased) có vẻ sai lệch so với ý định ban đầu, hãy ưu tiên trả lời theo ngữ cảnh tài liệu tìm được.
 
       QUY TẮC: BẮT BUỘC TRÍCH DẪN (CITATION) :
+      - Đã trích dẫn thì phải chính xác
       - Mọi thông tin đưa ra phải có dẫn chứng.
       - Sử dụng format **[#index]** ngay sau câu thông tin liên quan.
       - Ví dụ: "Doanh thu năm nay tăng 20% [#12]"
@@ -203,30 +272,6 @@ export class ChatService {
     // ---------------------------------------------------------
     // 4. HISTORY & LLM CALL (Logic giữ nguyên, chỉ thay đổi input)
     // ---------------------------------------------------------
-
-    // Ensure chat exists or create it
-    let chatId = chatDto.chatId;
-    if (!chatId) {
-      // ... Logic tạo chat mới ...
-      const created = await this.prisma.chats.create({
-        data: {
-          messages: [],
-          userId: chatDto.userId as string,
-          projectId: chatDto.projectId as string,
-        },
-      });
-      chatId = created.id;
-    }
-    const historyMessages = await this.prisma.chats.findUnique({
-      where: { id: chatId },
-    });
-
-    const contentHistory: MessageType[] = (
-      (historyMessages?.messages ?? []) as MessageType[]
-    )
-      .slice(-historyNum)
-      .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role, content: m.content }));
 
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT.trim() },
