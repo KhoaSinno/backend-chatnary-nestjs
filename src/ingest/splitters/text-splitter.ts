@@ -140,7 +140,7 @@ export class TextSplitterService {
   private findSmartNextStart(
     text: string,
     idealStart: number,
-    // previousEnd: number,
+    previousEnd: number,
   ): number {
     if (idealStart <= 0) return 0;
     if (idealStart >= text.length) return text.length;

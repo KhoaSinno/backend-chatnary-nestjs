@@ -140,9 +140,9 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
             fs.unlinkSync(r.path);
           }
           // Xóa file preprocessed
-          // if (r.prepPath && fs.existsSync(r.prepPath)) {
-          //   fs.unlinkSync(r.prepPath);
-          // }
+          if (r.prepPath && fs.existsSync(r.prepPath)) {
+            fs.unlinkSync(r.prepPath);
+          }
         } catch (error) {
           console.warn(`⚠️ Cannot delete temp file: ${r.path}`, error.message);
         }
@@ -157,7 +157,7 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
 
   // Normalize text: nối từ ngắt dòng, gộp khoảng trắng, sửa lỗi OCR phổ biến tiếng Việt
   private normalizeText(text: string): string {
-    let normalized = text
+    const normalized = text
       // Nối từ bị ngắt dòng
       .replace(/-\s*\n\s*/g, '')
       // Giữ nguyên xuống dòng đơn, chỉ gộp xuống dòng nhiều

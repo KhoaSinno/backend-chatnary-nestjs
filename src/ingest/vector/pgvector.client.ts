@@ -1,7 +1,7 @@
 import { ConsoleLogger, Injectable, OnModuleInit } from '@nestjs/common';
 import { PGVectorStore } from '@langchain/community/vectorstores/pgvector';
 import { OpenaiService } from '../../llm/openai/openai.service';
-import { pgConfig, getPgConfigNeon } from '../../config/pg.config';
+import { getPgConfig } from '../../config/pg.config';
 
 @Injectable()
 export class PgvectorService implements OnModuleInit {
@@ -26,15 +26,9 @@ export class PgvectorService implements OnModuleInit {
       return this.vectorStore;
     }
 
-    const useNeon = !!process.env.DATABASE_URL_NEON;
-    const config = useNeon ? getPgConfigNeon() : pgConfig;
-
-    this.logger.log('🔧 PGVector Config:', {
-      useNeon,
-      connectionString: useNeon
-        ? process.env.DATABASE_URL_NEON?.substring(0, 30) + '...'
-        : `${process.env.POSTGRES_HOST || 'db'}:${process.env.POSTGRES_PORT || '5432'}`,
-    });
+    // Use universal pgConfig - works with any PostgreSQL provider
+    // IMPORTANT: Call getPgConfig() at runtime to ensure env vars are loaded
+    const config = getPgConfig();
 
     this.vectorStore = await PGVectorStore.initialize(
       this.openaiService.getEmbeddings(),

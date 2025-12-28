@@ -29,7 +29,7 @@ export class DocumentController {
   // -- UPLOAD FILES --
   @Post('upload/files')
   @UseInterceptors(
-    FilesInterceptor('files', 10, {
+    FilesInterceptor('files', 20, {
       dest: 'uploads/documents',
       storage: storage,
       limits: { fileSize: 2000 * 1024 * 1024 },

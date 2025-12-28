@@ -1,12 +1,14 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters", "postgresqlExtensions"]
+  previewFeatures = ["postgresqlExtensions"]
 }
 
+// Universal datasource configuration
+// Works with: Neon, Supabase, Docker PostgreSQL, AWS RDS, etc.
 datasource db {
   provider   = "postgresql"
-  url        = env("DATABASE_URL_NEON")
-  directUrl  = env("DATABASE_URL_NEON_DIRECT")
+  url        = env("DATABASE_URL")
+  directUrl  = env("DATABASE_DIRECT_URL") // Optional: for migrations (required by Neon)
   extensions = [vector]
 }
 

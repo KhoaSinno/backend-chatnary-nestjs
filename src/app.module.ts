@@ -36,10 +36,64 @@ import 'winston-daily-rotate-file'; // Import if using rotation
       isGlobal: true,
       load: [envConfig],
       validationSchema: Joi.object({
+        // API Keys
         OPENAI_API_KEY: Joi.string().required(),
-        DATABASE_URL_NEON: Joi.string().required(),
+        GOOGLE_API_KEY: Joi.string().optional(),
+
+        // Database - Universal configuration (works with any PostgreSQL provider)
+        DATABASE_URL: Joi.string().required(),
+        DATABASE_DIRECT_URL: Joi.string().optional(), // For migrations (Neon, Supabase)
+
+        // Database - Legacy individual parameters (optional, for backward compatibility)
+        POSTGRES_HOST: Joi.string().optional(),
+        POSTGRES_PORT: Joi.number().optional(),
+        POSTGRES_DB: Joi.string().optional(),
+        POSTGRES_USER: Joi.string().optional(),
+        POSTGRES_PASSWORD: Joi.string().optional(),
+
+        // Database - Connection pool settings (optional)
+        DB_POOL_MAX: Joi.number().optional(),
+        DB_POOL_MIN: Joi.number().optional(),
+        DB_POOL_IDLE_TIMEOUT: Joi.number().optional(),
+        DB_POOL_CONNECTION_TIMEOUT: Joi.number().optional(),
+        DB_KEEPALIVE: Joi.boolean().optional(),
+        DB_KEEPALIVE_DELAY: Joi.number().optional(),
+        DB_SSL: Joi.boolean().optional(),
+        DB_SSL_REJECT_UNAUTHORIZED: Joi.boolean().optional(),
+
+        // PGVector settings (optional)
+        PGVECTOR_TABLE: Joi.string().optional(),
+        PGVECTOR_DISTANCE_STRATEGY: Joi.string()
+          .valid('cosine', 'innerProduct', 'euclidean')
+          .optional(),
+
+        // JWT Authentication
         JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRES_IN: Joi.string().optional(),
+        JWT_EXPIRES_IN: Joi.string().optional().default('15m'),
+        JWT_REFRESH_SECRET: Joi.string().optional(),
+        JWT_REFRESH_EXPIRES_IN: Joi.string().optional().default('7d'),
+
+        // Server configuration
+        PORT: Joi.number().optional().default(8000),
+        NODE_ENV: Joi.string()
+          .valid('dev', 'prod', 'test')
+          .optional()
+          .default('dev'),
+
+        // Model configuration
+        GEMINI_MODEL: Joi.string().optional(),
+        EMBEDDING_MODEL: Joi.string().optional(),
+
+        // Performance settings
+        API_TIMEOUT: Joi.number().optional(),
+        RETRIEVER_K: Joi.number().optional(),
+        MAX_HISTORY_MESSAGES: Joi.number().optional(),
+
+        // Logging
+        LOG_LEVEL: Joi.string()
+          .valid('ERROR', 'WARN', 'INFO', 'DEBUG')
+          .optional()
+          .default('INFO'),
       }),
     }),
     WinstonModule.forRoot({
