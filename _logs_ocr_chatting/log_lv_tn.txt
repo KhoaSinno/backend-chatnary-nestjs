@@ -1,0 +1,222 @@
+log_lv_tn:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Theo tài liệu, kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật là một ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên, được xây dựng dưới dạng một trang web. Hệ thống này sử dụng nhiều công nghệ và ngôn ngữ lập trình khác nhau như Python, PHP, JavaScript, đặc biệt là LangChain để kết nối và xây dựng ứng dụng. Backend sử dụng PHP và Python, với Flask để xây dựng chatbot, đồng thời sử dụng API của OpenAI (GPT-3.5) cho chức năng trả lời tự động. Hệ thống còn có các chức năng như tìm kiếm và tải các tệp PDF, chuyển đổi thành văn bản để xử lý, và giao diện chat cho sinh viên, giảng viên tương tác với AI [#89][#119][#146].\n\nVề so sánh với kiến trúc RAG (Retrieval-Augmented Generation), tài liệu không mô tả rõ ràng việc tích hợp một thành phần truy xuất dữ liệu (retriever) kết hợp với mô hình sinh (generator) như trong kiến trúc RAG chuẩn. Hệ thống chủ yếu sử dụng LangChain để hỗ trợ quá trình phát triển AI trả lời dựa trên các tài liệu đã được chuyển đổi thành văn bản, nhưng không đề cập đến việc sử dụng một pipeline truy xuất tài liệu động và kết hợp sinh câu trả lời như RAG. Do đó, có thể nhận định kiến trúc này là một phiên bản đơn giản hơn so với RAG, chủ yếu dựa vào khả năng của LLM (GPT-3.5) và các tài liệu đã được xử lý sẵn, chứ không phải là một hệ thống RAG hoàn chỉnh [#89][#119].",
+    "citations": [
+      {
+        "index": 89,
+        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 2.  Đặc tả hệ thống Chức năng hệ thống: • Kiến trúc tổng thể: Ứng dụng học máy hỗ tr...",
+        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 2.  Đặc tả hệ thống Chức năng hệ thống: • Kiến trúc tổng thể: Ứng dụng học máy hỗ trợ thủ tục hành chính là một trang web ứng dụng nhiều công nghệ và ngôn ngữ lập trình khác nhau như Python, PHP, JavaScript đặc biệt là LangChain để kết nối hợp lại và xây dựng nên một ứng dụng học máy này một trang web hỗ trợ hành chính để giải đáp các thắc mắc về vấn đề liên quan về mặt hành chính như: Học phí, quá trình nhập học, các ngành mà trường nhận đào tạo cho tân sinh viên và cũng như những thông báo, quy định, nghị định cho giảng viên mới vào trường. • Backend: Sử dụng PHP và Python làm ngôn ngữ lập trình chính cho Backend và Flask để xây dựng nên chatbot. Bắt đầu từ việc sử dụng Python để gọi API từ OpenAI để chạy chức năng cho cha",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 34,
+        "score": 0.8532875374939304,
+        "startOffset": 49052,
+        "endOffset": 49852,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 146,
+        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên Hình 4.17: Giao diện Chat của Sinh viên - Giảng Viên • Chức năng: Giao diện chat của...",
+        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên Hình 4.17: Giao diện Chat của Sinh viên - Giảng Viên • Chức năng: Giao diện chat của Sinh viên - Giảng viên sẽ khá khác biệt với giao diện của Cán bộ vì Sinh viên - Giảng viên chỉ có thể xem lại Thông tin đã được thiết lập ở trang sinh viên và Chat với AI. • Khi nào dùng: Sinh viên - Giảng viên có thể sử dụng bất kỳ lúc nào khi có thắc mắc về trường và muốn tìm hiểu những học phần dành cho Sinh viên và với Giảng viên thì sẽ xem những công văn, quy định của trường khi mới tham gia vào trường để đào tạo. 52",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 63,
+        "score": 0.8532452897204544,
+        "startOffset": 77309,
+        "endOffset": 77885,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 209,
+        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 57 Hội đồng trường có bao nhiêu ban? 5 Ban. Hội đồng trường có 5 ban. X 58 Trường có...",
+        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 57 Hội đồng trường có bao nhiêu ban? 5 Ban. Hội đồng trường có 5 ban. X 58 Trường có trang web của trường không? Có. Trang web của trường là http://pdaotao.ctuet.edu.vn. X 59 Hãy cho tôi biết số điện thoại của trưởng phòng đào tạo? 0913185666. Số điện thoại của trưởng phòng đào tạo là 0913185666. X 60 Học phần bắt buộc là gì? Là học phần chứa đựng những nội dung kiến thức chính yếu của mỗi chương trình và bắt buộc sinh viên phải tích lũy. Học phần bắt buộc là những học phần mà sinh viên phải học và tích lũy theo yêu cầu của chương trình đào tạo. Nội dung kiến thức chính yếu của chương trình được chứa đựng trong các học phần bắt buộc này. X 87",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 98,
+        "score": 0.8529473825410783,
+        "startOffset": 106650,
+        "endOffset": 107366,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 2,
+        "snippet": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi...",
+        "text": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn , trong khi    Gemini  được thiết kế  đa phương thức  (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả năng     phân tích và tạo nội dung trên nhiều dạng dữ liệu . Những  đột phá kỹ thuật  này không chỉ nâng cao hiệu suất tổng thể của mô hình  mà còn  mở đường cho các ứng dụng LLM sáng tạo  trong các lĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.) .  Bên cạnh khía cạnh kỹ thuật,  các nghiên cứu ứng dụng  cho thấy LLM có  tác động tích cực trong hoạt động thực tiễn .   Trong lĩnh vực giáo dục , việc tích hợp công cụ AI hỗ trợ giáo viên đã  mang lại hiệu quả rõ rệt   . Một khảo sát tạ",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "score": 0.8528903829655392,
+        "startOffset": 1300,
+        "endOffset": 2100,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 119,
+        "snippet": " ở đây đều được LangChain hỗ trợ một cách triệt để, dễ sử dụng và tiện lợi, giúp cho quá trình phát triển trí tuệ nhân tạo trả lời trên bộ soạn thảo t...",
+        "text": " ở đây đều được LangChain hỗ trợ một cách triệt để, dễ sử dụng và tiện lợi, giúp cho quá trình phát triển trí tuệ nhân tạo trả lời trên bộ soạn thảo trở nên dễ dàng hơn. Cụ thể, các thành phần của hệ thống được thể hiện như sau: from langchain import . . . from langchain_open import . . . from langchain_community . . .  import . . . import sys import json import os Khởi tạo mô hình và chỉnh sửa: • Chức năng: Khởi tạo một mô hình ngôn ngữ GPT-3.5 của OpenAI với cấu hình tùy chỉnh như nhiệt độ (temperature), số token tối đa (max tokens) và số lần thử lại khi có lỗi (max retries). Hàm tìm kiếm và tải tất cả các tệp PDF trong một thư mục, sau đó chuyển chúng thành dạng văn bản có thể xử lý được. 35",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 46,
+        "score": 0.8527035844889042,
+        "startOffset": 64226,
+        "endOffset": 64929,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 1,
+        "snippet": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa...",
+        "text": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đang được ứng dụng  rộng rãi trong các lĩnh vực  y tế, tài chính, giáo dục, dịch vụ khách hàng , giúp  cá nhân hóa phản hồi  và giải quyết những nhiệm vụ phân tích phức tạp . Động lực phát triển LLM  xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ chính xác cao . Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương pháp huấn luyện. Chẳng hạn, việc áp dụng  Mixture-of-Experts (MoE)  giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết,  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "score": 0.8515175642392112,
+        "startOffset": 650,
+        "endOffset": 1450,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 31,
+        "snippet": " sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài. Từ những vấn đề còn tồn tại trong hệ thống hành chính hiện tại, luận văn sẽ...",
+        "text": " sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài. Từ những vấn đề còn tồn tại trong hệ thống hành chính hiện tại, luận văn sẽ đi sâu vào việc ứng dụng công nghệ thông tin, đặc biệt là trí tuệ nhân tạo (AI) để giải quyết những khó khăn này. Mục tiêu, phạm vi, ý nghĩa khoa học và thực tiễn của việc xây dựng một hệ thống hỗ trợ hành chính tự động sẽ được trình bày rõ ràng. • Chương 1: Tổng quan , Chương này sẽ phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. Các nghiên cứu trong và ngoài nước sẽ được phân tích để làm rõ những thành tựu đã đạt được, những hạn chế còn tồn tại và xu hướng phát triển của lĩnh vực này. • Chương 2: Cơ sở lý thuyết , trình bày rõ mục tiêu nghi",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 15,
+        "score": 0.8512870921533903,
+        "startOffset": 17179,
+        "endOffset": 17979,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      },
+      {
+        "index": 50,
+        "snippet": "Chương 2. CƠ SỞ LÝ THUYẾT 1.  Large Language Model (LLM) 1.1.  LLM là gì? Large Language Model là một loại mô hình ngôn ngữ được đào tạo bằng cách sử ...",
+        "text": "Chương 2. CƠ SỞ LÝ THUYẾT 1.  Large Language Model (LLM) 1.1.  LLM là gì? Large Language Model là một loại mô hình ngôn ngữ được đào tạo bằng cách sử dụng các kỹ thuật học sâu trên tập dữ liệu văn bản khổng lồ. Các mô hình này có khả năng tạo văn bản tương tự như con người và thực hiện các tác vụ xử lý ngôn ngữ tự nhiên khác nhau. Một mô hình ngôn ngữ có thể có độ phức tạp khác nhau, từ các mô hình n-gram đơn giản đến các mô hình mạng mô phỏng hệ thần kinh của con người vô cùng phức tạp. Tuy nhiên, thuật ngữ \"Large Language Model\" thường dùng để chỉ các mô hình sử dụng kỹ thuật học sâu và có số lượng tham số lớn, có thể từ hàng tỷ đến hàng nghìn tỷ. Những mô hình này có thể phát hiện các quy luật phức tạp trong ngôn ngữ và tạo ra các văn bản y hệt con người. 1.2.  Ưu và Nhược điểm của mô h",
+        "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+        "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+        "page": 21,
+        "score": 0.8503967478989585,
+        "startOffset": 27497,
+        "endOffset": 28297,
+        "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+      }
+    ],
+    "chat": {
+      "id": "9bb2ae34-8606-48a2-872a-6b7dfde79e40",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Cho tôi biết kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
+        },
+        {
+          "role": "assistant",
+          "content": "Theo tài liệu, kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật là một ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên, được xây dựng dưới dạng một trang web. Hệ thống này sử dụng nhiều công nghệ và ngôn ngữ lập trình khác nhau như Python, PHP, JavaScript, đặc biệt là LangChain để kết nối và xây dựng ứng dụng. Backend sử dụng PHP và Python, với Flask để xây dựng chatbot, đồng thời sử dụng API của OpenAI (GPT-3.5) cho chức năng trả lời tự động. Hệ thống còn có các chức năng như tìm kiếm và tải các tệp PDF, chuyển đổi thành văn bản để xử lý, và giao diện chat cho sinh viên, giảng viên tương tác với AI [#89][#119][#146].\n\nVề so sánh với kiến trúc RAG (Retrieval-Augmented Generation), tài liệu không mô tả rõ ràng việc tích hợp một thành phần truy xuất dữ liệu (retriever) kết hợp với mô hình sinh (generator) như trong kiến trúc RAG chuẩn. Hệ thống chủ yếu sử dụng LangChain để hỗ trợ quá trình phát triển AI trả lời dựa trên các tài liệu đã được chuyển đổi thành văn bản, nhưng không đề cập đến việc sử dụng một pipeline truy xuất tài liệu động và kết hợp sinh câu trả lời như RAG. Do đó, có thể nhận định kiến trúc này là một phiên bản đơn giản hơn so với RAG, chủ yếu dựa vào khả năng của LLM (GPT-3.5) và các tài liệu đã được xử lý sẵn, chứ không phải là một hệ thống RAG hoàn chỉnh [#89][#119].",
+          "citation": [
+            {
+              "page": 34,
+              "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 2.  Đặc tả hệ thống Chức năng hệ thống: • Kiến trúc tổng thể: Ứng dụng học máy hỗ trợ thủ tục hành chính là một trang web ứng dụng nhiều công nghệ và ngôn ngữ lập trình khác nhau như Python, PHP, JavaScript đặc biệt là LangChain để kết nối hợp lại và xây dựng nên một ứng dụng học máy này một trang web hỗ trợ hành chính để giải đáp các thắc mắc về vấn đề liên quan về mặt hành chính như: Học phí, quá trình nhập học, các ngành mà trường nhận đào tạo cho tân sinh viên và cũng như những thông báo, quy định, nghị định cho giảng viên mới vào trường. • Backend: Sử dụng PHP và Python làm ngôn ngữ lập trình chính cho Backend và Flask để xây dựng nên chatbot. Bắt đầu từ việc sử dụng Python để gọi API từ OpenAI để chạy chức năng cho cha",
+              "index": 89,
+              "score": 0.8532875374939304,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 2.  Đặc tả hệ thống Chức năng hệ thống: • Kiến trúc tổng thể: Ứng dụng học máy hỗ tr...",
+              "endOffset": 49852,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 49052
+            },
+            {
+              "page": 63,
+              "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên Hình 4.17: Giao diện Chat của Sinh viên - Giảng Viên • Chức năng: Giao diện chat của Sinh viên - Giảng viên sẽ khá khác biệt với giao diện của Cán bộ vì Sinh viên - Giảng viên chỉ có thể xem lại Thông tin đã được thiết lập ở trang sinh viên và Chat với AI. • Khi nào dùng: Sinh viên - Giảng viên có thể sử dụng bất kỳ lúc nào khi có thắc mắc về trường và muốn tìm hiểu những học phần dành cho Sinh viên và với Giảng viên thì sẽ xem những công văn, quy định của trường khi mới tham gia vào trường để đào tạo. 52",
+              "index": 146,
+              "score": 0.8532452897204544,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên Hình 4.17: Giao diện Chat của Sinh viên - Giảng Viên • Chức năng: Giao diện chat của...",
+              "endOffset": 77885,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 77309
+            },
+            {
+              "page": 98,
+              "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 57 Hội đồng trường có bao nhiêu ban? 5 Ban. Hội đồng trường có 5 ban. X 58 Trường có trang web của trường không? Có. Trang web của trường là http://pdaotao.ctuet.edu.vn. X 59 Hãy cho tôi biết số điện thoại của trưởng phòng đào tạo? 0913185666. Số điện thoại của trưởng phòng đào tạo là 0913185666. X 60 Học phần bắt buộc là gì? Là học phần chứa đựng những nội dung kiến thức chính yếu của mỗi chương trình và bắt buộc sinh viên phải tích lũy. Học phần bắt buộc là những học phần mà sinh viên phải học và tích lũy theo yêu cầu của chương trình đào tạo. Nội dung kiến thức chính yếu của chương trình được chứa đựng trong các học phần bắt buộc này. X 87",
+              "index": 209,
+              "score": 0.8529473825410783,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 57 Hội đồng trường có bao nhiêu ban? 5 Ban. Hội đồng trường có 5 ban. X 58 Trường có...",
+              "endOffset": 107366,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 106650
+            },
+            {
+              "page": 1,
+              "text": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn , trong khi    Gemini  được thiết kế  đa phương thức  (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả năng     phân tích và tạo nội dung trên nhiều dạng dữ liệu . Những  đột phá kỹ thuật  này không chỉ nâng cao hiệu suất tổng thể của mô hình  mà còn  mở đường cho các ứng dụng LLM sáng tạo  trong các lĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.) .  Bên cạnh khía cạnh kỹ thuật,  các nghiên cứu ứng dụng  cho thấy LLM có  tác động tích cực trong hoạt động thực tiễn .   Trong lĩnh vực giáo dục , việc tích hợp công cụ AI hỗ trợ giáo viên đã  mang lại hiệu quả rõ rệt   . Một khảo sát tạ",
+              "index": 2,
+              "score": 0.8528903829655392,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi...",
+              "endOffset": 2100,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 1300
+            },
+            {
+              "page": 46,
+              "text": " ở đây đều được LangChain hỗ trợ một cách triệt để, dễ sử dụng và tiện lợi, giúp cho quá trình phát triển trí tuệ nhân tạo trả lời trên bộ soạn thảo trở nên dễ dàng hơn. Cụ thể, các thành phần của hệ thống được thể hiện như sau: from langchain import . . . from langchain_open import . . . from langchain_community . . .  import . . . import sys import json import os Khởi tạo mô hình và chỉnh sửa: • Chức năng: Khởi tạo một mô hình ngôn ngữ GPT-3.5 của OpenAI với cấu hình tùy chỉnh như nhiệt độ (temperature), số token tối đa (max tokens) và số lần thử lại khi có lỗi (max retries). Hàm tìm kiếm và tải tất cả các tệp PDF trong một thư mục, sau đó chuyển chúng thành dạng văn bản có thể xử lý được. 35",
+              "index": 119,
+              "score": 0.8527035844889042,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": " ở đây đều được LangChain hỗ trợ một cách triệt để, dễ sử dụng và tiện lợi, giúp cho quá trình phát triển trí tuệ nhân tạo trả lời trên bộ soạn thảo t...",
+              "endOffset": 64929,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 64226
+            },
+            {
+              "page": 1,
+              "text": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đang được ứng dụng  rộng rãi trong các lĩnh vực  y tế, tài chính, giáo dục, dịch vụ khách hàng , giúp  cá nhân hóa phản hồi  và giải quyết những nhiệm vụ phân tích phức tạp . Động lực phát triển LLM  xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ chính xác cao . Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương pháp huấn luyện. Chẳng hạn, việc áp dụng  Mixture-of-Experts (MoE)  giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết,  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi",
+              "index": 1,
+              "score": 0.8515175642392112,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa...",
+              "endOffset": 1450,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 650
+            },
+            {
+              "page": 15,
+              "text": " sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài. Từ những vấn đề còn tồn tại trong hệ thống hành chính hiện tại, luận văn sẽ đi sâu vào việc ứng dụng công nghệ thông tin, đặc biệt là trí tuệ nhân tạo (AI) để giải quyết những khó khăn này. Mục tiêu, phạm vi, ý nghĩa khoa học và thực tiễn của việc xây dựng một hệ thống hỗ trợ hành chính tự động sẽ được trình bày rõ ràng. • Chương 1: Tổng quan , Chương này sẽ phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. Các nghiên cứu trong và ngoài nước sẽ được phân tích để làm rõ những thành tựu đã đạt được, những hạn chế còn tồn tại và xu hướng phát triển của lĩnh vực này. • Chương 2: Cơ sở lý thuyết , trình bày rõ mục tiêu nghi",
+              "index": 31,
+              "score": 0.8512870921533903,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": " sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài. Từ những vấn đề còn tồn tại trong hệ thống hành chính hiện tại, luận văn sẽ...",
+              "endOffset": 17979,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 17179
+            },
+            {
+              "page": 21,
+              "text": "Chương 2. CƠ SỞ LÝ THUYẾT 1.  Large Language Model (LLM) 1.1.  LLM là gì? Large Language Model là một loại mô hình ngôn ngữ được đào tạo bằng cách sử dụng các kỹ thuật học sâu trên tập dữ liệu văn bản khổng lồ. Các mô hình này có khả năng tạo văn bản tương tự như con người và thực hiện các tác vụ xử lý ngôn ngữ tự nhiên khác nhau. Một mô hình ngôn ngữ có thể có độ phức tạp khác nhau, từ các mô hình n-gram đơn giản đến các mô hình mạng mô phỏng hệ thần kinh của con người vô cùng phức tạp. Tuy nhiên, thuật ngữ \"Large Language Model\" thường dùng để chỉ các mô hình sử dụng kỹ thuật học sâu và có số lượng tham số lớn, có thể từ hàng tỷ đến hàng nghìn tỷ. Những mô hình này có thể phát hiện các quy luật phức tạp trong ngôn ngữ và tạo ra các văn bản y hệt con người. 1.2.  Ưu và Nhược điểm của mô h",
+              "index": 50,
+              "score": 0.8503967478989585,
+              "fileId": "546cfb66-bf31-4fab-a4b9-2343b88b59c1",
+              "fileUrl": "uploads\\documents\\1766396663819-703794623.pdf",
+              "snippet": "Chương 2. CƠ SỞ LÝ THUYẾT 1.  Large Language Model (LLM) 1.1.  LLM là gì? Large Language Model là một loại mô hình ngôn ngữ được đào tạo bằng cách sử ...",
+              "endOffset": 28297,
+              "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+              "startOffset": 27497
+            }
+          ]
+        }
+      ],
+      "createdAt": "2025-12-22T09:48:56.608Z",
+      "updatedAt": "2025-12-22T09:49:06.171Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+    }
+  }
+}

@@ -1,0 +1,210 @@
+new_splitting_v1:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Theo tài liệu, nghiên cứu đã tập trung vào các mô hình ngôn ngữ lớn (LLM) hiện đại, tiêu biểu là ChatGPT của OpenAI và Gemini của Google. Đây là hai hệ thống đa năng nổi bật dựa trên nền tảng Transformer, được đánh giá là có khả năng vượt trội trong xử lý ngôn ngữ tự nhiên và tư duy đa dạng [#0][#13].\n\nCác điểm mạnh chính của những LLM này bao gồm:\n\n- Khả năng hiểu và sinh ngôn ngữ tự nhiên, cho phép máy tính không chỉ trả lời mà còn suy luận dựa trên ngôn ngữ.\n- Ứng dụng các kỹ thuật tiên tiến như học tăng cường từ phản hồi của con người (RLHF) để nâng cao tính mạch lạc trong hội thoại.\n- Kiến trúc đa phương thức, có thể xử lý đồng thời văn bản, hình ảnh, âm thanh, mở rộng phạm vi ứng dụng thực tiễn.\n- Tiềm năng ứng dụng rộng rãi trong nhiều lĩnh vực như giáo dục, y tế, tự động hóa nghiệp vụ [#0][#13].\n\nTuy nhiên, các nghiên cứu cũng chỉ ra rằng vẫn còn những thách thức như cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination và tối ưu hóa chi phí tính toán [#13].",
+    "citations": [
+      {
+        "index": 168,
+        "snippet": "việc nhóm và giao tiếp liên nhân của người học\n\nCách thức đánh giá\n\n55\nBài luận\n\nBài báo cáo\n\n16.6. Bài luận (Writen Assignments)\n\nMô tả phương pháp\n\n...",
+        "text": "việc nhóm và giao tiếp liên nhân của người học\n\nCách thức đánh giá\n\n55\nBài luận\n\nBài báo cáo\n\n16.6. Bài luận (Writen Assignments)\n\nMô tả phương pháp\n\nBài luận Ià một bài tóm Iược ngắn có tính thực tê cao, nhằm diễn tả, sàng Iọc, chứng\nminh hay phân tích một đề tài nào đó. Viết luận Ià một hình thức học dựa trên việc đọc\nvà nghiên cứu tài liệu. Viết luận có khả năng thê hiện được quá trình học và tư duy của\nngười học, từ đó kích thích nhu cầu học hỏi của người học\n\nCách thức thực hiện\n\nCung cấp cho người học danh sách các đề tài/vần đề đề người học Iựa chọn với\ncác yêu cầu cụ thể về bài luận\n\nHướng dẫn, cung cấp thông tin liên quan đên đê tài cho người học, vỉ dụ: nguồn\nthông tin tài liệu tham khảo, cách triển khai vấn đê, quy trình viết luận",
+        "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+        "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+        "page": 1,
+        "score": 0.84631662644843,
+        "startOffset": 96137,
+        "endOffset": 96890
+      },
+      {
+        "index": 33,
+        "snippet": "phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. C...",
+        "text": "phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. Các nghiên cứu trong và ngoài nước sẽ được phân tích để làm rõ những thành tựu đã đạt được, những hạn chế còn tồn tại và xu hướng phát triển của lĩnh vực này. • Chương 2: Cơ sở lý thuyết , trình bày rõ mục tiêu nghiên cứu, bao gồm việc xây dựng hệ thống hỗ trợ hành chính tự động, thiết kế giao diện người dùng, phát triển thuật toán xử lý ngôn ngữ tự nhiên và tích hợp với mô hình AI. Phạm vi nghiên cứu cũng được xác định rõ ràng, tập trung vào các thủ tục hành chính cụ thể, đối tượng áp dụng và thời gian nghiên cứu. • Chương 3: Phân tích thiết kế hệ thống , trình bày chi tiết về thiết kế của hệ thống hỗ trợ hành chính.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 15,
+        "score": 0.8347144982048567,
+        "startOffset": 17629,
+        "endOffset": 18404
+      },
+      {
+        "index": 37,
+        "snippet": "Chương 1. TỔNG QUAN 1.  Tài liệu nghiên cứu Trong đề tài này, việc lên ý tưởng cho một hệ thống có thể trả lời tự động đã được nhiều nghiên cứu khác n...",
+        "text": "Chương 1. TỔNG QUAN 1.  Tài liệu nghiên cứu Trong đề tài này, việc lên ý tưởng cho một hệ thống có thể trả lời tự động đã được nhiều nghiên cứu khác nhau phát triển. Việc tham khảo những nghiên cứu này là điều cần thiết để xây dựng nền tảng và định hình lý thuyết cho đồ án, từ đó tận dụng các ưu điểm và khắc phục những hạn chế còn tồn đọng. Ở chương này, nhóm sẽ nghiên cứu và liệt kê các dự án nghiên cứu liên quan cũng như trong nước và ngoài nước mà nhóm có thể sử dụng trong nghiên cứu của mình. 1.1.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 17,
+        "score": 0.8322982230541972,
+        "startOffset": 19442,
+        "endOffset": 19949
+      },
+      {
+        "index": 6,
+        "snippet": "tiễn . . . . . . . . . . . . . . . . . . . . . . . . . . .    4 3.3 Bố cục của đồ án tốt nghiệp . . . . . . . . . . . . . . . . . . . . .    4 Chương ...",
+        "text": "tiễn . . . . . . . . . . . . . . . . . . . . . . . . . . .    4 3.3 Bố cục của đồ án tốt nghiệp . . . . . . . . . . . . . . . . . . . . .    4 Chương 1.  TỔNG QUAN 6 1   Tài liệu nghiên cứu  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    6 1.1  Nghiên cứu trong nước . . . . . . . . . . . . . . . . . . . . . . . .    6 1.2  Nghiên cứu ngoài nước . . . . . . . . . . . . . . . . . . . . . . . .    6 2   Đối tượng và phương pháp nghiên cứu . . . . . . . . . . . . . . . . . . .    8 2.1  Đối tượng nghiên cứu . . . . . . . . . . . . . . . . . . . . . . . . .    8 2.2  Phương pháp nghiên cứu . . . . . . . . . . . . . . . . . . . . . . .    9 Chương 2.  CƠ SỞ LÝ THUYẾT 10 1   Large Language Model (LLM) . . . . . . . . . . . . . . . . . . . . . . .   10 1.1  LLM là gì?  . . . . . . .",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 6,
+        "score": 0.8146038843337193,
+        "startOffset": 2498,
+        "endOffset": 3298
+      },
+      {
+        "index": 0,
+        "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
+        "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
+        "fileId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+        "fileUrl": "uploads\\documents\\1766509585247-333190162.pdf",
+        "page": 1,
+        "score": 0.7498443037178695,
+        "startOffset": 0,
+        "endOffset": 769,
+        "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b"
+      },
+      {
+        "index": 97,
+        "snippet": "tính, năm được cấu trúc\ncơ bản của hệ điều hành, nguyên Iý Iàm việc\ncủa hệ điều hành và các tương tác giữa hệ\nđiều hành với người dùng.\n\n3TC\n\nQ0 LT.\n\n...",
+        "text": "tính, năm được cấu trúc\ncơ bản của hệ điều hành, nguyên Iý Iàm việc\ncủa hệ điều hành và các tương tác giữa hệ\nđiều hành với người dùng.\n\n3TC\n\nQ0 LT.\n\n30 TH)\n\n34\n\nPhương pháp\nnghiên cứu\ntrong công\nnghệ thông\ntin\n\nHọc phần này cung cấp cho sinh viên các kiến\nthức cơ bản về nghiên cứu khoa học trong\ncông nghệ thông tin (CNTT). Nội dung chính\ncủa học phần Ià cung cấp kiến thức giúp sinh\nviên nắm vững phương pháp nghiên cứu,\ntrình bày một cách có hệ thống các kết quả\nnghiên cứu vào tiểu luận, luận văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT",
+        "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+        "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+        "page": 1,
+        "score": 0.7192130707990888,
+        "startOffset": 55069,
+        "endOffset": 55718
+      },
+      {
+        "index": 13,
+        "snippet": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay....",
+        "text": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong tương lai. 12 11 •  11 •  12 •  12 •  13 14 15 16 1 7 17 2",
+        "fileId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+        "fileUrl": "uploads\\documents\\1766509585247-333190162.pdf",
+        "page": 2,
+        "score": 0.7062428998947131,
+        "startOffset": 7203,
+        "endOffset": 7931,
+        "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b"
+      },
+      {
+        "index": 31,
+        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Sử dụng các công nghệ mã nguồn mở LangChain, OpenAI để phân tích và thu thập dữ li...",
+        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Sử dụng các công nghệ mã nguồn mở LangChain, OpenAI để phân tích và thu thập dữ liệu từ thư mục PDF để tổng hợp cho chatbot học. 3.2.  Ý nghĩa thực tiễn • Tạo ra được một trợ lý ảo có thể phản hồi nhanh và chính xác đến 94%, có thể sử dụng đa ngôn ngữ. • Kết quả nghiên cứu giúp làm giảm chi phí, nguồn nhân lực chi tiêu vào bộ phận hỗ trợ hành chính. • Tạo ra được một giao diện thân thiện, nâng cao trải nghiệm người dùng. 3.3.  Bố cục của đồ án tốt nghiệp Ngoài mục lục, danh mục bảng, danh mục hình, tài liệu tham khảo. Nội dung luận văn bao gồm năm chương. Trong đó phần Mở đầu sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 15,
+        "score": 0.6674470581019623,
+        "startOffset": 16543,
+        "endOffset": 17268
+      }
+    ],
+    "chat": {
+      "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T05:04:19.340Z",
+      "updatedAt": "2025-12-25T05:04:23.696Z",
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "projectId": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Tài liệu nghiên cứu những llm nào và nó có điểm mạnh gì"
+        },
+        {
+          "role": "assistant",
+          "content": "Theo tài liệu, nghiên cứu đã tập trung vào các mô hình ngôn ngữ lớn (LLM) hiện đại, tiêu biểu là ChatGPT của OpenAI và Gemini của Google. Đây là hai hệ thống đa năng nổi bật dựa trên nền tảng Transformer, được đánh giá là có khả năng vượt trội trong xử lý ngôn ngữ tự nhiên và tư duy đa dạng [#0][#13].\n\nCác điểm mạnh chính của những LLM này bao gồm:\n\n- Khả năng hiểu và sinh ngôn ngữ tự nhiên, cho phép máy tính không chỉ trả lời mà còn suy luận dựa trên ngôn ngữ.\n- Ứng dụng các kỹ thuật tiên tiến như học tăng cường từ phản hồi của con người (RLHF) để nâng cao tính mạch lạc trong hội thoại.\n- Kiến trúc đa phương thức, có thể xử lý đồng thời văn bản, hình ảnh, âm thanh, mở rộng phạm vi ứng dụng thực tiễn.\n- Tiềm năng ứng dụng rộng rãi trong nhiều lĩnh vực như giáo dục, y tế, tự động hóa nghiệp vụ [#0][#13].\n\nTuy nhiên, các nghiên cứu cũng chỉ ra rằng vẫn còn những thách thức như cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination và tối ưu hóa chi phí tính toán [#13].",
+          "citation": [
+            {
+              "page": 1,
+              "text": "việc nhóm và giao tiếp liên nhân của người học\n\nCách thức đánh giá\n\n55\nBài luận\n\nBài báo cáo\n\n16.6. Bài luận (Writen Assignments)\n\nMô tả phương pháp\n\nBài luận Ià một bài tóm Iược ngắn có tính thực tê cao, nhằm diễn tả, sàng Iọc, chứng\nminh hay phân tích một đề tài nào đó. Viết luận Ià một hình thức học dựa trên việc đọc\nvà nghiên cứu tài liệu. Viết luận có khả năng thê hiện được quá trình học và tư duy của\nngười học, từ đó kích thích nhu cầu học hỏi của người học\n\nCách thức thực hiện\n\nCung cấp cho người học danh sách các đề tài/vần đề đề người học Iựa chọn với\ncác yêu cầu cụ thể về bài luận\n\nHướng dẫn, cung cấp thông tin liên quan đên đê tài cho người học, vỉ dụ: nguồn\nthông tin tài liệu tham khảo, cách triển khai vấn đê, quy trình viết luận",
+              "index": 168,
+              "score": 0.84631662644843,
+              "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+              "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+              "snippet": "việc nhóm và giao tiếp liên nhân của người học\n\nCách thức đánh giá\n\n55\nBài luận\n\nBài báo cáo\n\n16.6. Bài luận (Writen Assignments)\n\nMô tả phương pháp\n\n...",
+              "endOffset": 96890,
+              "startOffset": 96137
+            },
+            {
+              "page": 15,
+              "text": "phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. Các nghiên cứu trong và ngoài nước sẽ được phân tích để làm rõ những thành tựu đã đạt được, những hạn chế còn tồn tại và xu hướng phát triển của lĩnh vực này. • Chương 2: Cơ sở lý thuyết , trình bày rõ mục tiêu nghiên cứu, bao gồm việc xây dựng hệ thống hỗ trợ hành chính tự động, thiết kế giao diện người dùng, phát triển thuật toán xử lý ngôn ngữ tự nhiên và tích hợp với mô hình AI. Phạm vi nghiên cứu cũng được xác định rõ ràng, tập trung vào các thủ tục hành chính cụ thể, đối tượng áp dụng và thời gian nghiên cứu. • Chương 3: Phân tích thiết kế hệ thống , trình bày chi tiết về thiết kế của hệ thống hỗ trợ hành chính.",
+              "index": 33,
+              "score": 0.8347144982048567,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "phân tích các nghiên cứu, tài liệu liên quan đến ứng dụng AI trong lĩnh vực giáo dục, tự động hóa hành chính và các mô hình xử lý ngôn ngữ tự nhiên. C...",
+              "endOffset": 18404,
+              "startOffset": 17629
+            },
+            {
+              "page": 17,
+              "text": "Chương 1. TỔNG QUAN 1.  Tài liệu nghiên cứu Trong đề tài này, việc lên ý tưởng cho một hệ thống có thể trả lời tự động đã được nhiều nghiên cứu khác nhau phát triển. Việc tham khảo những nghiên cứu này là điều cần thiết để xây dựng nền tảng và định hình lý thuyết cho đồ án, từ đó tận dụng các ưu điểm và khắc phục những hạn chế còn tồn đọng. Ở chương này, nhóm sẽ nghiên cứu và liệt kê các dự án nghiên cứu liên quan cũng như trong nước và ngoài nước mà nhóm có thể sử dụng trong nghiên cứu của mình. 1.1.",
+              "index": 37,
+              "score": 0.8322982230541972,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "Chương 1. TỔNG QUAN 1.  Tài liệu nghiên cứu Trong đề tài này, việc lên ý tưởng cho một hệ thống có thể trả lời tự động đã được nhiều nghiên cứu khác n...",
+              "endOffset": 19949,
+              "startOffset": 19442
+            },
+            {
+              "page": 6,
+              "text": "tiễn . . . . . . . . . . . . . . . . . . . . . . . . . . .    4 3.3 Bố cục của đồ án tốt nghiệp . . . . . . . . . . . . . . . . . . . . .    4 Chương 1.  TỔNG QUAN 6 1   Tài liệu nghiên cứu  . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    6 1.1  Nghiên cứu trong nước . . . . . . . . . . . . . . . . . . . . . . . .    6 1.2  Nghiên cứu ngoài nước . . . . . . . . . . . . . . . . . . . . . . . .    6 2   Đối tượng và phương pháp nghiên cứu . . . . . . . . . . . . . . . . . . .    8 2.1  Đối tượng nghiên cứu . . . . . . . . . . . . . . . . . . . . . . . . .    8 2.2  Phương pháp nghiên cứu . . . . . . . . . . . . . . . . . . . . . . .    9 Chương 2.  CƠ SỞ LÝ THUYẾT 10 1   Large Language Model (LLM) . . . . . . . . . . . . . . . . . . . . . . .   10 1.1  LLM là gì?  . . . . . . .",
+              "index": 6,
+              "score": 0.8146038843337193,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "tiễn . . . . . . . . . . . . . . . . . . . . . . . . . . .    4 3.3 Bố cục của đồ án tốt nghiệp . . . . . . . . . . . . . . . . . . . . .    4 Chương ...",
+              "endOffset": 3298,
+              "startOffset": 2498
+            },
+            {
+              "page": 1,
+              "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
+              "index": 0,
+              "score": 0.7498443037178695,
+              "fileId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+              "fileUrl": "uploads\\documents\\1766509585247-333190162.pdf",
+              "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
+              "endOffset": 769,
+              "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+              "startOffset": 0
+            },
+            {
+              "page": 1,
+              "text": "tính, năm được cấu trúc\ncơ bản của hệ điều hành, nguyên Iý Iàm việc\ncủa hệ điều hành và các tương tác giữa hệ\nđiều hành với người dùng.\n\n3TC\n\nQ0 LT.\n\n30 TH)\n\n34\n\nPhương pháp\nnghiên cứu\ntrong công\nnghệ thông\ntin\n\nHọc phần này cung cấp cho sinh viên các kiến\nthức cơ bản về nghiên cứu khoa học trong\ncông nghệ thông tin (CNTT). Nội dung chính\ncủa học phần Ià cung cấp kiến thức giúp sinh\nviên nắm vững phương pháp nghiên cứu,\ntrình bày một cách có hệ thống các kết quả\nnghiên cứu vào tiểu luận, luận văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT",
+              "index": 97,
+              "score": 0.7192130707990888,
+              "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+              "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+              "snippet": "tính, năm được cấu trúc\ncơ bản của hệ điều hành, nguyên Iý Iàm việc\ncủa hệ điều hành và các tương tác giữa hệ\nđiều hành với người dùng.\n\n3TC\n\nQ0 LT.\n\n...",
+              "endOffset": 55718,
+              "startOffset": 55069
+            },
+            {
+              "page": 2,
+              "text": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong tương lai. 12 11 •  11 •  12 •  12 •  13 14 15 16 1 7 17 2",
+              "index": 13,
+              "score": 0.7062428998947131,
+              "fileId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+              "fileUrl": "uploads\\documents\\1766509585247-333190162.pdf",
+              "snippet": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay....",
+              "endOffset": 7931,
+              "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+              "startOffset": 7203
+            },
+            {
+              "page": 15,
+              "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Sử dụng các công nghệ mã nguồn mở LangChain, OpenAI để phân tích và thu thập dữ liệu từ thư mục PDF để tổng hợp cho chatbot học. 3.2.  Ý nghĩa thực tiễn • Tạo ra được một trợ lý ảo có thể phản hồi nhanh và chính xác đến 94%, có thể sử dụng đa ngôn ngữ. • Kết quả nghiên cứu giúp làm giảm chi phí, nguồn nhân lực chi tiêu vào bộ phận hỗ trợ hành chính. • Tạo ra được một giao diện thân thiện, nâng cao trải nghiệm người dùng. 3.3.  Bố cục của đồ án tốt nghiệp Ngoài mục lục, danh mục bảng, danh mục hình, tài liệu tham khảo. Nội dung luận văn bao gồm năm chương. Trong đó phần Mở đầu sẽ giới thiệu tổng quan về đề tài, bao gồm bối cảnh và lý do chọn đề tài.",
+              "index": 31,
+              "score": 0.6674470581019623,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Sử dụng các công nghệ mã nguồn mở LangChain, OpenAI để phân tích và thu thập dữ li...",
+              "endOffset": 17268,
+              "startOffset": 16543
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

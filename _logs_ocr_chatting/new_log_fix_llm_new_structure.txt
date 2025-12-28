@@ -1,0 +1,352 @@
+new_log_fix_llm:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Tài liệu nghiên cứu về các mô hình ngôn ngữ lớn (LLM) hiện đại, tập trung chủ yếu vào ChatGPT của OpenAI và Gemini của Google. Ngoài ra, tài liệu cũng đề cập đến GPT-3 (tiền thân của ChatGPT) và các thế hệ LLM mới dựa trên kiến trúc Transformer [#0][#4][#6][#9][#11].\n\nCác điểm mạnh nổi bật của các LLM này bao gồm:\n\n1. Khả năng xử lý ngôn ngữ tự nhiên vượt trội: LLM hiện đại có thể hiểu, sinh ngôn ngữ và suy luận dựa trên ngôn ngữ, mở rộng phạm vi ứng dụng trong thực tiễn như y tế, tài chính, giáo dục, dịch vụ khách hàng [#0][#1][#11].\n2. Ứng dụng kỹ thuật tiên tiến:\n   - ChatGPT sử dụng học tăng cường từ phản hồi của con người (RLHF) giúp mô hình hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn [#0][#2].\n   - Gemini được thiết kế đa phương thức, tích hợp xử lý văn bản, mã nguồn, hình ảnh, giúp mở rộng khả năng phân tích và tạo nội dung trên nhiều dạng dữ liệu [#2][#9].\n   - Việc áp dụng kiến trúc Mixture-of-Experts (MoE) giúp giảm chi phí tính toán và tăng hiệu suất cho các tác vụ chuyên biệt [#1][#9].\n3. Hiệu suất cao trên nhiều nhiệm vụ: Các LLM như GPT-3, ChatGPT, Gemini có thể thực hiện đa dạng nhiệm vụ NLP chỉ thông qua gợi ý ngữ cảnh, không cần tinh chỉnh riêng cho từng tác vụ [#4][#6].\n4. Khả năng học từ ít ví dụ (few-shot learning): Đặc biệt GPT-3 có thể thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa [#6].\n5. Hiệu quả trong thực tiễn: LLM đã chứng minh tác động tích cực trong các lĩnh vực như giáo dục (hỗ trợ giáo viên), y tế, tự động hóa nghiệp vụ, cá nhân hóa phản hồi và giải quyết các nhiệm vụ phân tích phức tạp [#1][#2][#11].\n6. Hiệu suất vượt trội của Gemini Ultra: Theo báo cáo của Google, Gemini Ultra vượt trội hơn các mô hình tương đương (Claude 2, GPT-4, Llama 2) trên nhiều thước đo tiêu chuẩn như GSM8K (toán học), HumanEval (lập trình), MMLU (hiểu biết đa lĩnh vực) [#9].\n\nTóm lại, tài liệu tập trung nghiên cứu các LLM như GPT-3, ChatGPT, Gemini và nhấn mạnh điểm mạnh về khả năng xử lý ngôn ngữ, đa nhiệm, hiệu suất cao, ứng dụng đa lĩnh vực và các kỹ thuật tiên tiến giúp tối ưu hóa hiệu quả và chi phí [#0][#1][#2][#4][#6][#9][#11].",
+    "citations": [
+      {
+        "index": 11,
+        "snippet": "g như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đ...",
+        "text": "g như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong ",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 2,
+        "chunkIndex": 11,
+        "score": 0.8206230747328352,
+        "startOffset": 7071,
+        "endOffset": 7871
+      },
+      {
+        "index": 0,
+        "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
+        "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "chunkIndex": 0,
+        "score": 0.7527439848933226,
+        "startOffset": 0,
+        "endOffset": 800
+      },
+      {
+        "index": 1,
+        "snippet": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa...",
+        "text": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đang được ứng dụng  rộng rãi trong các lĩnh vực  y tế, tài chính, giáo dục, dịch vụ khách hàng , giúp  cá nhân hóa phản hồi  và giải quyết những nhiệm vụ phân tích phức tạp . Động lực phát triển LLM  xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ chính xác cao . Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương pháp huấn luyện. Chẳng hạn, việc áp dụng  Mixture-of-Experts (MoE)  giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết,  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "chunkIndex": 1,
+        "score": 0.6491422912222812,
+        "startOffset": 650,
+        "endOffset": 1450
+      },
+      {
+        "index": 2,
+        "snippet": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi...",
+        "text": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn , trong khi    Gemini  được thiết kế  đa phương thức  (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả năng     phân tích và tạo nội dung trên nhiều dạng dữ liệu . Những  đột phá kỹ thuật  này không chỉ nâng cao hiệu suất tổng thể của mô hình  mà còn  mở đường cho các ứng dụng LLM sáng tạo  trong các lĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.) .  Bên cạnh khía cạnh kỹ thuật,  các nghiên cứu ứng dụng  cho thấy LLM có  tác động tích cực trong hoạt động thực tiễn .   Trong lĩnh vực giáo dục , việc tích hợp công cụ AI hỗ trợ giáo viên đã  mang lại hiệu quả rõ rệt   . Một khảo sát tạ",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "chunkIndex": 2,
+        "score": 0.6432812166213977,
+        "startOffset": 1300,
+        "endOffset": 2100
+      },
+      {
+        "index": 4,
+        "snippet": "i gian  và  nâng cao hiệu suất  trong môi trường làm việc thực tế. Về mặt kiến trúc và hiệu năng ,   các mô hình LLM thế hệ mới đều dựa trên kiến trúc...",
+        "text": "i gian  và  nâng cao hiệu suất  trong môi trường làm việc thực tế. Về mặt kiến trúc và hiệu năng ,   các mô hình LLM thế hệ mới đều dựa trên kiến trúc Transformer  do Google giới thiệu năm 2017 . Kiến trúc này cho phép mô hình học được mối quan hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng c",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 1,
+        "chunkIndex": 4,
+        "score": 0.5765994937241221,
+        "startOffset": 2600,
+        "endOffset": 3400
+      },
+      {
+        "index": 6,
+        "snippet": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên c...",
+        "text": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 2,
+        "chunkIndex": 6,
+        "score": 0.57197188365627,
+        "startOffset": 3821,
+        "endOffset": 4621
+      },
+      {
+        "index": 8,
+        "snippet": "iếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn chính xác tương đương mô hình dịch thuật được huấn luyện bài bản . Hạn chế:  Mặc dù rất mạnh mẽ,...",
+        "text": "iếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn chính xác tương đương mô hình dịch thuật được huấn luyện bài bản . Hạn chế:  Mặc dù rất mạnh mẽ, GPT-3  vẫn bộc lộ một số hạn chế . Mô hình có thể  sinh ra nội dung sai lệch hoặc không phù hợp  – ví dụ đôi khi tạo văn bản nghe có vẻ hợp lý nhưng  thực chất thiếu chính xác về mặt dữ kiện hoặc mang định kiến . Điều này bắt nguồn từ việc mô hình  chưa thực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ  mà chỉ dự đoán theo thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình ",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 2,
+        "chunkIndex": 8,
+        "score": 0.5618400105524042,
+        "startOffset": 5121,
+        "endOffset": 5921
+      },
+      {
+        "index": 9,
+        "snippet": "iến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình ...",
+        "text": "iến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng . Theo báo cáo của Google,  Gemini Ultra (phiên bản mạnh nhất của Gemini)  đã    vượt trội hơn các mô hình tương đương  trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra  đạt kết quả cao hơn so với Claude 2, GPT-4 (ChatGPT) và Llama 2  trong các bài kiểm tra  GSM8K (đánh giá khả năng toán học) ,  HumanEval (đánh giá sinh mã lập trình)  và    MMLU (đánh giá hiểu bi",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 2,
+        "chunkIndex": 9,
+        "score": 0.4263566522727429,
+        "startOffset": 5771,
+        "endOffset": 6571
+      }
+    ],
+    "relateDocs": [
+      [
+        {
+          "pageContent": "g như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong ",
+          "metadata": {
+            "page": 2,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 7871,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 11,
+            "startOffset": 7071
+          }
+        },
+        0.8206230747328352
+      ],
+      [
+        {
+          "pageContent": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa",
+          "metadata": {
+            "page": 1,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 800,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 0,
+            "startOffset": 0
+          }
+        },
+        0.7527439848933226
+      ],
+      [
+        {
+          "pageContent": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đang được ứng dụng  rộng rãi trong các lĩnh vực  y tế, tài chính, giáo dục, dịch vụ khách hàng , giúp  cá nhân hóa phản hồi  và giải quyết những nhiệm vụ phân tích phức tạp . Động lực phát triển LLM  xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ chính xác cao . Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương pháp huấn luyện. Chẳng hạn, việc áp dụng  Mixture-of-Experts (MoE)  giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết,  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi",
+          "metadata": {
+            "page": 1,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 1450,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 1,
+            "startOffset": 650
+          }
+        },
+        0.6491422912222812
+      ],
+      [
+        {
+          "pageContent": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn , trong khi    Gemini  được thiết kế  đa phương thức  (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả năng     phân tích và tạo nội dung trên nhiều dạng dữ liệu . Những  đột phá kỹ thuật  này không chỉ nâng cao hiệu suất tổng thể của mô hình  mà còn  mở đường cho các ứng dụng LLM sáng tạo  trong các lĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.) .  Bên cạnh khía cạnh kỹ thuật,  các nghiên cứu ứng dụng  cho thấy LLM có  tác động tích cực trong hoạt động thực tiễn .   Trong lĩnh vực giáo dục , việc tích hợp công cụ AI hỗ trợ giáo viên đã  mang lại hiệu quả rõ rệt   . Một khảo sát tạ",
+          "metadata": {
+            "page": 1,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 2100,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 2,
+            "startOffset": 1300
+          }
+        },
+        0.6432812166213977
+      ],
+      [
+        {
+          "pageContent": "i gian  và  nâng cao hiệu suất  trong môi trường làm việc thực tế. Về mặt kiến trúc và hiệu năng ,   các mô hình LLM thế hệ mới đều dựa trên kiến trúc Transformer  do Google giới thiệu năm 2017 . Kiến trúc này cho phép mô hình học được mối quan hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng c",
+          "metadata": {
+            "page": 1,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 3400,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 4,
+            "startOffset": 2600
+          }
+        },
+        0.5765994937241221
+      ],
+      [
+        {
+          "pageContent": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+          "metadata": {
+            "page": 2,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 4621,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 6,
+            "startOffset": 3821
+          }
+        },
+        0.57197188365627
+      ],
+      [
+        {
+          "pageContent": "iếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn chính xác tương đương mô hình dịch thuật được huấn luyện bài bản . Hạn chế:  Mặc dù rất mạnh mẽ, GPT-3  vẫn bộc lộ một số hạn chế . Mô hình có thể  sinh ra nội dung sai lệch hoặc không phù hợp  – ví dụ đôi khi tạo văn bản nghe có vẻ hợp lý nhưng  thực chất thiếu chính xác về mặt dữ kiện hoặc mang định kiến . Điều này bắt nguồn từ việc mô hình  chưa thực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ  mà chỉ dự đoán theo thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình ",
+          "metadata": {
+            "page": 2,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 5921,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 8,
+            "startOffset": 5121
+          }
+        },
+        0.5618400105524042
+      ],
+      [
+        {
+          "pageContent": "iến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng . Theo báo cáo của Google,  Gemini Ultra (phiên bản mạnh nhất của Gemini)  đã    vượt trội hơn các mô hình tương đương  trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra  đạt kết quả cao hơn so với Claude 2, GPT-4 (ChatGPT) và Llama 2  trong các bài kiểm tra  GSM8K (đánh giá khả năng toán học) ,  HumanEval (đánh giá sinh mã lập trình)  và    MMLU (đánh giá hiểu bi",
+          "metadata": {
+            "page": 2,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 6571,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 9,
+            "startOffset": 5771
+          }
+        },
+        0.4263566522727429
+      ]
+    ],
+    "chat": {
+      "id": "19a81201-1482-4265-9a9d-93a7c087374b",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Tài liệu nghiên cứu những llm nào và nó có điểm mạnh gì"
+        },
+        {
+          "role": "assistant",
+          "content": "Tài liệu nghiên cứu về các mô hình ngôn ngữ lớn (LLM) hiện đại, tập trung chủ yếu vào ChatGPT của OpenAI và Gemini của Google. Ngoài ra, tài liệu cũng đề cập đến GPT-3 (tiền thân của ChatGPT) và các thế hệ LLM mới dựa trên kiến trúc Transformer [#0][#4][#6][#9][#11].\n\nCác điểm mạnh nổi bật của các LLM này bao gồm:\n\n1. Khả năng xử lý ngôn ngữ tự nhiên vượt trội: LLM hiện đại có thể hiểu, sinh ngôn ngữ và suy luận dựa trên ngôn ngữ, mở rộng phạm vi ứng dụng trong thực tiễn như y tế, tài chính, giáo dục, dịch vụ khách hàng [#0][#1][#11].\n2. Ứng dụng kỹ thuật tiên tiến:\n   - ChatGPT sử dụng học tăng cường từ phản hồi của con người (RLHF) giúp mô hình hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn [#0][#2].\n   - Gemini được thiết kế đa phương thức, tích hợp xử lý văn bản, mã nguồn, hình ảnh, giúp mở rộng khả năng phân tích và tạo nội dung trên nhiều dạng dữ liệu [#2][#9].\n   - Việc áp dụng kiến trúc Mixture-of-Experts (MoE) giúp giảm chi phí tính toán và tăng hiệu suất cho các tác vụ chuyên biệt [#1][#9].\n3. Hiệu suất cao trên nhiều nhiệm vụ: Các LLM như GPT-3, ChatGPT, Gemini có thể thực hiện đa dạng nhiệm vụ NLP chỉ thông qua gợi ý ngữ cảnh, không cần tinh chỉnh riêng cho từng tác vụ [#4][#6].\n4. Khả năng học từ ít ví dụ (few-shot learning): Đặc biệt GPT-3 có thể thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa [#6].\n5. Hiệu quả trong thực tiễn: LLM đã chứng minh tác động tích cực trong các lĩnh vực như giáo dục (hỗ trợ giáo viên), y tế, tự động hóa nghiệp vụ, cá nhân hóa phản hồi và giải quyết các nhiệm vụ phân tích phức tạp [#1][#2][#11].\n6. Hiệu suất vượt trội của Gemini Ultra: Theo báo cáo của Google, Gemini Ultra vượt trội hơn các mô hình tương đương (Claude 2, GPT-4, Llama 2) trên nhiều thước đo tiêu chuẩn như GSM8K (toán học), HumanEval (lập trình), MMLU (hiểu biết đa lĩnh vực) [#9].\n\nTóm lại, tài liệu tập trung nghiên cứu các LLM như GPT-3, ChatGPT, Gemini và nhấn mạnh điểm mạnh về khả năng xử lý ngôn ngữ, đa nhiệm, hiệu suất cao, ứng dụng đa lĩnh vực và các kỹ thuật tiên tiến giúp tối ưu hóa hiệu quả và chi phí [#0][#1][#2][#4][#6][#9][#11].",
+          "citation": [
+            {
+              "page": 2,
+              "text": "g như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong ",
+              "index": 11,
+              "score": 0.8206230747328352,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "g như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đ...",
+              "endOffset": 7871,
+              "chunkIndex": 11,
+              "startOffset": 7071
+            },
+            {
+              "page": 1,
+              "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa",
+              "index": 0,
+              "score": 0.7527439848933226,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
+              "endOffset": 800,
+              "chunkIndex": 0,
+              "startOffset": 0
+            },
+            {
+              "page": 1,
+              "text": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đang được ứng dụng  rộng rãi trong các lĩnh vực  y tế, tài chính, giáo dục, dịch vụ khách hàng , giúp  cá nhân hóa phản hồi  và giải quyết những nhiệm vụ phân tích phức tạp . Động lực phát triển LLM  xuất phát từ nhu cầu giải quyết các bài toán thực tế ngày càng phức tạp với độ chính xác cao . Để đáp ứng điều đó, các nghiên cứu đã liên tục cải tiến kiến trúc mô hình và phương pháp huấn luyện. Chẳng hạn, việc áp dụng  Mixture-of-Experts (MoE)  giúp mô hình chỉ kích hoạt các cụm chuyên gia cần thiết,  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi",
+              "index": 1,
+              "score": 0.6491422912222812,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "ơng thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn . Ngày nay, các công nghệ này  đa...",
+              "endOffset": 1450,
+              "chunkIndex": 1,
+              "startOffset": 650
+            },
+            {
+              "page": 1,
+              "text": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi tự nhiên, trôi chảy hơn , trong khi    Gemini  được thiết kế  đa phương thức  (tích hợp xử lý văn bản, mã nguồn, hình ảnh) nhằm mở rộng khả năng     phân tích và tạo nội dung trên nhiều dạng dữ liệu . Những  đột phá kỹ thuật  này không chỉ nâng cao hiệu suất tổng thể của mô hình  mà còn  mở đường cho các ứng dụng LLM sáng tạo  trong các lĩnh vực chuyên sâu (ví dụ trợ lý bác sĩ, chuyên gia pháp lý ảo, v.v.) .  Bên cạnh khía cạnh kỹ thuật,  các nghiên cứu ứng dụng  cho thấy LLM có  tác động tích cực trong hoạt động thực tiễn .   Trong lĩnh vực giáo dục , việc tích hợp công cụ AI hỗ trợ giáo viên đã  mang lại hiệu quả rõ rệt   . Một khảo sát tạ",
+              "index": 2,
+              "score": 0.6432812166213977,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": ",  giảm chi phí tính toán và tăng hiệu suất  cho những tác vụ chuyên biệt . Song song,     RLHF trong ChatGPT  giúp mô hình  hiểu ngữ cảnh và phản hồi...",
+              "endOffset": 2100,
+              "chunkIndex": 2,
+              "startOffset": 1300
+            },
+            {
+              "page": 1,
+              "text": "i gian  và  nâng cao hiệu suất  trong môi trường làm việc thực tế. Về mặt kiến trúc và hiệu năng ,   các mô hình LLM thế hệ mới đều dựa trên kiến trúc Transformer  do Google giới thiệu năm 2017 . Kiến trúc này cho phép mô hình học được mối quan hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng c",
+              "index": 4,
+              "score": 0.5765994937241221,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "i gian  và  nâng cao hiệu suất  trong môi trường làm việc thực tế. Về mặt kiến trúc và hiệu năng ,   các mô hình LLM thế hệ mới đều dựa trên kiến trúc...",
+              "endOffset": 3400,
+              "chunkIndex": 4,
+              "startOffset": 2600
+            },
+            {
+              "page": 2,
+              "text": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+              "index": 6,
+              "score": 0.57197188365627,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên c...",
+              "endOffset": 4621,
+              "chunkIndex": 6,
+              "startOffset": 3821
+            },
+            {
+              "page": 2,
+              "text": "iếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn chính xác tương đương mô hình dịch thuật được huấn luyện bài bản . Hạn chế:  Mặc dù rất mạnh mẽ, GPT-3  vẫn bộc lộ một số hạn chế . Mô hình có thể  sinh ra nội dung sai lệch hoặc không phù hợp  – ví dụ đôi khi tạo văn bản nghe có vẻ hợp lý nhưng  thực chất thiếu chính xác về mặt dữ kiện hoặc mang định kiến . Điều này bắt nguồn từ việc mô hình  chưa thực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ  mà chỉ dự đoán theo thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình ",
+              "index": 8,
+              "score": 0.5618400105524042,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "iếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn chính xác tương đương mô hình dịch thuật được huấn luyện bài bản . Hạn chế:  Mặc dù rất mạnh mẽ,...",
+              "endOffset": 5921,
+              "chunkIndex": 8,
+              "startOffset": 5121
+            },
+            {
+              "page": 2,
+              "text": "iến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng . Theo báo cáo của Google,  Gemini Ultra (phiên bản mạnh nhất của Gemini)  đã    vượt trội hơn các mô hình tương đương  trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra  đạt kết quả cao hơn so với Claude 2, GPT-4 (ChatGPT) và Llama 2  trong các bài kiểm tra  GSM8K (đánh giá khả năng toán học) ,  HumanEval (đánh giá sinh mã lập trình)  và    MMLU (đánh giá hiểu bi",
+              "index": 9,
+              "score": 0.4263566522727429,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "iến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình ...",
+              "endOffset": 6571,
+              "chunkIndex": 9,
+              "startOffset": 5771
+            }
+          ]
+        }
+      ],
+      "createdAt": "2025-12-19T15:49:37.928Z",
+      "updatedAt": "2025-12-19T15:49:55.838Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+    }
+  }
+}
