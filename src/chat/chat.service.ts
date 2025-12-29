@@ -41,15 +41,16 @@ type BaseMessage =
   | {
       answer: string | (ContentBlock | ContentBlock.Text)[];
       citations: CitationType[];
-      chat: {
-        id: string;
-        userId: string;
-        title: string;
-        messages: JsonValue[];
-        createdAt: Date;
-        updatedAt: Date;
-        projectId: string | null;
-      };
+      // chat: {
+      //   id: string;
+      //   userId: string;
+      //   title: string;
+      //   messages: JsonValue[];
+      //   createdAt: Date;
+      //   updatedAt: Date;
+      //   projectId: string | null;
+      // };
+      chatId: string;
     };
 
 // 1. Grouping: Gom các chunk về theo từng File
@@ -313,16 +314,20 @@ export class ChatService {
         citation: citations,
       },
     ];
-
-    const chat = await this.prisma.chats.update({
-      where: { id: chatId },
-      data: { messages: updatedMessages },
-    });
+    // Update async
+    this.prisma.chats
+      .update({
+        where: { id: chatId },
+        data: { messages: updatedMessages },
+      })
+      .catch((err) => {
+        console.error('Error updating chat messages:', err);
+      });
 
     return {
       answer: aiAnswer,
       citations,
-      chat,
+      chatId: chatId,
     };
   }
 
