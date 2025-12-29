@@ -1,11 +1,17 @@
-import { ConsoleLogger, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PGVectorStore } from '@langchain/community/vectorstores/pgvector';
 import { OpenaiService } from '../../llm/openai/openai.service';
 import { getPgConfig } from '../../config/pg.config';
-
+import { Pool, PoolClient } from 'pg';
 @Injectable()
-export class PgvectorService implements OnModuleInit {
+export class PgvectorService implements OnModuleInit, OnModuleDestroy {
   private vectorStore: PGVectorStore | null = null;
+  private pool: Pool | null = null;
 
   constructor(
     private readonly openaiService: OpenaiService,
@@ -18,7 +24,20 @@ export class PgvectorService implements OnModuleInit {
     // Khuyến nghị: Chỉ chạy dòng này 1 lần khi deploy hoặc migration,
     // nhưng để ở đây cũng được nếu bảng chưa có index nó sẽ tạo.
     // Nếu index đã tồn tại, nó có thể báo lỗi, ta nên dùng try/catch
-    await this.ensureHnswIndex();
+    try {
+      await this.ensureHnswIndex();
+    } catch (e) {
+      this.logger.error(
+        '⚠️ Warning: HNSW Index check failed (non-fatal)',
+        e.message,
+      );
+    }
+  }
+
+  async onModuleDestroy() {
+    if (this.pool) {
+      await this.pool.end();
+    }
   }
 
   async initVectorStore() {
@@ -30,9 +49,26 @@ export class PgvectorService implements OnModuleInit {
     // IMPORTANT: Call getPgConfig() at runtime to ensure env vars are loaded
     const config = getPgConfig();
 
+    // Initialize PG connection pool
+    this.pool = new Pool(config.postgresConnectionOptions);
+
+    // 2. BẮT BUỘC: Lắng nghe sự kiện error trên pool
+    // Nếu không có dòng này, khi Neon ngắt kết nối, App sẽ Crash ngay lập tức
+    this.pool.on('error', (err) => {
+      this.logger.error('❌ PG Pool Error (Idle client):', err.message);
+      // Không throw error, chỉ log để app tiếp tục chạy và tự reconnect
+    });
+
+    this.pool.on('connect', (client: PoolClient) => {
+      client.on('error', (err) => {
+        this.logger.error('❌ PG Client Error:', err.message);
+      });
+    });
+
+    // Pass the pool to vector store config
     this.vectorStore = await PGVectorStore.initialize(
       this.openaiService.getEmbeddings(),
-      config,
+      { ...config, pool: this.pool },
     );
 
     this.logger.log('✅ Connected to PGVector successfully!');

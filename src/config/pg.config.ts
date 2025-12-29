@@ -10,7 +10,8 @@ import { PoolConfig } from 'pg';
 
 // Get database configuration based on DATABASE_URL or individual params
 const getDatabaseConfig = (): PoolConfig => {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl =
+    process.env.DATABASE_DIRECT_URL || process.env.DATABASE_URL;
 
   // If DATABASE_URL exists, use it directly - pg Pool handles parsing
   if (databaseUrl) {
