@@ -1,0 +1,536 @@
+[
+    [
+        {
+            "statusCode": 201,
+            "success": true,
+            "data": {
+                "answer": "Entropy là một khái niệm quan trọng trong lĩnh vực học máy (machine learning), đặc biệt khi xây dựng cây quyết định (decision tree). Entropy dùng để đo lường mức độ hỗn loạn hoặc độ không chắc chắn của một tập dữ liệu. Khi chọn một thuộc tính (feature) để chia dữ liệu, entropy giúp đánh giá mức độ \"sạch\" của các tập con sau khi chia.\n\nCụ thể, trong bài toán phân loại nhị phân (binary classification), khi một thuộc tính được chọn để chia, tập dữ liệu sẽ được tách thành hai nhánh (con trái và con phải). Mỗi nhánh này sẽ có một giá trị entropy riêng, phản ánh mức độ hỗn loạn của nhánh đó. Sau đó, tính trung bình có trọng số của entropy các nhánh con, gọi là entropy trung bình theo từng thuộc tính để chia. Mục tiêu là chọn thuộc tính sao cho entropy trung bình này là nhỏ nhất, tức là các nhánh con càng \"sạch\" càng tốt (ít hỗn loạn, các phần tử cùng lớp càng nhiều) [#23].\n\nTóm lại, entropy là thước đo mức độ hỗn loạn hoặc không chắc chắn của dữ liệu, được sử dụng để đánh giá hiệu quả của việc chia dữ liệu trong các thuật toán như cây quyết định.",
+                "citations": [
+                    {
+                        "index": 67,
+                        "snippet": "củn hít sốt bà các tít k tiếp\nBiucharest(4190,419,Pisshi) Bissi (317/08415, Rimnicl) \nRimmicpl220193,413,5i0) Sibii (14,253,393, An) Am ())306,36,-)\n\n...",
+                        "text": "củn hít sốt bà các tít k tiếp\nBiucharest(4190,419,Pisshi) Bissi (317/08415, Rimnicl) \nRimmicpl220193,413,5i0) Sibii (14,253,393, An) Am ())306,36,-)\n\nLm ít: Các rụng hi trong cl9sei Iì Irpng thái đĩ xét quí, ng nhiên không phải li\n0i các Irgig thất Iroiie dbsei đồi góp phần trong dường Iời gi (VÌ dụ đỉnh Eugnrb\nIrons bùi Iấn này không thuật đường đi Iời ghi\n\n14\nt0 đội (Hill chimbing)\n\nÝ tưởng: Tìm kiệm trạng thái đích bảng cách hướng Iới trạng thái\ntốt hơn trạng thái hiện tại (Leo Iên định của một ngọn đồi)\n\nĐặc điểm của gi thuật leo đôi:\n9. Trạng thất con Iối nhất sẽ được chọn cho bước hp theo\no Không hru si h t kì thông in bồ cắt tr! chí bà nh Bi,\n\n9 Qui trình! hi hi sỹ đing Iụi khi sĩp rạng thíi định hoặc Irịng\nkhít kế hấp xấu hơn trạng lhíi Iửng xố Iần lang \" ng MP",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.28469498457342457,
+                        "startOffset": 38095,
+                        "endOffset": 38874,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 13,
+                        "snippet": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay....",
+                        "text": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong tương lai. 12 11 •  11 •  12 •  12 •  13 14 15 16 1 7 17 2",
+                        "fileId": "ba84adb6-9e4e-4147-ab0e-d99b3dad7d2f",
+                        "fileUrl": "uploads\\documents\\1766910534643-528341960.pdf",
+                        "page": 2,
+                        "score": 0.2837375666968403,
+                        "startOffset": 7203,
+                        "endOffset": 7930,
+                        "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02"
+                    },
+                    {
+                        "index": 13,
+                        "snippet": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay....",
+                        "text": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong tương lai. 12 11 •  11 •  12 •  12 •  13 14 15 16 1 7 17 2",
+                        "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
+                        "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
+                        "page": 2,
+                        "score": 0.28372128017417886,
+                        "startOffset": 7203,
+                        "endOffset": 7930,
+                        "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02"
+                    },
+                    {
+                        "index": 13,
+                        "snippet": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay....",
+                        "text": "nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay. Những kết quả đạt được cho thấy  sự vượt trội của mô hình ngôn ngữ lớn  trong việc  xử lý ngôn ngữ tự nhiên và tư duy đa dạng , đồng thời nhấn mạnh  tiềm năng ứng dụng rộng rãi  của chúng vào thực tiễn (từ giáo dục, y tế đến tự động hóa nghiệp vụ). Song song, giới nghiên cứu cũng lưu ý về  những thách thức còn tồn tại  – từ việc cải thiện hiểu biết ngữ nghĩa, giảm thiểu sai lệch/hallucination  cho đến  tối ưu hóa chi phí tính toán  – nhằm tiếp tục hoàn thiện và  phát huy tối đa lợi ích của các mô hình LLM  trong tương lai. 12 11 •  11 •  12 •  12 •  13 14 15 16 1 7 17 2",
+                        "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
+                        "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
+                        "page": 2,
+                        "score": 0.2837169618179223,
+                        "startOffset": 7203,
+                        "endOffset": 7930,
+                        "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02"
+                    },
+                    {
+                        "index": 71,
+                        "snippet": "chỉ có thê được cải thiện trong một phạm vi\ngiới hạn nào đó\nLời giả tìm được không tôi vu hoặc không tìm được Iời giải mặc\ndù có tôn tại Iời giải d\n\n8...",
+                        "text": "chỉ có thê được cải thiện trong một phạm vi\ngiới hạn nào đó\nLời giả tìm được không tôi vu hoặc không tìm được Iời giải mặc\ndù có tôn tại Iời giải d\n\n8 0ó khuynh hướng sa Iây ở cực đại cục hộ\n\n8 (a0 nguyên\n\n8 Chóm chỉ với một phép toán, không cho ra lrang thái\n\" Jôt hơn \", nhưng với một vài phép toán có thế chuyên\nđền trạng thái \" Iôt hơn \"\n\n0ực trị đa phương\nLeo đội (Hil dimbing)\n\ns Một vài giải pháp xử Iý các vấn đề này\nQuay lui \" một vài bước \" trước đó và thử đi theo mội\nhướng khác. Dê thực thị chiên Iược này, duy trì một danh\nsách các bước đã trải qua, Giải pháp này đặc biệt phù\nhợp đê xử Iý tình huông \" Local 0pfima \"\nTạo ra một \" bước nhảy đột phá \" theo một hướng\nđệ chuyên sang một \" vùng \" mới trong không gian tìm\nkiêm, Phù hợp đê xử Iý tình huông \" Plaleau",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.2825086621202796,
+                        "startOffset": 40608,
+                        "endOffset": 41383,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 0,
+                        "snippet": "KH0A CNTT TRUYỀN THÔNG\nBM KH0A HỌC MÍY TÍNH\n\nNHẬP MÔN TRÍ TUỆ NHÂN TẠO\n\nCHƯƠNG 4. CÁC PHƯƠNG PHÁP HỌC TỪ DỮ LIỆU\n\n(Machine Learning\n\n (iún viên giáng ...",
+                        "text": "KH0A CNTT TRUYỀN THÔNG\nBM KH0A HỌC MÍY TÍNH\n\nNHẬP MÔN TRÍ TUỆ NHÂN TẠO\n\nCHƯƠNG 4. CÁC PHƯƠNG PHÁP HỌC TỪ DỮ LIỆU\n\n(Machine Learning\n\n (iún viên giáng dịp\n1S, TRÁN NGUYÊN MINH THƯ\n\nInmthu(Ocit.chLedi.vn\nMáy học la gì?\n\nHJMAS LEANN FR0M MA0HNES FHLLDM IETRULTUE\nPIST EIPEREIE 0ANBEHMA\nMáy học la gì?\n\nah\nLeamffomexpeleneeir Leafn ron ewpeWenee Follow instructions\n\n \n \nLu \n \n\n Á\nMáy học la gì?\n\n(hương trình truyền thống\n\nDala\n0utput\n\nNguyên Iý máy học\n\n21965 (omputer Model\n(Experience)\nMáy nọc Ià gi?\n\nMáy học I chương trình máy tính cho phép học tự động tử\ndữ liệu đề nhận dạng các mâu phúc tạp, tạo ra hành vi Ứng\nXử thông minh với trường hợp mới đên T. Mitchel, 1997 \n\nT.Mitchell: machine Learning: improving performante via",
+                        "fileId": "80786920-bcf4-4dbe-b5af-629a1005ac7a",
+                        "fileUrl": "uploads\\documents\\1766903551430-157464816.pdf",
+                        "page": 1,
+                        "score": 0.2815216432965278,
+                        "startOffset": 0,
+                        "endOffset": 727,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 22,
+                        "snippet": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n...",
+                        "text": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n Câu hỏi mở: Iàm thế nào đề kết hợp với học máy?\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nLogic\nMotivation: virtual assistant\nTell inlormation Âsk questlons\nIE :2 4E z1\n\nUse natural languagel\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\n984/ch problems\n\nMakoydecslonrocesesi Conslraint satisdaction problems\n\nAdversarial games Bayesian neluorls\nReflex 9tates Variables Logic\nnu\nLạt-leedl intellgene \"High-leel inteligene \n\nMachine learming\n\nTypes of models that we can use to represenlt real-world tasks",
+                        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
+                        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
+                        "page": 1,
+                        "score": 0.27869481984032296,
+                        "startOffset": 13200,
+                        "endOffset": 13893,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 23,
+                        "snippet": "Vấn đề của entropy Khi chọn feature để chia, nếu dạng binary classification như ví dụ trên, sẽ tạo 2 con trái và con phải Mỗi nút con tính một giá trị...",
+                        "text": "Vấn đề của entropy Khi chọn feature để chia, nếu dạng binary classification như ví dụ trên, sẽ tạo 2 con trái và con phải Mỗi nút con tính một giá trị entropy Tính trung bình của các nút con, được gọi là entropy trung bình theo từng feature để chia www.ctuet.edu.vn Decision trees 22 / 28",
+                        "fileId": "00cf3364-9710-44a0-8181-848bffd5e6a6",
+                        "fileUrl": "uploads\\documents\\1766903551480-321544779.pdf",
+                        "page": 23,
+                        "score": 0.2782266501649229,
+                        "startOffset": 4202,
+                        "endOffset": 4490,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    }
+                ],
+                "chatId": "95975595-e920-4d8f-81d5-9f1d7375a16e"
+            }
+        },
+        {
+            "statusCode": 201,
+            "success": true,
+            "data": {
+                "answer": "Ví dụ cụ thể về cách tính entropy như sau:\n\nGiả sử bạn có một tập dữ liệu gồm 14 mẫu, trong đó có 6 mẫu là \"dog\" và 8 mẫu là \"cat\". Ta muốn tính entropy của tập dữ liệu này.\n\nCông thức entropy:\n\\[ H(X) = -\\sum_{i=1}^{n} p_i \\log_2 p_i \\]\nTrong đó, \\( p_i \\) là xác suất xuất hiện của lớp thứ i.\n\nÁp dụng vào ví dụ:\n- Số lượng \"dog\": 6 → \\( p_{dog} = \\frac{6}{14} \\)\n- Số lượng \"cat\": 8 → \\( p_{cat} = \\frac{8}{14} \\)\n\nTính entropy:\n\\[\nH(X) = -\\left( \\frac{6}{14} \\log_2 \\frac{6}{14} + \\frac{8}{14} \\log_2 \\frac{8}{14} \\right)\n\\]\n\\[\n= -\\left( 0.4286 \\times \\log_2 0.4286 + 0.5714 \\times \\log_2 0.5714 \\right)\n\\]\n\\[\n= -\\left( 0.4286 \\times (-1.2224) + 0.5714 \\times (-0.8074) \\right)\n\\]\n\\[\n= -\\left( -0.5236 + (-0.4616) \\right)\n\\]\n\\[\n= 0.9852\n\\]\n\nVậy entropy của tập dữ liệu này là khoảng 0.9852 [#14].",
+                "citations": [
+                    {
+                        "index": 13,
+                        "snippet": "Giáo Trình Trí Tu ệ  Nhân T ạ o    M ộ t  đ ích có th ể  mô t ả  nh ư  m ộ t tr ạ ng thái, nh ư  b ả ng th ắ ng cu ộ c trong trò ch ơ i Tic - tac - to...",
+                        "text": "Giáo Trình Trí Tu ệ  Nhân T ạ o    M ộ t  đ ích có th ể  mô t ả  nh ư  m ộ t tr ạ ng thái, nh ư  b ả ng th ắ ng cu ộ c trong trò ch ơ i Tic - tac - toe  hay m ộ t c ấ u hình  đ ích trong trò  đố  8 ô. Nh ư ng m ặ t khác,  đ ích c ũ ng có th ể   đượ c mô t ả  nh ư   m ộ t  đặ c tính nào  đ ó c ủ a chính  đườ ng  đ i l ờ i gi ả i.  Trong  bài  toán  di  chuy ể n  c ủ a  ng ườ i  bán  hàng  (hình  3.6  và  3.7),  quá  trình  tìm  ki ế m  s ẽ  k ế t  thúc khi tìm  đượ c  đườ ng  đ i ng ắ n nh ấ t qua t ấ t c ả  các nút c ủ a  đồ  th ị . Trong bài toán phân tích  ng ữ  pháp,  đườ ng  đ i c ủ a quá trình phân tích thành công  đố i v ớ i m ộ t câu s ẽ  cho bi ế t rõ  đ i ể m  k ế t thúc.",
+                        "fileId": "8b31bb25-8d1b-4f92-b127-e8bdb53875b4",
+                        "fileUrl": "uploads\\documents\\1766903551510-26094721.pdf",
+                        "page": 4,
+                        "score": 0.8620649516582488,
+                        "startOffset": 7043,
+                        "endOffset": 7732,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 29,
+                        "snippet": "Herrisic TIML. p0\nHeurisic\n\n ĐỂ giải quyết các bài toán Iớn, phải cung cấp\nnhững kiên thức đặc trưng từng Iĩnh vực để\nnâng cao hiệu quả của việc tìm k...",
+                        "text": "Herrisic TIML. p0\nHeurisic\n\n ĐỂ giải quyết các bài toán Iớn, phải cung cấp\nnhững kiên thức đặc trưng từng Iĩnh vực để\nnâng cao hiệu quả của việc tìm kiệm\n\nTrong TK KGTT, heurisfic Ià các luật dùng đề\nchọn những nhánh! Iựa chọn nào có nhiều khả\nnăng nhất dân đến một giải pháp chập nhận\nđược\n\n1\nHeurslic\n\nSử dụng Heuristic trong trường hợp nào?\nVân đề có thê có giải pháp chính xác, nhưng chỉ\nphí tính toán đ tìm ra nó không cho phép. VD\ntờ Vua,\nVân đô go thê ung có giải pháp chính xác vì\nsự không rõ ràng trong diện đại vận đê hoặc\n\nfrong các dữ liệu có sắn. VD: chân đoán y\nkhoa...\n\n\"\nHeurslic\n\n8 Thuật toán Heurisic gồm hai phân:\n\n .. Phép đo Heurisfic: thể hiện qua hàm đánh giá heurisi,\n\ndùng đề đánh giá các đặc điểm của một trạng thái Iong\nK6TT.",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.8606025940538996,
+                        "startOffset": 16472,
+                        "endOffset": 17224,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 7,
+                        "snippet": "learming\n\n3. Học bán giám sđt- semt- SUpervised lcarming\n\n4 Học củng cô / học tăng cường: re nforccmienl\n\nleamming\nPhân loại học máy - hạt tó giám sát...",
+                        "text": "learming\n\n3. Học bán giám sđt- semt- SUpervised lcarming\n\n4 Học củng cô / học tăng cường: re nforccmienl\n\nleamming\nPhân loại học máy - hạt tó giám sát\n\n-. Học có giám sát Ià thuật toán học tạo ra một hàm ánh xạ\ndữ liệu đầu vào tới kết quả đích mong muốn (nhãn, Iớp\ngiá trị tà dự báo), Trong học có giám sát, tập dữ liệu\ndùng đễ huân luyện phải đượt gán nhấn, Iớp hay giá\ntrị cân dự báo\n\n1 Xây dựng mô hình H được huân luyện từ tập dữ liệu\n(Mi v) ly), uy\n\n-. Bài toán hôi quy (regression): y Ià giá trị liên tục\n\n-. Bài toán phân Iớp: y Ià giá trị không liên tục\nPhân loại học máy - hạt tó giám sát\n\n(lasslfication Example; Weather\nPrediction\nPhân loại học máy - hạt tó giám sát\n\nRegression example: Predicting\n60ld/Stock prices",
+                        "fileId": "80786920-bcf4-4dbe-b5af-629a1005ac7a",
+                        "fileUrl": "uploads\\documents\\1766903551430-157464816.pdf",
+                        "page": 1,
+                        "score": 0.860227567567084,
+                        "startOffset": 4066,
+                        "endOffset": 4793,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 18,
+                        "snippet": "nhiệm vụ\n(hương trình có thể trả Iời theo cách của một người hay\nkhông?\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\n984/ch problems...",
+                        "text": "nhiệm vụ\n(hương trình có thể trả Iời theo cách của một người hay\nkhông?\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\n984/ch problems\n\nMakoydecslonrocesesi Conslraint satisdaction problems\n\nAdversarial games Bayesian neluorls\nReflex 9tates Variables Logic\nnu\nLạt-leedl intellgene \"High-leel inteligene \n\nMachine learming\n\nTypes of models that we can use to represenlt real-world tasks\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nMột mô hình dựa trên phản xạ chỉ đơn giản Ià\nRells thực hiện một chuỗi tính toán cô định trên một\nđầu vào nhất định\nCác ví dụ bao gồm hầu hết các mô hình được\ntìm thấy trong học máy từ các phân loại tuyến\ntính đơn giản đến mô hình deep learning\n(ác phương pháp xây dựng ứng dụng TTN \n(heo mức độ thông mình",
+                        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
+                        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
+                        "page": 1,
+                        "score": 0.8538932619158466,
+                        "startOffset": 10728,
+                        "endOffset": 11499,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 37,
+                        "snippet": "Định lý Bayes và phân loại mẫu Trong bài toán phân loại mẫu (pattern classification), ta có K classes cần dự đoán Gọi C là class nhận giá trị 1 ,..., ...",
+                        "text": "Định lý Bayes và phân loại mẫu Trong bài toán phân loại mẫu (pattern classification), ta có K classes cần dự đoán Gọi C là class nhận giá trị 1 ,..., K Dữ liệu quan sát đầu vào là feature vector D chiều, ký hiệu là X Dữ liệu tập học có nhãn Dữ liệu tập thử không có nhãn → cần dự đoán www.ctuet.edu.vn Naive Bayes classification - part 1 34 / 37",
+                        "fileId": "98a5111a-c7dc-49e1-8f96-32c0911377b2",
+                        "fileUrl": "uploads\\documents\\1766903551477-789581466.pdf",
+                        "page": 38,
+                        "score": 0.8512681619466681,
+                        "startOffset": 10166,
+                        "endOffset": 10511,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 29,
+                        "snippet": "Bayes’ theorem cho một feature Làm cách nào tăng độ chính xác của bài toán phân loại cá? www.ctuet.edu.vn Naive Bayes classification - part 2 26 / 42...",
+                        "text": "Bayes’ theorem cho một feature Làm cách nào tăng độ chính xác của bài toán phân loại cá? www.ctuet.edu.vn Naive Bayes classification - part 2 26 / 42",
+                        "fileId": "06084096-ec28-411c-a6be-9b3944e666a2",
+                        "fileUrl": "uploads\\documents\\1766903551474-512774733.pdf",
+                        "page": 30,
+                        "score": 0.8445908612500583,
+                        "startOffset": 7715,
+                        "endOffset": 7864,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 30,
+                        "snippet": "toán Heurisic gồm hai phân:\n\n .. Phép đo Heurisfic: thể hiện qua hàm đánh giá heurisi,\n\ndùng đề đánh giá các đặc điểm của một trạng thái Iong\nK6TT.\n\n2...",
+                        "text": "toán Heurisic gồm hai phân:\n\n .. Phép đo Heurisfic: thể hiện qua hàm đánh giá heurisi,\n\ndùng đề đánh giá các đặc điểm của một trạng thái Iong\nK6TT.\n\n2. Giải thuật tìm kiêm heuristic\n8 Tìm kiếm tớ! nhất đầu tiên (hes-first search)\nTìm kiêm háu ăn (greedy best-lirst search)\nGiải thuật A \ns Tìm kiêm lo đổi\n\nIý,\nHeurslic\n\n: Phép đo Heurislic\nLt Iượng chỉ phí Iối tu giln hại hoật nhiều si phúp\nKhông mu Iốn kém ể Iính loín\n\nDược xác định cụ thể trong! ng bài loán (Vi: đồi với bài toán\nTS đánh giá khoảng cách giữa các thành phô sao cho chỉ phí\nIà thấp nhã \n\nHàm đánh giá Heuristic tại trạng thái n bà fn)\nf n) gi)! h(n)\ng(n) 5 khoảng cách thực sự từ n đên trạng thái bắt đâu\n\nhịn) ước Iượng heurislic cho khoảng cách từ trạng thái\nn đến trạng thái đích\n\n8\nPhép đo heurisiic (2)\n\n ị N",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.826441310558241,
+                        "startOffset": 17077,
+                        "endOffset": 17859,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 14,
+                        "snippet": "Ví dụ 2 classes: dog, cat Tính entropy của kết quả phân loại, giải thích giá trị entropy 6 dogs, 8 cats. Gọi H là entropy H ( X ) = − ( 6 14 log 2 6 1...",
+                        "text": "Ví dụ 2 classes: dog, cat Tính entropy của kết quả phân loại, giải thích giá trị entropy 6 dogs, 8 cats. Gọi H là entropy H ( X ) = − ( 6 14 log 2 6 14 + 8 14 log 2 8 14 ) = 0 . 98522813 (2) www.ctuet.edu.vn Decision trees 14 / 28",
+                        "fileId": "00cf3364-9710-44a0-8181-848bffd5e6a6",
+                        "fileUrl": "uploads\\documents\\1766903551480-321544779.pdf",
+                        "page": 14,
+                        "score": 0.7976511237205399,
+                        "startOffset": 2725,
+                        "endOffset": 2955,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    }
+                ],
+                "chatId": "95975595-e920-4d8f-81d5-9f1d7375a16e"
+            }
+        },
+        {
+            "statusCode": 201,
+            "success": true,
+            "data": {
+                "answer": "Gradient descent là một thuật toán tối ưu hóa được sử dụng phổ biến trong học máy (machine learning) để tìm giá trị tối ưu (thường là cực tiểu) của một hàm số. Cụ thể, gradient descent được dùng để điều chỉnh các tham số của mô hình (ví dụ: trọng số trong mạng nơ-ron) sao cho hàm mất mát (loss function) đạt giá trị nhỏ nhất. Thuật toán này hoạt động bằng cách tính đạo hàm (gradient) của hàm mất mát theo các tham số, sau đó cập nhật các tham số theo hướng ngược lại với gradient để giảm giá trị hàm mất mát dần dần qua từng bước lặp.\n\nKhác biệt giữa gradient descent và entropy:\n\n- Entropy là một thước đo mức độ hỗn loạn hoặc không chắc chắn của một tập dữ liệu, thường được sử dụng trong các thuật toán như cây quyết định để đánh giá chất lượng của việc phân chia dữ liệu [#41].\n- Gradient descent là một thuật toán tối ưu hóa, dùng để tìm giá trị cực tiểu của một hàm số, thường được sử dụng để huấn luyện các mô hình học máy bằng cách giảm dần giá trị hàm mất mát.\n\nTóm lại, entropy là một khái niệm dùng để đo lường thông tin hoặc sự hỗn loạn trong dữ liệu, còn gradient descent là một phương pháp tối ưu hóa để điều chỉnh tham số mô hình. Hai khái niệm này phục vụ các mục đích khác nhau trong học máy và không thay thế cho nhau.",
+                "citations": [
+                    {
+                        "index": 9,
+                        "snippet": "10 Nguyễn Tấn Phú  Việc ước lượng heuristic cho khoảng cách từ trạng thái n  đến trạng thái đích như thế nào?   Giả sử có các định nghĩa sau :  h 1...",
+                        "text": "10 Nguyễn Tấn Phú  Việc ước lượng heuristic cho khoảng cách từ trạng thái n  đến trạng thái đích như thế nào?   Giả sử có các định nghĩa sau :  h 1 (n) : số vị trí sai khác của trạng thái n so với goal .  h 2 (n) : khoảng cách dịch chuyển (  ,  ,  ,  ) ngắn nhất để dịch chuyển các ô chữ nằm sai vị trí về vị trí đúng (khoảng cách Manhattan) Cài đặt hàm đánh giá Heuristic Trí tuệ nhân tạo",
+                        "fileId": "f5db4623-f1e1-4c79-9e95-679eba403ce9",
+                        "fileUrl": "uploads\\documents\\1766903551353-752198510.pdf",
+                        "page": 10,
+                        "score": 0.7257616967870829,
+                        "startOffset": 2366,
+                        "endOffset": 2763,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 9,
+                        "snippet": "10 Nguyễn Tấn Phú  Việc ước lượng heuristic cho khoảng cách từ trạng thái n  đến trạng thái đích như thế nào?   Giả sử có các định nghĩa sau :  h 1...",
+                        "text": "10 Nguyễn Tấn Phú  Việc ước lượng heuristic cho khoảng cách từ trạng thái n  đến trạng thái đích như thế nào?   Giả sử có các định nghĩa sau :  h 1 (n) : số vị trí sai khác của trạng thái n so với goal .  h 2 (n) : khoảng cách dịch chuyển (  ,  ,  ,  ) ngắn nhất để dịch chuyển các ô chữ nằm sai vị trí về vị trí đúng (khoảng cách Manhattan) Cài đặt hàm đánh giá Heuristic Trí tuệ nhân tạo",
+                        "fileId": "8973c997-f53b-40a9-8aa7-8b8702117939",
+                        "fileUrl": "uploads\\documents\\1766903551359-141931852.pdf",
+                        "page": 10,
+                        "score": 0.7257461936171287,
+                        "startOffset": 2366,
+                        "endOffset": 2763,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 3,
+                        "snippet": "Thách thức trong unsupervised learning Thách thức chủ đạo của các giải thuật unsupervised learning là đánh giá giải thuật Vì không có label nên khó đá...",
+                        "text": "Thách thức trong unsupervised learning Thách thức chủ đạo của các giải thuật unsupervised learning là đánh giá giải thuật Vì không có label nên khó đánh giá mô hình làm việc hiểu quả như thế nào Unsupervised algorithms được sử dụng để khám phá dữ liệu, khi các nhà khoa học muốn tìm hiểu về dữ liệu đang thao tác, hơn là áp dụng như một hệ thống tự động www.ctuet.edu.vn Unsupervised learning 4 / 42",
+                        "fileId": "df17c94c-df84-4067-94a2-bf57fddc7595",
+                        "fileUrl": "uploads\\documents\\1766903551437-620251504.pdf",
+                        "page": 4,
+                        "score": 0.47296145078195184,
+                        "startOffset": 820,
+                        "endOffset": 1219,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 15,
+                        "snippet": "heuristic c ủ a nó dùng cho vi ệ c ch ọ n l ự a  các khái ni ệ m  ứ ng viên, và ti ề m n ă ng c ủ a nó  đố i v ớ i vi ệ c x ử  lý d ữ  li ệ u nhi ễ u....",
+                        "text": "heuristic c ủ a nó dùng cho vi ệ c ch ọ n l ự a  các khái ni ệ m  ứ ng viên, và ti ề m n ă ng c ủ a nó  đố i v ớ i vi ệ c x ử  lý d ữ  li ệ u nhi ễ u.  ID3 bi ể u di ễ n các  khái ni ệ m  (concept)  ở  d ạ ng các cây quy ế t  đị nh (decision tree). Bi ể u di ễ n  này cho phép chúng ta xác  đị nh phân lo ạ i c ủ a m ộ t  đố i t ượ ng b ằ ng cách ki ể m tra các giá tr ị   c ủ a nó trên m ộ t s ố  thu ộ c tính nào  đ ó.  Nh ư  v ậ y, nhi ệ m v ụ  c ủ a gi ả i thu ậ t ID3 là h ọ c cây quy ế t  đị nh t ừ  m ộ t t ậ p các ví d ụ  rèn luy ệ n  (training  example)  hay  còn  g ọ i  là  d ữ   li ệ u  rèn  luy ệ n  (training  data).  Hay  nói  khác  h ơ n,  gi ả i  thu ậ t có:  ¾   Đầ u  vào:  M ộ t t ậ p h ợ p các ví d ụ .",
+                        "fileId": "41a0ff87-6436-4a76-bf1e-f1b5212a4aa0",
+                        "fileUrl": "uploads\\documents\\1766903551498-390414281.pdf",
+                        "page": 3,
+                        "score": 0.34576801368808907,
+                        "startOffset": 8192,
+                        "endOffset": 8915,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 41,
+                        "snippet": "Trong tr ườ ng h ợ p S là t ậ p ví d ụ , thì thành viên c ủ a S là m ộ t ví d ụ , m ỗ i ví d ụ  thu ộ c m ộ t l ớ p  hay có m ộ t giá tr ị  phân lo ạ ...",
+                        "text": "Trong tr ườ ng h ợ p S là t ậ p ví d ụ , thì thành viên c ủ a S là m ộ t ví d ụ , m ỗ i ví d ụ  thu ộ c m ộ t l ớ p  hay có m ộ t giá tr ị  phân lo ạ i.   Entropy có giá tr ị  n ằ m trong kho ả ng [0..1],   Entropy(S) = 0  Ù  t ậ p ví d ụ  S ch ỉ  toàn ví d ụ  thu ộ c cùng m ộ t lo ạ i, hay S là thu ầ n nh ấ t.   Entropy(S) = 1  Ù  t ậ p ví d ụ  S có các ví d ụ  thu ộ c các lo ạ i khác nhau v ớ i  độ  pha tr ộ n là cao  nh ấ t.  0 < Entropy(S) < 1  Ù  t ậ p ví d ụ  S có s ố  l ượ ng ví d ụ  thu ộ c các lo ạ i khác nhau là không b ằ ng  nhau.  Để   đơ n gi ả n ta xét tr ườ ng h ợ p các ví d ụ  c ủ a S ch ỉ  thu ộ c lo ạ i  âm (-) ho ặ c d ươ ng (+).  Hình 9.4 minh h ọ a s ự  ph ụ  thu ộ c c ủ a giá tr ị  entropy vào xác su ấ t xu ấ t hi ệ n c ủ a ví d ụ  d ươ ng.",
+                        "fileId": "41a0ff87-6436-4a76-bf1e-f1b5212a4aa0",
+                        "fileUrl": "uploads\\documents\\1766903551498-390414281.pdf",
+                        "page": 9,
+                        "score": 0.3194431751302689,
+                        "startOffset": 22567,
+                        "endOffset": 23339,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 39,
+                        "snippet": "n  nút  m ụ c  tiêu.  Nh ư  v ậ y  f*(n)  là  chi  phí  th ự c  c ủ a  con   đườ ng t ố i  ư u t ừ  nút xu ấ t phát  đế n nút  đ ích  đ i qua nút n.  ...",
+                        "text": "n  nút  m ụ c  tiêu.  Nh ư  v ậ y  f*(n)  là  chi  phí  th ự c  c ủ a  con   đườ ng t ố i  ư u t ừ  nút xu ấ t phát  đế n nút  đ ích  đ i qua nút n.  N ế u thu ậ t toán A dùng hàm  đ ánh giá f, trong  đ ó h(n)  ≤  h*(n) thì nó  đượ c g ọ i là  thu ậ t toán  A* (algorithm A)   II.4.2   Tính  đơ n nh ấ t :   Khi có m ộ t tr ạ ng thái  đượ c phát hi ệ n nh ờ  s ử  d ụ ng tìm ki ế m heuristic, li ệ u có b ả o  đả m r ằ ng  v ề  sau s ẽ  không tìm  đượ c m ộ t tr ạ ng thái nh ư  v ậ y v ớ i kho ả ng cách ng ắ n h ơ n tính t ừ  tr ạ ng thái  xu ấ t phát.  Đ ây chính là thu ộ c tính c ủ a s ự   đơ n nh ấ t (monotocinity). Nói cách khác, tính  đơ n  nh ấ t c ủ a m ộ t heuristic là nó s ẽ  b ả o  đả m  đườ ng  đ i ng ắ n nh ấ t  đế n m ỗ i tr ạ ng thái.",
+                        "fileId": "2b81ee82-d580-49e2-8de1-8955921a83c9",
+                        "fileUrl": "uploads\\documents\\1766903551507-23851130.pdf",
+                        "page": 9,
+                        "score": 0.31174529333440554,
+                        "startOffset": 20754,
+                        "endOffset": 21508,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 36,
+                        "snippet": "37 Nguyễn Tấn Phú  Giải thuật A* là một trường hợp đặc biệt Best - first search  (việc cập nhật đường đi dựa trên giá trị  g(n)  thay vì dựa  trên gi...",
+                        "text": "37 Nguyễn Tấn Phú  Giải thuật A* là một trường hợp đặc biệt Best - first search  (việc cập nhật đường đi dựa trên giá trị  g(n)  thay vì dựa  trên giá trị  f(n)  tổng quát)  f(n) = g(n) + h(n)  h(n) phụ thuộc vào trạng thái n nên f(n) chỉ thay đổi khi g(n) thay đổi hay cách khác khi ta tìm được một đường đi mới đến n tốt hơn đường cũ  cập nhật lại g(n) khi đường đi mới tốt hơn) Giải thuật A* Trí tuệ nhân tạo",
+                        "fileId": "8973c997-f53b-40a9-8aa7-8b8702117939",
+                        "fileUrl": "uploads\\documents\\1766903551359-141931852.pdf",
+                        "page": 37,
+                        "score": 0.31031369777403445,
+                        "startOffset": 7926,
+                        "endOffset": 8341,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 36,
+                        "snippet": "37 Nguyễn Tấn Phú  Giải thuật A* là một trường hợp đặc biệt Best - first search  (việc cập nhật đường đi dựa trên giá trị  g(n)  thay vì dựa  trên gi...",
+                        "text": "37 Nguyễn Tấn Phú  Giải thuật A* là một trường hợp đặc biệt Best - first search  (việc cập nhật đường đi dựa trên giá trị  g(n)  thay vì dựa  trên giá trị  f(n)  tổng quát)  f(n) = g(n) + h(n)  h(n) phụ thuộc vào trạng thái n nên f(n) chỉ thay đổi khi g(n) thay đổi hay cách khác khi ta tìm được một đường đi mới đến n tốt hơn đường cũ  cập nhật lại g(n) khi đường đi mới tốt hơn) Giải thuật A* Trí tuệ nhân tạo",
+                        "fileId": "f5db4623-f1e1-4c79-9e95-679eba403ce9",
+                        "fileUrl": "uploads\\documents\\1766903551353-752198510.pdf",
+                        "page": 37,
+                        "score": 0.3103056746721261,
+                        "startOffset": 7926,
+                        "endOffset": 8341,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    }
+                ],
+                "chatId": "95975595-e920-4d8f-81d5-9f1d7375a16e"
+            }
+        },
+        {
+            "statusCode": 201,
+            "success": true,
+            "data": {
+                "answer": "Tài liệu hiện tại không chứa thông tin về vấn đề này.",
+                "citations": [
+                    {
+                        "index": 14,
+                        "snippet": "Các kiểu môi trường Phân đoạn (hay liên tiếp)? Lịch sử kinh nghiệm của tác tử được chia thành các giai đoạn (chương/hồi) Mỗi giai đoạn bao gồm việc nh...",
+                        "text": "Các kiểu môi trường Phân đoạn (hay liên tiếp)? Lịch sử kinh nghiệm của tác tử được chia thành các giai đoạn (chương/hồi) Mỗi giai đoạn bao gồm việc nhận thức của tác tử và hành động mà nó thực hiện Ở mỗi giai đoạn, việc lựa chọn hành động để thực hiện chỉ phụ thuộc vào giai đoạn đó (không phụ thuộc vào các giai đoạn khác) Tĩnh (hay động)? Môi trường không thay đổi trong khi tác tử cân nhắc (xem nên đưa ra hành động nào) Môi trường bán động (semi-dynamic) là môi trường mà khi thời gian trôi qua thì nó (môi trường) không thay đổi, nhưng hiệu quả hoạt động của tác tử thay đổi Ví dụ: các chương trình trò chơi có tính giờ Tác tử HK1, 2020 - 2021 15 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 15,
+                        "score": 0.5581299573910381,
+                        "startOffset": 4887,
+                        "endOffset": 5543,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 7,
+                        "snippet": "Định nghĩa (1) Các hệ thống suy nghĩ như con người Haugeland(1985) : TTNT giúp tạo ra máy tính có khả năng suy nghĩ... máy tính có trí tuệ theo đầy đủ...",
+                        "text": "Định nghĩa (1) Các hệ thống suy nghĩ như con người Haugeland(1985) : TTNT giúp tạo ra máy tính có khả năng suy nghĩ... máy tính có trí tuệ theo đầy đủ nghĩa của từ này. (2) Các hệ thống suy nghĩ hợp lý Winston (1992) : Nghiên cứu các tính toán giúp máy tính có thể nhận thức, suy luận và hành động. (3) Các hệ thống hành động như con người Rich và Knight (1991) : TTNT là khoa học nghiên cứu xem làm thế nào để máy tính có thể thực hiện được những công việc mà hiện con người làm tốt hơn máy tính Tổng quan HK1, 2020 - 2021 8 / 12",
+                        "fileId": "eb164f41-6521-443f-a556-dc779e978c7b",
+                        "fileUrl": "uploads\\documents\\1766903551337-310785598.pdf",
+                        "page": 8,
+                        "score": 0.5491925896657798,
+                        "startOffset": 2317,
+                        "endOffset": 2847,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 2,
+                        "snippet": "Tác tử Một tác tử (agent) là bất cứ cái gì cảm nhận môi trường (environment) qua cảm biến (sensors) và hành động phù hợp theo môi trường thông qua các...",
+                        "text": "Tác tử Một tác tử (agent) là bất cứ cái gì cảm nhận môi trường (environment) qua cảm biến (sensors) và hành động phù hợp theo môi trường thông qua các bộ phận hoạt động (actuators) Tác nhân con người mắt, tai... → sensors tay, chân, miệng... → actuators Tác nhân robot: máy ảnh và công cụ tìm phạm vi hồng ngoại → sensors động cơ → actuators Tác tử HK1, 2020 - 2021 3 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 3,
+                        "score": 0.5427177868134401,
+                        "startOffset": 165,
+                        "endOffset": 537,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 6,
+                        "snippet": "Tác tử hợp lý Tác tử cần phấn đấu để \"làm đúng việc cần làm\", dựa trên những gì nó nhận thức (nhận biết) được và dựa trên các hành động mà nó có thể t...",
+                        "text": "Tác tử hợp lý Tác tử cần phấn đấu để \"làm đúng việc cần làm\", dựa trên những gì nó nhận thức (nhận biết) được và dựa trên các hành động mà nó có thể thực hiện Một hành động đúng (hợp lý) là hành động giúp tác tử đạt được thành công cao nhất đối với mục tiêu đặt ra Đánh giá hiệu quả hoạt động: là tiêu chuẩn để đánh giá mức độ thành công trong hoạt động của một tác tử Ví dụ: Tiêu chí đánh giá hiệu quả hoạt động của một tác tử máy hút bụi có thể là mức độ làm sạch, thời gian hút bụi, mức độ điện năng tiêu tốn, mức độ tiếng ồn gây ra, ... Tác tử HK1, 2020 - 2021 7 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 7,
+                        "score": 0.5253761188830897,
+                        "startOffset": 1260,
+                        "endOffset": 1831,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 3,
+                        "snippet": "Tác tử và môi trường Hàm tác tử: là hàm ánh xạ từ lịch sử nhận thức tới các hành động: f : P ∗ →A Chương trình tác tử: hoạt động (chạy) dựa trên kiến ...",
+                        "text": "Tác tử và môi trường Hàm tác tử: là hàm ánh xạ từ lịch sử nhận thức tới các hành động: f : P ∗ →A Chương trình tác tử: hoạt động (chạy) dựa trên kiến trúc thực tế của hàm f Tác tử = kiến trúc + chương trình Tác tử HK1, 2020 - 2021 4 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 4,
+                        "score": 0.5227978512289642,
+                        "startOffset": 538,
+                        "endOffset": 775,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 4,
+                        "snippet": "Suy nghĩ như con người (thinking humanly) Phương pháp tiếp cận mô hình hóa nhận thức (cognitive modeling) ⇒ tìm hiểu cách suy nghĩ của con người Đi và...",
+                        "text": "Suy nghĩ như con người (thinking humanly) Phương pháp tiếp cận mô hình hóa nhận thức (cognitive modeling) ⇒ tìm hiểu cách suy nghĩ của con người Đi vào bản chất ⇒ tạo ra các mô hình tính toán có cách thức suy nghĩ của con người Tìm hiểu những diễn biến trong trí não con người ⇒ xây dựng mô hình tính toán phản ánh các kiểu xử lý Tạo các nơ ron (neuron) và thực hiện các cơ chế tính toán trên các neuron ⇒ mô phỏng bộ não người gồm các neuron Tổng quan HK1, 2020 - 2021 5 / 12",
+                        "fileId": "eb164f41-6521-443f-a556-dc779e978c7b",
+                        "fileUrl": "uploads\\documents\\1766903551337-310785598.pdf",
+                        "page": 5,
+                        "score": 0.5105816092740438,
+                        "startOffset": 1029,
+                        "endOffset": 1505,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 1,
+                        "snippet": "Perceptron Perceptron là phân loại nhị phân (binary classifier) có thể học theo từng training instances Phát triển từ 1950s bởi Frank Rosenblatt Mô ph...",
+                        "text": "Perceptron Perceptron là phân loại nhị phân (binary classifier) có thể học theo từng training instances Phát triển từ 1950s bởi Frank Rosenblatt Mô phỏng hoạt động của bộ não con người Bộ não (brain) bao gồm nhiều tế bào (cells) gọi là neurons Neurons xử lý thông tin Nối các neurons là synapses Synapses truyền thông tin 100 billion neurons, 100 billion synapses www.ctuet.edu.vn Perceptron 2 / 41",
+                        "fileId": "a0e80837-b7af-49d1-9414-04f2df731911",
+                        "fileUrl": "uploads\\documents\\1766903551471-182850855.pdf",
+                        "page": 2,
+                        "score": 0.48347273225567305,
+                        "startOffset": 128,
+                        "endOffset": 526,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 7,
+                        "snippet": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên c...",
+                        "text": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning).",
+                        "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
+                        "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
+                        "page": 2,
+                        "score": 0.3832969737625441,
+                        "startOffset": 3822,
+                        "endOffset": 4590,
+                        "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02"
+                    }
+                ],
+                "chatId": "95975595-e920-4d8f-81d5-9f1d7375a16e"
+            }
+        }
+    ],
+    [
+        {
+            "statusCode": 201,
+            "success": true,
+            "data": {
+                "answer": "Dưới đây là tóm tắt tất cả những gì bạn đã hỏi ở trên cùng với câu trả lời dựa trên tài liệu đã cung cấp:\n\n1. **Ví dụ cụ thể về cách tính entropy**  \n   Bạn hỏi về ví dụ cụ thể cách tính entropy.  \n   → Đã trả lời với ví dụ: Tập dữ liệu gồm 6 \"dog\" và 8 \"cat\", tính entropy theo công thức Shannon, kết quả khoảng 0.9852 [#14].\n\n2. **Gradient descent là gì, nó khác với entropy như thế nào?**  \n   Bạn hỏi về khái niệm gradient descent và sự khác biệt với entropy.  \n   → Đã trả lời:  \n   - Gradient descent là thuật toán tối ưu hóa dùng để tìm cực tiểu của hàm số, thường dùng để huấn luyện mô hình học máy.  \n   - Entropy là thước đo mức độ hỗn loạn hoặc không chắc chắn của dữ liệu, thường dùng trong các thuật toán như cây quyết định.  \n   - Hai khái niệm này phục vụ các mục đích khác nhau trong học máy.\n\n3. **Transformer architecture là gì, attention mechanism hoạt động ra sao?**  \n   Bạn hỏi về kiến trúc Transformer và cơ chế attention.  \n   → Đã trả lời: \"Tài liệu hiện tại không chứa thông tin về vấn đề này.\" (Không có thông tin trong các tài liệu cung cấp).\n\nNếu bạn cần chi tiết hơn về bất kỳ câu hỏi nào, vui lòng hỏi lại!",
+                "citations": [
+                    {
+                        "index": 27,
+                        "snippet": "Loại bỏ các lỗi sớm: Kiểm tra tiến (Forward checking) khi một giá trị được gán cho một biến, giá trị này sẽ không hợp lệ đối với biến khác sẽ bị xóa t...",
+                        "text": "Loại bỏ các lỗi sớm: Kiểm tra tiến (Forward checking) khi một giá trị được gán cho một biến, giá trị này sẽ không hợp lệ đối với biến khác sẽ bị xóa triển khai những sắp xếp heuristics tính toán ngầm định Ví dụ: WA = red thì NT không thể là red nếu tất cả giá trị của một biến bị xóa → DỪNG CSPs HK1, 2020 - 2021 28 / 32",
+                        "fileId": "470f9123-7fc4-403d-af6a-cb5d0c359c89",
+                        "fileUrl": "uploads\\documents\\1766903551320-66037845.pdf",
+                        "page": 28,
+                        "score": 0.46728957176208497,
+                        "startOffset": 5533,
+                        "endOffset": 5853,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 8,
+                        "snippet": "Tác tử hợp lý (tt) Sự hợp lý 6 = Sự thông suốt mọi thứ Sự thông suốt mọi thứ = Biết tất cả mọi thứ, với tri thức vô hạn Vì các nhận thức có thể không ...",
+                        "text": "Tác tử hợp lý (tt) Sự hợp lý 6 = Sự thông suốt mọi thứ Sự thông suốt mọi thứ = Biết tất cả mọi thứ, với tri thức vô hạn Vì các nhận thức có thể không cung cấp tất cả các thông tin liên quan Các tác tử có thể thực hiện các hành động nhằm thay đổi các nhận thức trong tương lai, với mục đích thu được các thông tin hữu ích (ví dụ: thu thập thông tin, khám phá tri thức) Tác tử tự trị (autonomous agent) là một tác tử mà các hành động của nó được quyết định bởi chính kinh nghiệm của tác tử đó (cùng với khả năng học và thích nghi) Tác tử HK1, 2020 - 2021 9 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 9,
+                        "score": 0.46176002232550983,
+                        "startOffset": 2145,
+                        "endOffset": 2704,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 0,
+                        "snippet": "Giới thiệu môn học Tổng số tiết: 30 tiết lý thuyết, 30 tiết thực hành Tóm tắt môn học: khái quát về trí tuệ nhân tạo và các khái niệm có liên quan, ph...",
+                        "text": "Giới thiệu môn học Tổng số tiết: 30 tiết lý thuyết, 30 tiết thực hành Tóm tắt môn học: khái quát về trí tuệ nhân tạo và các khái niệm có liên quan, phương pháp tiếp trí tuệ nhân tạo giải quyết bài toán, các kỹ thuật tìm kiếm giải pháp; phương pháp tiếp cận dựa trên logic và suy diễn; phương pháp tiếp cận dựa trên học Ngôn ngữ lập trình sử dụng trong thực hành: Python Đánh giá học phần: Giữa kỳ: chuyên cần + bài tập + kiểm tra giữa kỳ Cuối kỳ: trắc nghiệm + tự luận Tổng quan HK1, 2020 - 2021 1 / 12",
+                        "fileId": "eb164f41-6521-443f-a556-dc779e978c7b",
+                        "fileUrl": "uploads\\documents\\1766903551337-310785598.pdf",
+                        "page": 1,
+                        "score": 0.4299377538245246,
+                        "startOffset": 0,
+                        "endOffset": 502,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 17,
+                        "snippet": "đệ\n\ntiên đề\n4\n\n (em LAI -F LH) lu \n1\nlaai\n\n2 ơ L j ơ ơ\nChứng minh dựa trên các luật suy\ntiền\n\nmm: (Iên đ\n\n) A3C (tiên đ\n\n1 JB3D (liên đ\n\n4 I5 (liên đ\n...",
+                        "text": "đệ\n\ntiên đề\n4\n\n (em LAI -F LH) lu \n1\nlaai\n\n2 ơ L j ơ ơ\nChứng minh dựa trên các luật suy\ntiền\n\nmm: (Iên đ\n\n) A3C (tiên đ\n\n1 JB3D (liên đ\n\n4 I5 (liên đ\n\n3 8 3,4, Modus Tollens\n6 l5 Tam đoạn luận tuyên\n1C 26M\nThủ tục hợp giải ( esolution)\n(ơ sử của Hợp giải\n\nHợp giải Ià kỹ thuật Iập luận dựa trên nguyên Iý chứng\nmình phỉn chứng đề chíng minh mội phát biểu, hợp gi\nghíng ( Hàng phủ định của phái thi đó Iàm phút sinh một\nmâu thuận với những phát biểu đã bit.\n\nThủ tục hợp giả ì một quá trình Iặp đơn giản: Ú môi Iần Iặp, hại\nmệnh đề g01 Ià mệnh đề cha, được so sánh (hay gi quê retolyei), đễ tạo ra mệnh đề mới, các mệnh đề phải ở dạng chuân\nCN\nDạng chuân CNF DNF\n\nlyh tơ hắn: Í; thịnh phìn (7 bìn huy sự Iở hợp\ncủa các thành phân cơ bản bằng phép liyên(t)\n\nViừt:?;Fals: Pv9.",
+                        "fileId": "9234d71b-d05a-497b-94a4-2bbf969673a1",
+                        "fileUrl": "uploads\\documents\\1766903551408-721977946.pdf",
+                        "page": 1,
+                        "score": 0.2926115173101425,
+                        "startOffset": 10173,
+                        "endOffset": 10946,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 13,
+                        "snippet": "rộng (breafh-Ist sardh - BP9\n\nProoedure breadlh-first-search\nBegn - khởi đầu\n\n0pen: starl (losed \nWhileopen do còn các trạng thái chưa khảo sát\nBegil\n...",
+                        "text": "rộng (breafh-Ist sardh - BP9\n\nProoedure breadlh-first-search\nBegn - khởi đầu\n\n0pen: starl (losed \nWhileopen do còn các trạng thái chưa khảo sát\nBegil\n\nLoại bỏ trạng thái ngoài cùng bên trái khỏi open, gọi nó Ià X\nIfX Ià một đích then trẻ Iời kết quả (thành công) tìm thấy đích\n\nelse begin\nPhái sinh các con của X\nĐưa X vào close\nLoại các con cửa X đã tồn tại trong open hoặc dlosed; kiểm tra vòng Iặp\nĐưa các con còn Iại của X vào đâu bên phải của open; hàng đi\n\nen(;\nEnt\nTrả Iời kết quả (hát bại), không còn trạng thái nào\n\nEn(; 5\nTìm kiệm mù\n\ns Xét KGTT sau\nTìm kiệm rộng (brealh-IR saardh - BF9)\n\ns Tìmkiếm rộng\n8 ác bước thực hiện tìm kiếm rộng\n1. 0pen AJ dosed \n2. 0pen JB,0,DỊ dosed A \nỷ I\nProcedure breadlh-firsksearch\nBen 1 khởi tàu",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.29029604673385623,
+                        "startOffset": 7527,
+                        "endOffset": 8267,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 11,
+                        "snippet": "Ví dụ - PEAS Ví dụ: Thiết kế một tác tử chuẩn đoán y tế Đánh giá hiệu quả hoạt động (P): mức độ sức khỏe của bệnh nhân, cực tiểu hóa các chi phí, các ...",
+                        "text": "Ví dụ - PEAS Ví dụ: Thiết kế một tác tử chuẩn đoán y tế Đánh giá hiệu quả hoạt động (P): mức độ sức khỏe của bệnh nhân, cực tiểu hóa các chi phí, các việc khiếu nại,... Môi trường xung quanh (E): bệnh nhân, bệnh viện, nhân viên y tế,... Các bộ phận hành động (A): hiển thị trên màn hình các câu hỏi, các xét nghiệm, các chuẩn đoán, các điều trị, các chỉ dẫn... Các bộ phận cảm biến (S): bàn phím để nhập vào các thông tin về triệu chứng, các trả lời của bệnh nhân đối với các câu hỏi,... Tác tử HK1, 2020 - 2021 12 / 31",
+                        "fileId": "5e47ff27-e642-4635-9af6-35ff2c905f53",
+                        "fileUrl": "uploads\\documents\\1766903551326-132632091.pdf",
+                        "page": 12,
+                        "score": 0.2584785314034098,
+                        "startOffset": 3599,
+                        "endOffset": 4118,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 78,
+                        "snippet": "(a  →  (b  ∧  c))  ∧  x  3.   (c  →  a)  →  (d  ∧  e)  4.   b  →  (( d  ∧  x)  →  f)  5.   (e  ∧  b)  →  f  6.   ( e  ∧  y)  →  g  7.   d  →  f  8.   ...",
+                        "text": "(a  →  (b  ∧  c))  ∧  x  3.   (c  →  a)  →  (d  ∧  e)  4.   b  →  (( d  ∧  x)  →  f)  5.   (e  ∧  b)  →  f  6.   ( e  ∧  y)  →  g  7.   d  →  f  8.   f  →  ( ¬ a  ∨  g)  Hãy ch ứ ng minh g  đ úng b ằ ng th ủ  t ụ c h ợ p gi ả i.  VIII.4.   S ử  d ụ ng các tri th ứ c  đ ã cho  ở  bài t ậ p 2.3:  a)   John thích m ọ i lo ạ i th ứ c  ă n.  b)   Táo là th ứ c  ă n.  c)   Gà là th ứ c  ă n.  d)   T ấ t c ả  m ọ i th ứ   ă n  đượ c mà v ẫ n còn s ố ng thì  đ ó là th ứ c  ă n.  e)   Bill  ă n  đậ u ph ộ ng và Bill v ẫ n còn s ố ng.  f)   Sue  ă n m ọ i th ứ  mà Bill  ă n.  1.   Hãy bi ể u di ễ n tri th ứ c trên theo logic v ị  t ừ .  2.   Hãy s ử  d ụ ng h ợ p gi ả i  để  ch ứ ng minh “John thích  đậ u ph ộ ng”  3.   S ử  d ụ ng h ợ p gi ả i  để  tr ả  l ờ i câu h ỏ i : “Sue  ă n gì ?”  VIII.5.",
+                        "fileId": "cb98ee69-32ce-4dd4-989c-88ec42b035f7",
+                        "fileUrl": "uploads\\documents\\1766903551502-901921657.pdf",
+                        "page": 16,
+                        "score": 0.2539543452235664,
+                        "startOffset": 40981,
+                        "endOffset": 41779,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    },
+                    {
+                        "index": 21,
+                        "snippet": "loại : À: (0, B.0-, D.5-4\nThêm 1-4 vào 0pen 6;44//1-4 J cssedl A,B,0,D,E,F.HỊ\n\n40\nBước 6: G:44/1-4 dosed A,B.0,D,E,EH\n\nXét 6, lo phải trạng thái địch\n...",
+                        "text": "loại : À: (0, B.0-, D.5-4\nThêm 1-4 vào 0pen 6;44//1-4 J cssedl A,B,0,D,E,F.HỊ\n\n40\nBước 6: G:44/1-4 dosed A,B.0,D,E,EH\n\nXét 6, lo phải trạng thái địch\n\nĐưa 6 vào Dlbset: dosed A.B.0,D,E,FH 0 \n\n0ác con của 6: 0; 04 E.9-4 F-4-0, 9)\n\nLoại các con đã tồn Iại Irong open và dosell- loại ; 0; 0-4, E-9-4 F-4-J\nThêm .8-) vào 0pen 1-4 0 dosed AB.0,D,E,EH. 0 \n\n4\nL Bước 9: 1-4 10-0 dosed A,B,0,D,E,EH,G \nXét, ko phải trạng thái đích\n(004.50. 9 0/ep0bsd.obed\" AB 00EFHG, \nDác on của J L: 1-0, 00-4, H5-0, E.9-4\nLoại các con đã tôn tại trong open, và dosed - Iại 0:04 H.5-i) E:9-4\nThêm L: 1-, vào 0pen 9-0 L: 1-0, dbsed A.B,,D,E,EH.6,J \n\n0\nVí dụ: Bài toán đong nước II À\n\nL\n\nmm Tìm kiệm sâu\nf0oedure deplh - first-searc\nBegn - khởi đều (dephh ling sarth)",
+                        "fileId": "81ff7486-19b6-4f15-9e34-4b1d145957d2",
+                        "fileUrl": "uploads\\documents\\1766903551366-391700566.pdf",
+                        "page": 1,
+                        "score": 0.2502981311171689,
+                        "startOffset": 12024,
+                        "endOffset": 12766,
+                        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
+                    }
+                ],
+                "chatId": "95975595-e920-4d8f-81d5-9f1d7375a16e"
+            }
+        }
+    ]
+]

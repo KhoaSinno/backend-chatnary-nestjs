@@ -8,7 +8,6 @@ import { OpenaiService } from '../llm/openai/openai.service';
 import { ChatDto } from './dto/chat.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ContentBlock } from '@langchain/core/messages';
-import { JsonValue } from '@prisma/client/runtime/library';
 import {
   RetrievalService,
   ScoredDocument,
@@ -186,7 +185,6 @@ export class ChatService {
       if (doc.pageContent.length < 30) return;
 
       const fileId = doc.metadata.fileId as string;
-      // TODO: Fallback fileName:
       const fileName =
         doc.metadata['originalFileName'] ||
         `File_${fileId?.substring(0, 5) ?? 'Unknown'}`;
