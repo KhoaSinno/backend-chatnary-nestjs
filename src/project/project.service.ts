@@ -50,17 +50,17 @@ export class ProjectService {
   }
 
   // -- GET CHAT DETAIL IN PROJECT --
-  async getChatDetailInProject(
-    userId: string,
-    projectId: string,
-    chatId: string,
-  ) {
-    // TODO: CHECK EXISTED
-    return await this.prisma.chats.findUnique({
-      where: { id: chatId, userId: userId, projectId: projectId },
-      omit: { userId: true, projectId: true },
-    });
-  }
+  // async getChatDetailInProject(
+  //   userId: string,
+  //   projectId: string,
+  //   chatId: string,
+  // ) {
+  //   // TODO: CHECK EXISTED
+  //   return await this.prisma.chats.findUnique({
+  //     where: { id: chatId, userId: userId, projectId: projectId },
+  //     omit: { userId: true, projectId: true },
+  //   });
+  // }
 
   // -- GET DOCUMENTS IN PROJECT --
   async getDocumentsInProject(userId: string, projectId: string) {

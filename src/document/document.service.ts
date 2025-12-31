@@ -46,7 +46,7 @@ export class DocumentService {
           publishedYear: metadata?.publishedYear || undefined,
           subjects: metadata?.subjects || [],
           tags: metadata?.tags || [],
-          title: metadata?.title || file.originalname,
+          title: metadata?.title || path.parse(file.originalname).name,
           documentType: 'unknown',
         });
 

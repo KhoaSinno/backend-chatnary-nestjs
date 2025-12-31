@@ -343,13 +343,13 @@ export class ChatService {
   }
 
   // -- Get all user chats --
-  async getAllUserChat(userId: string) {
-    return await this.prisma.chats.findMany({
-      orderBy: { updatedAt: 'desc' },
-      where: { userId },
-      omit: { messages: true, userId: true },
-    });
-  }
+  // async getAllUserChat(userId: string) {
+  //   return await this.prisma.chats.findMany({
+  //     orderBy: { updatedAt: 'desc' },
+  //     where: { userId },
+  //     omit: { messages: true, userId: true },
+  //   });
+  // }
 
   // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
@@ -361,9 +361,9 @@ export class ChatService {
   }
 
   // -- Get Chat by ID --
-  async getChatById(userId: string, id: string) {
+  async getChatById(userId: string, chatId: string) {
     return await this.prisma.chats.findUnique({
-      where: { id, userId },
+      where: { id: chatId, userId },
     });
   }
 

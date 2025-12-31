@@ -81,22 +81,22 @@ export class ProjectController {
   }
 
   // -- GET CHAT IN PROJECTS --
-  @Get('/:projectId/chats/:chatId/messages')
-  async getChatDetailInProject(
-    @Req() req: { user: JwtPayloadWithRt },
-    @Param('projectId') projectId: string,
-    @Param('chatId') chatId: string,
-  ) {
-    // CHECK EXISTED
-    //...
+  // @Get('/:projectId/chats/:chatId/messages')
+  // async getChatDetailInProject(
+  //   @Req() req: { user: JwtPayloadWithRt },
+  //   @Param('projectId') projectId: string,
+  //   @Param('chatId') chatId: string,
+  // ) {
+  //   // CHECK EXISTED
+  //   //...
 
-    // RETURN CHAT MESSAGES IN A PROJECT SPECIFIC CHAT
-    return await this.projectService.getChatDetailInProject(
-      req.user.userId,
-      projectId,
-      chatId,
-    );
-  }
+  //   // RETURN CHAT MESSAGES IN A PROJECT SPECIFIC CHAT
+  //   return await this.projectService.getChatDetailInProject(
+  //     req.user.userId,
+  //     projectId,
+  //     chatId,
+  //   );
+  // }
 
   // -- POST CHAT IN PROJECTS --
   @Post('/:projectId/chats/messages')
