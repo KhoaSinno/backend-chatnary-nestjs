@@ -119,6 +119,11 @@ export class ChatService {
           messages: [],
           userId: chatDto.userId as string,
           projectId: chatDto.projectId as string,
+          // Title là câu hỏi được slice tròn câu để tránh quá dài
+          title:
+            chatDto.message.length > 50
+              ? chatDto.message.slice(0, 50) + '...'
+              : chatDto.message,
         },
       });
       chatId = created.id;
