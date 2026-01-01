@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
+import { CohereRerank } from '@langchain/cohere';
+import { raw } from '@prisma/client/runtime/library';
+import { Document } from '@langchain/core/documents';
 
 type MetadataDoc = {
   fileId?: string;
@@ -26,7 +29,7 @@ export interface ScoredDocument {
 @Injectable()
 export class RetrievalService {
   // Lấy nhiều hơn để lọc kỹ hơn (Wide Net)
-  private readonly RETRIEVE_K = 100;
+  private readonly RETRIEVE_K = 60;
   // Chỉ lấy top kết quả chất lượng nhất gửi cho LLM
   private readonly FINAL_K = 8;
 
@@ -56,27 +59,78 @@ export class RetrievalService {
 
     if (!rawDocs.length) return [];
 
+    const docsRerank: Document[] = [];
+    rawDocs.forEach(([doc, score]) => {
+      docsRerank.push(
+        new Document({
+          id: doc.id,
+          pageContent: doc.pageContent,
+          metadata: { ...doc.metadata },
+        }),
+      );
+    });
+
+    const cohereRerank = new CohereRerank({
+      apiKey: process.env.COHERE_API_KEY, // Default
+      topN: 8, // Default
+      model: 'rerank-v4.0-pro',
+    });
+
+    const rerankedDocuments = await cohereRerank.compressDocuments(
+      docsRerank,
+      query,
+    );
+
+    console.log(rerankedDocuments);
+
     // Chuẩn hóa documents sang format dễ xử lý
-    let candidates: ScoredDocument[] = rawDocs.map(([doc, score]) => ({
+    const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({
       pageContent: doc.pageContent,
       metadata: doc.metadata,
-      vectorScore: score, // Giả sử score càng cao càng tốt (Cosine Similarity)
+      finalScore: doc.metadata.relevanceScore,
+      vectorScore: 0,
+      keywordScore: 0,
     }));
 
-    // BƯỚC 2: RERANKING - Tính điểm từ khóa (Keyword Boosting)
-    // Đây là Core quality để tìm chính xác thông tin hỗn tạp
-    candidates = this.performKeywordReranking(query, candidates);
-
-    // BƯỚC 3: SORTING & SELECTION
-    // Sắp xếp theo điểm số cuối cùng (Final Score)
-    candidates.sort((a, b) => (b.finalScore || 0) - (a.finalScore || 0));
-
     // Log để debug chất lượng tìm kiếm
-    this.logSearchQuality(query, candidates);
+    // this.logSearchQuality(query, candidates);
 
     // Trả về top kết quả tốt nhất
     return candidates.slice(0, this.FINAL_K);
   }
+
+  // async retrieveAndRerank(query: string, userId: string, projectId?: string) {
+  //   // BƯỚC 1: RETRIEVAL - Lấy tập ứng viên rộng
+  //   const rawDocs = await this.vectorService.getRetrievalsWithScore(
+  //     query,
+  //     this.RETRIEVE_K,
+  //     userId,
+  //     projectId,
+  //   );
+
+  //   if (!rawDocs.length) return [];
+
+  //   // Chuẩn hóa documents sang format dễ xử lý
+  //   let candidates: ScoredDocument[] = rawDocs.map(([doc, score]) => ({
+  //     pageContent: doc.pageContent,
+  //     metadata: doc.metadata,
+  //     vectorScore: score, // Giả sử score càng cao càng tốt (Cosine Similarity)
+  //   }));
+
+  //   // BƯỚC 2: RERANKING - Tính điểm từ khóa (Keyword Boosting)
+  //   // Đây là Core quality để tìm chính xác thông tin hỗn tạp
+  //   candidates = this.performKeywordReranking(query, candidates);
+
+  //   // BƯỚC 3: SORTING & SELECTION
+  //   // Sắp xếp theo điểm số cuối cùng (Final Score)
+  //   candidates.sort((a, b) => (b.finalScore || 0) - (a.finalScore || 0));
+
+  //   // Log để debug chất lượng tìm kiếm
+  //   this.logSearchQuality(query, candidates);
+
+  //   // Trả về top kết quả tốt nhất
+  //   return candidates.slice(0, this.FINAL_K);
+  // }
 
   /**
    * THUẬT TOÁN RERANK MỚI CHO TIẾNG VIỆT
