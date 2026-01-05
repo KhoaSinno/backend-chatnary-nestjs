@@ -12,6 +12,7 @@ import {
   RetrievalService,
   ScoredDocument,
 } from '../retrieval/retrieval.service';
+import path from 'node:path';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -306,7 +307,8 @@ export class ChatService {
       if (!fileGroups.has(fileId)) {
         fileGroups.set(fileId, {
           fileId,
-          fileName,
+          // remove extension from file name
+          fileName: path.parse(fileName).name,
           maxScore: 0,
           chunks: [],
         });

@@ -24,13 +24,11 @@ export class VectorService {
 
     return vectorStore.addDocuments(
       chunks.map((chunk) => ({
-        pageContent: chunk.text,
+        pageContent: chunk.content,
         metadata: {
-          ...metadata,
           chunkIndex: chunk.chunkIndex,
-          page: chunk.page,
-          startOffset: chunk.startOffset,
-          endOffset: chunk.endOffset,
+          ...metadata,
+          ...chunk.metadata,
         },
       })),
     );
