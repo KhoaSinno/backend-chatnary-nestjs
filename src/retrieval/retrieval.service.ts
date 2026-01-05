@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
 import { CohereRerank } from '@langchain/cohere';
-import { raw } from '@prisma/client/runtime/library';
 import { Document } from '@langchain/core/documents';
 
 type MetadataDoc = {
@@ -29,9 +28,9 @@ export interface ScoredDocument {
 @Injectable()
 export class RetrievalService {
   // Lấy nhiều hơn để lọc kỹ hơn (Wide Net)
-  private readonly RETRIEVE_K = 60;
+  private readonly RETRIEVE_K = 90;
   // Chỉ lấy top kết quả chất lượng nhất gửi cho LLM
-  private readonly FINAL_K = 8;
+  private readonly FINAL_K = 20;
 
   // Trọng số cho Hybrid search (Fire tune base on real data)
   private readonly WEIGHT_VECTOR = 0.3;
@@ -60,7 +59,8 @@ export class RetrievalService {
     if (!rawDocs.length) return [];
 
     const docsRerank: Document[] = [];
-    rawDocs.forEach(([doc, score]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    rawDocs.forEach(([doc, _]) => {
       docsRerank.push(
         new Document({
           id: doc.id,
@@ -72,7 +72,7 @@ export class RetrievalService {
 
     const cohereRerank = new CohereRerank({
       apiKey: process.env.COHERE_API_KEY, // Default
-      topN: 8, // Default
+      topN: this.FINAL_K, // Default 8
       model: 'rerank-v4.0-pro',
     });
 
@@ -87,7 +87,7 @@ export class RetrievalService {
     const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({
       pageContent: doc.pageContent,
       metadata: doc.metadata,
-      finalScore: doc.metadata.relevanceScore,
+      finalScore: doc.metadata.relevanceScore as number,
       vectorScore: 0,
       keywordScore: 0,
     }));

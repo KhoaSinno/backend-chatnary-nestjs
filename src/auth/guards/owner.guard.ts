@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class OwnerGuard implements CanActivate {
@@ -15,7 +16,7 @@ export class OwnerGuard implements CanActivate {
     const userId = req.user.userId;
     const ownerId = await this.getOwnerIdFn(req);
 
-    if (ownerId !== userId && req.user.role !== 'ADMIN') {
+    if (ownerId !== userId && req.user.role !== Role.ADMIN) {
       throw new ForbiddenException('Not allowed: not owner');
     }
 

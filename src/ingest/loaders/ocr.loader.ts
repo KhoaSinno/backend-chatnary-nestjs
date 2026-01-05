@@ -203,21 +203,21 @@ export class OcrService implements OnModuleInit, OnModuleDestroy {
     const img = sharp(imgPath);
     const meta = await img.metadata();
 
-    const topCut = Math.floor(meta.height! * 0.03); // 1000px => cut 30px
-    const bottomCut = Math.floor(meta.height! * 0.03);
+    const topCut = Math.floor(meta.height * 0.03); // 1000px => cut 30px
+    const bottomCut = Math.floor(meta.height * 0.03);
 
     // Chỉ cắt trái/phải nếu ảnh quá rộng (scan lệch)
     // aspect ratio: width / height
     // < 1 là ảnh dọc, 0.75 là tỉ lệ phổ biến của trang A4
     const sideCut =
-      meta.width! / meta.height! > 0.75 ? Math.floor(meta.width! * 0.012) : 0;
+      meta.width / meta.height > 0.75 ? Math.floor(meta.width * 0.012) : 0;
 
     await img
       .extract({
         left: sideCut,
         top: topCut,
-        width: meta.width! - sideCut * 2, // cut left/right
-        height: meta.height! - topCut - bottomCut, // cut top/bottom
+        width: meta.width - sideCut * 2, // cut left/right
+        height: meta.height - topCut - bottomCut, // cut top/bottom
       })
       .grayscale()
       .normalize()

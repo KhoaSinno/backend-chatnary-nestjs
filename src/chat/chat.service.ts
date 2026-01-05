@@ -128,12 +128,12 @@ export class ChatService {
     const fileGroups = this.createFileGroups(scoredDocs);
 
     // -- HELPER: Create Context from File Groups --
-    const context = this.createContextFromFileGroups(fileGroups);
-    console.log('Final Context passed to LLM:\n', context);
+    const contextStr = this.createContextFromFileGroups(fileGroups);
+    console.log('Final Context passed to LLM:\n', contextStr);
 
     // -- HELPER: Create final inputLlm for LLM --
     const inputLlm = this.createFinalInputLlm(
-      context,
+      contextStr,
       chatDto.message,
       contentHistory,
     );

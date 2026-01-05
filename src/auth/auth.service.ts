@@ -7,6 +7,19 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Role } from '../constant/index.constant';
+import { $Enums } from '@prisma/client';
+
+type UserType = {
+  id: string;
+  name: string | null;
+  role: $Enums.Role;
+  email: string;
+  username: string;
+  password: string;
+  refreshToken: string | null;
+  storageUsed: bigint;
+  storageLimit: bigint;
+};
 
 @Injectable()
 export class AuthService {
@@ -81,7 +94,7 @@ export class AuthService {
         ...userSafe,
         storageUsed: Number(storageUsed),
         storageLimit: Number(storageLimit),
-      } as any,
+      } as unknown as UserType,
     };
   }
 
