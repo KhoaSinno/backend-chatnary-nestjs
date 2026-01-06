@@ -1,23 +1,53 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["postgresqlExtensions"]
 }
 
+// Universal datasource configuration
+// Works with: Neon, Supabase, Docker PostgreSQL, AWS RDS, etc.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL_NEON")
-  directUrl = env("DATABASE_URL_NEON_DIRECT")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DATABASE_DIRECT_URL")
+  extensions = [vector]
 }
 
-model documents {
+// Model này bạn quản lý bằng Raw SQL hoặc thư viện ngoài LangChain
+model embeddings {
   id        String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  text      String?
+  content   String                 @db.Text
   metadata  Json?
   embedding Unsupported("vector")?
 
-  @@map("documents")
-  @@ignore // No generate, no migration, no pull schema from db
+  // Bạn cần cột này trong DB thật để join, dù Prisma ignore
+  documentId String? @db.Uuid
+
+  @@map("embeddings")
+  @@ignore
 }
+
+// Upcoming Feature: Apply Small to big strategy with retrieval with child chunks, llm read parent chunk only
+// model ParentChunk {
+//   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+//   // Thay đổi: Content ở đây sẽ định dạng Markdown
+//   content String @db.Text
+
+//   pageNumber Int // Vẫn nên giữ để biết nguồn từ trang nào
+
+//   // Metadata bổ sung nếu cần (ví dụ: title của chương)
+//   metadata Json?
+
+//   documentId String    @db.Uuid
+//   document   documents @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now())
+
+//   // Quan hệ ảo để code hiểu, không tạo khóa ngoại trong DB thật (vì bảng embeddings LangChain quản lý)
+//   // childChunks ChildChunk[] 
+
+//   @@index([documentId])
+// }
 
 enum Role {
   ADMIN
@@ -32,53 +62,50 @@ enum AccessLevelDoc {
   RESTRICTED
 }
 
+enum DocumentStatus {
+  PROCESSING
+  DONE
+  ERROR
+}
+
 model users {
-  id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email            String              @unique
-  username         String              @unique
-  name             String?
-  password         String
-  refreshToken     String?
-  role             Role                @default(USER)
-  projects         projects[]
-  chats            chats[]
-  projectDocuments project_documents[]
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String  @unique
+  username     String  @unique
+  name         String?
+  password     String
+  role         Role    @default(USER)
+  refreshToken String?
+
+  // Quota management 
+  storageUsed  BigInt @default(0) // Dung lượng đã dùng (bytes)
+  storageLimit BigInt @default(1073741824) // Ví dụ: 1GB mặc định (bytes)
+
+  projects       projects[]
+  chats          chats[]
+  ownedDocuments documents[]
 }
 
 model chats {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String   @db.Uuid
-  title     String   @default("New Chat")
-  messages  Json[]
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title String @default("New Chat")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   projectId String?   @db.Uuid
   project   projects? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Json[]
 
   @@index([userId])
   @@index([projectId])
 }
 
-model projects {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  color       String?  @default("#3B82F6")
-  isArchived  Boolean  @default(false) // soft delete - TODO:
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  userId String @db.Uuid
-  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  chats     chats[]
-  documents project_documents[]
-}
-
-model project_documents {
+model documents {
   id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   // ===== Search info =====
   title         String? // Title of the document not name of file
@@ -91,27 +118,63 @@ model project_documents {
   accessLevel   AccessLevelDoc @default(PRIVATE) // public | private | restricted
 
   // ===== File info =====
-  name     String
-  filePath String
-  mimeType String?
-  size     Int?
-  status   String // uploading | processing | done | error
+  originalName String
+  filePath     String // S3/local
+  mimeType     String?
+  size         Int
+  pageCount    Int?
 
-  // ===== Dynamic metadata =====
-  metadata Json? // expandable unstable fields 
+  // Processing Status (Pipeline: Upload -> OCR -> Embedding)
+  status DocumentStatus @default(PROCESSING) // processing | done | error
 
+  // ===== Dynamic metadata & Stat =====
+  metadata  Json? // expandable unstable fields 
+  viewCount Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   // ===== Search & tracking =====
   indexedAt DateTime? // when the document was indexed for search Elasticsearch
-  viewCount Int       @default(0)
-
-  createdAt DateTime @default(now())
 
   // ===== Relations =====
-  projectId String   @db.Uuid
-  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  linkedProjects project_resources[] // Tài liệu này đang nằm trong những project nào?
+
+  // Ownership
+  userId String @db.Uuid
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // parentChunks ParentChunk[]
+
+  @@index([userId])
+}
+
+model projects {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  color       String? @default("#3B82F6")
+  isArchived  Boolean @default(false) // soft delete - TODO:
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userId String @db.Uuid
   user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([projectId])
+  chats            chats[]
+  projectResources project_resources[]
+}
+
+model project_resources {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  projectId String   @db.Uuid
+  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  documentId String    @db.Uuid
+  document   documents @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  // Settings riêng cho tài liệu trong ngữ cảnh project này
+  isSelected Boolean  @default(true) // User có thể tạm tắt tài liệu này khi chat 
+  addedAt    DateTime @default(now())
+
+  @@unique([projectId, documentId])
 }

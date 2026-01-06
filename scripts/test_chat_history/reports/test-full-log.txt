@@ -1,0 +1,71 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    CHAT HISTORY COMPREHENSIVE TEST                         ║
+║                    Full Logging Version - 2025-12-30                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🚀 Starting tests at 2025-12-30T03:42:37.318Z
+
+
+================================================================================
+📝 TEST 1: Create New Chat - Hỏi về Entropy & Information Gain
+================================================================================
+📤 URL: http://localhost:8080/api/v1/chat/global
+💬 MESSAGE: "IG, entropy la gi, tinh nhu nao, trinh bay lai step by step cho toi de hieu di"
+⏰ TIME: 2025-12-30T03:42:37.318Z
+
+✅ RESPONSE RECEIVED (10416ms)
+────────────────────────────────────────────────────────────────────────────────
+📋 STATUS CODE: 201
+🆔 CHAT ID: 765c4a8d-5273-4366-ae84-6b2fda58bdaf
+
+📝 ANSWER (1805 chars):
+────────────────────────────────────────
+IG (Information Gain) và Entropy là hai khái niệm quan trọng trong lĩnh vực cây quyết định (decision trees) của học máy.
+
+1. Entropy là gì?
+Entropy là một đại lượng đo lường mức độ không chắc chắn (uncertainty) hoặc độ hỗn loạn của một tập dữ liệu. Nếu một tập dữ liệu có các nhãn (labels) phân bố đều, entropy sẽ cao; nếu tất cả các nhãn giống nhau, entropy sẽ bằng 0. Entropy giúp đánh giá mức độ "lộn xộn" của thông tin trong tập dữ liệu đó [#10].
+
+2. Công thức tính Entropy
+Giả sử tập dữ liệu S có n loại nhãn (classes), xác suất xuất hiện của nhãn thứ i là pi, entropy được tính như sau:
+
+Entropy(S) = - ∑(pi * log2(pi)), với i chạy từ 1 đến n
+
+Trong đó:
+- pi là tỷ lệ phần tử thuộc nhãn i trong tập S.
+- log2 là logarit cơ số 2.
+
+3. Information Gain (IG) là gì?
+Information Gain (IG) là lượng thông tin thu được khi chia tập dữ liệu S thành các tập con dựa trên một thuộc tính (feature) nào đó. IG đo lường mức độ giảm không chắc chắn (entropy) sau khi chia.
+
+4. Công thức tính IG
+IG(S, A) = Entropy(S) - ∑ (|Sv|/|S|) * Entropy(Sv)
+
+Trong đó:
+- S là tập dữ liệu gốc.
+- A là thuộc tính dùng để chia.
+- Sv là tập con của S với giá trị thuộc tính A = v.
+- |Sv|/|S| là tỷ lệ phần tử của Sv so với S.
+
+5. Trình bày step by step (từng bước):
+
+Bước 1: Tính entropy của tập dữ liệu gốc S.
+Bước 2: Với mỗi giá trị v của thuộc tính A, chia S thành các tập con Sv.
+Bước 3: Tính entropy cho từng Sv.
+Bước 4: Tính entropy trung bình sau khi chia theo A: ∑ (|Sv|/|S|) * Entropy(Sv).
+Bước 5: Tính IG = Entropy(S) - entropy trung bình vừa tính ở bước 4.
+Bước 6: Lặp lại cho các thuộc tính khác, chọn thuộc tính có IG lớn nhất để chia tiếp.
+
+Tóm lại, IG giúp chọn thuộc tính tốt nhất để chia dữ liệu tại mỗi bước xây dựng cây quyết định, bằng cách đo mức giảm không chắc chắn (entropy) [#10].
+
+Nguồn tham khảo: [#10]
+────────────────────────────────────────
+
+📚 CITATIONS (8 items):
+  [1] Score: 0.2770 | File: uploads\documents\1766903551419-47988989.pdf | Page: 1
+  [2] Score: 0.2766 | File: uploads\documents\1766903551498-390414281.pdf | Page: 32
+  [3] Score: 0.2760 | File: uploads\documents\1766903551408-721977946.pdf | Page: 1
+  [4] Score: 0.2760 | File: uploads\documents\1766903551502-901921657.pdf | Page: 2
+  [5] Score: 0.2758 | File: uploads\documents\1766903551419-47988989.pdf | Page: 1
+  [6] Score: 0.2756 | File: uploads\documents\1766903551515-581923689.pdf | Page: 15
+  [7] Score: 0.2754 | File: uploads\documents\1766903551471-182850855.pdf | Page: 9
+  [8] Score: 0.2751 | File: uploads\documents\1766903551480-321544779.pdf | Page: 10

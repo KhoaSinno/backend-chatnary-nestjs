@@ -7,6 +7,19 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Role } from '../constant/index.constant';
+import { $Enums } from '@prisma/client';
+
+type UserType = {
+  id: string;
+  name: string | null;
+  role: $Enums.Role;
+  email: string;
+  username: string;
+  password: string;
+  refreshToken: string | null;
+  storageUsed: bigint;
+  storageLimit: bigint;
+};
 
 @Injectable()
 export class AuthService {
@@ -14,6 +27,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private config: ConfigService,
   ) {}
 
   // -- REGISTER --
@@ -63,7 +77,7 @@ export class AuthService {
 
     // User no password in response
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userSafe } = user;
+    const { password: _, storageUsed, storageLimit, ...userSafe } = user;
 
     // Sign JWT
     const tokens = await this.getTokens(
@@ -74,7 +88,14 @@ export class AuthService {
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
-    return { ...tokens, user: userSafe };
+    return {
+      ...tokens,
+      user: {
+        ...userSafe,
+        storageUsed: Number(storageUsed),
+        storageLimit: Number(storageLimit),
+      } as unknown as UserType,
+    };
   }
 
   // -- LOGOUT --
@@ -130,11 +151,11 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: jwtSecret,
-        expiresIn: '15m',
+        expiresIn: this.config.get('jwt.expiresIn'),
       }),
       this.jwtService.signAsync(payload, {
         secret: jwtRefreshSecret,
-        expiresIn: '7d',
+        expiresIn: this.config.get('jwtRefresh.expiresIn'),
       }),
     ]);
 

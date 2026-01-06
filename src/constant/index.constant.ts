@@ -1,5 +1,11 @@
-export const CHUNK_SIZE = 800; // recommended
-export const CHUNK_OVERLAP = 150; // recommended
+export const PARENT_CHUNK_SIZE = 3000;
+export const PARENT_CHUNK_OVERLAP = 300;
+
+export const CHILD_CHUNK_SIZE = 900;
+export const CHILD_CHUNK_OVERLAP = 150;
+
+export const CHUNK_SIZE = 1000;
+export const CHUNK_OVERLAP = 150;
 
 // Authorization
 

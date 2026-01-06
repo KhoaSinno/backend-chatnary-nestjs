@@ -19,6 +19,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './oss';
 import path from 'path';
 import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
+import { ParseJsonPipe } from '../common/pipes/parse-json.pipe';
+import { UploadMetadataDto } from './dto/upload-document.dto';
 
 @Controller('document')
 export class DocumentController {
@@ -27,10 +29,10 @@ export class DocumentController {
   // -- UPLOAD FILES --
   @Post('upload/files')
   @UseInterceptors(
-    FilesInterceptor('files', 10, {
+    FilesInterceptor('files', 20, {
       dest: 'uploads/documents',
       storage: storage,
-      limits: { fileSize: 20 * 1024 * 1024 },
+      limits: { fileSize: 2000 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         const extName = path.extname(file.originalname).toLowerCase();
         const allowedExts = [
@@ -56,7 +58,8 @@ export class DocumentController {
   async uploadFiles(
     @Req() req: { user: JwtPayloadWithRt },
     @UploadedFiles() files: Express.Multer.File[],
-    @Body('projectId') projectId?: string,
+    // @Body('projectId') projectId?: string,
+    @Body('data', ParseJsonPipe) metadata?: UploadMetadataDto,
   ) {
     Logger.log('Uploaded files:', files);
 
@@ -64,7 +67,21 @@ export class DocumentController {
       throw new BadRequestException('No files uploaded');
     }
 
-    await this.documentService.uploadFiles(req.user.userId, files, projectId);
+    console.log('Metadata:', metadata);
+    // Lúc này 'metadata' đã là Object xịn, có type đầy đủ, không cần parse thủ công
+    console.log(metadata?.authors); // ['Nguyen Van A', 'Tran Van B']
+    console.log(metadata?.publishedYear); // 2024 (Number)
+
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files uploaded');
+    }
+
+    await this.documentService.uploadFiles(
+      req.user.userId,
+      files,
+      metadata?.projectId as string,
+      metadata,
+    );
     return files.map((file) => ({
       url: `/uploads/documents/${file.filename}`,
     }));

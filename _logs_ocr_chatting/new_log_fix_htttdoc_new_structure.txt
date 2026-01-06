@@ -1,0 +1,352 @@
+new_log_fix_htttdoc:
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Theo thông báo của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ, các đối tượng được miễn, giảm học phí học kỳ I năm học 2025-2026 phải đáp ứng đủ 2 điều kiện:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n\nCụ thể, các đối tượng được miễn, giảm học phí gồm:\n\n**Đối tượng được miễn học phí:**\n- Con của người hoạt động cách mạng trước tháng 08/1945; con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; con của liệt sĩ, thương binh, bệnh binh hoặc được hưởng chính sách như thương binh, bệnh binh; con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.\n- Sinh viên khuyết tật.\n- Sinh viên từ 16 đến 22 tuổi đang học văn bằng thứ nhất, không có nguồn nuôi dưỡng, thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại Nghị định số 20/2021/NĐ-CP.\n- Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.\n- Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.\n\n**Đối tượng được giảm 70% học phí:**\n- Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n**Đối tượng được giảm 50% học phí:**\n- Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.\n\nLưu ý: Nếu sinh viên thuộc nhiều diện miễn, giảm/hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất [#1][#2][#3][#4][#5].",
+    "citations": [
+      {
+        "index": 2,
+        "snippet": "hân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh...",
+        "text": "hân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh hoặc được hưởng\nchính sách như thương binh, bệnh binh;\nCon của người hoạt động kháng chiến\nbị nhiễm chất độc hóa học.\n\nĐối tượng 2: (Khoản 3 - Điều 15) Đơn đê nghị miên, giảm học phí\nSinh viên khuyết tật (theo mâu);\n\nBản sao có công chứng Giây xác nhận\nkhuyêt tật\nĐối tượng 3: (Khoản 4 - Điều 15)\n\nSinh viên từ 16 tuổi đến 22 tuổi đang\nhọc văn bằng thứ nhất không có nguồn\nnuôi dưỡng thuộc đối tượng hưởng trợ\n\ncấp xã hội hàng tháng theo quy định tại\n\nkhoản 1 và khoản 2 Điều 5 Nghị định\nsố 20/2021/NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh vi",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 2,
+        "score": 0.7810525655746444,
+        "startOffset": 1300,
+        "endOffset": 2100
+      },
+      {
+        "index": 0,
+        "snippet": "UBND THÀNH PHÓ CÂN THƠ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC. Độc Iập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ\n\nSố: A64 /TB-ĐPHKTCN ...",
+        "text": "UBND THÀNH PHÓ CÂN THƠ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC. Độc Iập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ\n\nSố: A64 /TB-ĐPHKTCN Cần Thơ, ngày Aó tháng 9 năm 2025\n\nTHÔNG BÁO\nVề các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy\nhọc kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/NĐ- CP ngày 03 tháng 9 năm 2025 của\nChính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chỉ\nphí học tập và giá dịch vụ trong Iĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ\nthuật - Công nghệ Cần Thơ thông báo đến Iãnh đạo các khoa, cổ vấn học tập và\ntoàn thể sinh viên chính quy các nội dung sau:\n\nIL Đối tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhậ",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 0,
+        "score": 0.7750284537689952,
+        "startOffset": 0,
+        "endOffset": 800
+      },
+      {
+        "index": 4,
+        "snippet": "0 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nng...",
+        "text": "0 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nngười) ở thôn/bản đặc biệt khó khăn,\nxã khu vực III vùng dân tộc và miền\nnúi, xã đặc biệt khó khăn vùng bãi\nngang ven biển hải đảo theo quy định\ncủa cơ quan có thẩm quyền.\n\nĐơn đê nghị miên, giảm học phí\n(theo mều)\n\nBản sao công chứng của Giấy khai\nsinh\n\n3. Đối tượng giảm 50 học phí\n\nHồ sơ cần thực hiện\n\nĐối tượng 7: (Khoản 2 - Điều 16)\nSinh viên Ià con cán bộ, công chức,\nviên chức, công nhân mà cha hoặc mẹ\nbị mắc bệnh nghề nghiệp hoặc tai nạn\nlao động được hưởng trợ cấp thường\nxuyên\n\nĐơn đê nghị miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghi",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 4,
+        "score": 0.7476050076013813,
+        "startOffset": 2600,
+        "endOffset": 3400
+      },
+      {
+        "index": 3,
+        "snippet": "NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh vi...",
+        "text": "NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh viên Ià dân tộc thiêu số có cha\nhoặc mẹ hoặc cả cha và mẹ hoặc ông\nbà (trong trường hợp ở với ông bà)\nthuộc hộ nghèo và hộ cận nghèo theo\nquy định của Thủ tướng Chính phủ\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nGiấy chứng nhận hộ nghèo, hộ cận\nnghèo\n\nĐối tượng 5: (Khoản 10 - Điều 15)\nSinh viên Ià dân tộc thiêu số rất ít\nngười ở vùng có điêu kiện kinh tê - xã\nhội khó khăn và đặc biệt khó khăn\n\nĐơn đê nghị miên, giảm học phí\n(theo mẫu)\n\nBản sao công chứng của Giấy khai\nsinh\n\n2. Đối tượng giảm 70 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nng",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 3,
+        "score": 0.7441521883010846,
+        "startOffset": 1950,
+        "endOffset": 2750
+      },
+      {
+        "index": 1,
+        "snippet": "tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhậ...",
+        "text": "tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập)\n\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP\n(được nêu cụ thể tại phân Thủ tục thực hiện )\n\nH. Thủ tục thực hiện\n\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để\nđược xét miễn, giảm học phí, cụ thê như sau\n1. Đối tượng miễn học phí Hồ sơ cần thực hiện\n\nĐối tượng 1: (Khoản 2 - Điều 15) Đơn đê nghị miền, giảm học phí\n(theo mẫu)\n\nCon của người hoạt động cách mạng\ntrước tháng 08/1945; Con của Anh - Bản sao có công chứng Giấy xác\nhùng Lực Iượng vũ trang nhân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 1,
+        "score": 0.7440051250463873,
+        "startOffset": 650,
+        "endOffset": 1450
+      },
+      {
+        "index": 5,
+        "snippet": "miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghi...",
+        "text": "miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghiệp do tổ chức\nBảo hiểm xã hội cấp\n\nLưu ý:\n\n(1) S nh viên thuộc diện miễn, giảm học phí cùng Iúc hướng nhiều chính\nsách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.\n3\n\n(2) Danh mục vùng, địa bàn có điều kiện kinh tê - xã hội đặc biệt khó\nkhăn áp dụng đôi với đôi tượng 5 và đôi tượng 6 theo phụ Iục đính\nkèm thông báo này. Sinh viên căn cứ theo địa chỉ thường trú trước sáp\nnhập đề xét\n\nII. Thời gian và địa điểm nộp hồ sơ\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản Iý sinh viên\nKhởi nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui Iòng liên hệ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 5,
+        "score": 0.6489230065895915,
+        "startOffset": 3250,
+        "endOffset": 4050
+      },
+      {
+        "index": 8,
+        "snippet": "\nsách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 202...",
+        "text": "\nsách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiêu sô và miên núi giai đoạn 2021 - 2025\nJMau Ì\n(Theo phụ Iục JJ kèm theo Nghị\nđịnh số 23/2025/NĐ-CP)\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp;\nCố vấn học tập\nHọ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\nThuộc đối tượng\n(Ghi rõ đói tượng được quy định tại Nghị định 238/2025/NĐ-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đề\nnghị được Nhà trường xem xét để được miễn,",
+        "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+        "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+        "page": 1,
+        "chunkIndex": 8,
+        "score": 0.614343721011653,
+        "startOffset": 5200,
+        "endOffset": 6000
+      },
+      {
+        "index": 6,
+        "snippet": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên c...",
+        "text": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+        "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+        "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+        "page": 2,
+        "chunkIndex": 6,
+        "score": 0.5125452734556956,
+        "startOffset": 3821,
+        "endOffset": 4621
+      }
+    ],
+    "relateDocs": [
+      [
+        {
+          "pageContent": "hân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh hoặc được hưởng\nchính sách như thương binh, bệnh binh;\nCon của người hoạt động kháng chiến\nbị nhiễm chất độc hóa học.\n\nĐối tượng 2: (Khoản 3 - Điều 15) Đơn đê nghị miên, giảm học phí\nSinh viên khuyết tật (theo mâu);\n\nBản sao có công chứng Giây xác nhận\nkhuyêt tật\nĐối tượng 3: (Khoản 4 - Điều 15)\n\nSinh viên từ 16 tuổi đến 22 tuổi đang\nhọc văn bằng thứ nhất không có nguồn\nnuôi dưỡng thuộc đối tượng hưởng trợ\n\ncấp xã hội hàng tháng theo quy định tại\n\nkhoản 1 và khoản 2 Điều 5 Nghị định\nsố 20/2021/NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh vi",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 2100,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 2,
+            "startOffset": 1300
+          }
+        },
+        0.7810525655746444
+      ],
+      [
+        {
+          "pageContent": "UBND THÀNH PHÓ CÂN THƠ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC. Độc Iập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ\n\nSố: A64 /TB-ĐPHKTCN Cần Thơ, ngày Aó tháng 9 năm 2025\n\nTHÔNG BÁO\nVề các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy\nhọc kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/NĐ- CP ngày 03 tháng 9 năm 2025 của\nChính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chỉ\nphí học tập và giá dịch vụ trong Iĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ\nthuật - Công nghệ Cần Thơ thông báo đến Iãnh đạo các khoa, cổ vấn học tập và\ntoàn thể sinh viên chính quy các nội dung sau:\n\nIL Đối tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhậ",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 800,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 0,
+            "startOffset": 0
+          }
+        },
+        0.7750284537689952
+      ],
+      [
+        {
+          "pageContent": "0 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nngười) ở thôn/bản đặc biệt khó khăn,\nxã khu vực III vùng dân tộc và miền\nnúi, xã đặc biệt khó khăn vùng bãi\nngang ven biển hải đảo theo quy định\ncủa cơ quan có thẩm quyền.\n\nĐơn đê nghị miên, giảm học phí\n(theo mều)\n\nBản sao công chứng của Giấy khai\nsinh\n\n3. Đối tượng giảm 50 học phí\n\nHồ sơ cần thực hiện\n\nĐối tượng 7: (Khoản 2 - Điều 16)\nSinh viên Ià con cán bộ, công chức,\nviên chức, công nhân mà cha hoặc mẹ\nbị mắc bệnh nghề nghiệp hoặc tai nạn\nlao động được hưởng trợ cấp thường\nxuyên\n\nĐơn đê nghị miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghi",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 3400,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 4,
+            "startOffset": 2600
+          }
+        },
+        0.7476050076013813
+      ],
+      [
+        {
+          "pageContent": "NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh viên Ià dân tộc thiêu số có cha\nhoặc mẹ hoặc cả cha và mẹ hoặc ông\nbà (trong trường hợp ở với ông bà)\nthuộc hộ nghèo và hộ cận nghèo theo\nquy định của Thủ tướng Chính phủ\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nGiấy chứng nhận hộ nghèo, hộ cận\nnghèo\n\nĐối tượng 5: (Khoản 10 - Điều 15)\nSinh viên Ià dân tộc thiêu số rất ít\nngười ở vùng có điêu kiện kinh tê - xã\nhội khó khăn và đặc biệt khó khăn\n\nĐơn đê nghị miên, giảm học phí\n(theo mẫu)\n\nBản sao công chứng của Giấy khai\nsinh\n\n2. Đối tượng giảm 70 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nng",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 2750,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 3,
+            "startOffset": 1950
+          }
+        },
+        0.7441521883010846
+      ],
+      [
+        {
+          "pageContent": "tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập)\n\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP\n(được nêu cụ thể tại phân Thủ tục thực hiện )\n\nH. Thủ tục thực hiện\n\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để\nđược xét miễn, giảm học phí, cụ thê như sau\n1. Đối tượng miễn học phí Hồ sơ cần thực hiện\n\nĐối tượng 1: (Khoản 2 - Điều 15) Đơn đê nghị miền, giảm học phí\n(theo mẫu)\n\nCon của người hoạt động cách mạng\ntrước tháng 08/1945; Con của Anh - Bản sao có công chứng Giấy xác\nhùng Lực Iượng vũ trang nhân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 1450,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 1,
+            "startOffset": 650
+          }
+        },
+        0.7440051250463873
+      ],
+      [
+        {
+          "pageContent": "miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghiệp do tổ chức\nBảo hiểm xã hội cấp\n\nLưu ý:\n\n(1) S nh viên thuộc diện miễn, giảm học phí cùng Iúc hướng nhiều chính\nsách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.\n3\n\n(2) Danh mục vùng, địa bàn có điều kiện kinh tê - xã hội đặc biệt khó\nkhăn áp dụng đôi với đôi tượng 5 và đôi tượng 6 theo phụ Iục đính\nkèm thông báo này. Sinh viên căn cứ theo địa chỉ thường trú trước sáp\nnhập đề xét\n\nII. Thời gian và địa điểm nộp hồ sơ\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản Iý sinh viên\nKhởi nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui Iòng liên hệ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 4050,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 5,
+            "startOffset": 3250
+          }
+        },
+        0.6489230065895915
+      ],
+      [
+        {
+          "pageContent": "\nsách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiêu sô và miên núi giai đoạn 2021 - 2025\nJMau Ì\n(Theo phụ Iục JJ kèm theo Nghị\nđịnh số 23/2025/NĐ-CP)\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp;\nCố vấn học tập\nHọ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\nThuộc đối tượng\n(Ghi rõ đói tượng được quy định tại Nghị định 238/2025/NĐ-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đề\nnghị được Nhà trường xem xét để được miễn,",
+          "metadata": {
+            "page": 1,
+            "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+            "endOffset": 6000,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 8,
+            "startOffset": 5200
+          }
+        },
+        0.614343721011653
+      ],
+      [
+        {
+          "pageContent": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+          "metadata": {
+            "page": 2,
+            "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+            "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+            "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+            "endOffset": 4621,
+            "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4",
+            "chunkIndex": 6,
+            "startOffset": 3821
+          }
+        },
+        0.5125452734556956
+      ]
+    ],
+    "chat": {
+      "id": "cabcd589-4cf9-4467-8ade-36ba3b768341",
+      "userId": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Đối tượng nào được miễn giảm học phí"
+        },
+        {
+          "role": "assistant",
+          "content": "Theo thông báo của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ, các đối tượng được miễn, giảm học phí học kỳ I năm học 2025-2026 phải đáp ứng đủ 2 điều kiện:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP.\n\nCụ thể, các đối tượng được miễn, giảm học phí gồm:\n\n**Đối tượng được miễn học phí:**\n- Con của người hoạt động cách mạng trước tháng 08/1945; con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; con của liệt sĩ, thương binh, bệnh binh hoặc được hưởng chính sách như thương binh, bệnh binh; con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.\n- Sinh viên khuyết tật.\n- Sinh viên từ 16 đến 22 tuổi đang học văn bằng thứ nhất, không có nguồn nuôi dưỡng, thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại Nghị định số 20/2021/NĐ-CP.\n- Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.\n- Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.\n\n**Đối tượng được giảm 70% học phí:**\n- Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n**Đối tượng được giảm 50% học phí:**\n- Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.\n\nLưu ý: Nếu sinh viên thuộc nhiều diện miễn, giảm/hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất [#1][#2][#3][#4][#5].",
+          "citation": [
+            {
+              "page": 1,
+              "text": "hân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh hoặc được hưởng\nchính sách như thương binh, bệnh binh;\nCon của người hoạt động kháng chiến\nbị nhiễm chất độc hóa học.\n\nĐối tượng 2: (Khoản 3 - Điều 15) Đơn đê nghị miên, giảm học phí\nSinh viên khuyết tật (theo mâu);\n\nBản sao có công chứng Giây xác nhận\nkhuyêt tật\nĐối tượng 3: (Khoản 4 - Điều 15)\n\nSinh viên từ 16 tuổi đến 22 tuổi đang\nhọc văn bằng thứ nhất không có nguồn\nnuôi dưỡng thuộc đối tượng hưởng trợ\n\ncấp xã hội hàng tháng theo quy định tại\n\nkhoản 1 và khoản 2 Điều 5 Nghị định\nsố 20/2021/NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh vi",
+              "index": 2,
+              "score": 0.7810525655746444,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "hân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh...",
+              "endOffset": 2100,
+              "chunkIndex": 2,
+              "startOffset": 1300
+            },
+            {
+              "page": 1,
+              "text": "UBND THÀNH PHÓ CÂN THƠ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC. Độc Iập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ\n\nSố: A64 /TB-ĐPHKTCN Cần Thơ, ngày Aó tháng 9 năm 2025\n\nTHÔNG BÁO\nVề các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy\nhọc kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/NĐ- CP ngày 03 tháng 9 năm 2025 của\nChính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chỉ\nphí học tập và giá dịch vụ trong Iĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ\nthuật - Công nghệ Cần Thơ thông báo đến Iãnh đạo các khoa, cổ vấn học tập và\ntoàn thể sinh viên chính quy các nội dung sau:\n\nIL Đối tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhậ",
+              "index": 0,
+              "score": 0.7750284537689952,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "UBND THÀNH PHÓ CÂN THƠ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nTRƯỜNG ĐẠI HỌC. Độc Iập - Tự do - Hạnh phúc\nKỸ THUẬT-CÔNG NGHỆ CÀN THƠ\n\nSố: A64 /TB-ĐPHKTCN ...",
+              "endOffset": 800,
+              "chunkIndex": 0,
+              "startOffset": 0
+            },
+            {
+              "page": 1,
+              "text": "0 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nngười) ở thôn/bản đặc biệt khó khăn,\nxã khu vực III vùng dân tộc và miền\nnúi, xã đặc biệt khó khăn vùng bãi\nngang ven biển hải đảo theo quy định\ncủa cơ quan có thẩm quyền.\n\nĐơn đê nghị miên, giảm học phí\n(theo mều)\n\nBản sao công chứng của Giấy khai\nsinh\n\n3. Đối tượng giảm 50 học phí\n\nHồ sơ cần thực hiện\n\nĐối tượng 7: (Khoản 2 - Điều 16)\nSinh viên Ià con cán bộ, công chức,\nviên chức, công nhân mà cha hoặc mẹ\nbị mắc bệnh nghề nghiệp hoặc tai nạn\nlao động được hưởng trợ cấp thường\nxuyên\n\nĐơn đê nghị miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghi",
+              "index": 4,
+              "score": 0.7476050076013813,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "0 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nng...",
+              "endOffset": 3400,
+              "chunkIndex": 4,
+              "startOffset": 2600
+            },
+            {
+              "page": 1,
+              "text": "NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh viên Ià dân tộc thiêu số có cha\nhoặc mẹ hoặc cả cha và mẹ hoặc ông\nbà (trong trường hợp ở với ông bà)\nthuộc hộ nghèo và hộ cận nghèo theo\nquy định của Thủ tướng Chính phủ\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nGiấy chứng nhận hộ nghèo, hộ cận\nnghèo\n\nĐối tượng 5: (Khoản 10 - Điều 15)\nSinh viên Ià dân tộc thiêu số rất ít\nngười ở vùng có điêu kiện kinh tê - xã\nhội khó khăn và đặc biệt khó khăn\n\nĐơn đê nghị miên, giảm học phí\n(theo mẫu)\n\nBản sao công chứng của Giấy khai\nsinh\n\n2. Đối tượng giảm 70 học phí\n\nA . \nHồ sơ cần thực hiện\n\nĐối tượng 6: (Khoản 1 - Điều 16)\n\nSinh viên Ià người dân tộc thiểu số\n(ngoài đối tượng dân tộc thiểu số rất ít\nng",
+              "index": 3,
+              "score": 0.7441521883010846,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "NĐ-CP.\n\nĐơn đề nghị miễn, giảm học phí\n(theo mẫu);\n\nBản sao có công chứng Quyết định\nvề việc trợ cấp xã hội.\n\nĐối tượng 4: (Khoản 7 - Điều 15)\nSinh vi...",
+              "endOffset": 2750,
+              "chunkIndex": 3,
+              "startOffset": 1950
+            },
+            {
+              "page": 1,
+              "text": "tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập)\n\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/NĐ-CP\n(được nêu cụ thể tại phân Thủ tục thực hiện )\n\nH. Thủ tục thực hiện\n\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để\nđược xét miễn, giảm học phí, cụ thê như sau\n1. Đối tượng miễn học phí Hồ sơ cần thực hiện\n\nĐối tượng 1: (Khoản 2 - Điều 15) Đơn đê nghị miền, giảm học phí\n(theo mẫu)\n\nCon của người hoạt động cách mạng\ntrước tháng 08/1945; Con của Anh - Bản sao có công chứng Giấy xác\nhùng Lực Iượng vũ trang nhân dân, nhận đôi tượng do cơ quan quản Iý\nAnh hùng Lao động trong thời kỳ đối với người có công\n\nkháng chiên; Con của liệt sĩ, thương\nbinh, bệnh binh",
+              "index": 1,
+              "score": 0.7440051250463873,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "tượng được. miễn, giảm: Sinh viên thuộc đối tượng, được miễn,\ngiảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhậ...",
+              "endOffset": 1450,
+              "chunkIndex": 1,
+              "startOffset": 650
+            },
+            {
+              "page": 1,
+              "text": "miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghiệp do tổ chức\nBảo hiểm xã hội cấp\n\nLưu ý:\n\n(1) S nh viên thuộc diện miễn, giảm học phí cùng Iúc hướng nhiều chính\nsách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.\n3\n\n(2) Danh mục vùng, địa bàn có điều kiện kinh tê - xã hội đặc biệt khó\nkhăn áp dụng đôi với đôi tượng 5 và đôi tượng 6 theo phụ Iục đính\nkèm thông báo này. Sinh viên căn cứ theo địa chỉ thường trú trước sáp\nnhập đề xét\n\nII. Thời gian và địa điểm nộp hồ sơ\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản Iý sinh viên\nKhởi nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui Iòng liên hệ\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp",
+              "index": 5,
+              "score": 0.6489230065895915,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "miên, giảm học phí\n(theo mêu);\n\nBản sao công chứng của Quyêt\nđịnh hưởng trợ cấp hàng tháng của\ncha hoặc mẹ bị tai nạn lao động hoặc\nmắc bệnh nghề nghi...",
+              "endOffset": 4050,
+              "chunkIndex": 5,
+              "startOffset": 3250
+            },
+            {
+              "page": 1,
+              "text": "\nsách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều\nchỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc\nthiêu sô và miên núi giai đoạn 2021 - 2025\nJMau Ì\n(Theo phụ Iục JJ kèm theo Nghị\nđịnh số 23/2025/NĐ-CP)\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;\nPhòng Công tác Chính trị - Quản Iý sinh viên - Khởi nghiệp;\nCố vấn học tập\nHọ và tên sinh viên CC/CCCD\nNgày, tháng, năm sinh\n\nNơi sinh\n\nĐịa chỉ thường trú cũ\nĐịa chỉ thường trú mới\nThuộc đối tượng\n(Ghi rõ đói tượng được quy định tại Nghị định 238/2025/NĐ-CP)\n\nCăn cứ vào Nghị định số 238/2025/NĐ-CP của Chính phủ, tôi Iàm đơn này đề\nnghị được Nhà trường xem xét để được miễn,",
+              "index": 8,
+              "score": 0.614343721011653,
+              "fileId": "2fcf9723-b482-44f4-acd3-96f1a380b4d6",
+              "fileUrl": "uploads\\documents\\1766158177297-634089566.pdf",
+              "snippet": "\nsách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021\n2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 202...",
+              "endOffset": 6000,
+              "chunkIndex": 8,
+              "startOffset": 5200
+            },
+            {
+              "page": 2,
+              "text": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên cứu tiêu biểu đã tổng kết  các đặc điểm chính của mô hình GPT-3  và dòng LLM hiện đại như sau : Kiến trúc và dữ liệu huấn luyện:  GPT-3 và các thế hệ kế nhiệm  được xây dựng trên kiến trúc Transformer ,  huấn luyện trên tập dữ liệu văn bản khổng lồ  (hàng trăm tỷ từ) bao gồm nhiều nguồn khác nhau . Quy mô tham số cực lớn (GPT-3 có 175 tỷ tham số) cho phép mô hình  học được biểu diễn ngôn ngữ rất đa dạng , làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ. Khả năng học từ ít ví dụ:  GPT-3 có khả năng  thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa  (few-shot learning). Mô hình  hiểu yêu cầu từ ngữ cả",
+              "index": 6,
+              "score": 0.5125452734556956,
+              "fileId": "70dda18a-1754-4f74-b01e-13b5af6e2ad4",
+              "fileUrl": "uploads\\documents\\1766158271682-225179755.pdf",
+              "snippet": "các mô hình được huấn luyện chuyên biệt  cho tác vụ tương ứng,  cho thấy hiệu quả của việc mở rộng quy mô và học từ ngữ cảnh . Một công trình nghiên c...",
+              "endOffset": 4621,
+              "chunkIndex": 6,
+              "startOffset": 3821
+            }
+          ]
+        }
+      ],
+      "createdAt": "2025-12-19T15:49:10.283Z",
+      "updatedAt": "2025-12-19T15:49:18.122Z",
+      "projectId": "45ac97e2-0ed1-431c-9337-0e570f6875b4"
+    }
+  }
+}

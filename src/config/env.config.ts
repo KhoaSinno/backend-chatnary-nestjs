@@ -3,7 +3,19 @@ export const envConfig = () => ({
     apiKey: process.env.OPENAI_API_KEY,
   },
   database: {
-    url: process.env.DATABASE_URL_NEON,
+    // Flexible: works with any PostgreSQL provider (Neon, Supabase, Docker, etc.)
+    url: process.env.DATABASE_URL,
+    // Optional: for migrations (required by some providers like Neon)
+    directUrl: process.env.DATABASE_DIRECT_URL,
+    // Connection pool settings (optional, provider-specific)
+    pooling: {
+      max: parseInt(process.env.DB_POOL_MAX || '20'),
+      min: parseInt(process.env.DB_POOL_MIN || '2'),
+      idleTimeoutMillis: parseInt(process.env.DB_POOL_IDLE_TIMEOUT || '30000'),
+      connectionTimeoutMillis: parseInt(
+        process.env.DB_POOL_CONNECTION_TIMEOUT || '10000',
+      ),
+    },
   },
   jwt: {
     secret: process.env.JWT_SECRET,

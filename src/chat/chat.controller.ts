@@ -21,14 +21,14 @@ export class ChatController {
 
   // -- CHAT LITE --
   @Post('/global')
-  chatLite(
+  chatGlobal(
     @Req() req: { user: JwtPayloadWithRt },
     @Query('chatId') chatId: string | undefined,
     @Body() chatDto: ChatDto,
   ) {
     chatDto.userId = req.user.userId;
     chatDto.chatId = chatId;
-    return this.chatService.chatLite(chatDto);
+    return this.chatService.chatGlobal(chatDto);
   }
 
   // -- CHAT HISTORY --
@@ -42,16 +42,19 @@ export class ChatController {
   }
 
   // -- GET CHAT DETAIL BY ID --
-  @Get(':id')
-  getChatById(@Req() req: { user: JwtPayloadWithRt }, @Param('id') id: string) {
-    return this.chatService.getChatById(req.user.userId, id);
+  @Get(':chatId/messages')
+  getChatById(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('chatId') chatId: string,
+  ) {
+    return this.chatService.getChatById(req.user.userId, chatId);
   }
 
   // -- GET ALL USER CHATS --
-  @Get('/user/all')
-  getAllUserChat(@Req() req: { user: JwtPayloadWithRt }) {
-    return this.chatService.getAllUserChat(req.user.userId);
-  }
+  // @Get('/user/global')
+  // getAllUserChat(@Req() req: { user: JwtPayloadWithRt }) {
+  //   return this.chatService.getAllUserChat(req.user.userId);
+  // }
 
   // -- GET GLOBAL USER CHATS --
   @Get('/user/global')

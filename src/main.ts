@@ -3,9 +3,26 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from './response.interceptor';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Replace the default NestJS logger with Winston
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  // --- Config CORS ---
+  // Dev mode: Allow all origins
+  app.enableCors();
+
+  /* //  Production mode: Restrict origins
+   */
+  app.enableCors({
+    origin: ['http://localhost:3000'], // Add your allowed origins here
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Chatnary API')
     .setDescription('The Chatnary API description')

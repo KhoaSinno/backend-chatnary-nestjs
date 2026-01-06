@@ -127,6 +127,22 @@ prisma:
 	npx prisma generate
 	npx prisma db push
 	@echo "✅ Prisma setup complete!"
+
+# Prisma db seed local - no docker:
+.PHONY: seed
+seed:
+	@echo "🌱 Seeding database with initial data..."
+	npx prisma db seed
+	@echo "✅ Database seeding complete!"
+
+# Prisma reset local - no docker:
+.PHONY: reset
+reset:
+	@echo "♻️ Resetting database..."
+	npx prisma db push --force-reset
+	@echo "🌱 Seeding database with initial data..."
+	npx prisma db seed
+	@echo "✅ Database reset and seeding complete!"
 	
 ## 🆘 Hiển thị hướng dẫn
 help:

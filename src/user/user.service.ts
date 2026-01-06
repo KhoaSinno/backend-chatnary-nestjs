@@ -7,13 +7,6 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  // -- CREATE USER --
-  createNewUser(createUserDto: CreateUserDto) {
-    return this.prisma.users.create({
-      data: createUserDto,
-    });
-  }
-
   // -- ALL USERS: ADMIN ONLY --
   findAllUsers() {
     return this.prisma.users.findMany();
@@ -23,6 +16,13 @@ export class UserService {
   findUserById(id: string) {
     return this.prisma.users.findUnique({
       where: { id },
+    });
+  }
+
+  // -- CREATE USER --
+  createNewUser(createUserDto: CreateUserDto) {
+    return this.prisma.users.create({
+      data: createUserDto,
     });
   }
 

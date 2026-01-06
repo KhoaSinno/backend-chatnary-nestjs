@@ -57,3 +57,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /uploads/documents
 
 /src/generated/prisma
+/uploads/temp

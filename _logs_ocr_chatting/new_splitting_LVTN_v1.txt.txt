@@ -1,0 +1,206 @@
+new_splitting_LVTN_v1.txt
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Theo tài liệu \"LV_CTUET_ThinhNhat.pdf\", hệ thống trong luận văn của tác giả Trường Thịnh và Minh Nhật được xây dựng dựa trên việc kết hợp AI, Python, LangChain và sử dụng các file PDF để giải quyết các vấn đề liên quan đến thủ tục hành chính trong trường đại học. Cụ thể, Python là ngôn ngữ lập trình chính, sử dụng các thư viện hỗ trợ từ LangChain và API của mô hình OpenAI để xử lý dữ liệu từ các file PDF. Hệ thống này có khả năng trả lời đúng 94% các câu hỏi về hỗ trợ hành chính dựa trên dữ liệu của trường, cho thấy việc tích hợp AI với cơ sở dữ liệu hành chính là khả thi [#25].\n\nTuy nhiên, tài liệu không mô tả chi tiết về kiến trúc hệ thống theo mô hình RAG (Retrieval-Augmented Generation). RAG là kiến trúc kết hợp giữa truy xuất thông tin (retrieval) từ một kho dữ liệu và sinh văn bản (generation) dựa trên thông tin truy xuất được. Trong khi hệ thống của luận văn có sử dụng AI để xử lý và trả lời câu hỏi dựa trên dữ liệu PDF, tài liệu không đề cập rõ ràng đến việc có một thành phần truy xuất tài liệu độc lập (retriever) kết hợp với mô hình sinh (generator) như trong kiến trúc RAG. Do đó, có thể nhận định rằng hệ thống này là một phiên bản đơn giản hơn, chủ yếu dựa vào tích hợp AI với dữ liệu PDF thông qua LangChain và OpenAI API, chứ chưa phải là một kiến trúc RAG hoàn chỉnh [#25].\n\nTóm lại: Kiến trúc hệ thống của luận văn là một phiên bản đơn giản hơn so với kiến trúc RAG, chủ yếu tập trung vào tích hợp AI với dữ liệu PDF mà chưa có sự phân tách rõ ràng giữa các thành phần truy xuất và sinh như RAG [#25].",
+    "citations": [
+      {
+        "index": 25,
+        "snippet": "đánh giá: Nhóm cho rằng việc kết hợp AI và thủ tục hành chính thông qua các file hành chính của trường có thể đáp ứng được các nhu cầu đề tài đề ra. B...",
+        "text": "đánh giá: Nhóm cho rằng việc kết hợp AI và thủ tục hành chính thông qua các file hành chính của trường có thể đáp ứng được các nhu cầu đề tài đề ra. Bằng việc xây dựng hệ thống ứng dụng từ việc kết hợp AI, Python, LangChain và sử dụng PDF để giải quyết vấn đề xoay quanh đề tài, lấy Python làm ngôn ngữ lập trình chính, nhóm sử dụng các viện hỗ trợ từ LangChain và API từ mô hình OpenAI hỗ trợ cho việc xử lý dữ liệu từ các file PDF. Sau khi tận dụng và xây dựng đề tài, nhóm đã nghiệm thu và thống kê lại kết quả và đánh giá hệ thống ứng dụng có thể trả lời đúng 94% hầu như tất cả các hỏi về mặt hỗ trợ hành chính từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 13,
+        "score": 0.843311877349373,
+        "startOffset": 13624,
+        "endOffset": 14389
+      },
+      {
+        "index": 98,
+        "snippet": "văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT\n...",
+        "text": "văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT\n\n31\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập! trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ để nắm rõ hơn các kỹ thuật Iập\ntrình hướng đối tượng, tận dụng các ưu điểm\ndo nền Iẳng .NET cung cấp. Liên kết với các\nhọc phần khác để xây dựng một ứng dụng\nquản Iý thông tin hoàn chỉnh\n36. Lập trình Học phân này cung cấp cho sinh viên một 2TC\nJava 1 khối Iượng kiến thức tương đối hoàn chỉnh về. (15 LT,\nIập trình Java. Các nội dung chủ yêu bao 30 TH)\ngồm: Các kiểu dữ liệu cơ sở, hằng, biến, Iệnh\nvà khối Iệnh, mảng: Lập trình hướng đối\ntượng trong Java; Lập trình giao diện với",
+        "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+        "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+        "page": 1,
+        "score": 0.8431778384202074,
+        "startOffset": 55567,
+        "endOffset": 56346
+      },
+      {
+        "index": 107,
+        "snippet": "nội dung chính: tông 3TC\nliệu đa quan về dữ liệu đa phương tiện và hệ cơ SỞ dữ (30LT,\nphương tiện liệu đa phương tiện, các kỹ thuật truy xuất 30 TH)\n\n...",
+        "text": "nội dung chính: tông 3TC\nliệu đa quan về dữ liệu đa phương tiện và hệ cơ SỞ dữ (30LT,\nphương tiện liệu đa phương tiện, các kỹ thuật truy xuất 30 TH)\n\nthông tin đối với dữ liệu văn bản, hình ảnh,\nâm thanh, video; kiến trúc cơ sở dữ liệu đa\nphương tiện\n\n47. Phát triên Học phân giới thiệu cho sinh viên các kiến 3TC\nứng dụng IoT thức về nền tảng cho sự kết nối các thiết bị Q0LT,\n\nvới Internet, JoT. Học phần trang bị các kỹ 30 TH)\nnăng thực hành về Iập trình JoT và các kỹ\nthuật thiết kế hệ thống loT.\n\n48. Nguyên Iý Học phần này cung cấp cho sinh viên các kiến 2 TC\nthiết kê và thức về nguyên tắc thiết kế hệ thống phần Q30LT,\nkiên trúc mềm, vận dụng hiệu quả kỹ thuật thiết kế kiến 0 TH)\nphân mềm trúc. Những vấn đề chuyên sâu về thiết kế",
+        "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+        "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+        "page": 1,
+        "score": 0.8431458996788883,
+        "startOffset": 60741,
+        "endOffset": 61482
+      },
+      {
+        "index": 191,
+        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có ...",
+        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có thể, Khi vào học các chương trình của Trường, em sẽ có nhiều cơ hội học bổ sung những mảng kiến thức để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Khi vào học chương trình Hệ thống thông tin tại Trường ĐH Kỹ thuật - Công nghệ Cần Thơ, em sẽ được học bổ sung những kiến thức cần thiết để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Tuy nhiên, việc biết lập trình sẽ là một lợi thế trong việc học ngành này, vì lập trình là một trong những kỹ năng quan trọng trong lĩnh vực Hệ thống thông tin. Nếu em chưa biết lập trình, em vẫn có thể học ngành này, nhưng em nên sẵn sàng học và nắm vững kiến thức lập trình trong quá trình học tập.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 93,
+        "score": 0.8426130320199151,
+        "startOffset": 102095,
+        "endOffset": 102892
+      },
+      {
+        "index": 69,
+        "snippet": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự....",
+        "text": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự. • Kết luận: OpenAI là một mô hình GenAI mạnh mẽ và nổi tiếng nhất hiện nay, họ đã cải tiến việc nhận dạng bằng hình ảnh hay có thể chuyển đổi từ PDF sang Word hoặc ngược lại, nhưng vì được quá nhiều người biết đến, việc lạm dụng OpenAI vào các bài viết tiểu luận, luận văn ngày một nhiều hơn làm mất tính minh bạch. 14",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 25,
+        "score": 0.8424148610132765,
+        "startOffset": 35844,
+        "endOffset": 36314
+      },
+      {
+        "index": 44,
+        "snippet": "(VR), Xếp loại/Đánh giá và Tuyển sinh. Nó giảm thiểu các nhiệm vụ hành chính của giáo viên để đầu tư nhiều hơn vào việc giảng dạy và hướng dẫn học sin...",
+        "text": "(VR), Xếp loại/Đánh giá và Tuyển sinh. Nó giảm thiểu các nhiệm vụ hành chính của giáo viên để đầu tư nhiều hơn vào việc giảng dạy và hướng dẫn học sinh. Trong thời đại hiện nay, khi có rất nhiều nhiệm vụ liên quan đến nghề giáo, AIA đóng góp đáng kể vào việc nâng cao việc học của học sinh, giảm thiểu khối lượng công việc của giáo viên, xếp loại/đánh giá học sinh một cách hiệu quả và dễ dàng, đồng thời hỗ trợ nhiều nhiệm vụ hành chính khác. Nghiên cứu cần được kiểm tra định lượng để khái quát hóa và chấp nhận được. Các mô hình ngôn ngữ có khả năng xử lý các ví dụ nhỏ[5] tập trung vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman.",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 18,
+        "score": 0.8423429442150278,
+        "startOffset": 22510,
+        "endOffset": 23246
+      },
+      {
+        "index": 88,
+        "snippet": "gồm: những hiểu biết mởrộng 2TC\nHệ thống về các hệ thống thông tin được sử dụng để đạt (30 LT,\nthông tin được các mục tiêu của công ty. Các công . 0TH...",
+        "text": "gồm: những hiểu biết mởrộng 2TC\nHệ thống về các hệ thống thông tin được sử dụng để đạt (30 LT,\nthông tin được các mục tiêu của công ty. Các công . 0TH)\n\nnghệ hiện đại sẽ góp phần vào sự phát triển\ntrong tương lai của các hệ thống và ứng dụng\nCNTT cũng sẽ được giới thiệu. Các vấn đề\ngÓP phân vào việc Iập kê hoạch, thiết kê, phát\ntriên, triển khai và quản Iý thành công các hệ\nthống thông tin.\n\n24. Kỹthuậtlập Học phần này cung cấp cho sinh viên kỹ năng 3 TC\ntrình Iập trình căn bản, có khả năng mô hình hóa (30LT,\n\nbài toán bằng Iưu đồ giải thuật, hiểu định 30 TH)\n\nnghĩa các kiểu dữ liệu, định nghĩa kiểu dữ liệu\nmới dựa trên các kiểu dựng săn, xây dựng và\nsử dụng hàm, có khả năng truy xuất và Iưu trữ\ndữ liệu dưới dạng tập tin... thông qua một\nngôn ngữ Iập trình cụ thê\n\n29\nTT\n\nTên học\nphân",
+        "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+        "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+        "page": 1,
+        "score": 0.8422962354929371,
+        "startOffset": 50226,
+        "endOffset": 51022
+      },
+      {
+        "index": 26,
+        "snippet": "từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.  ...",
+        "text": "từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.  Phạm vi nghiên cứu 2.2.1  Phạm vi không gian Phạm vi không gian của đề tài Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên trong khu vực trường đại học. Tập trung vào việc phát triển và triển 2",
+        "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+        "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+        "page": 13,
+        "score": 0.8422861767496519,
+        "startOffset": 14240,
+        "endOffset": 14602
+      }
+    ],
+    "chat": {
+      "id": "05db033f-643d-4cbc-92cc-8b13538eb217",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T05:07:23.316Z",
+      "updatedAt": "2025-12-25T05:07:32.142Z",
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "projectId": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Cho tôi biết kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
+        },
+        {
+          "role": "assistant",
+          "content": "Theo tài liệu \"LV_CTUET_ThinhNhat.pdf\", hệ thống trong luận văn của tác giả Trường Thịnh và Minh Nhật được xây dựng dựa trên việc kết hợp AI, Python, LangChain và sử dụng các file PDF để giải quyết các vấn đề liên quan đến thủ tục hành chính trong trường đại học. Cụ thể, Python là ngôn ngữ lập trình chính, sử dụng các thư viện hỗ trợ từ LangChain và API của mô hình OpenAI để xử lý dữ liệu từ các file PDF. Hệ thống này có khả năng trả lời đúng 94% các câu hỏi về hỗ trợ hành chính dựa trên dữ liệu của trường, cho thấy việc tích hợp AI với cơ sở dữ liệu hành chính là khả thi [#25].\n\nTuy nhiên, tài liệu không mô tả chi tiết về kiến trúc hệ thống theo mô hình RAG (Retrieval-Augmented Generation). RAG là kiến trúc kết hợp giữa truy xuất thông tin (retrieval) từ một kho dữ liệu và sinh văn bản (generation) dựa trên thông tin truy xuất được. Trong khi hệ thống của luận văn có sử dụng AI để xử lý và trả lời câu hỏi dựa trên dữ liệu PDF, tài liệu không đề cập rõ ràng đến việc có một thành phần truy xuất tài liệu độc lập (retriever) kết hợp với mô hình sinh (generator) như trong kiến trúc RAG. Do đó, có thể nhận định rằng hệ thống này là một phiên bản đơn giản hơn, chủ yếu dựa vào tích hợp AI với dữ liệu PDF thông qua LangChain và OpenAI API, chứ chưa phải là một kiến trúc RAG hoàn chỉnh [#25].\n\nTóm lại: Kiến trúc hệ thống của luận văn là một phiên bản đơn giản hơn so với kiến trúc RAG, chủ yếu tập trung vào tích hợp AI với dữ liệu PDF mà chưa có sự phân tách rõ ràng giữa các thành phần truy xuất và sinh như RAG [#25].",
+          "citation": [
+            {
+              "page": 13,
+              "text": "đánh giá: Nhóm cho rằng việc kết hợp AI và thủ tục hành chính thông qua các file hành chính của trường có thể đáp ứng được các nhu cầu đề tài đề ra. Bằng việc xây dựng hệ thống ứng dụng từ việc kết hợp AI, Python, LangChain và sử dụng PDF để giải quyết vấn đề xoay quanh đề tài, lấy Python làm ngôn ngữ lập trình chính, nhóm sử dụng các viện hỗ trợ từ LangChain và API từ mô hình OpenAI hỗ trợ cho việc xử lý dữ liệu từ các file PDF. Sau khi tận dụng và xây dựng đề tài, nhóm đã nghiệm thu và thống kê lại kết quả và đánh giá hệ thống ứng dụng có thể trả lời đúng 94% hầu như tất cả các hỏi về mặt hỗ trợ hành chính từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.",
+              "index": 25,
+              "score": 0.843311877349373,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "đánh giá: Nhóm cho rằng việc kết hợp AI và thủ tục hành chính thông qua các file hành chính của trường có thể đáp ứng được các nhu cầu đề tài đề ra. B...",
+              "endOffset": 14389,
+              "startOffset": 13624
+            },
+            {
+              "page": 1,
+              "text": "văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT\n\n31\nTT Tên học Nội dung cân đạt được của học phân Khối Ghi chú\nphân Iượng\nkiên\nthức\nngôn ngữ Iập! trình C . Sinh viên thực hiện 30 TH)\nnhiều ví dụ để nắm rõ hơn các kỹ thuật Iập\ntrình hướng đối tượng, tận dụng các ưu điểm\ndo nền Iẳng .NET cung cấp. Liên kết với các\nhọc phần khác để xây dựng một ứng dụng\nquản Iý thông tin hoàn chỉnh\n36. Lập trình Học phân này cung cấp cho sinh viên một 2TC\nJava 1 khối Iượng kiến thức tương đối hoàn chỉnh về. (15 LT,\nIập trình Java. Các nội dung chủ yêu bao 30 TH)\ngồm: Các kiểu dữ liệu cơ sở, hằng, biến, Iệnh\nvà khối Iệnh, mảng: Lập trình hướng đối\ntượng trong Java; Lập trình giao diện với",
+              "index": 98,
+              "score": 0.8431778384202074,
+              "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+              "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+              "snippet": "văn ở bậc Đại\nhọc.\n\n2TC\n\nG0LT\n\n0 TH)\n\n35\n\nCông nghệ\nNET\n\nHọc phân này nhăm giúp sinh viên bước đầu\nIàm quen với môi trường .NET thông qua\n\n2TC\n\n(15LT\n...",
+              "endOffset": 56346,
+              "startOffset": 55567
+            },
+            {
+              "page": 1,
+              "text": "nội dung chính: tông 3TC\nliệu đa quan về dữ liệu đa phương tiện và hệ cơ SỞ dữ (30LT,\nphương tiện liệu đa phương tiện, các kỹ thuật truy xuất 30 TH)\n\nthông tin đối với dữ liệu văn bản, hình ảnh,\nâm thanh, video; kiến trúc cơ sở dữ liệu đa\nphương tiện\n\n47. Phát triên Học phân giới thiệu cho sinh viên các kiến 3TC\nứng dụng IoT thức về nền tảng cho sự kết nối các thiết bị Q0LT,\n\nvới Internet, JoT. Học phần trang bị các kỹ 30 TH)\nnăng thực hành về Iập trình JoT và các kỹ\nthuật thiết kế hệ thống loT.\n\n48. Nguyên Iý Học phần này cung cấp cho sinh viên các kiến 2 TC\nthiết kê và thức về nguyên tắc thiết kế hệ thống phần Q30LT,\nkiên trúc mềm, vận dụng hiệu quả kỹ thuật thiết kế kiến 0 TH)\nphân mềm trúc. Những vấn đề chuyên sâu về thiết kế",
+              "index": 107,
+              "score": 0.8431458996788883,
+              "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+              "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+              "snippet": "nội dung chính: tông 3TC\nliệu đa quan về dữ liệu đa phương tiện và hệ cơ SỞ dữ (30LT,\nphương tiện liệu đa phương tiện, các kỹ thuật truy xuất 30 TH)\n\n...",
+              "endOffset": 61482,
+              "startOffset": 60741
+            },
+            {
+              "page": 93,
+              "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có thể, Khi vào học các chương trình của Trường, em sẽ có nhiều cơ hội học bổ sung những mảng kiến thức để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Khi vào học chương trình Hệ thống thông tin tại Trường ĐH Kỹ thuật - Công nghệ Cần Thơ, em sẽ được học bổ sung những kiến thức cần thiết để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Tuy nhiên, việc biết lập trình sẽ là một lợi thế trong việc học ngành này, vì lập trình là một trong những kỹ năng quan trọng trong lĩnh vực Hệ thống thông tin. Nếu em chưa biết lập trình, em vẫn có thể học ngành này, nhưng em nên sẵn sàng học và nắm vững kiến thức lập trình trong quá trình học tập.",
+              "index": 191,
+              "score": 0.8426130320199151,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có ...",
+              "endOffset": 102892,
+              "startOffset": 102095
+            },
+            {
+              "page": 25,
+              "text": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự. • Kết luận: OpenAI là một mô hình GenAI mạnh mẽ và nổi tiếng nhất hiện nay, họ đã cải tiến việc nhận dạng bằng hình ảnh hay có thể chuyển đổi từ PDF sang Word hoặc ngược lại, nhưng vì được quá nhiều người biết đến, việc lạm dụng OpenAI vào các bài viết tiểu luận, luận văn ngày một nhiều hơn làm mất tính minh bạch. 14",
+              "index": 69,
+              "score": 0.8424148610132765,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự....",
+              "endOffset": 36314,
+              "startOffset": 35844
+            },
+            {
+              "page": 18,
+              "text": "(VR), Xếp loại/Đánh giá và Tuyển sinh. Nó giảm thiểu các nhiệm vụ hành chính của giáo viên để đầu tư nhiều hơn vào việc giảng dạy và hướng dẫn học sinh. Trong thời đại hiện nay, khi có rất nhiều nhiệm vụ liên quan đến nghề giáo, AIA đóng góp đáng kể vào việc nâng cao việc học của học sinh, giảm thiểu khối lượng công việc của giáo viên, xếp loại/đánh giá học sinh một cách hiệu quả và dễ dàng, đồng thời hỗ trợ nhiều nhiệm vụ hành chính khác. Nghiên cứu cần được kiểm tra định lượng để khái quát hóa và chấp nhận được. Các mô hình ngôn ngữ có khả năng xử lý các ví dụ nhỏ[5] tập trung vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman.",
+              "index": 44,
+              "score": 0.8423429442150278,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "(VR), Xếp loại/Đánh giá và Tuyển sinh. Nó giảm thiểu các nhiệm vụ hành chính của giáo viên để đầu tư nhiều hơn vào việc giảng dạy và hướng dẫn học sin...",
+              "endOffset": 23246,
+              "startOffset": 22510
+            },
+            {
+              "page": 1,
+              "text": "gồm: những hiểu biết mởrộng 2TC\nHệ thống về các hệ thống thông tin được sử dụng để đạt (30 LT,\nthông tin được các mục tiêu của công ty. Các công . 0TH)\n\nnghệ hiện đại sẽ góp phần vào sự phát triển\ntrong tương lai của các hệ thống và ứng dụng\nCNTT cũng sẽ được giới thiệu. Các vấn đề\ngÓP phân vào việc Iập kê hoạch, thiết kê, phát\ntriên, triển khai và quản Iý thành công các hệ\nthống thông tin.\n\n24. Kỹthuậtlập Học phần này cung cấp cho sinh viên kỹ năng 3 TC\ntrình Iập trình căn bản, có khả năng mô hình hóa (30LT,\n\nbài toán bằng Iưu đồ giải thuật, hiểu định 30 TH)\n\nnghĩa các kiểu dữ liệu, định nghĩa kiểu dữ liệu\nmới dựa trên các kiểu dựng săn, xây dựng và\nsử dụng hàm, có khả năng truy xuất và Iưu trữ\ndữ liệu dưới dạng tập tin... thông qua một\nngôn ngữ Iập trình cụ thê\n\n29\nTT\n\nTên học\nphân",
+              "index": 88,
+              "score": 0.8422962354929371,
+              "fileId": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+              "fileUrl": "uploads\\documents\\1766638786657-7059145.pdf",
+              "snippet": "gồm: những hiểu biết mởrộng 2TC\nHệ thống về các hệ thống thông tin được sử dụng để đạt (30 LT,\nthông tin được các mục tiêu của công ty. Các công . 0TH...",
+              "endOffset": 51022,
+              "startOffset": 50226
+            },
+            {
+              "page": 13,
+              "text": "từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.  Phạm vi nghiên cứu 2.2.1  Phạm vi không gian Phạm vi không gian của đề tài Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên trong khu vực trường đại học. Tập trung vào việc phát triển và triển 2",
+              "index": 26,
+              "score": 0.8422861767496519,
+              "fileId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+              "fileUrl": "uploads\\documents\\1766638903777-216667186.pdf",
+              "snippet": "từ các file dữ liệu của Trường. Thông qua thống kê đã được nêu, nhóm cho rằng việc kết hợp AI và cơ sở dữ liệu hành chính từ Trường là khả thi. 2.2.  ...",
+              "endOffset": 14602,
+              "startOffset": 14240
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
