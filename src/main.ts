@@ -16,12 +16,12 @@ async function bootstrap() {
   app.enableCors();
 
   /* //  Production mode: Restrict origins
+   */
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://chatnary.com'], // Add your allowed origins here
+    origin: ['http://localhost:3000'], // Add your allowed origins here
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies
   });
-  */
 
   const config = new DocumentBuilder()
     .setTitle('Chatnary API')
