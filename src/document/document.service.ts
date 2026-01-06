@@ -50,7 +50,7 @@ export class DocumentService {
           documentType: 'unknown',
         });
 
-        const chunksCount = await this.ingestService.ingestDocument(
+        const chunks = await this.ingestService.ingestDocument(
           file.path,
           document.id,
           userId,
@@ -59,11 +59,11 @@ export class DocumentService {
         );
 
         this.logger.log(
-          `✅ Ingested ${chunksCount} chunks for: ${file.originalname}`,
+          `✅ Ingested ${chunks.length} chunks for: ${file.originalname}`,
         );
 
         // If ingestion successful (has chunks), save document record in DB
-        if (chunksCount > 0) {
+        if (chunks.length > 0) {
           // update 'done' status
           await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
 

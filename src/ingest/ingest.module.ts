@@ -6,12 +6,14 @@ import { TextSplitterService } from './splitters/text-splitter';
 import { VectorService } from './vector/vector.service';
 import { PgvectorService } from './vector/pgvector.client';
 import { OpenaiService } from '../llm/openai/openai.service';
+import { CloudService } from './loaders/cloud.loader';
 
 @Module({
   providers: [
     IngestService,
     PdfService,
     OcrService,
+    CloudService,
     TextSplitterService,
     VectorService,
     PgvectorService,

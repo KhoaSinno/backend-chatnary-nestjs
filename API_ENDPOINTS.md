@@ -796,7 +796,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 
 ```json
 {
-  "message": "Cho tôi biết kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
+  "message": "Đối tượng nào được miễn giảm học phí năm 2025 2026"
 }
 ```
 
@@ -807,98 +807,65 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
   "statusCode": 201,
   "success": true,
   "data": {
-    "answer": "Theo tài liệu, hệ thống trong luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật được xây dựng với các thành phần chính như sau:\n\n- LLM (Large Language Model): Được sử dụng để hiểu ngữ cảnh và câu hỏi của người dùng, đóng vai trò cốt lõi trong việc xử lý ngôn ngữ tự nhiên.\n- Embeddings: Các văn bản được số hóa thành các vector số (embeddings) để hỗ trợ việc tìm kiếm thông tin nhanh và hiệu quả hơn.\n- PDFs: Bộ tài liệu hành chính được đóng gói trong một thư mục, AI sẽ truy xuất và sử dụng các tài liệu này để trả lời chính xác cho người dùng.\n- Chatbot: Lớp độc lập có chức năng tạo đoạn chat, hỗ trợ người dùng tương tác với hệ thống.\n- Các lớp quản lý người dùng như Cán bộ, Sinh viên, Tài khoản, với các chức năng như phân quyền, thêm/xóa tệp, v.v.\n\nLuồng xử lý cơ bản: Người dùng gửi câu hỏi → Hệ thống sử dụng embeddings để tìm kiếm thông tin liên quan trong các file PDF → LLM xử lý và tạo câu trả lời dựa trên thông tin tìm được → Trả lời cho người dùng qua chatbot [#105][#107].\n\nSo sánh với kiến trúc RAG (Retrieval-Augmented Generation):\n\n- Kiến trúc RAG tiêu chuẩn gồm hai thành phần chính: bộ truy xuất (retriever) để tìm kiếm các đoạn văn bản liên quan từ kho dữ liệu, và bộ sinh (generator, thường là LLM) để tổng hợp, tạo ra câu trả lời dựa trên các đoạn truy xuất được.\n- Hệ thống trong luận văn cũng có các thành phần tương tự: sử dụng embeddings để tìm kiếm (retrieval) và LLM để sinh câu trả lời (generation).\n- Tuy nhiên, tài liệu không mô tả chi tiết về việc tích hợp chặt chẽ giữa hai thành phần này như trong RAG chuẩn (ví dụ: có sử dụng cross-attention giữa retrieved context và prompt đầu vào hay không), cũng như không đề cập đến các kỹ thuật tối ưu hóa hoặc fine-tuning đặc thù cho RAG.\n\nKết luận:  \nKiến trúc hệ thống của luận văn có các thành phần và luồng xử lý tương tự với kiến trúc RAG, nhưng có thể xem là một phiên bản đơn giản hơn, chưa đầy đủ hoặc tối ưu như RAG chuẩn trong nghiên cứu hiện đại [#105][#107].",
+    "answer": "Theo thông báo của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ, các đối tượng được miễn, giảm học phí học kỳ I năm học 2025-2026 phải đáp ứng đủ 2 điều kiện:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/ND-CP.\n\nCụ thể, các đối tượng được miễn, giảm học phí bao gồm:\n\n### 1. Đối tượng được miễn học phí\n- Con của người hoạt động cách mạng trước tháng 08/1945; con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; con của liệt sĩ, thương binh, bệnh binh được hưởng chính sách như thương binh, bệnh binh; con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.\n- Sinh viên khuyết tật.\n- Sinh viên từ 16 đến 22 tuổi đang học văn bằng thứ nhất, không có nguồn nuôi dưỡng, thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/ND-CP.\n- Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.\n- Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.\n\n### 2. Đối tượng được giảm 70% học phí\n- Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n### 3. Đối tượng được giảm 50% học phí\n- Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.\n\n**Lưu ý:** Nếu sinh viên thuộc nhiều diện miễn, giảm học phí thì chỉ được hưởng một chế độ ưu đãi cao nhất [#0][#1].",
     "citations": [
       {
-        "index": 56,
-        "snippet": "cân nhắc trong các ứng dụng đòi hỏi độ chính xác và tính cập nhật cao. 2.  Trí tuệ nhân tạo tạo sinh – Generative artificial intelligence (GenAI) 2.1....",
-        "text": "cân nhắc trong các ứng dụng đòi hỏi độ chính xác và tính cập nhật cao. 2.  Trí tuệ nhân tạo tạo sinh – Generative artificial intelligence (GenAI) 2.1.  GenAI là gì? Gen AI là một lĩnh vực của trí tuệ nhân tạo tập trung vào việc tạo ra nội dung, dữ liệu hoặc thông tin mới mà không cần lập trình rõ ràng. Hệ thống hoạt động dựa trên các mô hình được đào tạo trên các tập dữ liệu lớn để tự động tạo nội dung. Các mô hình này học các mẫu và mối quan hệ từ các tập dữ liệu rộng lớn và sau đó có thể tạo ra văn bản, hình ảnh hoặc các dạng nội dung khác. Một loại GenAI cụ thể, các mô hình ngôn ngữ lớn, có tiềm năng to lớn để thay đổi cách thức làm việc của con người. 2.2.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 22,
-        "score": 0.8836096450439399,
-        "startOffset": 29397,
-        "endOffset": 30065
+        "index": 0,
+        "snippet": "# THÔNG BÁO\n## Về các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy học kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/ND-CP ng...",
+        "text": "# THÔNG BÁO\n## Về các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy học kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/ND-CP ngày 03 tháng 9 năm 2025 của Chính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chi phí học tập và giá dịch vụ trong lĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ thông báo đến lãnh đạo các khoa, cố vấn học tập và toàn thể sinh viên chính quy các nội dung sau:\n\n### I. Đối tượng được miễn, giảm: Sinh viên thuộc đối tượng được miễn, giảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/ND-CP (được nêu cụ thể tại phần \"Thủ tục thực hiện\").\n\n### II. Thủ tục thực hiện\n\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để được xét miễn, giảm học phí, cụ thể như sau:\n\n<table>\n  <thead>\n    <tr>\n        <th>1. Đối tượng miễn học phí</th>\n        <th>Hồ sơ cần thực hiện</th>\n    </tr>\n<tr>\n        <th>Đối tượng 1: (Khoản 2 - Điều 15)</th>\n        <th>-</th>\n    </tr>\n<tr>\n        <th>Con của người hoạt động cách mạng trước tháng 08/1945; Con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; Con của liệt sĩ, thương binh, bệnh binh được hưởng chính sách như thương binh, bệnh binh; Con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);</th>\n    </tr>\n<tr>\n        <th></th>\n        <th>- Bản sao có công chứng Giấy xác nhận đối tượng do cơ quan quản lý đối với người có công.</th>\n    </tr>\n<tr>\n        <th>Đối tượng 2: (Khoản 3 - Điều 15)</th>\n        <th>-</th>\n    </tr>\n<tr>\n        <th>Sinh viên khuyết tật.</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);</th>\n    </tr>\n<tr>\n        <th></th>\n        <th>- Bản sao có công chứng Giấy xác nhận khuyết tật</th>\n    </tr>\n  </thead>\n</table>",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 1,
+        "score": 0.96973956,
+        "startOffset": 0,
+        "endOffset": 0
       },
       {
-        "index": 191,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có ...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có thể, Khi vào học các chương trình của Trường, em sẽ có nhiều cơ hội học bổ sung những mảng kiến thức để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Khi vào học chương trình Hệ thống thông tin tại Trường ĐH Kỹ thuật - Công nghệ Cần Thơ, em sẽ được học bổ sung những kiến thức cần thiết để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Tuy nhiên, việc biết lập trình sẽ là một lợi thế trong việc học ngành này, vì lập trình là một trong những kỹ năng quan trọng trong lĩnh vực Hệ thống thông tin. Nếu em chưa biết lập trình, em vẫn có thể học ngành này, nhưng em nên sẵn sàng học và nắm vững kiến thức lập trình trong quá trình học tập.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 93,
-        "score": 0.8819597740149363,
-        "startOffset": 102095,
-        "endOffset": 102891
+        "index": 1,
+        "snippet": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;...",
+        "text": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao có công chứng Quyết định về việc trợ cấp xã hội.</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Sinh viên từ 16 tuổi đến 22 tuổi đang học văn bằng thứ nhất không có nguồn nuôi dưỡng thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/ND-CP.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 4: (Khoản 7 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Giấy chứng nhận hộ nghèo, hộ cận nghèo.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 5: (Khoản 10 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**2. Đối tượng giảm 70% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 6: (Khoản 1 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**3. Đối tượng giảm 50% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 7: (Khoản 2 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Quyết định hưởng trợ cấp hàng tháng của cha hoặc mẹ bị tai nạn lao động hoặc mắc bệnh nghề nghiệp do tổ chức Bảo hiểm xã hội cấp.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Lưu ý:**</td>\n<td></td>\n    </tr>\n<tr>\n        <td>(1) Sinh viên thuộc diện miễn, giảm học phí cùng lúc hưởng nhiều chính sách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.</td>\n<td></td>\n    </tr>\n  </tbody>\n</table>\n\nScanned with<br>CS CamScanner™",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 2,
+        "score": 0.9009141,
+        "startOffset": 0,
+        "endOffset": 0
       },
       {
-        "index": 69,
-        "snippet": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự....",
-        "text": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự. • Kết luận: OpenAI là một mô hình GenAI mạnh mẽ và nổi tiếng nhất hiện nay, họ đã cải tiến việc nhận dạng bằng hình ảnh hay có thể chuyển đổi từ PDF sang Word hoặc ngược lại, nhưng vì được quá nhiều người biết đến, việc lạm dụng OpenAI vào các bài viết tiểu luận, luận văn ngày một nhiều hơn làm mất tính minh bạch. 14",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 25,
-        "score": 0.8818111457599573,
-        "startOffset": 35844,
-        "endOffset": 36313
+        "index": 4,
+        "snippet": "# ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;  \n- Phòng Công tác Chính trị - Quản lý sinh vi...",
+        "text": "# ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;  \n- Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp;  \n- Cố vấn học tập: ……………………………………………\n\nHọ và tên sinh viên: ………………………………………… CC/CCCD: …………………………………………  \nNgày, tháng, năm sinh: …………………………………………  \nNơi sinh: …………………………………………  \nLớp: ………………………………………… Khoa: …………………………………………  \nMSSV: …………………………………………  \nSố điện thoại sinh viên: ………………………………………… Số điện thoại người thân: …………………………………………  \nĐịa chỉ thường trú cũ: …………………………………………  \nĐịa chỉ thường trú mới: …………………………………………  \nThuộc đối tượng: …………………………………………  \n\n(Ghi rõ đối tượng được quy định tại Nghị định 238/2025/ND-CP)\n\nCăn cứ vào Nghị định số 238/2025/ND-CP của Chính phủ, tôi làm đơn này đề nghị được Nhà trường xem xét để được miễn, giảm học phí theo quy định và chế độ hiện hành.\n\n……, ngày …… tháng …… năm ……\n\n**Xác nhận của CVHT**  \n………………………………………  \n………………………………………  \n………………………………………\n\n**Người làm đơn**  \n(Ký tên và ghi rõ họ tên)  \n………………………………………",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 5,
+        "score": 0.84927243,
+        "startOffset": 0,
+        "endOffset": 0
       },
       {
-        "index": 45,
-        "snippet": "vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman. ...",
-        "text": "vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman. Bài viết khai thác về các kiến trúc mô hình ngôn ngữ lớn và khả năng tổng quát hóa trong máy học với 175 tỷ tham số, bao gồm các nội dung chính sau • kiến trúc và mô hình: GPT-3 và các phiên bản đời sau sử dụng Transformer, được huấn luyên trên một tập dữ liệu lớn từ nhiều nguồn khác nhau. • Khả năng ví dụ học hỏi: GPT có thể thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ, một ví dụ, hoặc khồng cần ví dụ. • Đánh giá: GPT vượt trội trong nhiều bài toán NLP(Natural Language Processing) mà không cần tỉnh chỉnh, đạt kết quả gần ngang hoặc tốt hơn với các mô hình huấn luyện đặc thù.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 18,
-        "score": 0.8813174851319173,
-        "startOffset": 23096,
-        "endOffset": 23835
+        "index": 2,
+        "snippet": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo ...",
+        "text": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo này. Sinh viên cần có theo địa chỉ thường trú trước sáp nhập để xét.\n\nIII. Thời gian và địa điểm nộp hồ sơ:\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui lòng liên hệ Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp (Cô Đinh Việt Tuyết Hiền, ĐT: 0919.232.577).\n\nNoi nhận:\n- Các đơn vị;\n- website Phòng QLSV;\n- Lưu: VT, QLSV.\n(Hiện)\n\nKT. HIỆU TRƯỞNG\nPHÓ HIỆU TRƯỞNG\nNguyễn Thị Yên Chi",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 3,
+        "score": 0.7214293,
+        "startOffset": 0,
+        "endOffset": 0
       },
       {
-        "index": 105,
-        "snippet": "thống và tương tác với hệ thống. • Trò chuyện với AI: Giảng viên có thể sử dụng chức năng chat với AI bằng tài khoản được cung cấp bởi trường đại học....",
-        "text": "thống và tương tác với hệ thống. • Trò chuyện với AI: Giảng viên có thể sử dụng chức năng chat với AI bằng tài khoản được cung cấp bởi trường đại học. AI: Đóng vai trò cốt lõi trong hệ thống, được xây dựng với tiêu chí hỗ trợ không ngừng nghỉ cho người dùng các thành phần mà AI xử lý sau khi nhận được văn bản từ người dùng như sau: • LLM: Là ngôn ngữ lớn để hiểu được ngữ cảnh của mạch chuyện câu hỏi người dùng là việc không thể thiếu. • Embeddings: Mỗi văn bản sẽ được số hóa có thể lên đến hàng nghìn hàng triệu mã số, vì vậy với quá trình này sẽ giúp máy học có thể tìm kiếm văn bản nhanh hơn. • PDFs: Là một bộ tư liệu về hành chính được đóng gói trong một thư mục, AI sẽ lấy tài liệu được cung cấp trong đây để trả lời chính xác cho người dùng. 26",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 37,
-        "score": 0.8812226939930137,
-        "startOffset": 54970,
-        "endOffset": 55725
-      },
-      {
-        "index": 150,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên lý thông tin của hệ thống trên nhiều dạng câu hỏi với độ phức tạp khác nhau, từ việc...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên lý thông tin của hệ thống trên nhiều dạng câu hỏi với độ phức tạp khác nhau, từ việc truy xuất thông tin đơn giản đến việc tổng hợp và suy luận thông tin phức tạp. Hình 4.21: Biểu đồ tỉ lệ câu trả lời đúng và sai Biểu đồ cột trong Hình 4.21 cho thấy kết quả khả quan về tỉ lệ trả lời đúng của hệ thống, phản ánh mức độ chính xác của hệ thống khi phản hồi người dùng. Cụ thể, hệ thống đạt tỉ lệ chính xác cao ở cả ba mức độ câu hỏi: Dễ (96%), Trung bình (95%) và Khó (85%). Để đánh giá mức độ khó của câu hỏi, chúng tôi sử dụng các tiêu chí sau: • Dễ: Câu hỏi có nội dung đơn giản, thông tin trả lời nằm rõ ràng trong một tệp PDF duy nhất. Ví dụ, câu hỏi về thời hạn nộp học phí, quy định về điểm danh,...",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 68,
-        "score": 0.8812082367055191,
-        "startOffset": 80600,
-        "endOffset": 81370
-      },
-      {
-        "index": 35,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên use-case, sơ đồ lớp, sơ đồ hoạt động để minh họa rõ ràng cấu trúc, chức năng và luồn...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên use-case, sơ đồ lớp, sơ đồ hoạt động để minh họa rõ ràng cấu trúc, chức năng và luồng xử lý của hệ thống. • Chương 4: Xây dựng hệ thống , tập trung vào quá trình triển khai hệ thống. Các công cụ, ngôn ngữ lập trình, framework, thư viện được sử dụng sẽ được giới thiệu. Đồ án trình bày chi tiết về thuật toán, mã nguồn, giao diện người dùng và quy trình tích hợp các thành phần của hệ thống. Kết quả thử nghiệm, đánh giá hiệu năng và độ chính xác của hệ thống cũng sẽ được trình bày. • Chương 5: Kết Luận , là chương cuối cùng tóm tắt lại những kết quả đạt được của luận văn, bao gồm việc xây dựng thành công hệ thống hỗ trợ hành chính tự động, những đóng góp về mặt khoa học và thực tiễn.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 16,
-        "score": 0.8805841582491243,
-        "startOffset": 18549,
-        "endOffset": 19303
-      },
-      {
-        "index": 107,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Cán bộ: Lớp này có thêm các phương thức (method) PhanQuyen() (phân quyền), ThemFil...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Cán bộ: Lớp này có thêm các phương thức (method) PhanQuyen() (phân quyền), ThemFile() (thêm tệp) và XoaFile() (xóa tệp), cho thấy cán bộ có quyền quản lý tài khoản và tệp tin trong hệ thống. • Chatbot: Đây là một lớp độc lập, có chức năng TaoDoanChat() (tạo đoạn chat), có thể được sử dụng để hỗ trợ người dùng tương tác với hệ thống. • Pdf: Đây là một lớp độc lập, đại diện cho các tệp tin PDF trong hệ thống. Các mối quan hệ giữa các lớp được biểu diễn bằng các đường nối và các ký hiệu: • Mũi tên kế thừa: Biểu thị mối quan hệ kế thừa (inheritance), ví dụ, lớp Sinh viên kế thừa từ lớp Tài khoản. • Mũi tên liên kết: Biểu thị mối quan hệ liên kết (association), ví dụ, Tài khoản liên kết với Chatbot.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 39,
-        "score": 0.8788569499084086,
-        "startOffset": 56445,
-        "endOffset": 57216
+        "index": 3,
+        "snippet": "# PHỤ LỤC\n## DANH MỤC VÙNG, ĐỊA BÀN CÓ ĐIỀU KIỆN KINH TẾ - XÃ HỘI ĐẶC BIỆT KHÓ KHĂN\n(Kèm theo Thông báo số 169/TB-DHKTGN ngày 16 tháng 9 năm 2025 của ...",
+        "text": "# PHỤ LỤC\n## DANH MỤC VÙNG, ĐỊA BÀN CÓ ĐIỀU KIỆN KINH TẾ - XÃ HỘI ĐẶC BIỆT KHÓ KHĂN\n(Kèm theo Thông báo số 169/TB-DHKTGN ngày 16 tháng 9 năm 2025 của Trường Đại học Kỹ thuật – Công nghệ Cần Thơ)\n\n1. Quyết định số 353/QĐ-TTg ngày 15 tháng 3 năm 2022 của Thủ tướng Chính phủ: Phê duyệt danh sách huyện nghèo, xã đặc biệt khó khăn vùng bãi ngang, ven biển và hải đảo giai đoạn 2021 - 2025;\n\n2. Quyết định số 576/QĐ-TTg ngày 22 tháng 6 năm 2024 của Thủ tướng Chính phủ: Công nhận 09 xã đặc biệt khó khăn vùng bãi ngang, ven biển và hải đảo giai đoạn 2021 - 2025 thoát khỏi tình trạng đặc biệt khó khăn;\n\n3. Quyết định số 861/QĐ-TTg ngày 04 tháng 6 năm 2021 của Thủ tướng Chính phủ: Phê duyệt danh sách các xã khu vực III, khu vực II, khu vực I thuộc vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n4. Quyết định số 698/QĐ-TTg ngày 19 tháng 7 năm 2024 của Thủ tướng Chính phủ: Phê duyệt điều chỉnh, bổ sung và hiệu chỉnh danh sách xã khu vực III, khu vực II, khu vực I thuộc vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n5. Quyết định số 612/QĐ-UBDT ngày 16 tháng 9 năm 2021 phê duyệt danh sách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều chỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc thiểu số và miền núi giai đoạn 2021 - 2025.",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 4,
+        "score": 0.6509999,
+        "startOffset": 0,
+        "endOffset": 0
       }
     ],
-    "chatId": "18bd4935-9ad9-4f4b-968c-2a5a73a4fbc4"
+    "chatId": "53852a0e-6bb8-49c0-b17d-e5accb980355"
   }
 }
 ```
@@ -917,124 +884,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 ```
 
-**Body**
-
-```json
-{
-  "message": "IG, entropy la gi, tinh nhu nao, trinh bay lai step by step cho toi de hieu di"
-}
-```
-
-**Response**
-
-``` json
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "answer": "IG (Information Gain) và entropy là hai khái niệm quan trọng trong lĩnh vực cây quyết định (decision trees) của học máy. Dưới đây là giải thích chi tiết và từng bước cách tính toán:\n\n1. Entropy là gì?\n- Entropy là một đại lượng đo lường mức độ không chắc chắn (uncertainty) hoặc độ hỗn loạn của một tập dữ liệu. Nếu một tập dữ liệu có các nhãn phân bố đều, entropy sẽ cao; nếu tất cả các nhãn giống nhau, entropy sẽ thấp (bằng 0).\n- Công thức tính entropy cho một tập dữ liệu S với k lớp:\n  \n  Entropy(S) = - ∑ (p_i * log2(p_i))\n  \n  Trong đó, p_i là xác suất xuất hiện của lớp i trong tập S.\n\n2. Information Gain (IG) là gì?\n- IG (Information Gain) là lượng thông tin thu được khi chia tập dữ liệu S theo một thuộc tính (feature) nào đó. Nó đo lường mức giảm entropy sau khi chia.\n- Công thức:\n  \n  IG(S, A) = Entropy(S) - ∑ (|S_v| / |S|) * Entropy(S_v)\n  \n  Trong đó:\n  - S: tập dữ liệu gốc\n  - A: thuộc tính dùng để chia\n  - S_v: tập con của S với thuộc tính A có giá trị v\n  - |S_v|: số lượng phần tử trong S_v\n  - |S|: số lượng phần tử trong S\n\n3. Các bước tính toán (step by step):\n\nBước 1: Tính entropy của tập dữ liệu gốc S.\n- Đếm số lượng phần tử của từng lớp trong S.\n- Tính xác suất p_i cho từng lớp.\n- Áp dụng công thức entropy.\n\nBước 2: Chia tập dữ liệu S theo thuộc tính A thành các tập con S_v.\n\nBước 3: Tính entropy cho từng tập con S_v.\n\nBước 4: Tính entropy trung bình sau khi chia theo thuộc tính A:\n- Lấy entropy của từng S_v nhân với tỷ lệ |S_v| / |S|, rồi cộng lại.\n\nBước 5: Tính IG:\n- IG(S, A) = Entropy(S) - entropy trung bình sau khi chia.\n\nTóm lại, IG giúp chọn thuộc tính nào để chia dữ liệu tại mỗi bước của cây quyết định, bằng cách chọn thuộc tính làm giảm entropy nhiều nhất (tức là tăng \"thông tin\" nhiều nhất) [#10].",
-    "citations": [
-      {
-        "index": 22,
-        "snippet": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n...",
-        "text": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n Câu hỏi mở: Iàm thế nào đề kết hợp với học máy?\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nLogic\nMotivation: virtual assistant\nTell inlormation Âsk questlons\nIE :2 4E z1\n\nUse natural languagel\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\n984/ch problems\n\nMakoydecslonrocesesi Conslraint satisdaction problems\n\nAdversarial games Bayesian neluorls\nReflex 9tates Variables Logic\nnu\nLạt-leedl intellgene \"High-leel inteligene \n\nMachine learming\n\nTypes of models that we can use to represenlt real-world tasks",
-        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
-        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
-        "page": 1,
-        "score": 0.2769574737485445,
-        "startOffset": 13200,
-        "endOffset": 13893,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 155,
-        "snippet": "Thu ộ c tính và giá tr ị   ở   đ ây là các ký hi ệ u.  Sau khi h ọ c xong, ID3 bi ể u di ễ n khái ni ệ m h ọ c  đượ c b ằ ng m ộ t cây quy ế t  đị nh....",
-        "text": "Thu ộ c tính và giá tr ị   ở   đ ây là các ký hi ệ u.  Sau khi h ọ c xong, ID3 bi ể u di ễ n khái ni ệ m h ọ c  đượ c b ằ ng m ộ t cây quy ế t  đị nh.  −   Ti ế p c ậ n k ế t n ố i hay m ạ ng neuron mô ph ỏ ng h ệ  th ầ n kinh c ủ a con ng ườ i  để  h ọ c  đượ c  các  khái  ni ệ m  mà  không  s ử  d ụ ng  ký  hi ệ u  để   bi ể u  di ễ n  v ấ n  đề .  M ạ ng  đơ n  t ầ ng  perceptron  cho  th ấ y  s ứ c  m ạ nh  c ủ a  m ạ ng  neuron,  tuy  nhiên  kh ả  n ă ng  áp  d ụ ng  c ủ a  chúng ch ỉ  h ạ n ch ế  cho các bài toán có tính tách r ờ i tuy ế n tính. M ạ ng  đ a t ầ ng áp d ụ ng  gi ả i  thu ậ t  h ọ c  lan  truy ề n  ng ượ c  đ ã  v ượ t  qua  nh ữ ng  h ạ n  ch ế  c ủ a  m ạ ng  perceptron,   ch ứ ng t ỏ   đượ c s ứ c m ạ nh th ự c s ự  c ủ a ti ế p c ậ n này.",
-        "fileId": "41a0ff87-6436-4a76-bf1e-f1b5212a4aa0",
-        "fileUrl": "uploads\\documents\\1766903551498-390414281.pdf",
-        "page": 32,
-        "score": 0.27663375660482803,
-        "startOffset": 85025,
-        "endOffset": 85798,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 35,
-        "snippet": "IE-TẾ\n\n chứa cặp oondiiion,\n\nactlon (;Í ooldifion then acion\n\nmô tả các sự kiện, và trình\n\nbiên dịch điều khiển việc áp dụng các luật, và các sự kiện\n...",
-        "text": "IE-TẾ\n\n chứa cặp oondiiion,\n\nactlon (;Í ooldifion then acion\n\nmô tả các sự kiện, và trình\n\nbiên dịch điều khiển việc áp dụng các luật, và các sự kiện\n\nđược cho.\n\nSử dụng suy diễn tiền (đi tử dữ Iội đồn mục tiêu) hoặc suy\ndiện Iùi (đi từ mục tiêu về dữ liệu)\nHệ luật sinh\n\nVD; Hệ luật sinh đơn giản dùng đồ sắp xếp một d3 các chữ cái a, b,c\ntheo thứ tự từ điện\nProduction set\n\n1. ba ab\n2. ca - ac\n\n4z g4 .: À 3. cb 1 bc\nIặp đền khi mẫu\n\ntrong bộ nhớ Iàm Heration Workingmemory Conflictset Hule fired\nvệc không còn 0 cbaca 1,2,3 1\n\nkhớp với đều liện\n\ncủi bắt Iỳ luật sinh u cabca 2 :\n\nnao, 2 acbca 2.3 2\nBiểu diễn mạng\n( efwork represen(aflon)\nBiểu diễn mạnp\n\nTrị thức được biểu diện dưới dạng đồ thị: các định Ià các đôi\ntượng hoặc khái miệm, các cung Ià quan hệ giữa chúng",
-        "fileId": "9234d71b-d05a-497b-94a4-2bbf969673a1",
-        "fileUrl": "uploads\\documents\\1766903551408-721977946.pdf",
-        "page": 1,
-        "score": 0.2759722599676925,
-        "startOffset": 20719,
-        "endOffset": 21491,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 8,
-        "snippet": "¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic m ệ nh  đề .  ...",
-        "text": "¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic m ệ nh  đề .  ¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  Gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic v ị  t ừ    Ki ế n th ứ c tiên quy ế t : Ngôn ng ữ  logic m ệ nh  đề , ngôn ng ữ  logic v ị  t ừ , ph ươ ng pháp ch ứ ng  minh d ẫ n xu ấ t, phép  đố i sánh m ẫ u trong logic v ị  t ừ .  Tài li ệ u tham kh ả o :   [1]  Geogre F. Luger –  Artificial Intelligence, Structures and  Strategies for Complex Problem  Solving 4 th  Ed. –  Addison-Wesley Publishing Company, Inc – 2002  (trang 509 – trang 552)   [2]   Elaine  Rich,  Kevin  Knight  –   Artificial  Intelligence,  2 nd   Ed.",
-        "fileId": "cb98ee69-32ce-4dd4-989c-88ec42b035f7",
-        "fileUrl": "uploads\\documents\\1766903551502-901921657.pdf",
-        "page": 2,
-        "score": 0.2759576725959778,
-        "startOffset": 4278,
-        "endOffset": 5046,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 21,
-        "snippet": "81519J716/1/407 3\nVanables 41 J 3 iJ J42isjals3lils1\nnu lj 6 111)3J912/4J81516\nô 218 916/1J5)317/21814\n4J1)9 2181714J1/9/603)5\nI 119 314J512J81611/7)3...",
-        "text": "81519J716/1/407 3\nVanables 41 J 3 iJ J42isjals3lils1\nnu lj 6 111)3J912/4J81516\nô 218 916/1J5)317/21814\n4J1)9 2181714J1/9/603)5\nI 119 314J512J81611/7)3\n\n604l: put dglts In blank squares so each row, column, and 3 3 sub-block\nhas dgls 1-9\n\nNote: order of flling squares doesn t matter in the evaluation criterial\n\n0591 / Alturin 2018 / Lang\n(ác phương pháp xây dựng ứng dụng TTN \ntheo mức độ thông minh\n\n(ongirasint satiacton problms hard consrainis (eg, SUdoku\nsthedling)\n\n(0 stralnt salisdfactlon problems\n\nBayeslan neworls\n\nVariables\n\nBayeslan nehuorls: soft _ Ẹ, 1racling ca s from sensors)\n\n114\n\n(0921 / Attumn 2018 / La 1\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận",
-        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
-        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
-        "page": 1,
-        "score": 0.2757757830619812,
-        "startOffset": 12549,
-        "endOffset": 13348,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 113,
-        "snippet": "đ ã cho th ấ y  tính  hi ệ u  qu ả  c ủ a  tri  th ứ c  ư u  tiên  trong  quá  trình  h ọ c  (mitchell  et  al.  1986,  dejong  and   mooney 1986).  S...",
-        "text": "đ ã cho th ấ y  tính  hi ệ u  qu ả  c ủ a  tri  th ứ c  ư u  tiên  trong  quá  trình  h ọ c  (mitchell  et  al.  1986,  dejong  and   mooney 1986).  S ự  thành công c ủ a các ch ươ ng trình h ọ c máy thuy ế t ph ụ c r ằ ng có th ể  t ồ n t ạ i m ộ t t ậ p h ợ p các  nguyên t ắ c h ọ c t ổ ng quát cho phép xây d ự ng nên các ch ươ ng trình có kh ả  n ă ng h ọ c t ậ p trong  nhi ề u l ĩ nh v ự c th ự c t ế .  III.9   X ử  lý phân tán song song và tính toán ki ể u n ả y sinh  H ầ u h ế t các k ỹ  thu ậ t nói  đế n trong tài li ệ u này  đề u s ử  d ụ ng tri th ứ c  đượ c bi ể u di ễ n rõ ràng và  các thu ậ t toán tìm ki ế m  đượ c thi ế t k ế  m ộ t cách c ẩ n th ậ n  để  cài  đặ t trí tu ệ .",
-        "fileId": "3b6fd126-c315-4b6e-88ba-cdd0d0b5e8e8",
-        "fileUrl": "uploads\\documents\\1766903551515-581923689.pdf",
-        "page": 15,
-        "score": 0.2756116038196321,
-        "startOffset": 57626,
-        "endOffset": 58323,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 8,
-        "snippet": "Heaviside step function Gọi x là tổng kết hợp trong công thức (1) g ( x ) =      1 , if x > 0 0 , elsewhere (2) còn được gọi à Heaviside step fun...",
-        "text": "Heaviside step function Gọi x là tổng kết hợp trong công thức (1) g ( x ) =      1 , if x > 0 0 , elsewhere (2) còn được gọi à Heaviside step function www.ctuet.edu.vn Perceptron 9 / 41",
-        "fileId": "a0e80837-b7af-49d1-9414-04f2df731911",
-        "fileUrl": "uploads\\documents\\1766903551471-182850855.pdf",
-        "page": 9,
-        "score": 0.2753538638564265,
-        "startOffset": 1673,
-        "endOffset": 1863,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 10,
-        "snippet": "Trình tự thực hiện if-else Giải thuật decision trees tuần tự thực hiện từng cột dữ liệu, hay gọi là từng feature Kết quả của sự chia feature trước sẽ ...",
-        "text": "Trình tự thực hiện if-else Giải thuật decision trees tuần tự thực hiện từng cột dữ liệu, hay gọi là từng feature Kết quả của sự chia feature trước sẽ ảnh hưởng đến sự chia feature sau Nguyên tắc chọn câu hỏi if-else là sao cho quá trình chia feature, giảm sự không chắc chắn (the amount of uncertainty) Giá trị thể hiện sự không chắc chắn được gọi là entropy www.ctuet.edu.vn Decision trees 10 / 28",
-        "fileId": "00cf3364-9710-44a0-8181-848bffd5e6a6",
-        "fileUrl": "uploads\\documents\\1766903551480-321544779.pdf",
-        "page": 10,
-        "score": 0.27511617422103885,
-        "startOffset": 1706,
-        "endOffset": 2104,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      }
-    ],
-    "chatId": "3ef5d8bd-2149-47bd-9baa-ae070977ea03"
-  }
-}
-```
+Body and Response same with `/chat/global`
 
 ## Get Chat Detail
 
@@ -1089,78 +939,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
             "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
             "startOffset": 6616
           },
-          {
-            "page": 2,
-            "text": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng .",
-            "index": 10,
-            "score": 0.9029724299907684,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. ...",
-            "endOffset": 6205,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 5591
-          },
-          {
-            "page": 2,
-            "text": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng .",
-            "index": 10,
-            "score": 0.9029724299907684,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. ...",
-            "endOffset": 6205,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 5591
-          },
-          {
-            "page": 1,
-            "text": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng cho từng tác vụ .",
-            "index": 5,
-            "score": 0.9004563748836517,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . V...",
-            "endOffset": 3416,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 2845
-          },
-          {
-            "page": 1,
-            "text": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng cho từng tác vụ .",
-            "index": 5,
-            "score": 0.9003304779332589,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . V...",
-            "endOffset": 3416,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 2845
-          },
-          {
-            "page": 1,
-            "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
-            "index": 0,
-            "score": 0.8964306837742281,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
-            "endOffset": 768,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 0
-          },
-          {
-            "page": 1,
-            "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
-            "index": 0,
-            "score": 0.8961400389671326,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
-            "endOffset": 768,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 0
-          }
+          // ...
         ]
       }
     ]
