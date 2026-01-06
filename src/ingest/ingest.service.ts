@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { VectorService } from './vector/vector.service';
-import { PdfService } from './loaders/pdf.loader';
 import { TextSplitterService } from './splitters/text-splitter';
-import { OcrService } from './loaders/ocr.loader';
 import { CloudService } from './loaders/cloud.loader';
-// import * as fs from 'fs';
 
 @Injectable()
 export class IngestService {
   constructor(
-    // private pdfService: PdfService,
-    // private ocrService: OcrService,
     private cloudService: CloudService,
     private textSplitterService: TextSplitterService,
     private vectorService: VectorService,
@@ -27,22 +22,9 @@ export class IngestService {
     projectId?: string,
     originalFileName?: string,
   ) {
-    // const pdfPages = await this.pdfService.load(filePath);
     const markdownResult = await this.cloudService.load(filePath);
 
     // console.log(JSON.stringify(markdownResult));
-
-    // // OCR handle
-    // let pagesToSplit = pdfPages;
-    // if (
-    //   !pdfPages ||
-    //   pdfPages.length === 0 ||
-    //   pdfPages.every((p) => p.text.trim().length < 5)
-    // ) {
-    //   console.log('📄 PDF scanned → OCR');
-    //   const ocrResult = await this.ocrService.load(filePath);
-    //   pagesToSplit = [{ page: 1, text: ocrResult.text }];
-    // }
 
     // 2. Split text into chunks
     // Extract markdown text from ParseResult array

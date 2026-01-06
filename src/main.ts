@@ -26,7 +26,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Chatnary API')
     .setDescription('The Chatnary API description')
-    .setVersion('1.0')
+    .setVersion('1.1')
     .addTag('chatnary')
     .addBearerAuth()
     .build();

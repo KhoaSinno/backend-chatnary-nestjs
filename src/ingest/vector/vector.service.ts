@@ -10,7 +10,7 @@ type Metadata = {
 };
 @Injectable()
 export class VectorService {
-  constructor(private readonly pgvectorService: PgvectorService) {}
+  constructor(private readonly pgvectorService: PgvectorService) { }
 
   // -- ADD DOCUMENTS TO VECTOR STORE --
   async addDocuments({
