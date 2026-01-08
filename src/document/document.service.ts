@@ -17,7 +17,7 @@ export class DocumentService {
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
   //-- UPLOAD --
   async uploadFiles(
@@ -169,7 +169,7 @@ export class DocumentService {
   async addDocumentsToProject(
     userId: string,
     projectId: string,
-    documentIds: string[],
+    documentIds: string[]
   ) {
     // 1. Check Project exists AND belongs to User
     const project = await this.prisma.projects.findFirst({
@@ -212,11 +212,30 @@ export class DocumentService {
       isSelected: true,
     }));
 
-    // 4. Create links
-    return await this.prisma.project_resources.createMany({
-      data: dataToInput,
-      skipDuplicates: true,
-    });
+    // 4. Update vector store and create DB links in parallel (Performance Optimization)
+    const [_, result] = await Promise.all([
+      this.vectorService.link2Project(validDocIds, projectId),
+      this.prisma.project_resources.createMany({
+        data: dataToInput,
+        skipDuplicates: true,
+      }),
+    ]);
+
+    return result;
+  }
+
+  async removeDocumentsOutProject(projectId: string, documentIds: string[]) {
+    // Delete from vector store and database in parallel
+    const [_, res] = await Promise.all([
+      this.vectorService.removeOutProject(documentIds, projectId),
+      this.prisma.project_resources.deleteMany({
+        where: {
+          projectId: projectId,
+          documentId: { in: documentIds },
+        },
+      }),
+    ]);
+    return res;
   }
 
   // -- Unlink ALL DOCUMENTS IN PROJECT --

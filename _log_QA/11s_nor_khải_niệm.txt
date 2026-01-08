@@ -1,0 +1,231 @@
+retrievel + rerank: 11s
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Tìm kiếm đệ quy là một phương pháp thực hiện thuật toán tìm kiếm sâu (depth-first search) bằng cách sử dụng kỹ thuật đệ quy trong lập trình. Thay vì sử dụng một cấu trúc dữ liệu như ngăn xếp (stack) để lưu trữ các trạng thái cần kiểm tra (danh sách open), thuật toán đệ quy sẽ gọi lại chính nó với từng trạng thái con, nhờ đó quá trình tìm kiếm được thực hiện một cách tự nhiên và ngắn gọn hơn.\n\nCụ thể, trong tìm kiếm đệ quy, mỗi lần thuật toán được gọi với một trạng thái hiện hành, nó sẽ kiểm tra xem trạng thái đó có phải là trạng thái đích không. Nếu không, nó sẽ lần lượt phát sinh từng trạng thái con chưa được kiểm tra và tiếp tục gọi đệ quy với từng trạng thái con đó. Nếu một trạng thái con dẫn đến đích, thuật toán sẽ trả về thành công và bỏ qua các trạng thái anh em còn lại. Nếu không có trạng thái con nào dẫn đến đích, thuật toán trả về thất bại và quay lại trạng thái cha để thử các trạng thái anh em khác. Danh sách closed (các trạng thái đã kiểm tra) thường được dùng để tránh lặp lại các trạng thái đã duyệt qua [#5][#7][#9][#10].\n\nTóm lại, tìm kiếm đệ quy giúp chia nhỏ bài toán lớn thành các bài toán con nhỏ hơn, giải quyết từng bài toán con bằng cách gọi lại chính thuật toán đó, cho đến khi tìm được đích hoặc hết không gian tìm kiếm [#10].",
+    "citations": [
+      {
+        "index": 2,
+        "snippet": "**Nội dung chính:** Trong chương này, các kỹ thuật sâu hơn cho việc cài đặt các thuật toán tìm kiếm sẽ được trình bày một cách chi tiết. Trước hết là ...",
+        "text": "**Nội dung chính:** Trong chương này, các kỹ thuật sâu hơn cho việc cài đặt các thuật toán tìm kiếm sẽ được trình bày một cách chi tiết. Trước hết là tìm kiếm đệ quy (recursive search) – một phương pháp thực hiện tìm kiếm sâu kèm theo lần ngược với cách thức tự nhiên và ngắn gọn. Tìm kiếm đệ quy được tăng cường nhờ sử dụng sự hợp nhất (unification) để tìm kiếm các không gian trạng thái do các biểu thức của phép tính vị từ sinh ra. Sự kết hợp này cho ta thuật toán tìm kiếm hướng mẫu (pattern-directed search). Phần tiếp theo trong nội dung chương V giới thiệu mô hình hệ sinh (production system) – một cấu trúc tổng quát để giải các bài toán hướng mẫu, nó được sử dụng khá nhiều không những để mô hình hóa việc giải quyết các vấn đề của con người, mà còn để xây dựng các hệ chuyên gia và những ứng dụng Trí tuệ nhân tạo khác. Cuối cùng, một cách giải bài toán trí tuệ nhân tạo khác cũng được đề cập đến – kiến trúc bảng đen (blackboard architecture).",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 1,
+        "score": 0.9020415,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 9,
+        "snippet": "phát sinh trạng thái. Trong tìm kiếm theo đệ quy đối với một trạng thái con, nếu có một con\nnào đó của trạng thái này là đích, thuật toán đệ quy sẽ tr...",
+        "text": "phát sinh trạng thái. Trong tìm kiếm theo đệ quy đối với một trạng thái con, nếu có một con\nnào đó của trạng thái này là đích, thuật toán đệ quy sẽ trả lời thành công và bỏ qua tất cả các\ntrạng thái anh em. Ngược lại, các trạng thái anh em kế tiếp được phát sinh. Cứ như vậy thuật\ntoán sẽ tìm kiếm toàn bộ đồ thị lần lượt theo từng độ sâu một.\n\nThuật toán đệ quy cho phép bỏ qua danh sách open trong suốt quá trình thực hiện. Cơ chế\nmà một ngôn ngữ lập trình sử dụng để cài đặt đệ quy là dùng mẩu tin hoạt động (activation\nrecord) cho từng lần gọi đệ quy. Quá trình lần ngược sẽ tác động khi tất cả các con cháu của\nmột trạng thái không phải là đích, làm cho bước đệ quy đó thất bại. Việc thực hiện đệ quy\ncho phép lập trình viên thu hẹp tầm nhìn của họ vào một trạng thái duy nhất cùng với các\ncon của nó thay vì phải duy trì một danh sách open gồm nhiều trạng thái.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 3,
+        "score": 0.84368914,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 5,
+        "snippet": "## I.1 Tìm kiếm đệ quy\n\nMột chuyển đổi trực tiếp của thuật toán tìm kiếm sâu thành dạng đệ quy sẽ minh họa cho sự tương đương của đệ quy và lặp lại đơ...",
+        "text": "## I.1 Tìm kiếm đệ quy\n\nMột chuyển đổi trực tiếp của thuật toán tìm kiếm sâu thành dạng đệ quy sẽ minh họa cho sự tương đương của đệ quy và lặp lại đơn giản. Thuật toán này sử dụng các biến toàn cục closed và open để duy trì danh sách các trạng thái:\n\n```pascal\nFunction Depthsearch;                                            % open và closed toàn cục\nBegin\n    If open rỗng then trả lời (thất bại);\n    Trạng thái hiện hành := phần tử đầu tiên của open;\n    If trạng thái hiện hành là trạng thái đích\n        then trả lời (thành công)\n    Else\n        begin\n            Open := open - phần tử đầu tiên của open;\n            Closed := closed + trạng thái hiện hành;\n            For mỗi trạng thái con của trạng thái hiện hành do\n                If chưa có trong closed hay open          % xây dựng ngăn xếp\n                    then bổ sung con đó vào đầu danh sách open\n        end;\n    Tìm kiếm sâu;                                                      % đệ quy\nEnd;",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.823101,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 10,
+        "snippet": "Tìm kiếm trong không gian trạng thái là một quá trình đệ quy. Để tìm đường đi từ trạng thái\nhiện hành đến đích, bạn chuyển đến một trạng thái con và t...",
+        "text": "Tìm kiếm trong không gian trạng thái là một quá trình đệ quy. Để tìm đường đi từ trạng thái\nhiện hành đến đích, bạn chuyển đến một trạng thái con và thực hiện phép đệ quy. Nếu trạng\nthái con đó không dẫn đến đích, bạn thử lần lượt các trạng thái anh em của nó. Phép đệ quy\nsẽ chia một bài toán lớn và khó (tìm kiếm khắp không gian) thành các bài toán nhỏ và đơn\ngiản hơn (phát sinh các con của một trạng thái) và áp dụng chiến lược đệ quy cho từng bài\ntoán nhỏ đó. Quá trình cứ tiếp tục như vậy cho đến khi phát hiện được đích hoặc hết không\ngian.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 3,
+        "score": 0.80354404,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 4,
+        "snippet": "# I TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI...",
+        "text": "# I TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.71827835,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 7,
+        "snippet": "```pascal\nFunction Depthsearch (trạng thái hiện hành);                       % closed toàn cục\nBegin\n    If trạng thái hiện hành là trạng thái đích th...",
+        "text": "```pascal\nFunction Depthsearch (trạng thái hiện hành);                       % closed toàn cục\nBegin\n    If trạng thái hiện hành là trạng thái đích then\n        trả lời (thành công);\n    For mỗi trạng thái hiện hành có con chưa được kiểm tra do\n        begin\n            Con := con chưa được kiểm tra kế tiếp;\n            If con không phải là thành viên của closed\n                then if depthsearch (con) = thành công\n                    then trả lời (thành công);\n        end;\n    Trả lời (thất bại);\nEnd;                                                               % tìm kiếm đã đến cùng",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.67198735,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 6,
+        "snippet": "```\n\nTìm kiếm sâu như vừa được trình bày sẽ không sử dụng hết sức mạnh của phép đệ quy. Nó vẫn còn khả năng đơn giản hóa thủ tục bằng cách sử dụng chí...",
+        "text": "```\n\nTìm kiếm sâu như vừa được trình bày sẽ không sử dụng hết sức mạnh của phép đệ quy. Nó vẫn còn khả năng đơn giản hóa thủ tục bằng cách sử dụng chính phép đệ quy (thay gì một danh sách open) để sắp xếp các trạng thái trong không gian trạng thái. Trong phiên bản này của thuật toán, một danh sách closed toàn cục sẽ được dùng để phát hiện các trạng thái lặp lại, còn danh sách open thì tiềm ẩn trong các mẩu tin hoạt động của môi trường đệ quy.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.66506255,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 65,
+        "snippet": "# Chương V\n\n## ĐIỀU KHIỂN VÀ CÀI ĐẶT TÌM KIẾM TRONG KHÔNG GIAN TRẠNG THÁI\n\n### I. TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI\n\n- I.1. Tìm kiếm đệ quy\n- I.2. Tìm ki...",
+        "text": "# Chương V\n\n## ĐIỀU KHIỂN VÀ CÀI ĐẶT TÌM KIẾM TRONG KHÔNG GIAN TRẠNG THÁI\n\n### I. TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI\n\n- I.1. Tìm kiếm đệ quy\n- I.2. Tìm kiếm hướng mẫu (Pattern – directed search)\n\n### II. HỆ THỐNG LUẬT SINH (HỆ SINH – PRODUCTION SYSTEM)\n\n- II.1. Định nghĩa hệ sinh\n- II.2. Một số ví dụ về hệ sinh\n- II.3. Điều khiển tìm kiếm trong các hệ sinh\n- II.4. Những ưu điểm của hệ sinh dùng cho trí tuệ nhân tạo\n\n### III. KIẾN TRÚC BẢNG ĐEN (BLACKBOARD ARCHITECTURE)\n\n## BÀI TẬP CHƯƠNG V",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 17,
+        "score": 0.6615731,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 3,
+        "snippet": "**Mục tiêu cần đạt:** Sau chương này, sinh viên có thể:\n\n- Vận dụng thuật toán tìm kiếm đệ quy kết hợp lần ngược trên không gian trạng thái.\n- Hiểu th...",
+        "text": "**Mục tiêu cần đạt:** Sau chương này, sinh viên có thể:\n\n- Vận dụng thuật toán tìm kiếm đệ quy kết hợp lần ngược trên không gian trạng thái.\n- Hiểu thuật toán hướng mẫu khi thực hiện việc tìm kiếm trong không gian trạng thái.\n- Vận dụng hệ sinh cho một bài toán.\n- Hiểu các ưu điểm của hệ sinh\n- Hiểu các ứng dụng kiến trúc bảng đen trong GQVĐ.\n\n**Kiến thức tiên quyết:** Lý thuyết đồ thị, Các thuật toán tìm kiếm trên đồ thị, Lý thuyết trò chơi, …\n\n**Tài liệu tham khảo:**\n\n[1] George F. Luger, William A. Stubblefield – Albuquerque – Artificial Intelligence – Wesley Publishing Company, Inc – 1997 (Chapter 4)  \n[2] Bùi Xuân Toại – Trương Gia Việt (Biên dịch) – Trí tuệ nhân tạo – Các cấu trúc và chiến lược giải quyết vấn đề - NXB Thống kê, 2000 (Phần II)  \n[3] Recursion: http://cs-people.bu.edu/dbuzan/cs112/lab5/lab5.html  \n[4] Blackboard Architecture: http://www.nb.net/~javadoug/bb.htm",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 1,
+        "score": 0.6165665,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 11,
+        "snippet": "## I.2 Tìm kiếm hướng mẫu (Pattern – directed search)\n\nTrong phần này chúng ta sẽ áp dụng tìm kiếm đệ quy vào không gian các suy diễn logic, kết\nquả s...",
+        "text": "## I.2 Tìm kiếm hướng mẫu (Pattern – directed search)\n\nTrong phần này chúng ta sẽ áp dụng tìm kiếm đệ quy vào không gian các suy diễn logic, kết\nquả sẽ là một thủ tục tìm kiếm tổng quát dùng cho phép tính vị từ.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 3,
+        "score": 0.59981334,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 61,
+        "snippet": "Erman và cộng sự - 1981) là sự tổng quát hóa phương pháp mà HEARSAY-II đã dùng. Chiều thời gian của HEARSAY-II không còn cần thiết nữa, nhưng nhiều KS...",
+        "text": "Erman và cộng sự - 1981) là sự tổng quát hóa phương pháp mà HEARSAY-II đã dùng. Chiều thời gian của HEARSAY-II không còn cần thiết nữa, nhưng nhiều KS ứng với các mức phân tích thì vẫn giữ nguyên. Bảng đen dùng cho HEARSAY-III được hoạch định để tương tác với một cơ sở dữ liệu quan hệ đa năng. Thực vậy, HEARSAY-III là một khung chung dùng để thiết kế các hệ chuyên gia. Một thay đổi quan trọng trong HEARSAY-III là chia bộ lập lịch trình thành một công cụ điều khiển riêng cho bảng đen.\n\n**TỔNG KẾT CHƯƠNG V:** Chương V đã trình bày một số các thuật toán cũng như các mô hình, kiến trúc phổ biến dùng điều khiển và cài đặt quá trình tìm kiếm trong không gian trạng thái như: tìm kiếm đệ quy, mô hình hệ sinh, kiến trúc bảng đen, … cùng với các bài toán minh họa cho từng giải thuật rất cụ thể. Trong chương VI tiếp theo, chúng ta sẽ thảo luận việc giải quyết vấn đề tri thức chuyên sâu mà điển hình là thiết kế các hệ chuyên gia.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 15,
+        "score": 0.5979366,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 12,
+        "snippet": "Giả sử cần phải viết một thuật toán để xác định xem một biểu thức phép tính vị từ cho trước\ncó phải là kết quả logic của một tập các khẳng định nào đó...",
+        "text": "Giả sử cần phải viết một thuật toán để xác định xem một biểu thức phép tính vị từ cho trước\ncó phải là kết quả logic của một tập các khẳng định nào đó hay không. Thuật toán này phải\ntìm một trình tự suy diễn tạo nên biểu thức đích. Thuật toán sẽ đề nghị một tìm kiếm hướng\nmục tiêu với câu hỏi ban đầu tạo nên đích và các modus ponens xác định các chuyển tiếp\ngiữa các trạng thái. Cho trước một đích, thuật toán sẽ dùng phương pháp đồng nhất để chọn\ncác phép kéo theo có kết luận phù hợp với đích đó. Sau khi đồng nhất đích với kết luận của\nphép kéo theo và đã áp dụng các thay thế vừa suy ra được, tiền đề của phép kéo theo sẽ trở\nthành một đích mới gọi là đích phụ (subgoal). Sau đó thuật toán sẽ thực hiện đệ quy đối với\nđích phụ này. Nếu đích phụ phù hợp với một sự kiện trong cơ sở tri thức, cuộc tìm kiếm kết\nthúc. Chuỗi suy diễn dẫn từ đích ban đầu đến các sự kiện cho trước sẽ chứng minh đích xuất\nphát là đúng.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 3,
+        "score": 0.5637142,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 8,
+        "snippet": "```\n\nThay vì phát sinh tất cả các con của một trạng thái và đưa chúng vào danh sách open, thuật toán này phát sinh mỗi lần một con và tìm kiếm theo ph...",
+        "text": "```\n\nThay vì phát sinh tất cả các con của một trạng thái và đưa chúng vào danh sách open, thuật toán này phát sinh mỗi lần một con và tìm kiếm theo phép đệ quy các nút cháu của từng con đó trước khi phát sinh các anh em của nó. Thuật toán này sẽ gán một thứ tự cho các bước",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.5482865,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 35,
+        "snippet": "## II.3.1 Điều khiển chọn chiến lược tìm kiếm hướng dữ liệu (suy diễn tiến) hay tìm kiếm hướng mục tiêu (suy diễn lùi)\n\nTìm kiếm hướng dữ liệu bắt đầu...",
+        "text": "## II.3.1 Điều khiển chọn chiến lược tìm kiếm hướng dữ liệu (suy diễn tiến) hay tìm kiếm hướng mục tiêu (suy diễn lùi)\n\nTìm kiếm hướng dữ liệu bắt đầu với một mô tả bài toán (như một tập các tiền đề logic, các triệu chứng của người bệnh, hay một khối dữ liệu cần suy diễn ...) rồi suy ra các kiến thức mới từ dữ liệu đó. Quá trình này được thực hiện bằng cách áp dụng các luật suy diễn, các nước đi hợp lệ trong một trò chơi hoặc các thao tác sinh ra trạng thái khác vào mô tả hiện hành của bài toán, đồng thời đưa thêm các kết quả vào mô tả bài toán. Quá trình này tiếp tục cho đến khi tiếp cận một mục tiêu.\n\n### Tập luật sinh\n\n1. $p \\land q \\to \\text{goal}$\n2. $r \\land s \\to p$\n3. $w \\land r \\to q$\n4. $t \\land u \\to q$\n5. $v \\to s$\n6. $\\text{start} \\to v \\land r \\land q$",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 9,
+        "score": 0.48203897,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 15,
+        "snippet": "Begin  \n    If current_goal ∈ closed then return fail  \n    else Thêm current_goal vào closed;  \n    while còn dữ kiện hoặc luật đồng nhất do  \n    be...",
+        "text": "Begin  \n    If current_goal ∈ closed then return fail  \n    else Thêm current_goal vào closed;  \n    while còn dữ kiện hoặc luật đồng nhất do  \n    begin case  \n        current_goal đồng nhất với dữ kiện:  \n            return tập phép thế;  \n        current_goal là ¬p:  \n            pattern_search(p);  \n            if pattern_search thất bại then return {}  \n            else return fail  \n        current_goal đồng nhất với kết luận của luật (q → p):  \n        begin  \n            áp dụng phép thế đồng nhất mục tiêu vào tiền đề (q);  \n            pattern_search(q);  \n            if pattern_search thành công  \n                then return hợp của tập phép thế của p và q;  \n            else return fail;  \n        end;  \n        current_goal có dạng (p₁ ∧ p₂ …):  \n        begin  \n            for mỗi thành phần pᵢ do  \n            begin  \n                pattern_search(pᵢ);  \n                if pattern_search thất bại then return fail;",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 4,
+        "score": 0.4703473,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 26,
+        "snippet": "## Thí dụ 5.2: Bài toán trò đố 8 ô\n\nKhông gian tìm kiếm do trò đố 8 ô sinh ra vừa đủ phức tạp để khảo sát và cũng vừa đủ nhỏ để có thể theo dõi, cho n...",
+        "text": "## Thí dụ 5.2: Bài toán trò đố 8 ô\n\nKhông gian tìm kiếm do trò đố 8 ô sinh ra vừa đủ phức tạp để khảo sát và cũng vừa đủ nhỏ để có thể theo dõi, cho nên ta thường hay sử dụng nó để minh họa cho các chiến lược tìm kiếm khác nhau như tìm kiếm sâu, tìm kiếm rộng, cũng như các chiến lược tìm kiếm heuristic. Nó cũng thích hợp với việc giải bằng hệ sinh. Các nước đi hợp lệ được trình bày như các luật trong hình. Trong trường hợp trạng thái bắt đầu và trạng thái đích của trò chơi được xác định, chúng ta có khả năng áp dụng một hệ sinh cho không gian tìm kiếm của bài toán.\n\nTrạng thái bắt đầu:\n```\n2 8 3\n1 6 4\n7   5\n```\n\nTrạng thái kết thúc:\n```\n1 2 3\n8   4\n7 6 5\n```",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.45868814,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 16,
+        "snippet": "begin  \n                pattern_search(pᵢ);  \n                if pattern_search thất bại then return fail;  \n                else áp dụng các phép thế...",
+        "text": "begin  \n                pattern_search(pᵢ);  \n                if pattern_search thất bại then return fail;  \n                else áp dụng các phép thế vào các pᵢ còn lại;  \n            end;  \n            if pattern_search thành công cho tất cả các pᵢ  \n                then return hợp của các tập phép thế;  \n            else return fail;  \n        end;  \n        current_goal có dạng (p₁ ∨ p₂ …):  \n        begin  \n            repeat cho mỗi pᵢ  \n                pattern_search(pᵢ);  \n            until không còn thành phần pᵢ nào hoặc thành công;  \n            if pattern_search thành công then return {phép thế};  \n            else return fail;  \n        end;  \n        return fail;  \n    end;  \nEnd;",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 4,
+        "score": 0.45481113,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 28,
+        "snippet": "## Thí dụ 5.3: Bài toán đường đi quân mã (Knight’s tour problem)\n\nBài toán đường đi quân mã trên bàn cờ vua cũng có thể được giải bằng cách sử dụng hệ...",
+        "text": "## Thí dụ 5.3: Bài toán đường đi quân mã (Knight’s tour problem)\n\nBài toán đường đi quân mã trên bàn cờ vua cũng có thể được giải bằng cách sử dụng hệ sinh. Mỗi nước đi sẽ được biểu diễn bằng một luật mà phần điều kiện của nó là vị trí của quân cờ tại một ô và phần hành động của nó là vị trí hợp lệ sau khi di chuyển quân cờ. Mười sáu luật sinh sẽ biểu diễn cho tất cả các nước đi hợp lệ của quân cờ. Khởi đầu, bộ nhớ làm việc chứa trạng thái bàn cờ hiện tại và trạng thái đích. Vòng lặp điều khiển sẽ áp dụng các luật cho đến khi trạng thái hiện tại giống trạng thái đích rồi dừng lại. Một chiến lược giải quyết tranh chấp sẽ kích hoạt luật đầu tiên và không tạo vòng lặp. Vì quá trình tìm kiếm có thể dẫn đến những kết thúc chết nên chu trình điều khiển cho phép lần ngược.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.45481113,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 39,
+        "snippet": "Ta cũng có thể áp dụng tìm kiếm hướng mục tiêu trong các hệ sinh. Để thực hiện điều này, mục tiêu được đưa vào bộ nhớ làm việc và được đối sánh với ph...",
+        "text": "Ta cũng có thể áp dụng tìm kiếm hướng mục tiêu trong các hệ sinh. Để thực hiện điều này, mục tiêu được đưa vào bộ nhớ làm việc và được đối sánh với phần ACTION của các luật sinh (bằng phép hợp nhất chẳng hạn) và phần CODITION của luật sẽ được bổ sung vào bộ nhớ làm việc và trở thành các mục tiêu mới của quá trình tìm kiếm. Quá trình này cứ tiếp tục cho đến khi một sự kiện được tìm thấy, thường là trong mô tả ban đầu của bài toán. Quá trình tìm kiếm sẽ dừng lại khi các CODITION của tất cả các luật sinh được kích hoạt đều là đúng. Hình sau là một ví dụ về suy luận hướng mục tiêu. Cần chú ý rằng ta sẽ dừng lại khi các CODITION của tất cả các luật sinh được kích hoạt đều là đúng. Tìm kiếm hướng mục tiêu sẽ kích hoạt loạt luật sinh khác và tiến hành quá trình tìm kiếm trên không gian khác so với kiểu hướng dữ liệu.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 10,
+        "score": 0.43168002,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 42,
+        "snippet": "## Không gian suy diễn\n\n```mermaid\ngraph TD\n    A[goal] --> B[p]\n    A --> C[q]\n    B --> D[w]\n    B --> E[s]\n    C --> F[t]\n    C --> G[u]\n    D --> ...",
+        "text": "## Không gian suy diễn\n\n```mermaid\ngraph TD\n    A[goal] --> B[p]\n    A --> C[q]\n    B --> D[w]\n    B --> E[s]\n    C --> F[t]\n    C --> G[u]\n    D --> H[v]\n    E --> H\n    F --> H\n    G --> H\n    H --> I[start]\n```\n\n> Hướng suy diễn\n\n*Hình 5.6. – Tìm kiếm hướng mục tiêu trong một hệ sinh*",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 10,
+        "score": 0.42021883,
+        "startOffset": 0,
+        "endOffset": 0
+      }
+    ],
+    "chatId": "4f157c04-1ce2-4b08-947f-565029e49f23"
+  }
+}

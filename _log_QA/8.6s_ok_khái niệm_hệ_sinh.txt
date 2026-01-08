@@ -1,0 +1,235 @@
+mô hình bình thường trả lời ngon chét: 8.6s
+{
+  "message": "Hệ sinh là gì, ví dụ cụ thể đi"
+}
+
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Hệ sinh (production system) là một mô hình tính toán quan trọng trong trí tuệ nhân tạo, dùng để thực hiện các thuật toán tìm kiếm và mô hình hóa việc giải các bài toán của con người. Một hệ sinh được định nghĩa bởi ba thành phần chính:\n\n1. **Tập luật sinh (Production rules):** Mỗi luật có dạng điều kiện → hành động (condition → action). Khi điều kiện của luật phù hợp với trạng thái hiện tại trong bộ nhớ làm việc, hành động tương ứng sẽ được thực hiện.\n2. **Bộ nhớ làm việc (Working memory):** Chứa mô tả về trạng thái hiện thời của bài toán, được dùng để đối sánh với điều kiện của các luật sinh.\n3. **Chu trình nhận dạng - hành động (Recognize - act cycle):** Là cấu trúc điều khiển của hệ sinh, lặp lại quá trình đối sánh và kích hoạt luật cho đến khi không còn luật nào phù hợp nữa [#18][#19].\n\n**Ví dụ cụ thể:**  \nBài toán trò đố 8 ô (8-puzzle) có thể được giải bằng hệ sinh. Trong ví dụ này:\n\n- **Bộ nhớ làm việc** chứa trạng thái bắt đầu và trạng thái kết thúc của trò chơi.\n- **Tập luật sinh** gồm các luật như:\n  - Nếu trạng thái kết thúc xuất hiện trong bộ nhớ làm việc → Dừng.\n  - Nếu ô trống không ở cạnh trái → Chuyển ô trống sang trái.\n  - Nếu ô trống không ở cạnh đỉnh → Chuyển ô trống lên.\n  - Nếu ô trống không ở cạnh phải → Chuyển ô trống sang phải.\n  - Nếu ô trống không ở cạnh dưới → Chuyển ô trống xuống.\n\nCơ chế kiểm soát sẽ thử từng luật theo thứ tự, không cho phép vòng lặp, và dừng lại khi tìm thấy trạng thái kết thúc [#26][#27].\n\n**Tóm lại:** Hệ sinh là một mô hình giải quyết vấn đề dựa trên tập luật điều kiện–hành động, bộ nhớ làm việc và chu trình nhận dạng–hành động, được ứng dụng rộng rãi trong các hệ chuyên gia và trí tuệ nhân tạo [#18][#19][#26][#27].",
+    "citations": [
+      {
+        "index": 18,
+        "snippet": "## II.1 Định nghĩa hệ sinh\n\nHệ sinh là một mô hình tính toán quan trọng trong trí tuệ nhân tạo về cả hai mặt: thực hiện các thuật toán tìm kiếm và mô ...",
+        "text": "## II.1 Định nghĩa hệ sinh\n\nHệ sinh là một mô hình tính toán quan trọng trong trí tuệ nhân tạo về cả hai mặt: thực hiện các thuật toán tìm kiếm và mô hình hóa việc giải các bài toán của con người.\n\nMột hệ sinh được định nghĩa bởi:\n\n1.  **Tập luật sinh (Production rules):** Mỗi luật sinh có dạng condition → action (điều kiện → hành động). Phần điều kiện của luật là một mẫu cho biết khi nào thì có thể áp dụng luật. Phần hành động quy định các bước giải toán tương ứng điều kiện.\n2.  **Bộ nhớ làm việc (Working memory):** Chứa một mô tả về trạng thái hiện thời của bài toán trong quá trình suy luận. Mô tả này là một mẫu sẽ được đối sánh với phần điều kiện của một luật sinh để chọn ra bước giải thích hợp. Khi phần điều kiện của luật phù hợp với nội dung trong bộ nhớ làm việc, hành động phát sinh từ điều kiện đó sẽ được thực hiện làm thay đổi nội dung bộ nhớ làm việc.\n3.  **Chu trình nhận dạng - hành động (Recognize - act cycle):** Là cấu trúc điều khiển của hệ sinh.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 5,
+        "score": 0.941245,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 22,
+        "snippet": "## Hình 5.1 – Cấu trúc hệ sinh\n\n> **Thí dụ 5.1:** Một chương trình hệ sinh đơn giản dùng để sắp xếp một dãy các chữ cái a, b, c theo thứ tự từ điển. T...",
+        "text": "## Hình 5.1 – Cấu trúc hệ sinh\n\n> **Thí dụ 5.1:** Một chương trình hệ sinh đơn giản dùng để sắp xếp một dãy các chữ cái a, b, c theo thứ tự từ điển. Trong ví dụ này, một luật sinh sẽ được áp dụng nếu điều kiện của nó phù hợp với một phần của dãy chữ cái trong bộ nhớ làm việc. Khi một luật được kích hoạt, phần dãy phù hợp với điều kiện luật này được thay thế bởi dãy ở phần hành động của luật đó.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 6,
+        "score": 0.93381816,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 25,
+        "snippet": "# II.2 Một số ví dụ về hệ sinh...",
+        "text": "# II.2 Một số ví dụ về hệ sinh",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.9003021,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 28,
+        "snippet": "## Thí dụ 5.3: Bài toán đường đi quân mã (Knight’s tour problem)\n\nBài toán đường đi quân mã trên bàn cờ vua cũng có thể được giải bằng cách sử dụng hệ...",
+        "text": "## Thí dụ 5.3: Bài toán đường đi quân mã (Knight’s tour problem)\n\nBài toán đường đi quân mã trên bàn cờ vua cũng có thể được giải bằng cách sử dụng hệ sinh. Mỗi nước đi sẽ được biểu diễn bằng một luật mà phần điều kiện của nó là vị trí của quân cờ tại một ô và phần hành động của nó là vị trí hợp lệ sau khi di chuyển quân cờ. Mười sáu luật sinh sẽ biểu diễn cho tất cả các nước đi hợp lệ của quân cờ. Khởi đầu, bộ nhớ làm việc chứa trạng thái bàn cờ hiện tại và trạng thái đích. Vòng lặp điều khiển sẽ áp dụng các luật cho đến khi trạng thái hiện tại giống trạng thái đích rồi dừng lại. Một chiến lược giải quyết tranh chấp sẽ kích hoạt luật đầu tiên và không tạo vòng lặp. Vì quá trình tìm kiếm có thể dẫn đến những kết thúc chết nên chu trình điều khiển cho phép lần ngược.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.88447905,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 65,
+        "snippet": "# Chương V\n\n## ĐIỀU KHIỂN VÀ CÀI ĐẶT TÌM KIẾM TRONG KHÔNG GIAN TRẠNG THÁI\n\n### I. TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI\n\n- I.1. Tìm kiếm đệ quy\n- I.2. Tìm ki...",
+        "text": "# Chương V\n\n## ĐIỀU KHIỂN VÀ CÀI ĐẶT TÌM KIẾM TRONG KHÔNG GIAN TRẠNG THÁI\n\n### I. TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI\n\n- I.1. Tìm kiếm đệ quy\n- I.2. Tìm kiếm hướng mẫu (Pattern – directed search)\n\n### II. HỆ THỐNG LUẬT SINH (HỆ SINH – PRODUCTION SYSTEM)\n\n- II.1. Định nghĩa hệ sinh\n- II.2. Một số ví dụ về hệ sinh\n- II.3. Điều khiển tìm kiếm trong các hệ sinh\n- II.4. Những ưu điểm của hệ sinh dùng cho trí tuệ nhân tạo\n\n### III. KIẾN TRÚC BẢNG ĐEN (BLACKBOARD ARCHITECTURE)\n\n## BÀI TẬP CHƯƠNG V",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 17,
+        "score": 0.8546907,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 47,
+        "snippet": "## II.3.3 Điều khiển chọn chiến lược giải quyết tranh chấp\n\nMặc dù các hệ sinh (giống như tất cả các cấu trúc dùng cho những hệ thống dựa vào kiến thứ...",
+        "text": "## II.3.3 Điều khiển chọn chiến lược giải quyết tranh chấp\n\nMặc dù các hệ sinh (giống như tất cả các cấu trúc dùng cho những hệ thống dựa vào kiến thức) cho phép các heuristic được mã hóa vào trong nội dung kiến thức của bản thân các luật, nhưng chúng cũng có nhiều cơ hội khác để điều khiển heuristic thông qua các giải pháp giải quyết tranh chấp. Ví dụ các chiến lược giải quyết tranh chấp được hỗ trợ bởi OPS5 (Brownston và cộng sự -1985) gồm có:\n\n1.  **Chiến lược khúc xạ (refraction):** Chiến lược này quy định rằng khi một luật đã được kích hoạt, nó không thể được kích hoạt lại trước khi các phần tử trong bộ nhớ làm việc phù hợp với phần điều kiện của nó thay đổi. Chiến lược này giúp ngăn ngừa vòng lặp.\n2.  **Chiến lược vừa mới xảy ra (recency):** Chiến lược này chọn những luật có phần điều kiện phù hợp với các mẫu vừa mới được bổ sung vào bộ nhớ làm việc. Chiến lược này giúp tập trung việc tìm kiếm vào một dòng suy luận duy nhất.\n\nVõ Huỳnh Trâm – Trần Ngân Bình    89",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 11,
+        "score": 0.82760537,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 26,
+        "snippet": "## Thí dụ 5.2: Bài toán trò đố 8 ô\n\nKhông gian tìm kiếm do trò đố 8 ô sinh ra vừa đủ phức tạp để khảo sát và cũng vừa đủ nhỏ để có thể theo dõi, cho n...",
+        "text": "## Thí dụ 5.2: Bài toán trò đố 8 ô\n\nKhông gian tìm kiếm do trò đố 8 ô sinh ra vừa đủ phức tạp để khảo sát và cũng vừa đủ nhỏ để có thể theo dõi, cho nên ta thường hay sử dụng nó để minh họa cho các chiến lược tìm kiếm khác nhau như tìm kiếm sâu, tìm kiếm rộng, cũng như các chiến lược tìm kiếm heuristic. Nó cũng thích hợp với việc giải bằng hệ sinh. Các nước đi hợp lệ được trình bày như các luật trong hình. Trong trường hợp trạng thái bắt đầu và trạng thái đích của trò chơi được xác định, chúng ta có khả năng áp dụng một hệ sinh cho không gian tìm kiếm của bài toán.\n\nTrạng thái bắt đầu:\n```\n2 8 3\n1 6 4\n7   5\n```\n\nTrạng thái kết thúc:\n```\n1 2 3\n8   4\n7 6 5\n```",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.82196057,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 50,
+        "snippet": "2. Đưa một sắp xếp tự nhiên vào tìm kiếm trong không gian trạng thái: Các phần tử của một hệ sinh sẽ được sắp xếp một cách tự nhiên vào cấu trúc tìm k...",
+        "text": "2. Đưa một sắp xếp tự nhiên vào tìm kiếm trong không gian trạng thái: Các phần tử của một hệ sinh sẽ được sắp xếp một cách tự nhiên vào cấu trúc tìm kiếm không gian trạng thái. Các trạng thái kế tiếp của bộ nhớ làm việc sẽ tạo nên các nút của đồ thị. Các luật sinh là các bước chuyển đổi có thể xảy ra giữa các trạng thái cùng với các chiến lược giải quyết tranh chấp sẽ cài đặt việc chọn một nhánh trong không gian trạng thái đó.\n\n3. Tính module của luật sinh: Một yếu tố quan trọng của hệ sinh là không có bất kỳ sự tương tác lẫn nhau nào về cú pháp giữa các luật sinh. Các luật chỉ có thể tác động đến việc kích hoạt các luật khác bằng cách thay đổi mẫu trong bộ nhớ làm việc, chúng không thể “gọi” trực tiếp các luật khác như là một thủ tục con (subroutine), cũng không thể thiết lập giá trị của các biến cho các luật sinh khác. Tính độc lập về cú pháp này đã hỗ trợ cho sự phát triển của các hệ chuyên gia bằng cách liên tục bổ sung, loại bỏ hoặc thay đổi các tri thức (luật) của hệ thống.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 12,
+        "score": 0.8179237,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 19,
+        "snippet": "Cấu trúc điều khiển của một hệ sinh khá đơn giản: Bộ nhớ làm việc được khởi đầu với mô tả của bài toán. Trạng thái hiện hành của việc giải bài toán đư...",
+        "text": "Cấu trúc điều khiển của một hệ sinh khá đơn giản: Bộ nhớ làm việc được khởi đầu với mô tả của bài toán. Trạng thái hiện hành của việc giải bài toán được duy trì dưới dạng một tập các mẫu trong bộ nhớ làm việc. Các mẫu này được đối sánh với phần điều kiện của các luật sinh, các luật có điều kiện phù hợp với mẫu trong bộ nhớ làm việc được gọi là tập luật tranh chấp (conflict set). Sau đó một trong các luật sinh này sẽ được chọn và được kích hoạt. Để kích hoạt một luật, phần hành động của nó được thực hiện và làm thay đổi nội dung bộ nhớ làm việc. Chu trình điều khiển sẽ lặp lại với nội dung đã được thay đổi trong bộ nhớ làm việc. Quá trình này kết thúc khi nội dung của bộ nhớ làm việc không còn phù hợp với điều kiện của luật nào nữa.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 5,
+        "score": 0.8179237,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 27,
+        "snippet": "### Tập luật sinh:\n\n<table>\n  <thead>\n    <tr>\n        <th>Điều kiện</th>\n        <th>Hành động</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <...",
+        "text": "### Tập luật sinh:\n\n<table>\n  <thead>\n    <tr>\n        <th>Điều kiện</th>\n        <th>Hành động</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Trạng thái kết thúc trong bộ nhớ làm việc → Dừng</td>\n<td></td>\n    </tr>\n<tr>\n        <td>Ô trống không ở cạnh trái</td>\n<td>→ Chuyển ô trống sang trái</td>\n    </tr>\n<tr>\n        <td>Ô trống không ở cạnh đỉnh</td>\n<td>→ Chuyển ô trống lên</td>\n    </tr>\n<tr>\n        <td>Ô trống không ở cạnh phải</td>\n<td>→ Chuyển ô trống sang phải</td>\n    </tr>\n<tr>\n        <td>Ô trống không ở cạnh dưới</td>\n<td>→ Chuyển ô trống xuống</td>\n    </tr>\n  </tbody>\n</table>\n\n**Bộ nhớ làm việc chứa trạng thái bắt đầu và trạng thái kết thúc**\n\n### Cơ chế kiểm soát\n\n1. Thử mỗi luật sinh theo thứ tự\n2. Không cho phép vòng lặp\n3. Dừng khi tìm thấy trạng thái kết thúc\n\n> **Hình 5.3 – Trò đố 8 ô dưới dạng một hệ sinh**",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 7,
+        "score": 0.8114371,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 49,
+        "snippet": "## II.4 Những ưu điểm của hệ sinh dùng cho trí tuệ nhân tạo\n\nTheo các minh họa trên, hệ sinh cho chúng ta một quy tắc chung để thực hiện tìm kiếm. Nhờ...",
+        "text": "## II.4 Những ưu điểm của hệ sinh dùng cho trí tuệ nhân tạo\n\nTheo các minh họa trên, hệ sinh cho chúng ta một quy tắc chung để thực hiện tìm kiếm. Nhờ tính đơn giản, khả năng cải biến và sự linh hoạt trong việc áp dụng các kiến thức giải toán, hệ sinh đã tỏ ra là một công cụ quan trọng để xây dựng các hệ chuyên gia và các ứng dụng trí tuệ nhân tạo khác. Những ưu điểm chính của các hệ sinh đối với trí tuệ nhân tạo là:\n\n1. Tách riêng tri thức và điều khiển: Trong hệ sinh sự điều khiển được cho bởi chu trình nhận dạng – hành động của vòng lặp hệ sinh, còn các kiến thức giải toán được mã hóa vào trong các luật. Ưu điểm của sự tách biệt này là dễ thay đổi loại cơ sở tri thức mà không thay đổi việc điều khiển chương trình và ngược lại.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 12,
+        "score": 0.7928494,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 2,
+        "snippet": "**Nội dung chính:** Trong chương này, các kỹ thuật sâu hơn cho việc cài đặt các thuật toán tìm kiếm sẽ được trình bày một cách chi tiết. Trước hết là ...",
+        "text": "**Nội dung chính:** Trong chương này, các kỹ thuật sâu hơn cho việc cài đặt các thuật toán tìm kiếm sẽ được trình bày một cách chi tiết. Trước hết là tìm kiếm đệ quy (recursive search) – một phương pháp thực hiện tìm kiếm sâu kèm theo lần ngược với cách thức tự nhiên và ngắn gọn. Tìm kiếm đệ quy được tăng cường nhờ sử dụng sự hợp nhất (unification) để tìm kiếm các không gian trạng thái do các biểu thức của phép tính vị từ sinh ra. Sự kết hợp này cho ta thuật toán tìm kiếm hướng mẫu (pattern-directed search). Phần tiếp theo trong nội dung chương V giới thiệu mô hình hệ sinh (production system) – một cấu trúc tổng quát để giải các bài toán hướng mẫu, nó được sử dụng khá nhiều không những để mô hình hóa việc giải quyết các vấn đề của con người, mà còn để xây dựng các hệ chuyên gia và những ứng dụng Trí tuệ nhân tạo khác. Cuối cùng, một cách giải bài toán trí tuệ nhân tạo khác cũng được đề cập đến – kiến trúc bảng đen (blackboard architecture).",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 1,
+        "score": 0.7915634,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 39,
+        "snippet": "Ta cũng có thể áp dụng tìm kiếm hướng mục tiêu trong các hệ sinh. Để thực hiện điều này, mục tiêu được đưa vào bộ nhớ làm việc và được đối sánh với ph...",
+        "text": "Ta cũng có thể áp dụng tìm kiếm hướng mục tiêu trong các hệ sinh. Để thực hiện điều này, mục tiêu được đưa vào bộ nhớ làm việc và được đối sánh với phần ACTION của các luật sinh (bằng phép hợp nhất chẳng hạn) và phần CODITION của luật sẽ được bổ sung vào bộ nhớ làm việc và trở thành các mục tiêu mới của quá trình tìm kiếm. Quá trình này cứ tiếp tục cho đến khi một sự kiện được tìm thấy, thường là trong mô tả ban đầu của bài toán. Quá trình tìm kiếm sẽ dừng lại khi các CODITION của tất cả các luật sinh được kích hoạt đều là đúng. Hình sau là một ví dụ về suy luận hướng mục tiêu. Cần chú ý rằng ta sẽ dừng lại khi các CODITION của tất cả các luật sinh được kích hoạt đều là đúng. Tìm kiếm hướng mục tiêu sẽ kích hoạt loạt luật sinh khác và tiến hành quá trình tìm kiếm trên không gian khác so với kiểu hướng dữ liệu.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 10,
+        "score": 0.7889737,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 53,
+        "snippet": "8. Mô hình hóa việc giải các bài toán của con người: Đây là một trong những ứng dụng đầu tiên của hệ sinh, chúng vẫn còn được dùng làm mô hình cho hoạ...",
+        "text": "8. Mô hình hóa việc giải các bài toán của con người: Đây là một trong những ứng dụng đầu tiên của hệ sinh, chúng vẫn còn được dùng làm mô hình cho hoạt động của con người trong nhiều nghiên cứu khoa học về nhận thức.\n\n# III KIẾN TRÚC BẢNG ĐEN (BLACKBOARD ARCHITECTURE)\n\nKiến trúc bảng đen là cơ chế điều khiển cuối cùng được giới thiệu trong chương này. Kiến trúc bảng đen mở rộng các hệ sinh bằng cách cho phép chúng ta sắp xếp bộ nhớ làm việc thành các module riêng, mỗi module tương ứng với một luật sinh khác nhau. Kiến trúc này cũng cho phép chúng ta tích hợp các tập luật sinh khác nhau vào một cấu trúc toàn cục duy nhất.\n\nMột kiến trúc bảng đen bao gồm:\n\n1. Bảng đen (Blackboard): Là một số cơ sở dữ liệu toàn cục tập trung dùng để trao đổi thông tin giữa các nguồn tri thức không đồng bộ độc lập, tập trung vào các mặt có liên quan của một bài toán cụ thể.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 13,
+        "score": 0.7810635,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 45,
+        "snippet": "Trong biểu diễn của phép tính vị từ, các biểu thức chỉ định nghĩa các quan hệ thực trong một lĩnh vực bài toán chứ không khẳng định về thứ tự diễn dịc...",
+        "text": "Trong biểu diễn của phép tính vị từ, các biểu thức chỉ định nghĩa các quan hệ thực trong một lĩnh vực bài toán chứ không khẳng định về thứ tự diễn dịch các thành phần của chúng do đó có thể có một vài cách biểu diễn khác nhau cho cùng một luật nhưng chúng vẫn tương đương về mặt chân trị. Những cách viết này có thể không dẫn đến cùng một kết quả khi được diễn dịch dưới dạng các luật sinh vì việc cài đặt của hệ sinh phải theo một thứ tự trong việc đối sánh và kích hoạt các luật. Hệ sinh thử các luật theo một thứ tự xác định nên người lập trình có thể điều khiển quá trình tìm kiếm thông qua cấu trúc và thứ tự của các luật trong tập luật sinh. Mặc dù tương đương về mặt logic nhưng hai cách thực hiện không như nhau trong một quá trình tìm kiếm.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 11,
+        "score": 0.7770292,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 17,
+        "snippet": "# II HỆ THỐNG LUẬT SINH (HỆ SINH – PRODUCTION SYSTEM)...",
+        "text": "# II HỆ THỐNG LUẬT SINH (HỆ SINH – PRODUCTION SYSTEM)",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 5,
+        "score": 0.74879336,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 51,
+        "snippet": "4. Điều khiển theo mẫu: Các bài toán được chương trình trí tuệ nhân tạo nhằm vào đều yêu cầu phải linh hoạt trong quá trình thực thi chương trình. Mục...",
+        "text": "4. Điều khiển theo mẫu: Các bài toán được chương trình trí tuệ nhân tạo nhằm vào đều yêu cầu phải linh hoạt trong quá trình thực thi chương trình. Mục tiêu này được đáp ứng bởi thực tế là các luật trong hệ sinh có thể kích hoạt theo mọi trình tự. Trong một bài toán, các mô tả tạo nên trạng thái hiện hành sẽ xác định tập luật tranh chấp và do đó cũng sẽ xác định con đường tìm kiếm và lời giải riêng.\n\n5. Có cơ hội cho điều khiển heuristic của quá trình tìm kiếm.\n\n6. Theo dõi và giải thích: Tính module của các luật và bản chất lặp lại trong quá trình thực thi làm cho nó dễ dàng theo dõi hơn trong một hệ sinh. Ở mỗi giai đoạn của chu trình nhận dạng – hành động, luật được chọn có thể được hiện ra. Vì mỗi luật ứng với một đoạn của quá trình giải toán nên nội dung luật sẽ giải thích đầy đủ ý nghĩa về trạng thái và hành động hiện hành của hệ thống đó.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 12,
+        "score": 0.71827835,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 20,
+        "snippet": "Một quá trình giải quyết tranh chấp (conflict resolution) sẽ chọn một luật từ tập luật tranh chấp để kích hoạt. Chiến lược giải quyết tranh chấp có th...",
+        "text": "Một quá trình giải quyết tranh chấp (conflict resolution) sẽ chọn một luật từ tập luật tranh chấp để kích hoạt. Chiến lược giải quyết tranh chấp có thể rất đơn giản như chọn luật đầu tiên có điều kiện phù hợp hoặc có thể dựa vào các heuristic chọn luật phức tạp. Đây là một khâu quan trọng để các hệ sinh có thể đưa khả năng điều khiển heuristic vào một thuật toán tìm kiếm.\n\nMột sơ đồ của hệ sinh được mô tả như hình sau:",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 5,
+        "score": 0.7166947,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 3,
+        "snippet": "**Mục tiêu cần đạt:** Sau chương này, sinh viên có thể:\n\n- Vận dụng thuật toán tìm kiếm đệ quy kết hợp lần ngược trên không gian trạng thái.\n- Hiểu th...",
+        "text": "**Mục tiêu cần đạt:** Sau chương này, sinh viên có thể:\n\n- Vận dụng thuật toán tìm kiếm đệ quy kết hợp lần ngược trên không gian trạng thái.\n- Hiểu thuật toán hướng mẫu khi thực hiện việc tìm kiếm trong không gian trạng thái.\n- Vận dụng hệ sinh cho một bài toán.\n- Hiểu các ưu điểm của hệ sinh\n- Hiểu các ứng dụng kiến trúc bảng đen trong GQVĐ.\n\n**Kiến thức tiên quyết:** Lý thuyết đồ thị, Các thuật toán tìm kiếm trên đồ thị, Lý thuyết trò chơi, …\n\n**Tài liệu tham khảo:**\n\n[1] George F. Luger, William A. Stubblefield – Albuquerque – Artificial Intelligence – Wesley Publishing Company, Inc – 1997 (Chapter 4)  \n[2] Bùi Xuân Toại – Trương Gia Việt (Biên dịch) – Trí tuệ nhân tạo – Các cấu trúc và chiến lược giải quyết vấn đề - NXB Thống kê, 2000 (Phần II)  \n[3] Recursion: http://cs-people.bu.edu/dbuzan/cs112/lab5/lab5.html  \n[4] Blackboard Architecture: http://www.nb.net/~javadoug/bb.htm",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 1,
+        "score": 0.71191186,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 62,
+        "snippet": "## IV BÀI TẬP CHƯƠNG V\n\n**V.1.** Trước tình hình dịch cúm gà gần đây, Bộ y tế có đưa ra một số hướng dẫn về thực phẩm an toàn (safe) dưới dạng một tập...",
+        "text": "## IV BÀI TẬP CHƯƠNG V\n\n**V.1.** Trước tình hình dịch cúm gà gần đây, Bộ y tế có đưa ra một số hướng dẫn về thực phẩm an toàn (safe) dưới dạng một tập hợp biểu thức vị từ như sau:\n\n- R1. vegetable(X) ∨ fruit(X) ⇒ safe(X)\n- R2. beef(X) ∨ porc(X) ∨ lamb(X) ⇒ meat(X)\n- R3. meat(X) ∧ low_fat(X) ⇒ low_risk(X)\n- R4. contains_fat(X,Y) ∧ (Y<20%) ⇒ low_fat(X)\n- R5. certified(X) ∨ low_risk(X) ⇒ safe(X)\n\na) Vẽ đồ thị AND/OR cho biết “thực phẩm an toàn”.\n\nb) Nếu biết lượng chất béo có trong thịt bò (contains_fat) là nhỏ hơn 20%, biểu diễn các bước suy diễn theo hệ sinh – tìm kiếm hướng dữ liệu để chứng tỏ “thịt bò là thực phẩm an toàn”.",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 15,
+        "score": 0.7086966,
+        "startOffset": 0,
+        "endOffset": 0
+      }
+    ],
+    "chatId": "f5882876-5b20-4676-92f6-e1dbfc17e9c6"
+  }
+}

@@ -15,7 +15,7 @@ type MetadataDoc = {
   page?: number;
   title?: string;
   originalFileName?: string;
-};
+};  
 
 export interface ScoredDocument {
   pageContent: string;
@@ -33,8 +33,8 @@ export class RetrievalService {
   private readonly FINAL_K = 20;
 
   // Trọng số cho Hybrid search (Fire tune base on real data)
-  private readonly WEIGHT_VECTOR = 0.3;
-  private readonly WEIGHT_KEYWORD = 0.7;
+  // private readonly WEIGHT_VECTOR = 0.3;
+  // private readonly WEIGHT_KEYWORD = 0.7;
 
   constructor(
     private vectorService: VectorService,

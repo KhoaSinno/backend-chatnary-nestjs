@@ -23,7 +23,7 @@ export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE --
   @Post()
@@ -44,6 +44,20 @@ export class ProjectController {
   ) {
     return await this.documentService.addDocumentsToProject(
       req.user.userId,
+      projectId,
+      dto.documentIds,
+    );
+  }
+
+  // -- REMOVE DOUCMENTS TO PROJECT -- 
+  @Delete('/:projectId/documents/unlink')
+  async removeDocumentsOutProject(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('projectId') projectId: string,
+    @Body() dto: AddDocumentToProjectDto,
+  ) {
+    return await this.documentService.removeDocumentsOutProject(
+      // req.user.userId,
       projectId,
       dto.documentIds,
     );

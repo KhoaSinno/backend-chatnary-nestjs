@@ -16,7 +16,7 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
   // Tự động chạy khi module khởi tạo
   async onModuleInit() {
@@ -73,6 +73,26 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
 
     this.logger.log('✅ Connected to PGVector successfully!');
     return this.vectorStore;
+  }
+
+  // Expose the pool for direct SQL queries
+  async getPool(): Promise<Pool> {
+    if (!this.pool) {
+      await this.initVectorStore();
+    }
+    return this.pool!;
+  }
+
+  // Get the configured table name
+  getTableName(): string {
+    const config = getPgConfig();
+    return config.tableName;
+  }
+
+  // Get the configured metadata column name
+  getMetadataColumnName(): string {
+    const config = getPgConfig();
+    return config.columns.metadataColumnName;
   }
 
   // ---  INDEX HNSW ---
