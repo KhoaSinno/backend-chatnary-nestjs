@@ -234,6 +234,69 @@ authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjd
 }
 ```
 
+## Update Project
+
+### **PATCH** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Body**
+
+```json
+// some fields:  name, description, color, isArchived
+{
+  "name": "Sinoo khung bo 1101"
+  // ... some fields to update
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+    "name": "Sinoo khung bo 1101",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-08T15:48:49.375Z",
+    "updatedAt": "2025-12-08T15:53:24.488Z",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
+
+## Delete Project
+
+### **DELETE** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z"
+    }
+  ]
+}
+```
+
 ## List Chats in Project
 
 ### **GET** `/project/:projectId/chats`
@@ -371,20 +434,51 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 }
 ```
 
-## Update Project
+## Add documents to Project
 
-### **PATCH** `/project/:projectId`
+### **POST** `/project/:projectId/documents`
 
 **Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 **Body**
 
 ```json
-// some fields:  name, description, color, isArchived
 {
-  "name": "Sinoo khung bo 1101"
-  // ... some fields to update
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "count": 1
+  }
+}
+```
+
+## Remove documents from Project
+
+### **DELETE** `/project/:projectId/documents/unlink`
+
+**Param**
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+{
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
 }
 ```
 
@@ -395,42 +489,8 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
   "statusCode": 200,
   "success": true,
   "data": {
-    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
-    "name": "Sinoo khung bo 1101",
-    "description": "Desc ...",
-    "color": "#3B82F6",
-    "isArchived": false,
-    "createdAt": "2025-12-08T15:48:49.375Z",
-    "updatedAt": "2025-12-08T15:53:24.488Z",
-    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+    "count": 1
   }
-}
-```
-
-## Delete Project
-
-### **DELETE** `/project/:projectId`
-
-**Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
-      "name": "MGHP HK1(2025-2026).pdf",
-      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
-      "mimeType": "application/pdf",
-      "size": 2751843,
-      "status": "done",
-      "createdAt": "2025-12-07T04:08:06.354Z"
-    }
-  ]
 }
 ```
 

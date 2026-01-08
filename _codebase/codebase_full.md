@@ -7,6 +7,8 @@
 ## Folder Structure
 
 ```
+prisma
+  schema.prisma
 src
   app.controller.spec.ts
   app.controller.ts
@@ -105,12 +107,14 @@ src
     user.controller.ts
     user.module.ts
     user.service.ts
-prisma
-  schema.prisma
-package.json
 API_ENDPOINTS.md
+package.json
 
 ```
+
+### prisma\schema.prisma
+
+*(Unsupported file type)*
 
 ### src\app.controller.spec.ts
 
@@ -1885,7 +1889,7 @@ export class DocumentService {
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
   //-- UPLOAD --
   async uploadFiles(
@@ -2037,7 +2041,7 @@ export class DocumentService {
   async addDocumentsToProject(
     userId: string,
     projectId: string,
-    documentIds: string[],
+    documentIds: string[]
   ) {
     // 1. Check Project exists AND belongs to User
     const project = await this.prisma.projects.findFirst({
@@ -2080,11 +2084,30 @@ export class DocumentService {
       isSelected: true,
     }));
 
-    // 4. Create links
-    return await this.prisma.project_resources.createMany({
-      data: dataToInput,
-      skipDuplicates: true,
-    });
+    // 4. Update vector store and create DB links in parallel (Performance Optimization)
+    const [_, result] = await Promise.all([
+      this.vectorService.link2Project(validDocIds, projectId),
+      this.prisma.project_resources.createMany({
+        data: dataToInput,
+        skipDuplicates: true,
+      }),
+    ]);
+
+    return result;
+  }
+
+  async removeDocumentsOutProject(projectId: string, documentIds: string[]) {
+    // Delete from vector store and database in parallel
+    const [_, res] = await Promise.all([
+      this.vectorService.removeOutProject(documentIds, projectId),
+      this.prisma.project_resources.deleteMany({
+        where: {
+          projectId: projectId,
+          documentId: { in: documentIds },
+        },
+      }),
+    ]);
+    return res;
   }
 
   // -- Unlink ALL DOCUMENTS IN PROJECT --
@@ -3312,7 +3335,7 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
   // Tự động chạy khi module khởi tạo
   async onModuleInit() {
@@ -3371,6 +3394,26 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
     return this.vectorStore;
   }
 
+  // Expose the pool for direct SQL queries
+  async getPool(): Promise<Pool> {
+    if (!this.pool) {
+      await this.initVectorStore();
+    }
+    return this.pool!;
+  }
+
+  // Get the configured table name
+  getTableName(): string {
+    const config = getPgConfig();
+    return config.tableName;
+  }
+
+  // Get the configured metadata column name
+  getMetadataColumnName(): string {
+    const config = getPgConfig();
+    return config.columns.metadataColumnName;
+  }
+
   // ---  INDEX HNSW ---
   async ensureHnswIndex() {
     if (!this.vectorStore) await this.initVectorStore();
@@ -3414,7 +3457,7 @@ type Metadata = {
 };
 @Injectable()
 export class VectorService {
-  constructor(private readonly pgvectorService: PgvectorService) {}
+  constructor(private readonly pgvectorService: PgvectorService) { }
 
   // -- ADD DOCUMENTS TO VECTOR STORE --
   async addDocuments({
@@ -3478,6 +3521,45 @@ export class VectorService {
     // }
 
     return results;
+  }
+
+  async link2Project(docIds: string[], projectId: string) {
+    // PGVectorStore doesn't have an update() method
+    // We need to update the metadata directly using SQL
+    const pool = await this.pgvectorService.getPool();
+    const tableName = this.pgvectorService.getTableName();
+    const metadataColumn = this.pgvectorService.getMetadataColumnName();
+
+    await Promise.all(
+      docIds.map(async (docId) => {
+        // Update the metadata column by merging the new projectId
+        await pool.query(
+          `UPDATE ${tableName} 
+           SET ${metadataColumn} = jsonb_set(${metadataColumn}, '{projectId}', $1::jsonb, true)
+           WHERE ${metadataColumn}->>'fileId' = $2`,
+          [JSON.stringify(projectId), docId]
+        );
+      })
+    );
+  }
+
+  async removeOutProject(docIds: string[], projectId: string) {
+    const pool = await this.pgvectorService.getPool();
+    const tableName = this.pgvectorService.getTableName();
+    const metadataColumn = this.pgvectorService.getMetadataColumnName();
+
+    await Promise.all(
+      docIds.map(async (docId) => {
+        // Dùng toán tử '-' để xóa key khỏi JSONB
+        await pool.query(
+          `UPDATE ${tableName} 
+           SET ${metadataColumn} = ${metadataColumn} - 'projectId'
+           WHERE ${metadataColumn}->>'fileId' = $1 
+           AND ${metadataColumn}->>'projectId' = $2`,
+          [docId, projectId]
+        );
+      })
+    );
   }
 
   // -- DELETE VECTOR STORE BY FILEID --
@@ -3754,7 +3836,7 @@ export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE --
   @Post()
@@ -3775,6 +3857,20 @@ export class ProjectController {
   ) {
     return await this.documentService.addDocumentsToProject(
       req.user.userId,
+      projectId,
+      dto.documentIds,
+    );
+  }
+
+  // -- REMOVE DOUCMENTS TO PROJECT -- 
+  @Delete('/:projectId/documents/unlink')
+  async removeDocumentsOutProject(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('projectId') projectId: string,
+    @Body() dto: AddDocumentToProjectDto,
+  ) {
+    return await this.documentService.removeDocumentsOutProject(
+      // req.user.userId,
       projectId,
       dto.documentIds,
     );
@@ -4150,7 +4246,7 @@ type MetadataDoc = {
   page?: number;
   title?: string;
   originalFileName?: string;
-};
+};  
 
 export interface ScoredDocument {
   pageContent: string;
@@ -4168,13 +4264,13 @@ export class RetrievalService {
   private readonly FINAL_K = 20;
 
   // Trọng số cho Hybrid search (Fire tune base on real data)
-  private readonly WEIGHT_VECTOR = 0.3;
-  private readonly WEIGHT_KEYWORD = 0.7;
+  // private readonly WEIGHT_VECTOR = 0.3;
+  // private readonly WEIGHT_KEYWORD = 0.7;
 
   constructor(
     private vectorService: VectorService,
     private logger: Logger,
-  ) {}
+  ) { }
 
   /**
    * Pipeline tìm kiếm chuyên nghiệp:
@@ -4228,156 +4324,10 @@ export class RetrievalService {
     }));
 
     // Log để debug chất lượng tìm kiếm
-    // this.logSearchQuality(query, candidates);
+    this.logSearchQuality(query, candidates);
 
     // Trả về top kết quả tốt nhất
     return candidates.slice(0, this.FINAL_K);
-  }
-
-  // async retrieveAndRerank(query: string, userId: string, projectId?: string) {
-  //   // BƯỚC 1: RETRIEVAL - Lấy tập ứng viên rộng
-  //   const rawDocs = await this.vectorService.getRetrievalsWithScore(
-  //     query,
-  //     this.RETRIEVE_K,
-  //     userId,
-  //     projectId,
-  //   );
-
-  //   if (!rawDocs.length) return [];
-
-  //   // Chuẩn hóa documents sang format dễ xử lý
-  //   let candidates: ScoredDocument[] = rawDocs.map(([doc, score]) => ({
-  //     pageContent: doc.pageContent,
-  //     metadata: doc.metadata,
-  //     vectorScore: score, // Giả sử score càng cao càng tốt (Cosine Similarity)
-  //   }));
-
-  //   // BƯỚC 2: RERANKING - Tính điểm từ khóa (Keyword Boosting)
-  //   // Đây là Core quality để tìm chính xác thông tin hỗn tạp
-  //   candidates = this.performKeywordReranking(query, candidates);
-
-  //   // BƯỚC 3: SORTING & SELECTION
-  //   // Sắp xếp theo điểm số cuối cùng (Final Score)
-  //   candidates.sort((a, b) => (b.finalScore || 0) - (a.finalScore || 0));
-
-  //   // Log để debug chất lượng tìm kiếm
-  //   this.logSearchQuality(query, candidates);
-
-  //   // Trả về top kết quả tốt nhất
-  //   return candidates.slice(0, this.FINAL_K);
-  // }
-
-  /**
-   * THUẬT TOÁN RERANK MỚI CHO TIẾNG VIỆT
-   * Ưu tiên: Cụm từ chính xác (Bigram/Phrase) > Từ đơn (Unigram)
-   */
-  private performKeywordReranking(
-    query: string,
-    docs: ScoredDocument[],
-  ): ScoredDocument[] {
-    const queryLower = query.toLowerCase().trim();
-
-    // 1. Tách từ đơn (Unigrams) - KHÔNG lọc độ dài nữa
-    const unigrams = queryLower.split(/\s+/);
-
-    // 2. Tạo cụm từ (Bigrams) để bắt ngữ cảnh.
-    // Ví dụ: "miễn giảm học phí" -> ["miễn giảm", "giảm học", "học phí"]
-    const bigrams: string[] = [];
-    for (let i = 0; i < unigrams.length - 1; i++) {
-      bigrams.push(`${unigrams[i]} ${unigrams[i + 1]}`);
-    }
-
-    return docs.map((doc) => {
-      const contentLower = doc.pageContent.toLowerCase();
-      let score = 0;
-
-      // -- A. Điểm cho cụm từ (Quan trọng nhất - Trọng số cao) --
-      // Nếu tìm thấy "miễn giảm" hoặc "học phí", cộng điểm rất lớn
-      bigrams.forEach((gram) => {
-        if (contentLower.includes(gram)) {
-          score += 0.5; // Mỗi bigram khớp cộng 0.5 điểm
-        }
-      });
-
-      // -- B. Điểm cho từ đơn (Bổ trợ) --
-      unigrams.forEach((term) => {
-        if (contentLower.includes(term)) {
-          score += 0.1; // Mỗi từ đơn khớp cộng 0.1 điểm
-        }
-      });
-
-      // -- C. Boost đặc biệt nếu khớp nguyên câu query (Hiếm nhưng chất) --
-      if (contentLower.includes(queryLower)) {
-        score += 2.0;
-      }
-
-      // Normalization: Kéo điểm về khoảng [0, 1] để không lấn át Vector quá đà
-      // (Dùng hàm sigmoid hoặc min/max đơn giản)
-      const normalizedKeywordScore = Math.min(score, 2.0) / 2.0; // Max là 1.0
-
-      doc.keywordScore = normalizedKeywordScore;
-
-      // Công thức tính Final Score
-      doc.finalScore =
-        doc.vectorScore * this.WEIGHT_VECTOR +
-        normalizedKeywordScore * this.WEIGHT_KEYWORD;
-
-      return doc;
-    });
-  }
-
-  /**
-   * Thuật toán tính điểm Keyword đơn giản nhưng hiệu quả (BM25 Simplified)
-   * Tăng điểm cho các document chứa chính xác từ khóa trong query
-   */
-  // private performKeywordReranking(
-  //   query: string,
-  //   docs: ScoredDocument[],
-  // ): ScoredDocument[] {
-  //   // Tách query thành các token (từ đơn), loại bỏ từ quá ngắn
-  //   const queryTerms = query
-  //     .toLowerCase()
-  //     .split(/\s+/)
-  //     .filter((w) => w.length > 2); // TODO: User chat: "IT là gì, AI là gì?, IC là gì? " -> loại bỏ luôn key thì toang
-
-  //   if (queryTerms.length === 0) return docs;
-
-  //   return docs.map((doc) => {
-  //     const contentLower = doc.pageContent.toLowerCase();
-  //     let keywordMatches = 0;
-
-  //     // Đếm số lượng từ khóa xuất hiện trong đoạn văn
-  //     queryTerms.forEach((term) => {
-  //       // Sử dụng regex để tìm từ chính xác (word boundary) tránh match nhầm
-  //       // Ví dụ: tìm "tài" không nên match "tài liệu"
-  //       const regex = new RegExp(`\\b${this.escapeRegExp(term)}\\b`, 'g');
-  //       const matches = contentLower.match(regex);
-  //       if (matches) {
-  //         keywordMatches += matches.length;
-  //       }
-  //       // Fallback: nếu không tìm thấy chính xác, tìm chuỗi con (cho tiếng Việt)
-  //       else if (contentLower.includes(term)) {
-  //         keywordMatches += 0.5;
-  //       }
-  //     });
-
-  //     // Tính điểm keyword (Normalization đơn giản)
-  //     // Giới hạn điểm keyword boost tối đa là 1.0 để không lấn át hoàn toàn Vector
-  //     const keywordScore = Math.min(keywordMatches * 0.1, 1.0);
-
-  //     // CÔNG THỨC HYBRID SCORE
-  //     // Kết hợp sức mạnh của Vector (hiểu ngữ nghĩa) và Keyword (độ chính xác)
-  //     doc.keywordScore = keywordScore;
-  //     doc.finalScore =
-  //       doc.vectorScore * this.WEIGHT_VECTOR +
-  //       keywordScore * this.WEIGHT_KEYWORD;
-
-  //     return doc;
-  //   });
-  // }
-
-  private escapeRegExp(string: string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   private logSearchQuality(query: string, sortedDocs: ScoredDocument[]) {
@@ -4566,133 +4516,6 @@ export class UserService {
   }
 }
 
-```
-
-### prisma\schema.prisma
-
-*(Unsupported file type)*
-
-### package.json
-
-```json
-{
-  "name": "backend-chatnary-nestjs",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
-  "scripts": {
-    "build": "nest build",
-    "postinstall": "prisma generate",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "dev": "nest start",
-    "start:dev": "nest start --watch",
-    "wdev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main.js",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "dependencies": {
-    "@langchain/cohere": "^1.0.1",
-    "@langchain/community": "^1.0.4",
-    "@langchain/core": "^1.0.6",
-    "@langchain/openai": "^1.1.2",
-    "@langchain/textsplitters": "^1.0.0",
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/jwt": "^11.0.2",
-    "@nestjs/mapped-types": "*",
-    "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/serve-static": "^5.0.4",
-    "@nestjs/swagger": "^11.2.3",
-    "@prisma/adapter-pg": "6.9.0",
-    "@prisma/client": "6.9.0",
-    "bcrypt": "^6.0.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.3",
-    "express": "^5.2.1",
-    "joi": "^18.0.2",
-    "llama-cloud-services": "^0.5.1",
-    "lodash": "^4.17.21",
-    "multer": "^2.0.2",
-    "nest-winston": "^1.10.2",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "pdf-parse": "1.1.1",
-    "pdf2pic": "^3.2.0",
-    "pg": "^8.16.3",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "sharp": "^0.34.5",
-    "tesseract.js": "^6.0.1",
-    "uuid": "^13.0.0",
-    "winston": "^3.19.0",
-    "winston-daily-rotate-file": "^5.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1",
-    "@types/bcrypt": "^6.0.0",
-    "@types/dotenv": "^8.2.3",
-    "@types/express": "^5.0.0",
-    "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.21",
-    "@types/multer": "^2.0.0",
-    "@types/node": "^22.10.7",
-    "@types/passport-jwt": "^4.0.1",
-    "@types/pdf-parse": "^1.1.5",
-    "@types/pg": "^8.15.6",
-    "@types/supertest": "^6.0.2",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.2",
-    "globals": "^16.0.0",
-    "jest": "^30.0.0",
-    "prettier": "^3.4.2",
-    "prisma": "6.9.0",
-    "source-map-support": "^0.5.21",
-    "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  }
-}
 ```
 
 ### API_ENDPOINTS.md
@@ -4934,6 +4757,69 @@ authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjd
 }
 ```
 
+## Update Project
+
+### **PATCH** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Body**
+
+```json
+// some fields:  name, description, color, isArchived
+{
+  "name": "Sinoo khung bo 1101"
+  // ... some fields to update
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+    "name": "Sinoo khung bo 1101",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-08T15:48:49.375Z",
+    "updatedAt": "2025-12-08T15:53:24.488Z",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
+
+## Delete Project
+
+### **DELETE** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z"
+    }
+  ]
+}
+```
+
 ## List Chats in Project
 
 ### **GET** `/project/:projectId/chats`
@@ -5071,20 +4957,51 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
 }
 ```
 
-## Update Project
+## Add documents to Project
 
-### **PATCH** `/project/:projectId`
+### **POST** `/project/:projectId/documents`
 
 **Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 **Body**
 
 ```json
-// some fields:  name, description, color, isArchived
 {
-  "name": "Sinoo khung bo 1101"
-  // ... some fields to update
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "count": 1
+  }
+}
+```
+
+## Remove documents from Project
+
+### **DELETE** `/project/:projectId/documents/unlink`
+
+**Param**
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+{
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
 }
 ```
 
@@ -5095,42 +5012,8 @@ projectId = eae33420-8426-4f3e-b055-d4afeefad60b
   "statusCode": 200,
   "success": true,
   "data": {
-    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
-    "name": "Sinoo khung bo 1101",
-    "description": "Desc ...",
-    "color": "#3B82F6",
-    "isArchived": false,
-    "createdAt": "2025-12-08T15:48:49.375Z",
-    "updatedAt": "2025-12-08T15:53:24.488Z",
-    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+    "count": 1
   }
-}
-```
-
-## Delete Project
-
-### **DELETE** `/project/:projectId`
-
-**Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
-      "name": "MGHP HK1(2025-2026).pdf",
-      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
-      "mimeType": "application/pdf",
-      "size": 2751843,
-      "status": "done",
-      "createdAt": "2025-12-07T04:08:06.354Z"
-    }
-  ]
 }
 ```
 
@@ -5748,4 +5631,127 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
 }
 ```
 
+```
+
+### package.json
+
+```json
+{
+  "name": "backend-chatnary-nestjs",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "scripts": {
+    "build": "nest build",
+    "postinstall": "prisma generate",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "dev": "nest start",
+    "start:dev": "nest start --watch",
+    "wdev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/src/main.js",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@langchain/cohere": "^1.0.1",
+    "@langchain/community": "^1.0.4",
+    "@langchain/core": "^1.0.6",
+    "@langchain/openai": "^1.1.2",
+    "@langchain/textsplitters": "^1.0.0",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/mapped-types": "*",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/serve-static": "^5.0.4",
+    "@nestjs/swagger": "^11.2.3",
+    "@prisma/adapter-pg": "6.9.0",
+    "@prisma/client": "6.9.0",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
+    "express": "^5.2.1",
+    "joi": "^18.0.2",
+    "llama-cloud-services": "^0.5.1",
+    "lodash": "^4.17.21",
+    "multer": "^2.0.2",
+    "nest-winston": "^1.10.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pdf-parse": "1.1.1",
+    "pdf2pic": "^3.2.0",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "sharp": "^0.34.5",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^13.0.0",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.21",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.10.7",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/pg": "^8.15.6",
+    "@types/supertest": "^6.0.2",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "jest": "^30.0.0",
+    "prettier": "^3.4.2",
+    "prisma": "6.9.0",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
 ```
