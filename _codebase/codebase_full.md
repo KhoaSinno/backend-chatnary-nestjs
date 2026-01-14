@@ -2,7 +2,7 @@
 
 ## Project Statistics
 
-- Total files: 70
+- Total files: 63
 
 ## Folder Structure
 
@@ -58,8 +58,6 @@ src
       create-document.dto.ts
       update-document.dto.ts
       upload-document.dto.ts
-    entities
-      document.entity.ts
     oss.ts
   http-exception.filter.ts
   ingest
@@ -67,8 +65,6 @@ src
     ingest.service.ts
     loaders
       cloud.loader.ts
-      ocr.loader.ts
-      pdf.loader.ts
     splitters
       text-splitter.ts
     vector
@@ -79,9 +75,6 @@ src
       openai.module.ts
       openai.service.ts
   main.ts
-  pipeline
-    pipeline.module.ts
-    pipeline.service.ts
   prisma
     prisma.module.ts
     prisma.service.ts
@@ -89,8 +82,6 @@ src
     dto
       create-project.dto.ts
       update-project.dto.ts
-    entities
-      project.entity.ts
     project.controller.ts
     project.module.ts
     project.service.ts
@@ -102,13 +93,11 @@ src
     dto
       create-user.dto.ts
       update-user.dto.ts
-    entities
-      user.entity.ts
     user.controller.ts
     user.module.ts
     user.service.ts
+.env.example
 API_ENDPOINTS.md
-package.json
 
 ```
 
@@ -172,7 +161,6 @@ import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -316,7 +304,6 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     IngestModule,
     DocumentModule,
     ChatModule,
-    PipelineModule,
     OpenaiModule,
     PrismaModule,
     ProjectModule,
@@ -1889,7 +1876,7 @@ export class DocumentService {
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) { }
+  ) {}
 
   //-- UPLOAD --
   async uploadFiles(
@@ -2041,7 +2028,7 @@ export class DocumentService {
   async addDocumentsToProject(
     userId: string,
     projectId: string,
-    documentIds: string[]
+    documentIds: string[],
   ) {
     // 1. Check Project exists AND belongs to User
     const project = await this.prisma.projects.findFirst({
@@ -2424,13 +2411,6 @@ export class UploadMetadataDto {
 
 ```
 
-### src\document\entities\document.entity.ts
-
-```ts
-export class Document {}
-
-```
-
 ### src\document\oss.ts
 
 ```ts
@@ -2529,8 +2509,6 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 ```ts
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { IngestService } from './ingest.service';
-import { PdfService } from './loaders/pdf.loader';
-import { OcrService } from './loaders/ocr.loader';
 import { TextSplitterService } from './splitters/text-splitter';
 import { VectorService } from './vector/vector.service';
 import { PgvectorService } from './vector/pgvector.client';
@@ -2540,8 +2518,6 @@ import { CloudService } from './loaders/cloud.loader';
 @Module({
   providers: [
     IngestService,
-    PdfService,
-    OcrService,
     CloudService,
     TextSplitterService,
     VectorService,
@@ -2685,326 +2661,12 @@ export class CloudService {
 
 ```
 
-### src\ingest\loaders\ocr.loader.ts
-
-```ts
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import * as Tesseract from 'tesseract.js';
-import { fromPath } from 'pdf2pic';
-import * as fs from 'fs';
-import * as path from 'path';
-import pdf from 'pdf-parse';
-import sharp from 'sharp';
-
-@Injectable()
-export class OcrService implements OnModuleInit, OnModuleDestroy {
-  private workers: Tesseract.Worker[] = [];
-  private readonly WORKER_COUNT = 8; // Số workers song song
-
-  async onModuleInit() {
-    console.log('🔧 Initializing OCR worker pool...');
-    // Tạo worker pool để OCR song song
-    const workerPromises = Array.from(
-      { length: this.WORKER_COUNT },
-      async () => {
-        const worker = await Tesseract.createWorker('vie', 1, {
-          logger: () => {}, // Tắt log verbose
-        });
-
-        // Cấu hình tối ưu cho tiếng Việt
-        await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO, // Tự động detect layout
-          tessedit_char_whitelist: '', // Cho phép tất cả ký tự
-          preserve_interword_spaces: '1',
-          // Cải thiện nhận diện dấu tiếng Việt
-          textord_heavy_nr: '1',
-          // Giảm noise
-          edges_use_new_outline_complexity: '1',
-        });
-
-        return worker;
-      },
-    );
-
-    this.workers = await Promise.all(workerPromises);
-    console.log(`✅ Initialized ${this.workers.length} OCR workers`);
-  }
-
-  private getWorker(index: number): Tesseract.Worker {
-    return this.workers[index % this.workers.length];
-  }
-
-  // Handle
-  async load(filePath: string) {
-    try {
-      const ext = filePath.toLowerCase();
-      const isPdf = ext.endsWith('.pdf');
-
-      // Supported image formats for OCR
-      const isImage = /\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext);
-
-      // --- CASE 1: Image files only ---
-      if (isImage) {
-        const result = await this.workers[0].recognize(filePath);
-        return { text: result.data.text, confidence: result.data.confidence };
-      }
-
-      // --- CASE 2: Non-PDF and non-image files (e.g., .txt) ---
-      if (!isPdf) {
-        throw new Error(
-          `Unsupported file type for OCR. Only PDF and images are supported. Got: ${path.extname(filePath)}`,
-        );
-      }
-
-      // --- CASE 3: PDF files ---
-      // -- Get pageNumber --
-      const pdfBuffet = fs.readFileSync(filePath);
-      const pdfInfo = await pdf(pdfBuffet);
-
-      if (pdfInfo.text && pdfInfo.text.trim().length > 20) {
-        // Return if PDF has embedded text
-        console.log('📄 PDF has embedded text, skipping OCR.');
-        return { text: pdfInfo.text };
-      }
-
-      const pageCount = pdfInfo.numpages;
-
-      if (!pageCount || pageCount === 0) return { text: '' };
-
-      // Create: "uploads/temp" if not exists
-      const tempDir = path.join(process.cwd(), 'uploads', 'temp');
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      // List pages: convert(1) => page 1
-      console.log('📄 PDF scanned → OCR');
-      const convert = fromPath(filePath, {
-        density: 200, // Tăng DPI để OCR chính xác hơn (từ 200 lên 300)
-        saveFilename: `ocr-${Date.now()}`, // Temporary filename
-        savePath: tempDir,
-        format: 'png',
-        width: 1700, // Tăng kích thước để giữ chi tiết (từ 1200 lên 2400)
-        height: 2400,
-      });
-
-      const convertPromises: Promise<any>[] = [];
-      for (let page = 1; page <= pageCount; page++) {
-        convertPromises.push(convert(page, { responseType: 'image' }));
-      }
-      const pageImages = await Promise.all(convertPromises);
-      console.log('✅ PDF converted to images');
-
-      // 5️⃣ OCR tất cả trang song song với worker pool
-      console.log(`🔍 Running OCR on ${pageCount} pages...`);
-
-      const ocrPromises = pageImages.map(async (img: any, index: number) => {
-        const worker = this.getWorker(index);
-
-        const prep = await this.preprocessImage(img.path);
-
-        const res = await worker.recognize(prep);
-
-        return {
-          text: res.data.text,
-          path: img.path,
-          prepPath: prep, // Lưu đường dẫn file preprocessed
-          page: index + 1,
-        };
-      });
-
-      const results = await Promise.all(ocrPromises);
-      console.log('✅ OCR completed');
-
-      // 6️⃣ Ghép text theo thứ tự trang
-      const allText = results
-        .sort((a, b) => a.page - b.page)
-        .map((r) => this.normalizeText(r.text))
-        .join('\n');
-
-      // 7️⃣ Xoá file ảnh tạm (cả gốc và preprocessed)
-      results.forEach((r) => {
-        try {
-          // Xóa file gốc
-          if (fs.existsSync(r.path)) {
-            fs.unlinkSync(r.path);
-          }
-          // Xóa file preprocessed
-          if (r.prepPath && fs.existsSync(r.prepPath)) {
-            fs.unlinkSync(r.prepPath);
-          }
-        } catch (error) {
-          console.warn(`⚠️ Cannot delete temp file: ${r.path}`, error.message);
-        }
-      });
-
-      return { text: allText };
-    } catch (error) {
-      console.log('OCR Error: ', error);
-      throw error;
-    }
-  }
-
-  // Normalize text: nối từ ngắt dòng, gộp khoảng trắng, sửa lỗi OCR phổ biến tiếng Việt
-  private normalizeText(text: string): string {
-    const normalized = text
-      // Nối từ bị ngắt dòng
-      .replace(/-\s*\n\s*/g, '')
-      // Giữ nguyên xuống dòng đơn, chỉ gộp xuống dòng nhiều
-      .replace(/\n{3,}/g, '\n\n')
-      // Chuẩn hóa space (không gộp xuống dòng)
-      .replace(/[ \t]+/g, ' ')
-      // Remove brand watermarks
-      .replace(/Scanned with[\s\S]*$/gi, '')
-      // Sửa lỗi OCR phổ biến tiếng Việt
-      .replace(/\bl\b/g, 'I') // l đơn -> I
-      .replace(/ĐẠl/g, 'ĐẠI')
-      .replace(/HỘl/g, 'HỘI')
-      .replace(/TRUẬT/g, 'THUẬT')
-      .replace(/lẼN/g, 'MIỄN')
-      // Loại bỏ ký tự lỗi OCR phổ biến
-      .replace(/[¬]/g, '-')
-      .replace(/[‹›«»]/g, '"')
-      // Loại bỏ các ký tự lạ không phải chữ cái, số, dấu câu thông thường
-      .replace(
-        /[^\w\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđĐÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸ.,;:!?()\-"/\n]/g,
-        ' ',
-      )
-      // Gộp space thừa sau khi xử lý
-      .replace(/[ \t]+/g, ' ')
-      .trim();
-
-    // Đếm diacritics để debug
-    const diacriticCount = (
-      normalized.match(
-        /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/gi,
-      ) || []
-    ).length;
-    if (diacriticCount > 0) {
-      console.log(`Detected ${diacriticCount} diacritics`);
-    }
-
-    return normalized;
-  }
-
-  private async preprocessImage(imgPath: string): Promise<string> {
-    const outPath = imgPath.replace('.png', '-prep.png');
-
-    const img = sharp(imgPath);
-    const meta = await img.metadata();
-
-    const topCut = Math.floor(meta.height * 0.03); // 1000px => cut 30px
-    const bottomCut = Math.floor(meta.height * 0.03);
-
-    // Chỉ cắt trái/phải nếu ảnh quá rộng (scan lệch)
-    // aspect ratio: width / height
-    // < 1 là ảnh dọc, 0.75 là tỉ lệ phổ biến của trang A4
-    const sideCut =
-      meta.width / meta.height > 0.75 ? Math.floor(meta.width * 0.012) : 0;
-
-    await img
-      .extract({
-        left: sideCut,
-        top: topCut,
-        width: meta.width - sideCut * 2, // cut left/right
-        height: meta.height - topCut - bottomCut, // cut top/bottom
-      })
-      .grayscale()
-      .normalize()
-      .sharpen({ sigma: 0.5 })
-      // .threshold(115)
-      .median(1)
-      .toFile(outPath);
-
-    return outPath;
-  }
-
-  async onModuleDestroy() {
-    console.log('🛑 Terminating OCR workers...');
-    await Promise.all(this.workers.map((w) => w.terminate()));
-  }
-}
-
-```
-
-### src\ingest\loaders\pdf.loader.ts
-
-```ts
-import { Injectable } from '@nestjs/common';
-import pdfParse from 'pdf-parse';
-import * as fs from 'fs';
-
-// Type definitions for pdf.js objects
-interface TextItem {
-  str: string;
-  transform: number[];
-}
-
-interface TextContent {
-  items: TextItem[];
-}
-
-interface PageData {
-  pageNumber: number;
-  getTextContent(options?: {
-    normalizeWhitespace?: boolean;
-    disableCombineTextItems?: boolean;
-  }): Promise<TextContent>;
-}
-
-@Injectable()
-export class PdfService {
-  private pageTexts: Map<number, string> = new Map();
-
-  async load(filePath: string): Promise<{ page: number; text: string }[]> {
-    // Reset page texts for new document
-    this.pageTexts.clear();
-
-    // Read PDF file as buffer
-    const dataBuffer = fs.readFileSync(filePath);
-
-    // Parse PDF with pdf-parse
-    await pdfParse(dataBuffer, {
-      pagerender: (pageData: PageData) => this.renderPage(pageData),
-    });
-
-    // Convert Map to array sorted by page number
-    const result = Array.from(this.pageTexts.entries())
-      .sort((a, b) => a[0] - b[0])
-      .map(([pageNum, text]) => ({
-        page: pageNum,
-        text: text,
-      }));
-
-    return result;
-  }
-
-  private async renderPage(pageData: PageData): Promise<string> {
-    const render_options = {
-      normalizeWhitespace: false,
-      disableCombineTextItems: false,
-    };
-
-    const textContent = await pageData.getTextContent(render_options);
-    const strings = textContent.items.map((item) => item.str);
-    const pageText = strings.join(' ') + '\n';
-
-    // Store text by page number
-    this.pageTexts.set(pageData.pageNumber, pageText);
-
-    return pageText;
-  }
-}
-
-```
-
 ### src\ingest\splitters\text-splitter.ts
 
 ```ts
 import { Injectable, Logger } from '@nestjs/common';
 import { CHUNK_SIZE, CHUNK_OVERLAP } from '../../constant/index.constant.js';
-import { MarkdownTextSplitter } from '@langchain/textsplitters';
-import { randomUUID } from 'node:crypto';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
 export type ChunkResult = {
   content: string;
@@ -3014,21 +2676,14 @@ export type ChunkResult = {
 
 export type MarkdownProp = { content: string; page: number };
 
-// Alias for backward compatibility
 @Injectable()
 export class TextSplitterService {
   private readonly logger = new Logger(TextSplitterService.name);
 
-  // private readonly HEADER_TO_SPLIT = [
-  //   ['#', 'Header 1'],
-  //   ['##', 'Header 2'],
-  //   ['###', 'Header 3'],
-  // ];
-
   async splitToMarkdown(
     markdownInputs: MarkdownProp[],
   ): Promise<ChunkResult[]> {
-    if (!markdownInputs) {
+    if (!markdownInputs || markdownInputs.length === 0) {
       this.logger.warn('Empty markdown text received for splitting.');
       return [];
     }
@@ -3036,281 +2691,39 @@ export class TextSplitterService {
     const texts = markdownInputs.map((item) => item.content);
     const metadata = markdownInputs.map((item) => ({
       page: item.page,
-      // Thêm các metadata khác từ input nếu cần
     }));
 
-    const splitter = new MarkdownTextSplitter({
-      chunkSize: CHUNK_SIZE,
-      chunkOverlap: CHUNK_OVERLAP,
-      // keepSeparator: true,
+    // Logic: Cố gắng giữ văn bản liền mạch, chỉ cắt khi vượt quá CHUNK_SIZE
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: CHUNK_SIZE || 1000,
+      chunkOverlap: CHUNK_OVERLAP || 200,
+      separators: [
+        '\n\n', // Ưu tiên 1: Cắt theo đoạn văn (giữ header dính với body)
+        '\n', // Ưu tiên 2: Xuống dòng
+        '. ', // Ưu tiên 3: Kết thúc câu
+        '? ',
+        '! ',
+        ' ', // Ưu tiên 4: Dấu cách
+        '', // Cuối cùng: Cắt ký tự
+      ],
+      // keepSeparator: true, // Giữ lại ký tự phân cách để văn bản tự nhiên hơn
     });
 
     const docsSplitted = await splitter.createDocuments(texts, metadata);
+
     this.logger.log(
-      `Start splitting: Generated ${docsSplitted.length} parent chunks.`,
+      `Splitting completed: Processed ${texts.length} pages into ${docsSplitted.length} chunks.`,
     );
 
     let globalChildIndex = 0;
 
     return docsSplitted.map((doc) => ({
-      id: randomUUID(),
       content: doc.pageContent,
       chunkIndex: globalChildIndex++,
       metadata: doc.metadata || {},
     }));
   }
 }
-
-//  === SMALL TO BIG VERSION ===
-// export type ChildChunkResult = {
-//   id: string;
-//   content: string;
-//   chunkIndex: number;
-//   metadata: Record<string, any>;
-// };
-
-// export type ParentChunkResult = {
-//   content: string;
-//   metadata: Record<string, any>;
-//   children: ChildChunkResult[];
-// };
-// export class TextSplitterService {
-//   private readonly logger = new Logger(TextSplitterService.name);
-
-//   private readonly HEADER_TO_SPLIT = [
-//     ['#', 'Header 1'],
-//     ['##', 'Header 2'],
-//     ['###', 'Header 3'],
-//   ];
-
-//   async splitToMarkdown(markdownText: string[]): Promise<ParentChunkResult[]> {
-//     if (!markdownText) {
-//       this.logger.warn('Empty markdown text received for splitting.');
-//       return [];
-//     }
-
-//     const parentSplitter = new MarkdownTextSplitter({
-//       chunkSize: PARENT_CHUNK_SIZE,
-//       chunkOverlap: PARENT_CHUNK_OVERLAP,
-//       // keepSeparator: true,
-//     });
-
-//     const parentDocs = await parentSplitter.createDocuments(markdownText);
-//     this.logger.log(
-//       `Start splitting: Generated ${parentDocs.length} parent chunks.`,
-//     );
-
-//     const childrenSplitter = new MarkdownTextSplitter({
-//       chunkSize: CHILD_CHUNK_SIZE,
-//       chunkOverlap: CHILD_CHUNK_OVERLAP,
-//     });
-
-//     const result: ParentChunkResult[] = [];
-//     let globalChildIndex = 0;
-//     for (const parentDoc of parentDocs) {
-//       const childDocs = await childrenSplitter.createDocuments([
-//         parentDoc.pageContent,
-//       ]);
-
-//       // Map sang format ChildChunkResult
-//       const childrenNodes: ChildChunkResult[] = childDocs.map((child) => ({
-//         id: randomUUID(),
-//         content: child.pageContent,
-//         chunkIndex: globalChildIndex++,
-//         // Merge metadata của cha vào con (để sau này filter nếu cần)
-//         metadata: {
-//           ...parentDoc.metadata,
-//           ...child.metadata,
-//         },
-//       }));
-
-//       result.push({
-//         content: parentDoc.pageContent,
-//         metadata: parentDoc.metadata,
-//         children: childrenNodes,
-//       });
-//     }
-
-//     return result;
-//   }
-// }
-// OLD version
-
-// import { Injectable } from '@nestjs/common';
-// import { CHUNK_SIZE, CHUNK_OVERLAP } from '../../constant/index.constant.js';
-
-// export type ChunkResult = {
-//   text: string;
-//   page: number;
-//   chunkIndex: number;
-//   startOffset: number;
-//   endOffset: number;
-// };
-
-// @Injectable()
-// export class TextSplitterService {
-//   // Thứ tự ưu tiên: Ngắt đoạn đôi -> Đoạn đơn -> Câu -> Mệnh đề -> Từ
-//   private readonly SEPARATORS = [
-//     '\n\n',
-//     '\n',
-//     '. ',
-//     '? ',
-//     '! ',
-//     '; ',
-//     ': ', // Thêm dấu hai chấm
-//     ', ',
-//     ' ',
-//     '', // Fallback cuối cùng: cắt từng ký tự nếu không tìm thấy gì
-//   ];
-
-//   splitPdfPages(pages: { page: number; text: string }[]): ChunkResult[] {
-//     const chunks: ChunkResult[] = [];
-//     let globalOffset = 0;
-//     let chunkIndex = 0;
-
-//     for (const p of pages) {
-//       const pageText = p.text;
-
-//       // Xử lý trang rỗng
-//       if (!pageText || pageText.length === 0) {
-//         continue; // Offset không đổi vì độ dài = 0
-//       }
-
-//       let localStart = 0;
-
-//       while (localStart < pageText.length) {
-//         // 1. Xác định điểm cắt lý tưởng (Hard Limit)
-//         let localEnd = Math.min(localStart + CHUNK_SIZE, pageText.length);
-
-//         // 2. Tìm điểm cắt ngữ nghĩa (Semantic Boundary)
-//         // Chỉ tìm nếu chưa hết văn bản
-//         if (localEnd < pageText.length) {
-//           const semanticEnd = this.findNearestSeparator(
-//             pageText,
-//             localStart,
-//             localEnd,
-//           );
-//           if (semanticEnd !== -1) {
-//             localEnd = semanticEnd;
-//           }
-//         }
-
-//         // 3. Lấy raw text
-//         const rawChunkText = pageText.slice(localStart, localEnd);
-
-//         // 4. XỬ LÝ TRIM VÀ OFFSET CHÍNH XÁC (QUAN TRỌNG)
-//         // Ta cần tìm vị trí thực của chữ cái đầu tiên và cuối cùng trong rawChunkText
-//         // để offset trả về KHÔNG bao gồm khoảng trắng thừa ở đầu/cuối.
-//         if (rawChunkText.trim().length > 0) {
-//           // Tính toán offset nội bộ để trim
-//           const startTrimDelta =
-//             rawChunkText.length - rawChunkText.trimStart().length;
-//           const endTrimDelta =
-//             rawChunkText.length - rawChunkText.trimEnd().length;
-
-//           const realStartOffset = globalOffset + localStart + startTrimDelta;
-//           const realEndOffset = globalOffset + localEnd - endTrimDelta;
-
-//           chunks.push({
-//             text: rawChunkText.trim(),
-//             page: p.page,
-//             chunkIndex: chunkIndex,
-//             startOffset: realStartOffset,
-//             endOffset: realEndOffset,
-//           });
-//           chunkIndex++;
-//         }
-
-//         // 5. Chuẩn bị cho vòng lặp sau (Overlap)
-//         if (localEnd >= pageText.length) {
-//           break;
-//         }
-
-//         // Tính overlap
-//         const idealNextStart = Math.max(localStart, localEnd - CHUNK_OVERLAP);
-
-//         // Tìm điểm bắt đầu "đẹp" cho chunk sau (tránh cắt giữa từ)
-//         localStart = this.findSmartNextStart(
-//           pageText,
-//           idealNextStart,
-//           localEnd,
-//         );
-//       }
-
-//       globalOffset += pageText.length;
-//     }
-
-//     return chunks;
-//   }
-
-//   /**
-//    * TỐI ƯU HIỆU NĂNG:
-//    * Không dùng slice() để tạo chuỗi con mới. Dùng lastIndexOf với tham số position.
-//    */
-//   private findNearestSeparator(
-//     text: string,
-//     start: number,
-//     limit: number,
-//   ): number {
-//     // Chỉ tìm ngược lại trong khoảng 40% cuối của chunk
-//     // Để đảm bảo chunk không bị quá ngắn (ví dụ chunk 1000 mà cắt ở ký tự thứ 10)
-//     const minSearchIndex = Math.max(
-//       start,
-//       limit - Math.floor(CHUNK_SIZE * 0.4),
-//     );
-
-//     for (const sep of this.SEPARATORS) {
-//       if (sep === '') return limit; // Fallback hard cut
-
-//       // Tìm separator cuối cùng xuất hiện TRƯỚC limit
-//       const lastIndex = text.lastIndexOf(sep, limit);
-
-//       // Quan trọng: lastIndex phải >= minSearchIndex để đảm bảo chunk đủ dài
-//       if (lastIndex !== -1 && lastIndex >= minSearchIndex) {
-//         // Cắt SAU separator (ví dụ sau dấu chấm)
-//         return lastIndex + sep.length;
-//       }
-//     }
-
-//     return -1; // Fallback
-//   }
-
-//   private findSmartNextStart(
-//     text: string,
-//     idealStart: number,
-//     previousEnd: number,
-//   ): number {
-//     if (idealStart <= 0) return 0;
-//     if (idealStart >= text.length) return text.length;
-
-//     // Nếu ngay tại idealStart đã là ký tự bắt đầu từ mới (trước đó là space) -> Tốt
-//     if (text[idealStart - 1] === ' ' || text[idealStart - 1] === '\n') {
-//       return idealStart;
-//     }
-
-//     // Nếu không, lùi lại tìm khoảng trắng gần nhất
-//     // Giới hạn lùi tối đa 50 ký tự để tránh chunk sau bị overlap quá nhiều (thừa thãi)
-//     const searchLimit = Math.max(0, idealStart - 50);
-
-//     // Tìm space hoặc newline gần nhất phía trước
-//     const lastSpace = text.lastIndexOf(' ', idealStart);
-//     const lastNewline = text.lastIndexOf('\n', idealStart);
-
-//     const bestStart = Math.max(lastSpace, lastNewline);
-
-//     if (bestStart !== -1 && bestStart >= searchLimit) {
-//       return bestStart + 1; // Bắt đầu sau dấu cách
-//     }
-
-//     // Nếu từ quá dài (dài hơn 50 ký tự không có dấu cách), đành cắt giữa từ
-//     return idealStart;
-//   }
-
-//   splitText(text: string): ChunkResult[] {
-//     const pages = [{ page: 1, text }];
-//     return this.splitPdfPages(pages);
-//   }
-// }
 
 ```
 
@@ -3680,29 +3093,6 @@ bootstrap();
 
 ```
 
-### src\pipeline\pipeline.module.ts
-
-```ts
-import { Module } from '@nestjs/common';
-import { PipelineService } from './pipeline.service';
-
-@Module({
-  providers: [PipelineService],
-})
-export class PipelineModule {}
-
-```
-
-### src\pipeline\pipeline.service.ts
-
-```ts
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
-export class PipelineService {}
-
-```
-
 ### src\prisma\prisma.module.ts
 
 ```ts
@@ -3798,13 +3188,6 @@ export class UpdateProjectDto {
   @IsBoolean({ message: 'isArchived must be a boolean' })
   isArchived?: boolean;
 }
-
-```
-
-### src\project\entities\project.entity.ts
-
-```ts
-export class Project {}
 
 ```
 
@@ -4380,13 +3763,6 @@ export class UpdateUserDto {
 
 ```
 
-### src\user\entities\user.entity.ts
-
-```ts
-export class User {}
-
-```
-
 ### src\user\user.controller.ts
 
 ```ts
@@ -4517,6 +3893,10 @@ export class UserService {
 }
 
 ```
+
+### .env.example
+
+*(Unsupported file type)*
 
 ### API_ENDPOINTS.md
 
@@ -5631,127 +5011,4 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
 }
 ```
 
-```
-
-### package.json
-
-```json
-{
-  "name": "backend-chatnary-nestjs",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
-  "scripts": {
-    "build": "nest build",
-    "postinstall": "prisma generate",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "dev": "nest start",
-    "start:dev": "nest start --watch",
-    "wdev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main.js",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "dependencies": {
-    "@langchain/cohere": "^1.0.1",
-    "@langchain/community": "^1.0.4",
-    "@langchain/core": "^1.0.6",
-    "@langchain/openai": "^1.1.2",
-    "@langchain/textsplitters": "^1.0.0",
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/jwt": "^11.0.2",
-    "@nestjs/mapped-types": "*",
-    "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/serve-static": "^5.0.4",
-    "@nestjs/swagger": "^11.2.3",
-    "@prisma/adapter-pg": "6.9.0",
-    "@prisma/client": "6.9.0",
-    "bcrypt": "^6.0.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.3",
-    "express": "^5.2.1",
-    "joi": "^18.0.2",
-    "llama-cloud-services": "^0.5.1",
-    "lodash": "^4.17.21",
-    "multer": "^2.0.2",
-    "nest-winston": "^1.10.2",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "pdf-parse": "1.1.1",
-    "pdf2pic": "^3.2.0",
-    "pg": "^8.16.3",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "sharp": "^0.34.5",
-    "tesseract.js": "^6.0.1",
-    "uuid": "^13.0.0",
-    "winston": "^3.19.0",
-    "winston-daily-rotate-file": "^5.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1",
-    "@types/bcrypt": "^6.0.0",
-    "@types/dotenv": "^8.2.3",
-    "@types/express": "^5.0.0",
-    "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.21",
-    "@types/multer": "^2.0.0",
-    "@types/node": "^22.10.7",
-    "@types/passport-jwt": "^4.0.1",
-    "@types/pdf-parse": "^1.1.5",
-    "@types/pg": "^8.15.6",
-    "@types/supertest": "^6.0.2",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.2",
-    "globals": "^16.0.0",
-    "jest": "^30.0.0",
-    "prettier": "^3.4.2",
-    "prisma": "6.9.0",
-    "source-map-support": "^0.5.21",
-    "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  }
-}
 ```

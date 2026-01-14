@@ -12,7 +12,7 @@ export class ProjectService {
     private prisma: PrismaService,
     private readonly chatService: ChatService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE NEW PROJECT --
   async createNewProject(createProjectDto: CreateProjectDto) {
@@ -42,9 +42,9 @@ export class ProjectService {
       );
     }
 
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       where: { projectId: projectId },
-      omit: { userId: true, projectId: true, messages: true },
+      omit: { userId: true, projectId: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -56,7 +56,7 @@ export class ProjectService {
   //   chatId: string,
   // ) {
   //   // TODO: CHECK EXISTED
-  //   return await this.prisma.chats.findUnique({
+  //   return await this.prisma.chat.findUnique({
   //     where: { id: chatId, userId: userId, projectId: projectId },
   //     omit: { userId: true, projectId: true },
   //   });

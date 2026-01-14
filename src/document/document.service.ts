@@ -1,86 +1,82 @@
 import { ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { IngestService } from '../ingest/ingest.service';
 import { VectorService } from '../ingest/vector/vector.service';
 import { deleteFile } from './oss';
-import path from 'path';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { documents, DocumentStatus } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
 import { UploadMetadataDto } from './dto/upload-document.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { IngestJobData } from '../queue/ingest.processor';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    private readonly ingestService: IngestService,
+    @InjectQueue('ingest-queue') private ingestQueue: Queue<IngestJobData>,
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
-  //-- UPLOAD --
+  //-- UPLOAD (Non-blocking with Queue) --
   async uploadFiles(
     userId: string,
     files: Express.Multer.File[],
     projectId?: string,
     metadata?: UploadMetadataDto,
-  ): Promise<void> {
-    for (const file of files) {
-      let document: documents | null = null;
-      try {
-        // Pre create document record with 'processing' status
-        document = await this.createDocument({
-          projectId: projectId,
-          originalName: file.originalname,
-          filePath: file.path,
-          mimeType: file.mimetype,
-          size: file.size,
-          status: DocumentStatus.PROCESSING,
-          userId: userId,
-          accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
-          viewCount: 0, // TODO: default 0
-          pageCount: 0, // TODO: get real page count after OCR
-          authors: metadata?.authors || [],
-          description: metadata?.description || '',
-          publishedYear: metadata?.publishedYear || undefined,
-          subjects: metadata?.subjects || [],
-          tags: metadata?.tags || [],
-          title: metadata?.title || path.parse(file.originalname).name,
-          documentType: 'unknown',
-        });
+  ): Promise<{ documents: documents[]; jobIds: string[] }> {
+    const createdDocuments: documents[] = [];
+    const jobIds: string[] = [];
 
-        const chunks = await this.ingestService.ingestDocument(
-          file.path,
-          document.id,
+    for (const file of files) {
+      // 1. Create document record with PENDING status (immediate response)
+      const document = await this.createDocument({
+        projectId: projectId,
+        originalName: file.originalname,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        size: file.size,
+        status: DocumentStatus.PENDING,
+        userId: userId,
+        accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
+        viewCount: 0,
+        pageCount: 0,
+        authors: metadata?.authors || [],
+        description: metadata?.description || '',
+        publishedYear: metadata?.publishedYear || undefined,
+        subjects: metadata?.subjects || [],
+        tags: metadata?.tags || [],
+        title: metadata?.title || path.parse(file.originalname).name,
+        documentType: 'unknown',
+      });
+
+      createdDocuments.push(document);
+
+      // 2. Add job to queue (non-blocking, processed by worker)
+      const job = await this.ingestQueue.add(
+        'process-document',
+        {
+          fileId: document.id,
+          filePath: file.path,
           userId,
           projectId,
-          file.originalname,
-        );
+          originalFileName: file.originalname,
+        },
+        {
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 5000 },
+          removeOnComplete: true,
+        },
+      );
 
-        this.logger.log(
-          `✅ Ingested ${chunks.length} chunks for: ${file.originalname}`,
-        );
-
-        // If ingestion successful (has chunks), save document record in DB
-        if (chunks.length > 0) {
-          // update 'done' status
-          await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
-
-          this.logger.log(
-            `📝 Document record created for: ${file.originalname}`,
-          );
-        } else {
-          this.logger.warn(`⚠️ No chunks created for: ${file.originalname}`);
-        }
-      } catch (error) {
-        this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
-        // Optionally update 'error' status
-        if (document) {
-          await this.updateDocumentStatus(document.id, DocumentStatus.ERROR);
-        }
-      }
+      jobIds.push(job.id || document.id);
+      this.logger.log(`📤 Queued job ${job.id} for: ${file.originalname}`);
     }
+
+    return { documents: createdDocuments, jobIds };
   }
 
   // -- REMOVE --
@@ -263,7 +259,7 @@ export class DocumentService {
       },
     });
 
-    console.log(docsRaw);
+
     // return docsRaw;
     return docsRaw.map((item) => {
       return {

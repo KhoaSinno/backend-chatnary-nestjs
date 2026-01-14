@@ -7,6 +7,11 @@ export const CHILD_CHUNK_OVERLAP = 150;
 export const CHUNK_SIZE = 1000;
 export const CHUNK_OVERLAP = 150;
 
+// Chat constants
+export const MAX_HISTORY_MESSAGES = 6;
+export const RETRIEVAL_K = 90;
+export const FINAL_K = 20;
+
 // Authorization
 
 export enum Role {

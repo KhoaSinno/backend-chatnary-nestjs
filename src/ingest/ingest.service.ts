@@ -9,7 +9,7 @@ export class IngestService {
     private cloudService: CloudService,
     private textSplitterService: TextSplitterService,
     private vectorService: VectorService,
-  ) {}
+  ) { }
   /* 
     1. Load document (Text/PDF/Image)
     2. Split text into chunks
@@ -47,11 +47,6 @@ export class IngestService {
       originalFileName,
     };
 
-    console.log(
-      '💾 Saving to vector store with metadata:',
-      JSON.stringify(metadata),
-    );
-    // console.log('📦 Total chunks:', chunks);
 
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({

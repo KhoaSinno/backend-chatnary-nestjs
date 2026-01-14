@@ -12,7 +12,7 @@ import {
   RetrievalService,
   ScoredDocument,
 } from '../retrieval/retrieval.service';
-import path from 'node:path';
+import * as path from 'node:path';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -34,24 +34,24 @@ type CitationType = {
 
 type BaseMessage =
   | {
-      answer: string;
-      citations?: undefined;
-      chat?: undefined;
-    }
+    answer: string;
+    citations?: undefined;
+    chat?: undefined;
+  }
   | {
-      answer: string | (ContentBlock | ContentBlock.Text)[];
-      citations: CitationType[];
-      // chat: {
-      //   id: string;
-      //   userId: string;
-      //   title: string;
-      //   messages: JsonValue[];
-      //   createdAt: Date;
-      //   updatedAt: Date;
-      //   projectId: string | null;
-      // };
-      chatId: string;
-    };
+    answer: string | (ContentBlock | ContentBlock.Text)[];
+    citations: CitationType[];
+    // chat: {
+    //   id: string;
+    //   userId: string;
+    //   title: string;
+    //   messages: JsonValue[];
+    //   createdAt: Date;
+    //   updatedAt: Date;
+    //   projectId: string | null;
+    // };
+    chatId: string;
+  };
 
 // 1. Grouping: Gom các chunk về theo từng File
 // Mục đích: Không để chunk của file A nằm xen kẽ file B, gây lú ngữ cảnh.
@@ -67,13 +67,11 @@ export class ChatService {
     private readonly openaiService: OpenaiService,
     private prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
-  ) {}
+  ) { }
 
   // -- CORE CHAT FUNCTIONALITY --
   private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
-    // -- VALIDATIONS -- TODO: update with joi
-
-    const historyNum = 6;
+    const MAX_HISTORY_MESSAGES = 6;
 
     // Ensure chat exists
     const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
@@ -81,17 +79,16 @@ export class ChatService {
     // Rewrite question to standalone if chatId provided
     let finalQuestion = chatDto.message;
 
-    const historyMessages = await this.prisma.chats.findUnique({
-      where: { id: chatId },
-      select: { messages: true },
+    // Load history from ChatMessage table (not JSON)
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
     });
 
-    const contentHistory: MessageType[] = (
-      (historyMessages?.messages ?? []) as MessageType[]
-    )
-      .slice(-historyNum)
+    const contentHistory: MessageType[] = historyMessages
       .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role, content: m.content }));
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
 
     if (contentHistory.length > 0) {
       finalQuestion = await this.createStandaloneQuestion(
@@ -117,20 +114,13 @@ export class ChatService {
       };
     }
 
-    // Debug: Log kết quả sau khi Rerank
-    console.log(`📋 Top ${scoredDocs.length} Documents after Rerank:`);
-    scoredDocs.slice(0, 3).forEach((doc, idx) => {
-      console.log(
-        `  ${idx + 1}. [Score=${doc.finalScore?.toFixed(3)}] ${doc.pageContent.substring(0, 50)}...`,
-      );
-    });
 
     // -- HELPER: Create File Groups from Scored Docs --
     const fileGroups = this.createFileGroups(scoredDocs);
 
     // -- HELPER: Create Context from File Groups --
     const contextStr = this.createContextFromFileGroups(fileGroups);
-    console.log('Final Context passed to LLM:\n', contextStr);
+
 
     // -- HELPER: Create final inputLlm for LLM --
     const inputLlm = this.createFinalInputLlm(
@@ -162,27 +152,26 @@ export class ChatService {
     }));
 
     // ---------------------------------------------------------
-    // 6. SAVE & RETURN
+    // 6. SAVE MESSAGES TO ChatMessage TABLE
     // ---------------------------------------------------------
-    const updatedMessages = [
-      ...((historyMessages?.messages as MessageType[]) || []),
-      { role: 'user', content: chatDto.message },
-      {
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
+        role: 'user',
+        content: chatDto.message,
+      },
+    });
+
+    // Save assistant message with citations
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
         role: 'assistant',
         content: aiAnswer,
-        citation: citations,
+        metadata: { citations },
       },
-    ];
-
-    // Update async
-    this.prisma.chats
-      .update({
-        where: { id: chatId },
-        data: { messages: updatedMessages },
-      })
-      .catch((err) => {
-        console.error('Error updating chat messages:', err);
-      });
+    });
 
     return {
       answer: aiAnswer,
@@ -349,12 +338,10 @@ export class ChatService {
   private async ensureChatExists(chatId: string | undefined, chatDto: ChatDto) {
     let chatIdLocal = chatId;
     if (!chatId) {
-      const created = await this.prisma.chats.create({
+      const created = await this.prisma.chat.create({
         data: {
-          messages: [],
           userId: chatDto.userId as string,
           projectId: chatDto.projectId as string,
-          // Title là câu hỏi được slice tròn câu để tránh quá dài
           title:
             chatDto.message.length > 50
               ? chatDto.message.slice(0, 50) + '...'
@@ -403,7 +390,7 @@ export class ChatService {
 
   // -- Get all user chats --
   // async getAllUserChat(userId: string) {
-  //   return await this.prisma.chats.findMany({
+  //   return await this.prisma.chat.findMany({
   //     orderBy: { updatedAt: 'desc' },
   //     where: { userId },
   //     omit: { messages: true, userId: true },
@@ -412,41 +399,41 @@ export class ChatService {
 
   // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
-      omit: { messages: true, userId: true },
+      omit: { userId: true },
     });
   }
 
   // -- Get Chat by ID --
   async getChatById(userId: string, chatId: string) {
-    return await this.prisma.chats.findUnique({
+    return await this.prisma.chat.findUnique({
       where: { id: chatId, userId },
     });
   }
 
   // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
-    return await this.prisma.chats.update({
+    return await this.prisma.chat.update({
       where: { id, userId },
       data: updateChatDto,
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 
   // -- Delete chat --
   async remove(userId: string, id: string) {
-    const chat = await this.prisma.chats.findUnique({
+    const chat = await this.prisma.chat.findUnique({
       where: { id },
     });
     if (!chat) throw new BadRequestException('Chat not found');
     if (chat.userId !== userId)
       throw new ForbiddenException('User Unauthorized!');
 
-    return await this.prisma.chats.delete({
+    return await this.prisma.chat.delete({
       where: { id },
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
 import { CohereRerank } from '@langchain/cohere';
 import { Document } from '@langchain/core/documents';
+import { ConfigService } from '@nestjs/config';
 
 type MetadataDoc = {
   fileId?: string;
@@ -15,7 +16,7 @@ type MetadataDoc = {
   page?: number;
   title?: string;
   originalFileName?: string;
-};  
+};
 
 export interface ScoredDocument {
   pageContent: string;
@@ -39,6 +40,7 @@ export class RetrievalService {
   constructor(
     private vectorService: VectorService,
     private logger: Logger,
+    private configService: ConfigService,
   ) { }
 
   /**
@@ -71,8 +73,8 @@ export class RetrievalService {
     });
 
     const cohereRerank = new CohereRerank({
-      apiKey: process.env.COHERE_API_KEY, // Default
-      topN: this.FINAL_K, // Default 8
+      apiKey: this.configService.get<string>('COHERE_API_KEY'),
+      topN: this.FINAL_K,
       model: 'rerank-v4.0-pro',
     });
 
@@ -81,7 +83,7 @@ export class RetrievalService {
       query,
     );
 
-    console.log(rerankedDocuments);
+
 
     // Chuẩn hóa documents sang format dễ xử lý
     const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({

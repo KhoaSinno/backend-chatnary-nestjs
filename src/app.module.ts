@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
@@ -21,7 +21,9 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { RetrievalModule } from './retrieval/retrieval.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file'; // Import if using rotation
+import 'winston-daily-rotate-file';
+import { BullModule } from '@nestjs/bullmq';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -93,6 +95,12 @@ import 'winston-daily-rotate-file'; // Import if using rotation
           .valid('ERROR', 'WARN', 'INFO', 'DEBUG')
           .optional()
           .default('INFO'),
+
+        // Redis (BullMQ)
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
+        REDIS_USERNAME: Joi.string().optional().default('default'),
+        REDIS_PASSWORD: Joi.string().required(),
       }),
     }),
     WinstonModule.forRoot({
@@ -154,6 +162,20 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     AuthModule,
     UserModule,
     RetrievalModule,
+    // BullMQ Global Configuration
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          username: configService.get<string>('REDIS_USERNAME') || 'default',
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [
@@ -171,4 +193,4 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
