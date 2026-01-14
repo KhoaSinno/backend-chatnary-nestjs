@@ -3,8 +3,6 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
-// Universal datasource configuration
-// Works with: Neon, Supabase, Docker PostgreSQL, AWS RDS, etc.
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
@@ -25,29 +23,6 @@ model embeddings {
   @@map("embeddings")
   @@ignore
 }
-
-// Upcoming Feature: Apply Small to big strategy with retrieval with child chunks, llm read parent chunk only
-// model ParentChunk {
-//   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-//   // Thay đổi: Content ở đây sẽ định dạng Markdown
-//   content String @db.Text
-
-//   pageNumber Int // Vẫn nên giữ để biết nguồn từ trang nào
-
-//   // Metadata bổ sung nếu cần (ví dụ: title của chương)
-//   metadata Json?
-
-//   documentId String    @db.Uuid
-//   document   documents @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-//   createdAt DateTime @default(now())
-
-//   // Quan hệ ảo để code hiểu, không tạo khóa ngoại trong DB thật (vì bảng embeddings LangChain quản lý)
-//   // childChunks ChildChunk[] 
-
-//   @@index([documentId])
-// }
 
 enum Role {
   ADMIN

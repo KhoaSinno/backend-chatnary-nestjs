@@ -5,7 +5,6 @@ import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -149,7 +148,6 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     IngestModule,
     DocumentModule,
     ChatModule,
-    PipelineModule,
     OpenaiModule,
     PrismaModule,
     ProjectModule,

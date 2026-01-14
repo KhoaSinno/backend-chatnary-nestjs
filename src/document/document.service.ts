@@ -17,7 +17,7 @@ export class DocumentService {
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) { }
+  ) {}
 
   //-- UPLOAD --
   async uploadFiles(
@@ -169,7 +169,7 @@ export class DocumentService {
   async addDocumentsToProject(
     userId: string,
     projectId: string,
-    documentIds: string[]
+    documentIds: string[],
   ) {
     // 1. Check Project exists AND belongs to User
     const project = await this.prisma.projects.findFirst({
