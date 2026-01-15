@@ -923,7 +923,145 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 }
 ```
 
-## New chat and Chat Session
+## Chat Stream (SSE)
+
+_Real-time streaming chat responses using Server-Sent Events_
+
+### **GET** `/chat/stream`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time streaming chat responses. Returns AI responses token-by-token with citations.
+
+**Query Parameters:**
+
+```
+message (required) - The user's question
+projectId (optional) - Project context for the chat
+chatId (optional) - Existing chat session ID
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <accessToken>
+Accept: text/event-stream
+```
+
+**Event Stream Format:**
+
+The endpoint sends multiple SSE events in sequence:
+
+1. **CITATIONS Event** - Document references found for the question
+
+```json
+{
+  "data": {
+    "type": "CITATIONS",
+    "content": [
+      {
+        "index": 0,
+        "snippet": "Preview text...",
+        "text": "Full chunk content",
+        "fileId": "uuid",
+        "fileUrl": "path/to/file.pdf",
+        "page": 1,
+        "score": 0.95,
+        "startOffset": 0,
+        "endOffset": 100,
+        "projectId": "uuid"
+      }
+    ],
+    "chatId": "uuid"
+  }
+}
+```
+
+2. **TOKEN Events** - AI response streamed word-by-word
+
+```json
+{
+  "data": {
+    "type": "TOKEN",
+    "content": "word "
+  }
+}
+```
+
+3. **DONE Event** - Signals completion
+
+```json
+{
+  "data": {
+    "type": "DONE"
+  }
+}
+```
+
+4. **ERROR Event** - If an error occurs
+
+```json
+{
+  "data": {
+    "type": "ERROR",
+    "content": "Error message"
+  }
+}
+```
+
+**Example Usage (JavaScript/TypeScript):**
+
+```javascript
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/chat/stream?message=${encodeURIComponent('Your question')}`,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  },
+);
+
+let fullAnswer = '';
+let citations = [];
+let chatId = null;
+
+eventSource.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+
+  switch (data.data.type) {
+    case 'CITATIONS':
+      citations = data.data.content;
+      chatId = data.data.chatId;
+      break;
+
+    case 'TOKEN':
+      fullAnswer += data.data.content;
+      // Update UI with streaming text
+      break;
+
+    case 'DONE':
+      eventSource.close();
+      // Finalize UI
+      break;
+
+    case 'ERROR':
+      console.error(data.data.content);
+      eventSource.close();
+      break;
+  }
+});
+
+eventSource.addEventListener('error', (error) => {
+  console.error('SSE connection error:', error);
+  eventSource.close();
+});
+```
+
+**Example cURL:**
+
+```bash
+curl -N -X GET "http://localhost:8080/api/v1/chat/stream?message=Your%20question" \
+  -H "Authorization: Bearer eyJhbGci..." \
+  -H "Accept: text/event-stream"
+```
 
 ### **POST** `/project/:projectId/chats/messages`
 
