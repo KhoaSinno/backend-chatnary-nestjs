@@ -1,11 +1,11 @@
 # 📘 Chatnary Backend API Endpoints
 
-*(NestJS · Prisma · PGVector · LangChainJS)*
+_(NestJS · Prisma · PGVector · LangChainJS)_
 
 ## Base URL
 
 ```
-http://localhost:8000/api/v1
+http://localhost:8080/api/v1
 ```
 
 ---
@@ -14,7 +14,7 @@ http://localhost:8000/api/v1
 
 ### **GET** `/docs`
 
-* API documents Backend
+- API documents Backend
 
 ---
 
@@ -152,12 +152,11 @@ authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjd
     "message": "User logged out successfully"
   }
 }
-
 ```
 
 # 📁 Projects
 
-*(Giống ChatGPT workspace — quản lý không gian dự án)*
+_(Giống ChatGPT workspace — quản lý không gian dự án)_
 
 ## Create Project
 
@@ -519,7 +518,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 // "data" exmaple
 // {
-//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link 
+//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link
 //   "title": "Tên hiển thị (Optional)",
 //   "description": "Mô tả ngắn",
 //   "authors": ["Tác giả A", "Tác giả B"],
@@ -529,7 +528,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 //   "accessLevel": "PRIVATE"  // hoặc "PUBLIC", "RESTRICTED"
 // }
 
-// FE phải stringify object này trước khi gửi 
+// FE phải stringify object này trước khi gửi
 // formData.append('data', JSON.stringify(metadata));
 
 ```
@@ -701,13 +700,9 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
       "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
       "title": "Giáo trình AI",
       "description": "Demo upload",
-      "authors": [
-        "Teacher A"
-      ],
+      "authors": ["Teacher A"],
       "subjects": [],
-      "tags": [
-        "AI"
-      ],
+      "tags": ["AI"],
       "documentType": "unknown",
       "publishedYear": 2024,
       "accessLevel": "PRIVATE",
@@ -761,13 +756,9 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
     "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
     "title": "Giáo trình AI",
     "description": "Demo upload",
-    "authors": [
-      "Teacher A"
-    ],
+    "authors": ["Teacher A"],
     "subjects": [],
-    "tags": [
-      "AI"
-    ],
+    "tags": ["AI"],
     "documentType": "unknown",
     "publishedYear": 2024,
     "accessLevel": "PRIVATE",
@@ -840,12 +831,14 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
   }
 }
 ```
+
 <!-- --------------------- CHAT MODULE --------------------- -->
+
 # 💬 Chat RAG Module
 
 ## Chat global
 
-*Will have projectId = null
+\*Will have projectId = null
 
 ### **POST** `/chat/global`
 
@@ -939,8 +932,8 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 **Query**:
 
-``` json
-// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat 
+```json
+// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat
 chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 ```
 
@@ -998,7 +991,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
             "endOffset": 7353,
             "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
             "startOffset": 6616
-          },
+          }
           // ...
         ]
       }
@@ -1049,9 +1042,9 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ```json
 {
-    // Just update 2 fields
-    "title": "Sinoo chat",
-    "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
+  // Just update 2 fields
+  "title": "Sinoo chat",
+  "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
 }
 ```
 
@@ -1093,6 +1086,96 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
   }
 }
 ```
+
+---
+
+# � Notifications (SSE)
+
+## Connect to SSE Stream
+
+### **GET** `/notifications/sse`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time notifications. Events are filtered by userId.
+
+**Query Parameters:**
+
+- `userId` (required): User ID to filter notifications
+
+**Authentication:** Required (JWT Bearer Token)
+
+**Example Connection:**
+
+```javascript
+const userId = 'user-123';
+const token = 'your-jwt-token';
+
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/notifications/sse?userId=${userId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  },
+);
+
+eventSource.onopen = () => {
+  console.log('✅ SSE Connected');
+};
+
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('📨 Notification:', data);
+
+  // Handle different event types
+  switch (data.type) {
+    case 'DOCUMENT_PROCESSED':
+      handleDocumentProcessed(data.payload);
+      break;
+    // Add more event types as needed
+  }
+};
+
+eventSource.onerror = (error) => {
+  console.error('❌ SSE Error:', error);
+  // Implement reconnection logic
+};
+
+// Clean up on component unmount
+// eventSource.close();
+```
+
+**Event Format:**
+
+```json
+{
+  "type": "DOCUMENT_PROCESSED",
+  "payload": {
+    "fileId": "abc-123",
+    "projectId": "project-456",
+    "status": "DONE",
+    "message": "Xử lý thành công"
+  },
+  "timestamp": "2026-01-15T03:30:00.000Z"
+}
+```
+
+**Event Types:**
+
+| Type                 | Description                   | Payload Fields                             |
+| -------------------- | ----------------------------- | ------------------------------------------ |
+| `DOCUMENT_PROCESSED` | Document processing completed | `fileId`, `projectId`, `status`, `message` |
+
+**Status Values:**
+
+- `DONE`: Processing completed successfully
+- `ERROR`: Processing failed
+
+**Notes:**
+
+- SSE connection is persistent and will automatically push events when they occur
+- No polling required
+- Events are only sent to the user who owns the resource
+- Connection will auto-reconnect on network issues (browser default behavior)
 
 ---
 

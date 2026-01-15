@@ -24,9 +24,14 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { BullModule } from '@nestjs/bullmq';
 import { QueueModule } from './queue/queue.module';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationModule } from './notification/notification.module';
 @Module({
   imports: [
+
+    // Event emitter
+    EventEmitterModule.forRoot(),
     // Serve static files from the "uploads" directory
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
@@ -176,6 +181,7 @@ import { QueueModule } from './queue/queue.module';
       inject: [ConfigService],
     }),
     QueueModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

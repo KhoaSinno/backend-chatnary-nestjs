@@ -4,6 +4,7 @@ import { Logger } from '@nestjs/common';
 import { IngestService } from '../ingest/ingest.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { DocumentStatus } from '@prisma/client';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export interface IngestJobData {
     fileId: string;
@@ -20,6 +21,7 @@ export class IngestProcessor extends WorkerHost {
     constructor(
         private readonly ingestService: IngestService,
         private readonly prisma: PrismaService,
+        private readonly eventEmitter: EventEmitter2,
     ) {
         super();
     }
@@ -50,8 +52,18 @@ export class IngestProcessor extends WorkerHost {
                 where: { id: fileId },
                 data: {
                     status: DocumentStatus.DONE,
-                    pageCount: chunks.length, // Approximate page count from chunks
+                    pageCount: chunks.length, // TODO: Wrong pageCount
                 },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'DONE',
+                message: 'Xử lý thành công',
             });
 
             this.logger.log(
@@ -69,6 +81,16 @@ export class IngestProcessor extends WorkerHost {
                     status: DocumentStatus.ERROR,
                     errorMessage: error.message?.substring(0, 500), // Truncate long errors
                 },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'ERROR',
+                message: 'Xử lý thất bại',
             });
 
             throw error; // Re-throw for BullMQ retry mechanism
