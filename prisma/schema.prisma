@@ -44,7 +44,7 @@ enum DocumentStatus {
   ERROR
 }
 
-model users {
+model User {
   id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email        String  @unique
   username     String  @unique
@@ -57,25 +57,26 @@ model users {
   storageUsed  BigInt @default(0) // Dung lượng đã dùng (bytes)
   storageLimit BigInt @default(1073741824) // Ví dụ: 1GB mặc định (bytes)
 
-  projects       projects[]
-  chats          Chat[]
-  ownedDocuments documents[]
+  projects          Project[]
+  chats            Chat[]
+  ownedDocuments   Document[]
+  userQuizAttempts UserQuizAttempt[]
 }
 
 // Chat with separate messages for proper LangChain Memory integration
 model Chat {
-  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String        @default("New Chat")
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String   @default("New Chat")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  userId    String        @db.Uuid
-  user      users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  projectId String?       @db.Uuid
-  project   projects?     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String?   @db.Uuid
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  messages  ChatMessage[]
+  messages ChatMessage[]
 
   @@index([userId])
   @@index([projectId])
@@ -84,17 +85,17 @@ model Chat {
 model ChatMessage {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   chatId    String   @db.Uuid
-  role      String   // 'user' | 'assistant' | 'system'
+  role      String // 'user' | 'assistant' | 'system'
   content   String   @db.Text
-  metadata  Json?    // citations, token usage, etc.
+  metadata  Json? // citations, token usage, etc.
   createdAt DateTime @default(now())
 
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@index([chatId, createdAt])
 }
 
-model documents {
+model Document {
   id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   // ===== Search info =====
   title         String? // Title of the document not name of file
@@ -115,7 +116,7 @@ model documents {
 
   // Processing Status (Pipeline: Upload -> OCR -> Embedding)
   status       DocumentStatus @default(PENDING)
-  errorMessage String?        // Error message if processing failed
+  errorMessage String? // Error message if processing failed
 
   // ===== Dynamic metadata & Stat =====
   metadata  Json? // expandable unstable fields 
@@ -126,17 +127,17 @@ model documents {
   indexedAt DateTime? // when the document was indexed for search Elasticsearch
 
   // ===== Relations =====
-  linkedProjects project_resources[] // Tài liệu này đang nằm trong những project nào?
+  linkedProjects ProjectResources[] // Tài liệu này đang nằm trong những project nào?
 
   // Ownership
   userId String @db.Uuid
-  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   // parentChunks ParentChunk[]
 
   @@index([userId])
 }
 
-model projects {
+model Project {
   id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
@@ -147,24 +148,66 @@ model projects {
   updatedAt DateTime @updatedAt
 
   userId String @db.Uuid
-  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   chats            Chat[]
-  projectResources project_resources[]
+  projectResources ProjectResources[]
+  quizzes          Quiz[]
 }
 
-model project_resources {
+model ProjectResources {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   projectId String   @db.Uuid
-  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   documentId String    @db.Uuid
-  document   documents @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   // Settings riêng cho tài liệu trong ngữ cảnh project này
   isSelected Boolean  @default(true) // User có thể tạm tắt tài liệu này khi chat 
   addedAt    DateTime @default(now())
 
   @@unique([projectId, documentId])
+}
+
+model Quiz {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  projectId String @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  difficulty String @default("MEDIUM") // EASY, MEDIUM, HARD
+  timeLimit  Int    @default(30) // Phút
+
+  questions QuizQuestion[]
+  attempts  UserQuizAttempt[]
+
+  createdAt DateTime @default(now())
+}
+
+model QuizQuestion {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quizId String @db.Uuid
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  questionText  String
+  options       Json // Mảng ["A. ...", "B. ...", "C. ...", "D. ..."]
+  correctAnswer String // "A", "B", "C" hoặc "D"
+  explanation   String? // Giải thích tại sao đúng
+
+  referenceChunkId String? // (Optional) Link ngược lại chunk nào trong vector store
+}
+
+model UserQuizAttempt {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @db.Uuid
+  user   User  @relation(fields: [userId], references: [id])
+  quizId String @db.Uuid
+  quiz   Quiz   @relation(fields: [quizId], references: [id])
+
+  score       Float
+  userAnswers Json // Lưu lại user chọn gì: { "questionId1": "A", ... }
+  startedAt   DateTime @default(now())
+  finishedAt  DateTime @default(now())
 }

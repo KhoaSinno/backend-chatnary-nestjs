@@ -16,7 +16,7 @@ export class ProjectService {
 
   // -- CREATE NEW PROJECT --
   async createNewProject(createProjectDto: CreateProjectDto) {
-    return await this.prisma.projects.create({
+    return await this.prisma.project.create({
       data: createProjectDto,
       omit: { userId: true },
     });
@@ -24,7 +24,7 @@ export class ProjectService {
 
   // -- FIND PROJECTS BY USER ID --
   async findByUserId(userId: string) {
-    return await this.prisma.projects.findMany({
+    return await this.prisma.project.findMany({
       where: { userId: userId },
       omit: { userId: true },
     });
@@ -33,7 +33,7 @@ export class ProjectService {
   // -- GET CHATS IN PROJECT --
   async getChatsInProject(userId: string, projectId: string) {
     // Check existed
-    const project = await this.prisma.projects.findFirst({
+    const project = await this.prisma.project.findFirst({
       where: { id: projectId, userId: userId },
     });
     if (!project) {
@@ -65,7 +65,7 @@ export class ProjectService {
   // -- GET DOCUMENTS IN PROJECT --
   async getDocumentsInProject(userId: string, projectId: string) {
     // Check existed
-    const project = await this.prisma.projects.findFirst({
+    const project = await this.prisma.project.findFirst({
       where: { id: projectId, userId: userId },
     });
     if (!project)
@@ -83,7 +83,7 @@ export class ProjectService {
 
   // -- UPDATE PROJECT --
   async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
-    return await this.prisma.projects.update({
+    return await this.prisma.project.update({
       where: { id: id },
       data: updateProjectDto,
     });
@@ -92,7 +92,7 @@ export class ProjectService {
   // -- DELETE PROJECT CASCADE --
   async removeProject(id: string) {
     // Get project info first (before delete)
-    const project = await this.prisma.projects.findUnique({
+    const project = await this.prisma.project.findUnique({
       where: { id: id },
     });
     if (!project) {
@@ -103,7 +103,7 @@ export class ProjectService {
     await this.documentService.unlinkAllDocumentsInProject(id);
 
     // Then delete project (cascade will delete DB records)
-    const projectDel = await this.prisma.projects.delete({
+    const projectDel = await this.prisma.project.delete({
       where: { id: id },
     });
 

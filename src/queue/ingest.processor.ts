@@ -33,7 +33,7 @@ export class IngestProcessor extends WorkerHost {
 
         try {
             // 1. Update Status: PROCESSING
-            await this.prisma.documents.update({
+            await this.prisma.document.update({
                 where: { id: fileId },
                 data: { status: DocumentStatus.PROCESSING },
             });
@@ -48,7 +48,7 @@ export class IngestProcessor extends WorkerHost {
             );
 
             // 3. Update Status: DONE
-            await this.prisma.documents.update({
+            await this.prisma.document.update({
                 where: { id: fileId },
                 data: {
                     status: DocumentStatus.DONE,
@@ -75,7 +75,7 @@ export class IngestProcessor extends WorkerHost {
             this.logger.error(`❌ Job ${job.id} failed: ${error.message}`);
 
             // 4. Update Status: ERROR with error message
-            await this.prisma.documents.update({
+            await this.prisma.document.update({
                 where: { id: fileId },
                 data: {
                     status: DocumentStatus.ERROR,

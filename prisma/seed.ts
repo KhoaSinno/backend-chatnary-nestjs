@@ -8,7 +8,7 @@ async function main() {
 
   const passwordHash = await bcrypt.hash('123456', 10);
 
-  const user = await prisma.users.upsert({
+  const user = await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {},
     create: {
@@ -20,7 +20,7 @@ async function main() {
   });
 
   // 2. Create sample projects for this user
-  const project1 = await prisma.projects.create({
+  const project1 = await prisma.project.create({
     data: {
       name: 'AI Văn Bản',
       description: 'Project dùng để test RAG + OCR',
@@ -28,7 +28,7 @@ async function main() {
     },
   });
 
-  const project2 = await prisma.projects.create({
+  const project2 = await prisma.project.create({
     data: {
       name: 'Thư Viện Số',
       description: 'Project số hóa tài liệu PDF',

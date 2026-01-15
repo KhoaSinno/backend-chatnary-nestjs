@@ -33,7 +33,7 @@ export class AuthService {
   // -- REGISTER --
   async register(registerDto: RegisterDto) {
     // Check user exist
-    const existingUser = await this.prisma.users.findUnique({
+    const existingUser = await this.prisma.user.findUnique({
       where: { email: registerDto.email },
     });
     if (existingUser) throw new ForbiddenException('User already exists');
@@ -42,7 +42,7 @@ export class AuthService {
     // random username
     const randomUsername = `user_${Math.random().toString(36).substring(2, 8)}`;
     // Create user
-    await this.prisma.users.create({
+    await this.prisma.user.create({
       data: {
         email: registerDto.email,
         password: passwordHash,
@@ -63,7 +63,7 @@ export class AuthService {
   // -- LOGIN --
   async login(loginDto: LoginDto): Promise<AuthEntity> {
     // Check user exist
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
     if (!user) throw new Error('Invalid credentials');
@@ -101,7 +101,7 @@ export class AuthService {
   // -- LOGOUT --
   async logout(userId: string): Promise<{ message: string }> {
     // Clean RT, add RT to blacklist
-    await this.prisma.users.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: null },
     });
@@ -113,7 +113,7 @@ export class AuthService {
   // -- REFRESH TOKEN --
   async refreshToken(userId: string, rt: string) {
     // Check user exist
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
     if (!user || !user.refreshToken) {
@@ -134,7 +134,7 @@ export class AuthService {
   async updateRefreshToken(userId: string, rt: string) {
     const hashedRt = bcrypt.hashSync(rt, 10);
 
-    await this.prisma.users.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashedRt },
     });

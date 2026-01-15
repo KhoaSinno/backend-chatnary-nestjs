@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { users } from '@prisma/client';
+import { User } from '@prisma/client';
 export class AuthEntity {
   @ApiProperty()
   accessToken: string;
 
-  user: Omit<users, 'password'>;
+  user: Omit<User, 'password'>;
 }
