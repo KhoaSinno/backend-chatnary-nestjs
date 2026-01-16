@@ -4,12 +4,21 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RetrievalService } from '../retrieval/retrieval.service';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { SubmitQuizDto } from './dto/submit-quiz.dto';
 
-interface QuizQuestionData {
+export type QuizQuestionData = {
   question: string;
   options: string[];
   correctAnswer: string;
   explanation?: string;
+}
+
+export type AttemptQuestion = {
+  questionId: string;
+  userAnswer: string | null;
+  correctAnswer: string;
+  isCorrect: boolean;
+  explanation: string | null;
 }
 
 @Injectable()
@@ -19,6 +28,7 @@ export class QuizService {
     private readonly retrievalService: RetrievalService,
     private readonly openaiService: OpenaiService,
   ) { }
+  // == generate quiz ==
 
   async generate(quizDto: CreateQuizDto) {
     // 1. Verify project exists and belongs to user
@@ -123,4 +133,91 @@ export class QuizService {
 
     return quiz;
   }
+
+  // == Submit ==
+
+  async submitQuiz(body: SubmitQuizDto) {
+
+    // Get quiz
+    const quiz = await this.prisma.quiz.findUnique({
+      where: { id: body.quizId },
+      include: {
+        questions: true,
+      },
+    })
+
+    if (!quiz) {
+      throw new NotFoundException('Quiz not found');
+    }
+
+    let resultArr: AttemptQuestion[] = [];
+    let countCorrectQuestion = 0;
+    const totalQuestions = quiz.questions.length;
+
+    quiz.questions.forEach((q) => {
+
+      const isCorrect = q.correctAnswer === body.answers[q.id]
+      if (isCorrect) {
+        countCorrectQuestion++;
+      }
+
+      resultArr.push({
+        questionId: q.id,
+        userAnswer: body.answers[q.id] || null, // Có thể user không chọn
+        correctAnswer: q.correctAnswer,
+        isCorrect: isCorrect,
+        explanation: q.explanation
+      });
+
+    });
+
+    // == Calculate score 
+    const score = totalQuestions > 0 ? Number((countCorrectQuestion / totalQuestions) * 10).toFixed(2) : 0;
+
+    // Ensure userId exists (should be populated by controller from JWT)
+    if (!body.userId) {
+      throw new BadRequestException('User ID is required');
+    }
+
+    const attempt = await this.prisma.userQuizAttempt.create({
+      data: {
+        quizId: quiz.id,
+        userId: body.userId,
+        score: Number(score),
+        userAnswers: body.answers,
+
+      },
+    });
+
+    return {
+      attemptId: attempt.id,
+      score: Number(score),
+      totalQuestions: totalQuestions,
+      details: resultArr
+    };
+  }
+
+  // Get history user attempts
+  async getQuizAttempts(userId: string) {
+    return await this.prisma.userQuizAttempt.findMany({
+      where: { userId },
+      include: {
+        quiz: { select: { title: true, difficulty: true } }
+      },
+      orderBy: { startedAt: 'desc' }
+    });
+  }
+
+  // Get detail of a specific attempt
+  async getQuizAttemptDetail(userId: string, attemptId: string) {
+    return await this.prisma.userQuizAttempt.findUnique({
+      where: { id: attemptId, userId }, //  Check userId to save security
+      include: {
+        quiz: { include: { questions: true } }
+      }
+    });
+  }
 }
+
+
+

@@ -6,7 +6,9 @@ import {
   HttpStatus,
   HttpCode,
   ValidationPipe,
-  UsePipes
+  UsePipes,
+  Get,
+  Param
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,6 +20,7 @@ import {
 import { QuizService } from './quiz.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
+import { SubmitQuizDto } from './dto/submit-quiz.dto';
 
 @ApiTags('Quiz')
 @ApiBearerAuth()
@@ -73,5 +76,63 @@ export class QuizController {
   ) {
     createQuizDto.userId = req.user.userId;
     return this.quizService.generate(createQuizDto);
+  }
+
+  @Post('submit')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  @ApiOperation({
+    summary: 'Submit quiz',
+    description: 'Submit quiz answers'
+  })
+  @ApiBody({ type: SubmitQuizDto })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Quiz submitted successfully',
+    schema: {
+      example: {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        quizId: '123e4567-e89b-12d3-a456-426614174000',
+        userId: '123e4567-e89b-12d3-a456-426614174000',
+        score: 10,
+        userAnswers: {
+          '123e4567-e89b-12d3-a456-426614174000': 'A',
+          '123e4567-e89b-12d3-a456-426614174001': 'B',
+          '123e4567-e89b-12d3-a456-426614174002': 'C',
+          '123e4567-e89b-12d3-a456-426614174003': 'D',
+        },
+        createdAt: '2026-01-15T10:00:00Z'
+      }
+    }
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Dữ liệu đầu vào không hợp lệ'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Chưa đăng nhập hoặc token không hợp lệ'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Không tìm thấy quiz'
+  })
+  async submitQuiz(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Body() submitQuizDto: SubmitQuizDto
+  ) {
+    submitQuizDto.userId = req.user.userId;
+    return this.quizService.submitQuiz(submitQuizDto);
+  }
+
+  // == GET == 
+  @Get('history')
+  getHistory(@Req() req: { user: JwtPayloadWithRt }) {
+    return this.quizService.getQuizAttempts(req.user.userId);
+  }
+
+  @Get('history/:id')
+  getAttemptDetail(@Req() req: { user: JwtPayloadWithRt }, @Param('id') id: string) {
+    return this.quizService.getQuizAttemptDetail(req.user.userId, id);
   }
 }
