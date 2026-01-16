@@ -42,9 +42,11 @@ export class VectorService {
     projectId?: string,
   ) {
     const vectorStore = await this.pgvectorService.initVectorStore();
-    const filter: { userId: string; projectId?: string } = { userId };
-
-    if (projectId) filter.projectId = projectId;
+    // If projectId provided → filter by project only (for project members)
+    // If no projectId → filter by userId (global chat)
+    const filter: { userId?: string; projectId?: string } = projectId
+      ? { projectId }
+      : { userId };
 
     const results = await vectorStore.similaritySearch(query, k, filter);
     return results;
@@ -58,20 +60,17 @@ export class VectorService {
     projectId?: string,
   ) {
     const vectorStore = await this.pgvectorService.initVectorStore();
-
-    const filter: { userId: string; projectId?: string } = { userId };
-
-    if (projectId) filter.projectId = projectId;
+    // If projectId provided → filter by project only (for project members)
+    // If no projectId → filter by userId (global chat)
+    const filter: { userId?: string; projectId?: string } = projectId
+      ? { projectId }
+      : { userId };
 
     const results = await vectorStore.similaritySearchWithScore(
       query,
       k,
-      filter,
+      filter, // Just one argument projectId or userId
     );
-
-    //  for (const [doc, score] of similaritySearchWithScoreResults) {
-    //   console.log(`* [SIM=${score.toFixed(3)}] ${doc.pageContent} [${JSON.stringify(doc.metadata)}]`);
-    // }
 
     return results;
   }
