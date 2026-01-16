@@ -17,6 +17,7 @@ import { ChatDto } from '../chat/dto/chat.dto';
 import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 import { DocumentService } from '../document/document.service';
 import { AddDocumentToProjectDto } from '../document/dto/add-doc2pj.dto';
+import { InviteMemberDto } from './dto/inviteMem-project.dto';
 
 @Controller('project')
 export class ProjectController {
@@ -60,6 +61,20 @@ export class ProjectController {
       // req.user.userId,
       projectId,
       dto.documentIds,
+    );
+  }
+
+  // -- INVITE MEMBER --
+  @Post('/:projectId/members')
+  async inviteMember(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('projectId') projectId: string,
+    @Body() dto: InviteMemberDto,
+  ) {
+    return await this.projectService.inviteMember(
+      req.user.userId,
+      projectId,
+      dto
     );
   }
 
@@ -142,13 +157,4 @@ export class ProjectController {
     return this.projectService.removeProject(id);
   }
 
-  @Get()
-  findAll() {
-    return this.projectService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
-  }
 }

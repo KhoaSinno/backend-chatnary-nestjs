@@ -44,6 +44,12 @@ enum DocumentStatus {
   ERROR
 }
 
+enum ProjectRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
 model User {
   id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email        String  @unique
@@ -57,10 +63,11 @@ model User {
   storageUsed  BigInt @default(0) // Dung lượng đã dùng (bytes)
   storageLimit BigInt @default(1073741824) // Ví dụ: 1GB mặc định (bytes)
 
-  projects          Project[]
+  projects         Project[]
   chats            Chat[]
   ownedDocuments   Document[]
   userQuizAttempts UserQuizAttempt[]
+  projectMembers   ProjectMembers[]
 }
 
 // Chat with separate messages for proper LangChain Memory integration
@@ -73,7 +80,7 @@ model Chat {
   userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  projectId String?   @db.Uuid
+  projectId String?  @db.Uuid
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   messages ChatMessage[]
@@ -130,9 +137,10 @@ model Document {
   linkedProjects ProjectResources[] // Tài liệu này đang nằm trong những project nào?
 
   // Ownership
-  userId String @db.Uuid
-  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String           @db.Uuid
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   // parentChunks ParentChunk[]
+  projectMemberships ProjectMembers[]
 
   @@index([userId])
 }
@@ -148,20 +156,21 @@ model Project {
   updatedAt DateTime @updatedAt
 
   userId String @db.Uuid
-  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   chats            Chat[]
   projectResources ProjectResources[]
   quizzes          Quiz[]
+  projectMembers   ProjectMembers[]
 }
 
 model ProjectResources {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  projectId String   @db.Uuid
+  projectId String  @db.Uuid
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  documentId String    @db.Uuid
+  documentId String   @db.Uuid
   document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   // Settings riêng cho tài liệu trong ngữ cảnh project này
@@ -171,10 +180,27 @@ model ProjectResources {
   @@unique([projectId, documentId])
 }
 
+model ProjectMembers {
+  id String @id @default(uuid())
+
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  roleProject ProjectRole @default(VIEWER)
+  joinedAt    DateTime    @default(now())
+  document    Document?   @relation(fields: [documentId], references: [id])
+  documentId  String?     @db.Uuid
+
+  @@unique([projectId, userId]) // Một user chỉ join project 1 lần
+}
+
 model Quiz {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title     String
-  projectId String @db.Uuid
+  projectId String  @db.Uuid
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   difficulty String @default("MEDIUM") // EASY, MEDIUM, HARD
@@ -202,7 +228,7 @@ model QuizQuestion {
 model UserQuizAttempt {
   id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId String @db.Uuid
-  user   User  @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   quizId String @db.Uuid
   quiz   Quiz   @relation(fields: [quizId], references: [id])
 

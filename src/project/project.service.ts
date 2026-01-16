@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ChatDto } from '../chat/dto/chat.dto';
 import { ChatService } from '../chat/chat.service';
 import { DocumentService } from '../document/document.service';
+import { InviteMemberDto } from './dto/inviteMem-project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -25,8 +26,61 @@ export class ProjectService {
   // -- FIND PROJECTS BY USER ID --
   async findByUserId(userId: string) {
     return await this.prisma.project.findMany({
-      where: { userId: userId },
-      omit: { userId: true },
+      where: {
+        OR: [
+          { userId: userId },
+          {
+            projectMembers: {
+              some: {
+                userId: userId
+              }
+            }
+          }
+        ]
+      },
+      include: {
+        projectMembers: {
+          include: {
+            user: {
+              select: { email: true, name: true }
+            }
+          }
+        },
+        _count: { select: { projectResources: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  // -- INVITE MEMBER -- 
+  async inviteMember(userId: string, projectId: string, inviteMemberDto: InviteMemberDto) {
+    // == Check user's role can invite yet
+
+    // == Check guest exist
+    const guest = await this.prisma.user.findFirst({
+      where: { email: inviteMemberDto.email },
+    });
+    if (!guest) {
+      throw new NotFoundException('Guest not found');
+    }
+
+    // == Check project exist
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, userId: userId },
+    });
+    if (!project) {
+      throw new NotFoundException(
+        'Project not found or does not belong to user',
+      );
+    }
+
+    // == Add to project
+    return await this.prisma.projectMembers.create({
+      data: {
+        projectId: projectId,
+        userId: guest.id,
+        roleProject: inviteMemberDto.roleProject,
+      },
     });
   }
 
@@ -110,11 +164,4 @@ export class ProjectService {
     return projectDel;
   }
 
-  findAll() {
-    return `This action returns all project`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
-  }
 }
