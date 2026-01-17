@@ -345,6 +345,34 @@ export class DocumentService {
     });
   }
 
+  // -- TOOGLE DOCUMENT -- 
+
+  async toggleDocumentSelection(userId: string, projectId: string, docId: string) {
+    // Check exist project
+    const projectRes = await this.prisma.projectResources.findFirst({
+      where: {
+        projectId: projectId,
+        documentId: docId,
+      },
+    });
+
+    if (!projectRes) {
+      throw new NotFoundException('Không tìm thấy tài liệu trong dự án');
+    }
+
+    // Update
+    return await this.prisma.projectResources.update({
+      where: {
+        id: projectRes.id,
+      },
+      data: {
+        isSelected: !projectRes.isSelected,
+      },
+    });
+
+
+  }
+
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
     return await this.prisma.document.update({

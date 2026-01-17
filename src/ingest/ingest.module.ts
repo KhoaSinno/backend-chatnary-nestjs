@@ -5,8 +5,10 @@ import { VectorService } from './vector/vector.service';
 import { PgvectorService } from './vector/pgvector.client';
 import { OpenaiService } from '../llm/openai/openai.service';
 import { CloudService } from './loaders/cloud.loader';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   providers: [
     IngestService,
     CloudService,
@@ -15,7 +17,8 @@ import { CloudService } from './loaders/cloud.loader';
     PgvectorService,
     OpenaiService,
     ConsoleLogger,
+
   ],
   exports: [IngestService, VectorService],
 })
-export class IngestModule {}
+export class IngestModule { }
