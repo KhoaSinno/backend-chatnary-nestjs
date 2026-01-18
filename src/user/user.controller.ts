@@ -12,7 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '../constant/index.constant';
+import { Role } from '@prisma/client';
 
 @Controller('user')
 @Roles(Role.ADMIN)

@@ -14,15 +14,15 @@ export const FINAL_K = 20;
 
 // Authorization
 
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  LIBRARIAN = 'LIBRARIAN',
-  GUEST = 'GUEST',
-}
+// export enum Role {
+//   USER = 'USER',
+//   ADMIN = 'ADMIN',
+//   LIBRARIAN = 'LIBRARIAN',
+//   GUEST = 'GUEST',
+// }
 
-export enum AccessLevelDoc {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE',
-  RESTRICTED = 'RESTRICTED',
-}
+// export enum AccessLevelDoc {
+//   PUBLIC = 'PUBLIC',
+//   PRIVATE = 'PRIVATE',
+//   RESTRICTED = 'RESTRICTED',
+// }

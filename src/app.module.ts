@@ -28,6 +28,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationController } from './notification/notification.controller';
 import { NotificationModule } from './notification/notification.module';
 import { QuizModule } from './quiz/quiz.module';
+import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
 
@@ -184,6 +185,7 @@ import { QuizModule } from './quiz/quiz.module';
     QueueModule,
     NotificationModule,
     QuizModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

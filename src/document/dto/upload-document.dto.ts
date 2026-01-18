@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AccessLevelDoc } from '../../constant/index.constant';
+import { AccessLevelDoc } from '@prisma/client';
 
 export class UploadMetadataDto {
   @IsOptional()
