@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
@@ -12,7 +13,8 @@ import {
   RetrievalService,
   ScoredDocument,
 } from '../retrieval/retrieval.service';
-import path from 'node:path';
+import * as path from 'node:path';
+import { Observable, Subject } from 'rxjs';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -32,26 +34,35 @@ type CitationType = {
   projectId: string;
 };
 
+// Custom SSE message type for streaming responses
+type SSEMessage = {
+  data: {
+    type: 'TOKEN' | 'CITATIONS' | 'CHAT_ID' | 'ERROR' | 'DONE';
+    content?: string | CitationType[];
+    chatId?: string;
+  };
+};
+
 type BaseMessage =
   | {
-      answer: string;
-      citations?: undefined;
-      chat?: undefined;
-    }
+    answer: string;
+    citations?: undefined;
+    chat?: undefined;
+  }
   | {
-      answer: string | (ContentBlock | ContentBlock.Text)[];
-      citations: CitationType[];
-      // chat: {
-      //   id: string;
-      //   userId: string;
-      //   title: string;
-      //   messages: JsonValue[];
-      //   createdAt: Date;
-      //   updatedAt: Date;
-      //   projectId: string | null;
-      // };
-      chatId: string;
-    };
+    answer: string | (ContentBlock | ContentBlock.Text)[];
+    citations: CitationType[];
+    // chat: {
+    //   id: string;
+    //   userId: string;
+    //   title: string;
+    //   messages: JsonValue[];
+    //   createdAt: Date;
+    //   updatedAt: Date;
+    //   projectId: string | null;
+    // };
+    chatId: string;
+  };
 
 // 1. Grouping: Gom các chunk về theo từng File
 // Mục đích: Không để chunk của file A nằm xen kẽ file B, gây lú ngữ cảnh.
@@ -63,17 +74,134 @@ type FileGroup = {
 };
 @Injectable()
 export class ChatService {
+  // logger
+  private readonly logger = new Logger(ChatService.name);
   constructor(
     private readonly openaiService: OpenaiService,
     private prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
-  ) {}
+  ) { }
 
   // -- CORE CHAT FUNCTIONALITY --
-  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
-    // -- VALIDATIONS -- TODO: update with joi
 
-    const historyNum = 6;
+  chatStream(chatDto: ChatDto): Observable<SSEMessage> {
+    const subject = new Subject<SSEMessage>();
+
+    (async () => {
+      try {
+        const preparedData = await this.prepareRagContext(chatDto);
+
+        // Xử lý case không tìm thấy tài liệu
+        if ('answer' in preparedData) {
+          subject.next({ data: { type: 'ERROR', content: preparedData.answer } });
+          subject.complete();
+          return;
+        }
+
+        const { chatId, messages, citations } = preparedData;
+
+        subject.next({
+          data: { type: 'CITATIONS', content: citations, chatId }
+        });
+
+        // Call stream llm
+        const stream = await this.openaiService.getChatModel().stream(messages);
+
+        let fullAnswer = ''; // Biến gom text để lưu DB
+
+        for await (const chunk of stream) {
+          const token = chunk.content as string;
+          if (token) {
+            fullAnswer += token;
+            // Send token to client
+            subject.next({ data: { type: 'TOKEN', content: token } });
+          }
+        }
+
+        // Call save db
+        await this.saveChatToDb(chatId, chatDto.message, fullAnswer, citations);
+
+        // Send done to client
+        subject.next({ data: { type: 'DONE' } });
+        subject.complete();
+
+
+      } catch (error) {
+        this.logger.error(error);
+        subject.next({ data: { type: 'ERROR', content: 'Có lỗi xảy ra khi xử lý.' } });
+        subject.complete();
+      }
+    })()
+
+    return subject.asObservable();
+  }
+
+  // === DRY === 
+
+  private async prepareRagContext(chatDto: ChatDto): Promise<
+    | { answer: string } // Case không tìm thấy docs
+    | { chatId: string; messages: any[]; citations: CitationType[] } // Case thành công
+  > {
+    const MAX_HISTORY_MESSAGES = 6;
+
+    // 1. Ensure Chat & Load History
+    const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
+
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
+    });
+
+    const contentHistory = historyMessages
+      .filter((m) => m.role && m.content)
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
+
+    // 2. Rewrite Question
+    let finalQuestion = chatDto.message;
+    if (contentHistory.length > 0) {
+      finalQuestion = await this.createStandaloneQuestion(contentHistory, chatDto.message);
+    }
+
+    // 3. Retrieve & Rerank
+    const scoredDocs = await this.callRetrieveAndRerank(
+      finalQuestion,
+      chatDto.userId as string,
+      chatDto.projectId as string,
+    );
+
+    if (!scoredDocs || scoredDocs.length === 0) {
+      return {
+        answer: 'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn.',
+      };
+    }
+
+    // 4. Build Context
+    const fileGroups = this.createFileGroups(scoredDocs);
+    const contextStr = this.createContextFromFileGroups(fileGroups);
+    const messages = this.createFinalInputLlm(contextStr, chatDto.message, contentHistory);
+
+    // 5. Build Citations (Logic map cũ của em)
+    const citations: CitationType[] = scoredDocs.map((doc) => ({
+      index: doc.metadata.chunkIndex as number,
+      snippet: doc.pageContent.substring(0, 150) + '...',
+      text: doc.pageContent,
+      fileId: doc.metadata.fileId as string,
+      fileUrl: (doc.metadata.fileUrl as string) || '',
+      page: (doc.metadata.page as number) || 0,
+      score: doc.finalScore,
+      startOffset: (doc.metadata.startOffset as number) || 0,
+      endOffset: (doc.metadata.endOffset as number) || 0,
+      projectId: doc.metadata.projectId as string,
+    }));
+
+    return { chatId: chatId as string, messages, citations };
+  }
+
+
+
+  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
+    const MAX_HISTORY_MESSAGES = 6;
 
     // Ensure chat exists
     const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
@@ -81,17 +209,16 @@ export class ChatService {
     // Rewrite question to standalone if chatId provided
     let finalQuestion = chatDto.message;
 
-    const historyMessages = await this.prisma.chats.findUnique({
-      where: { id: chatId },
-      select: { messages: true },
+    // Load history from ChatMessage table (not JSON)
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
     });
 
-    const contentHistory: MessageType[] = (
-      (historyMessages?.messages ?? []) as MessageType[]
-    )
-      .slice(-historyNum)
+    const contentHistory: MessageType[] = historyMessages
       .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role, content: m.content }));
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
 
     if (contentHistory.length > 0) {
       finalQuestion = await this.createStandaloneQuestion(
@@ -117,20 +244,13 @@ export class ChatService {
       };
     }
 
-    // Debug: Log kết quả sau khi Rerank
-    console.log(`📋 Top ${scoredDocs.length} Documents after Rerank:`);
-    scoredDocs.slice(0, 3).forEach((doc, idx) => {
-      console.log(
-        `  ${idx + 1}. [Score=${doc.finalScore?.toFixed(3)}] ${doc.pageContent.substring(0, 50)}...`,
-      );
-    });
 
     // -- HELPER: Create File Groups from Scored Docs --
     const fileGroups = this.createFileGroups(scoredDocs);
 
     // -- HELPER: Create Context from File Groups --
     const contextStr = this.createContextFromFileGroups(fileGroups);
-    console.log('Final Context passed to LLM:\n', contextStr);
+
 
     // -- HELPER: Create final inputLlm for LLM --
     const inputLlm = this.createFinalInputLlm(
@@ -143,9 +263,7 @@ export class ChatService {
     const response = await this.openaiService.getChatModel().invoke(inputLlm);
     const aiAnswer = response.content as string;
 
-    // ---------------------------------------------------------
     // 5. PREPARE CITATIONS (FE will controll it)
-    // ---------------------------------------------------------
     // Map từ ScoredDocument sang CitationType
     const citations: CitationType[] = scoredDocs.map((doc) => ({
       index: doc.metadata.chunkIndex as number,
@@ -161,28 +279,25 @@ export class ChatService {
       projectId: doc.metadata.projectId as string,
     }));
 
-    // ---------------------------------------------------------
-    // 6. SAVE & RETURN
-    // ---------------------------------------------------------
-    const updatedMessages = [
-      ...((historyMessages?.messages as MessageType[]) || []),
-      { role: 'user', content: chatDto.message },
-      {
+    // 6. SAVE MESSAGES TO ChatMessage TABLE
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
+        role: 'user',
+        content: chatDto.message,
+      },
+    });
+
+    // Save assistant message with citations
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
         role: 'assistant',
         content: aiAnswer,
-        citation: citations,
+        metadata: { citations },
       },
-    ];
-
-    // Update async
-    this.prisma.chats
-      .update({
-        where: { id: chatId },
-        data: { messages: updatedMessages },
-      })
-      .catch((err) => {
-        console.error('Error updating chat messages:', err);
-      });
+    });
 
     return {
       answer: aiAnswer,
@@ -210,9 +325,7 @@ export class ChatService {
     message: string,
     contentHistory: MessageType[],
   ) {
-    // ---------------------------------------------------------
     // 3. PROMPT ENGINEERING (Tinh chỉnh cho Rerank)
-    // ---------------------------------------------------------
     const SYSTEM_PROMPT = `
       Bạn là trợ lý AI chuyên nghiệp, nhiệm vụ là trả lời câu hỏi dựa trên các tài liệu được cung cấp.
 
@@ -240,10 +353,7 @@ export class ChatService {
       ${message}
     `;
 
-    // ---------------------------------------------------------
     // 4. HISTORY & LLM CALL (Logic giữ nguyên, chỉ thay đổi input)
-    // ---------------------------------------------------------
-
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT.trim() },
       ...contentHistory,
@@ -286,9 +396,7 @@ export class ChatService {
   private createFileGroups(
     scoredDocs: ScoredDocument[],
   ): Map<string, FileGroup> {
-    // ---------------------------------------------------------
     // 2. CONTEXT CONSTRUCTION (Learn Logic from "NotebookLM")
-    // ---------------------------------------------------------
     // Gom nhóm chunk theo File để LLM hiểu ngữ cảnh của từng tài liệu
     const fileGroups = new Map<string, FileGroup>();
 
@@ -345,16 +453,38 @@ export class ChatService {
     return scoredDocs;
   }
 
+
+  // -- HELPER: Save chat to db --
+  private async saveChatToDb(
+    chatId: string,
+    userMsg: string,
+    aiMsg: string,
+    citations: CitationType[]
+  ) {
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: { chatId, role: 'user', content: userMsg },
+    });
+
+    // Save assistant message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId,
+        role: 'assistant',
+        content: aiMsg,
+        metadata: { citations } // Lưu citations vào metadata để truy xuất sau
+      },
+    });
+  }
+
   // -- HELPER: Ensure chat exists or create it --
   private async ensureChatExists(chatId: string | undefined, chatDto: ChatDto) {
     let chatIdLocal = chatId;
     if (!chatId) {
-      const created = await this.prisma.chats.create({
+      const created = await this.prisma.chat.create({
         data: {
-          messages: [],
           userId: chatDto.userId as string,
           projectId: chatDto.projectId as string,
-          // Title là câu hỏi được slice tròn câu để tránh quá dài
           title:
             chatDto.message.length > 50
               ? chatDto.message.slice(0, 50) + '...'
@@ -403,7 +533,7 @@ export class ChatService {
 
   // -- Get all user chats --
   // async getAllUserChat(userId: string) {
-  //   return await this.prisma.chats.findMany({
+  //   return await this.prisma.chat.findMany({
   //     orderBy: { updatedAt: 'desc' },
   //     where: { userId },
   //     omit: { messages: true, userId: true },
@@ -412,41 +542,41 @@ export class ChatService {
 
   // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
-      omit: { messages: true, userId: true },
+      omit: { userId: true },
     });
   }
 
   // -- Get Chat by ID --
   async getChatById(userId: string, chatId: string) {
-    return await this.prisma.chats.findUnique({
+    return await this.prisma.chat.findUnique({
       where: { id: chatId, userId },
     });
   }
 
   // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
-    return await this.prisma.chats.update({
+    return await this.prisma.chat.update({
       where: { id, userId },
       data: updateChatDto,
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 
   // -- Delete chat --
   async remove(userId: string, id: string) {
-    const chat = await this.prisma.chats.findUnique({
+    const chat = await this.prisma.chat.findUnique({
       where: { id },
     });
     if (!chat) throw new BadRequestException('Chat not found');
     if (chat.userId !== userId)
       throw new ForbiddenException('User Unauthorized!');
 
-    return await this.prisma.chats.delete({
+    return await this.prisma.chat.delete({
       where: { id },
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 }

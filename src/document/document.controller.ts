@@ -24,7 +24,7 @@ import { UploadMetadataDto } from './dto/upload-document.dto';
 
 @Controller('document')
 export class DocumentController {
-  constructor(private readonly documentService: DocumentService) {}
+  constructor(private readonly documentService: DocumentService) { }
 
   // -- UPLOAD FILES --
   @Post('upload/files')

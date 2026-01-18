@@ -1,25 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthEntity } from './entities/auth.entity';
+import { AuthEntity, SafeUser } from './entities/auth.entity';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { Role } from '../constant/index.constant';
-import { $Enums } from '@prisma/client';
-
-type UserType = {
-  id: string;
-  name: string | null;
-  role: $Enums.Role;
-  email: string;
-  username: string;
-  password: string;
-  refreshToken: string | null;
-  storageUsed: bigint;
-  storageLimit: bigint;
-};
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -28,12 +15,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private config: ConfigService,
-  ) {}
+  ) { }
 
   // -- REGISTER --
   async register(registerDto: RegisterDto) {
     // Check user exist
-    const existingUser = await this.prisma.users.findUnique({
+    const existingUser = await this.prisma.user.findUnique({
       where: { email: registerDto.email },
     });
     if (existingUser) throw new ForbiddenException('User already exists');
@@ -42,7 +29,7 @@ export class AuthService {
     // random username
     const randomUsername = `user_${Math.random().toString(36).substring(2, 8)}`;
     // Create user
-    await this.prisma.users.create({
+    await this.prisma.user.create({
       data: {
         email: registerDto.email,
         password: passwordHash,
@@ -63,7 +50,7 @@ export class AuthService {
   // -- LOGIN --
   async login(loginDto: LoginDto): Promise<AuthEntity> {
     // Check user exist
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
     if (!user) throw new Error('Invalid credentials');
@@ -75,10 +62,6 @@ export class AuthService {
     );
     if (!isPasswordValid) throw new ForbiddenException('Invalid credentials');
 
-    // User no password in response
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, storageUsed, storageLimit, ...userSafe } = user;
-
     // Sign JWT
     const tokens = await this.getTokens(
       user.id,
@@ -88,20 +71,31 @@ export class AuthService {
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
+    // Build safe user object (exclude password, convert bigint to number)
+    const safeUser: SafeUser = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      name: user.name,
+      role: user.role,
+      refreshToken: user.refreshToken,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      storageUsed: Number(user.storageUsed),
+      storageLimit: Number(user.storageLimit),
+      isDeleted: user.isDeleted,
+    };
+
     return {
       ...tokens,
-      user: {
-        ...userSafe,
-        storageUsed: Number(storageUsed),
-        storageLimit: Number(storageLimit),
-      } as unknown as UserType,
+      user: safeUser,
     };
   }
 
   // -- LOGOUT --
   async logout(userId: string): Promise<{ message: string }> {
     // Clean RT, add RT to blacklist
-    await this.prisma.users.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: null },
     });
@@ -113,7 +107,7 @@ export class AuthService {
   // -- REFRESH TOKEN --
   async refreshToken(userId: string, rt: string) {
     // Check user exist
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
     if (!user || !user.refreshToken) {
@@ -134,7 +128,7 @@ export class AuthService {
   async updateRefreshToken(userId: string, rt: string) {
     const hashedRt = bcrypt.hashSync(rt, 10);
 
-    await this.prisma.users.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashedRt },
     });

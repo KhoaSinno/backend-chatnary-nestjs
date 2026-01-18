@@ -2,7 +2,7 @@
 
 ## Project Statistics
 
-- Total files: 70
+- Total files: 69
 
 ## Folder Structure
 
@@ -41,6 +41,8 @@ src
     dto
       chat.dto.ts
       update-chat.dto.ts
+    memory
+      prisma-history.store.ts
   common
     pipes
       parse-json.pipe.ts
@@ -58,8 +60,6 @@ src
       create-document.dto.ts
       update-document.dto.ts
       upload-document.dto.ts
-    entities
-      document.entity.ts
     oss.ts
   http-exception.filter.ts
   ingest
@@ -67,8 +67,6 @@ src
     ingest.service.ts
     loaders
       cloud.loader.ts
-      ocr.loader.ts
-      pdf.loader.ts
     splitters
       text-splitter.ts
     vector
@@ -79,9 +77,9 @@ src
       openai.module.ts
       openai.service.ts
   main.ts
-  pipeline
-    pipeline.module.ts
-    pipeline.service.ts
+  notification
+    notification.controller.ts
+    notification.module.ts
   prisma
     prisma.module.ts
     prisma.service.ts
@@ -89,11 +87,12 @@ src
     dto
       create-project.dto.ts
       update-project.dto.ts
-    entities
-      project.entity.ts
     project.controller.ts
     project.module.ts
     project.service.ts
+  queue
+    ingest.processor.ts
+    queue.module.ts
   response.interceptor.ts
   retrieval
     retrieval.module.ts
@@ -102,11 +101,10 @@ src
     dto
       create-user.dto.ts
       update-user.dto.ts
-    entities
-      user.entity.ts
     user.controller.ts
     user.module.ts
     user.service.ts
+.env.example
 API_ENDPOINTS.md
 package.json
 
@@ -166,13 +164,12 @@ export class AppController {
 
 ```ts
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -189,10 +186,17 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { RetrievalModule } from './retrieval/retrieval.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file'; // Import if using rotation
-
+import 'winston-daily-rotate-file';
+import { BullModule } from '@nestjs/bullmq';
+import { QueueModule } from './queue/queue.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationModule } from './notification/notification.module';
 @Module({
   imports: [
+
+    // Event emitter
+    EventEmitterModule.forRoot(),
     // Serve static files from the "uploads" directory
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
@@ -261,6 +265,12 @@ import 'winston-daily-rotate-file'; // Import if using rotation
           .valid('ERROR', 'WARN', 'INFO', 'DEBUG')
           .optional()
           .default('INFO'),
+
+        // Redis (BullMQ)
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
+        REDIS_USERNAME: Joi.string().optional().default('default'),
+        REDIS_PASSWORD: Joi.string().required(),
       }),
     }),
     WinstonModule.forRoot({
@@ -316,13 +326,27 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     IngestModule,
     DocumentModule,
     ChatModule,
-    PipelineModule,
     OpenaiModule,
     PrismaModule,
     ProjectModule,
     AuthModule,
     UserModule,
     RetrievalModule,
+    // BullMQ Global Configuration
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          username: configService.get<string>('REDIS_USERNAME') || 'default',
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    QueueModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
@@ -340,7 +364,7 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
 
 ```
 
@@ -931,9 +955,9 @@ import {
   Patch,
   Param,
   Delete,
-  Headers,
   Query,
   Req,
+  Sse,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -942,7 +966,32 @@ import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) { }
+
+  // -- CHAT STREAM --
+  // Note: SSE uses GET, so we use Query params instead of Body
+  @Sse('/stream')
+  chatStream(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Query('message') message: string,
+    @Query('projectId') projectId?: string,
+    @Query('chatId') chatId?: string,
+  ) {
+    // Debug: Log user info
+    console.log('SSE Stream - req.user:', req.user);
+
+    if (!req.user || !req.user.userId) {
+      throw new Error('User not authenticated');
+    }
+
+    const chatDto: ChatDto = {
+      message,
+      projectId,
+      chatId,
+      userId: req.user.userId,
+    };
+    return this.chatService.chatStream(chatDto);
+  }
 
   // -- CHAT LITE --
   @Post('/global')
@@ -1032,6 +1081,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
@@ -1042,7 +1092,8 @@ import {
   RetrievalService,
   ScoredDocument,
 } from '../retrieval/retrieval.service';
-import path from 'node:path';
+import * as path from 'node:path';
+import { Observable, Subject } from 'rxjs';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -1062,26 +1113,35 @@ type CitationType = {
   projectId: string;
 };
 
+// Custom SSE message type for streaming responses
+type SSEMessage = {
+  data: {
+    type: 'TOKEN' | 'CITATIONS' | 'CHAT_ID' | 'ERROR' | 'DONE';
+    content?: string | CitationType[];
+    chatId?: string;
+  };
+};
+
 type BaseMessage =
   | {
-      answer: string;
-      citations?: undefined;
-      chat?: undefined;
-    }
+    answer: string;
+    citations?: undefined;
+    chat?: undefined;
+  }
   | {
-      answer: string | (ContentBlock | ContentBlock.Text)[];
-      citations: CitationType[];
-      // chat: {
-      //   id: string;
-      //   userId: string;
-      //   title: string;
-      //   messages: JsonValue[];
-      //   createdAt: Date;
-      //   updatedAt: Date;
-      //   projectId: string | null;
-      // };
-      chatId: string;
-    };
+    answer: string | (ContentBlock | ContentBlock.Text)[];
+    citations: CitationType[];
+    // chat: {
+    //   id: string;
+    //   userId: string;
+    //   title: string;
+    //   messages: JsonValue[];
+    //   createdAt: Date;
+    //   updatedAt: Date;
+    //   projectId: string | null;
+    // };
+    chatId: string;
+  };
 
 // 1. Grouping: Gom các chunk về theo từng File
 // Mục đích: Không để chunk của file A nằm xen kẽ file B, gây lú ngữ cảnh.
@@ -1093,17 +1153,134 @@ type FileGroup = {
 };
 @Injectable()
 export class ChatService {
+  // logger
+  private readonly logger = new Logger(ChatService.name);
   constructor(
     private readonly openaiService: OpenaiService,
     private prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
-  ) {}
+  ) { }
 
   // -- CORE CHAT FUNCTIONALITY --
-  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
-    // -- VALIDATIONS -- TODO: update with joi
 
-    const historyNum = 6;
+  chatStream(chatDto: ChatDto): Observable<SSEMessage> {
+    const subject = new Subject<SSEMessage>();
+
+    (async () => {
+      try {
+        const preparedData = await this.prepareRagContext(chatDto);
+
+        // Xử lý case không tìm thấy tài liệu
+        if ('answer' in preparedData) {
+          subject.next({ data: { type: 'ERROR', content: preparedData.answer } });
+          subject.complete();
+          return;
+        }
+
+        const { chatId, messages, citations } = preparedData;
+
+        subject.next({
+          data: { type: 'CITATIONS', content: citations, chatId }
+        });
+
+        // Call stream llm
+        const stream = await this.openaiService.getChatModel().stream(messages);
+
+        let fullAnswer = ''; // Biến gom text để lưu DB
+
+        for await (const chunk of stream) {
+          const token = chunk.content as string;
+          if (token) {
+            fullAnswer += token;
+            // Send token to client
+            subject.next({ data: { type: 'TOKEN', content: token } });
+          }
+        }
+
+        // Call save db
+        await this.saveChatToDb(chatId, chatDto.message, fullAnswer, citations);
+
+        // Send done to client
+        subject.next({ data: { type: 'DONE' } });
+        subject.complete();
+
+
+      } catch (error) {
+        this.logger.error(error);
+        subject.next({ data: { type: 'ERROR', content: 'Có lỗi xảy ra khi xử lý.' } });
+        subject.complete();
+      }
+    })()
+
+    return subject.asObservable();
+  }
+
+  // === DRY === 
+
+  private async prepareRagContext(chatDto: ChatDto): Promise<
+    | { answer: string } // Case không tìm thấy docs
+    | { chatId: string; messages: any[]; citations: CitationType[] } // Case thành công
+  > {
+    const MAX_HISTORY_MESSAGES = 6;
+
+    // 1. Ensure Chat & Load History
+    const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
+
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
+    });
+
+    const contentHistory = historyMessages
+      .filter((m) => m.role && m.content)
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
+
+    // 2. Rewrite Question
+    let finalQuestion = chatDto.message;
+    if (contentHistory.length > 0) {
+      finalQuestion = await this.createStandaloneQuestion(contentHistory, chatDto.message);
+    }
+
+    // 3. Retrieve & Rerank
+    const scoredDocs = await this.callRetrieveAndRerank(
+      finalQuestion,
+      chatDto.userId as string,
+      chatDto.projectId as string,
+    );
+
+    if (!scoredDocs || scoredDocs.length === 0) {
+      return {
+        answer: 'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn.',
+      };
+    }
+
+    // 4. Build Context
+    const fileGroups = this.createFileGroups(scoredDocs);
+    const contextStr = this.createContextFromFileGroups(fileGroups);
+    const messages = this.createFinalInputLlm(contextStr, chatDto.message, contentHistory);
+
+    // 5. Build Citations (Logic map cũ của em)
+    const citations: CitationType[] = scoredDocs.map((doc) => ({
+      index: doc.metadata.chunkIndex as number,
+      snippet: doc.pageContent.substring(0, 150) + '...',
+      text: doc.pageContent,
+      fileId: doc.metadata.fileId as string,
+      fileUrl: (doc.metadata.fileUrl as string) || '',
+      page: (doc.metadata.page as number) || 0,
+      score: doc.finalScore,
+      startOffset: (doc.metadata.startOffset as number) || 0,
+      endOffset: (doc.metadata.endOffset as number) || 0,
+      projectId: doc.metadata.projectId as string,
+    }));
+
+    return { chatId: chatId as string, messages, citations };
+  }
+
+
+
+  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
+    const MAX_HISTORY_MESSAGES = 6;
 
     // Ensure chat exists
     const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
@@ -1111,17 +1288,16 @@ export class ChatService {
     // Rewrite question to standalone if chatId provided
     let finalQuestion = chatDto.message;
 
-    const historyMessages = await this.prisma.chats.findUnique({
-      where: { id: chatId },
-      select: { messages: true },
+    // Load history from ChatMessage table (not JSON)
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
     });
 
-    const contentHistory: MessageType[] = (
-      (historyMessages?.messages ?? []) as MessageType[]
-    )
-      .slice(-historyNum)
+    const contentHistory: MessageType[] = historyMessages
       .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role, content: m.content }));
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
 
     if (contentHistory.length > 0) {
       finalQuestion = await this.createStandaloneQuestion(
@@ -1147,20 +1323,13 @@ export class ChatService {
       };
     }
 
-    // Debug: Log kết quả sau khi Rerank
-    console.log(`📋 Top ${scoredDocs.length} Documents after Rerank:`);
-    scoredDocs.slice(0, 3).forEach((doc, idx) => {
-      console.log(
-        `  ${idx + 1}. [Score=${doc.finalScore?.toFixed(3)}] ${doc.pageContent.substring(0, 50)}...`,
-      );
-    });
 
     // -- HELPER: Create File Groups from Scored Docs --
     const fileGroups = this.createFileGroups(scoredDocs);
 
     // -- HELPER: Create Context from File Groups --
     const contextStr = this.createContextFromFileGroups(fileGroups);
-    console.log('Final Context passed to LLM:\n', contextStr);
+
 
     // -- HELPER: Create final inputLlm for LLM --
     const inputLlm = this.createFinalInputLlm(
@@ -1173,9 +1342,7 @@ export class ChatService {
     const response = await this.openaiService.getChatModel().invoke(inputLlm);
     const aiAnswer = response.content as string;
 
-    // ---------------------------------------------------------
     // 5. PREPARE CITATIONS (FE will controll it)
-    // ---------------------------------------------------------
     // Map từ ScoredDocument sang CitationType
     const citations: CitationType[] = scoredDocs.map((doc) => ({
       index: doc.metadata.chunkIndex as number,
@@ -1191,28 +1358,25 @@ export class ChatService {
       projectId: doc.metadata.projectId as string,
     }));
 
-    // ---------------------------------------------------------
-    // 6. SAVE & RETURN
-    // ---------------------------------------------------------
-    const updatedMessages = [
-      ...((historyMessages?.messages as MessageType[]) || []),
-      { role: 'user', content: chatDto.message },
-      {
+    // 6. SAVE MESSAGES TO ChatMessage TABLE
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
+        role: 'user',
+        content: chatDto.message,
+      },
+    });
+
+    // Save assistant message with citations
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
         role: 'assistant',
         content: aiAnswer,
-        citation: citations,
+        metadata: { citations },
       },
-    ];
-
-    // Update async
-    this.prisma.chats
-      .update({
-        where: { id: chatId },
-        data: { messages: updatedMessages },
-      })
-      .catch((err) => {
-        console.error('Error updating chat messages:', err);
-      });
+    });
 
     return {
       answer: aiAnswer,
@@ -1240,9 +1404,7 @@ export class ChatService {
     message: string,
     contentHistory: MessageType[],
   ) {
-    // ---------------------------------------------------------
     // 3. PROMPT ENGINEERING (Tinh chỉnh cho Rerank)
-    // ---------------------------------------------------------
     const SYSTEM_PROMPT = `
       Bạn là trợ lý AI chuyên nghiệp, nhiệm vụ là trả lời câu hỏi dựa trên các tài liệu được cung cấp.
 
@@ -1270,10 +1432,7 @@ export class ChatService {
       ${message}
     `;
 
-    // ---------------------------------------------------------
     // 4. HISTORY & LLM CALL (Logic giữ nguyên, chỉ thay đổi input)
-    // ---------------------------------------------------------
-
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT.trim() },
       ...contentHistory,
@@ -1316,9 +1475,7 @@ export class ChatService {
   private createFileGroups(
     scoredDocs: ScoredDocument[],
   ): Map<string, FileGroup> {
-    // ---------------------------------------------------------
     // 2. CONTEXT CONSTRUCTION (Learn Logic from "NotebookLM")
-    // ---------------------------------------------------------
     // Gom nhóm chunk theo File để LLM hiểu ngữ cảnh của từng tài liệu
     const fileGroups = new Map<string, FileGroup>();
 
@@ -1375,16 +1532,38 @@ export class ChatService {
     return scoredDocs;
   }
 
+
+  // -- HELPER: Save chat to db --
+  private async saveChatToDb(
+    chatId: string,
+    userMsg: string,
+    aiMsg: string,
+    citations: CitationType[]
+  ) {
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: { chatId, role: 'user', content: userMsg },
+    });
+
+    // Save assistant message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId,
+        role: 'assistant',
+        content: aiMsg,
+        metadata: { citations } // Lưu citations vào metadata để truy xuất sau
+      },
+    });
+  }
+
   // -- HELPER: Ensure chat exists or create it --
   private async ensureChatExists(chatId: string | undefined, chatDto: ChatDto) {
     let chatIdLocal = chatId;
     if (!chatId) {
-      const created = await this.prisma.chats.create({
+      const created = await this.prisma.chat.create({
         data: {
-          messages: [],
           userId: chatDto.userId as string,
           projectId: chatDto.projectId as string,
-          // Title là câu hỏi được slice tròn câu để tránh quá dài
           title:
             chatDto.message.length > 50
               ? chatDto.message.slice(0, 50) + '...'
@@ -1433,7 +1612,7 @@ export class ChatService {
 
   // -- Get all user chats --
   // async getAllUserChat(userId: string) {
-  //   return await this.prisma.chats.findMany({
+  //   return await this.prisma.chat.findMany({
   //     orderBy: { updatedAt: 'desc' },
   //     where: { userId },
   //     omit: { messages: true, userId: true },
@@ -1442,41 +1621,41 @@ export class ChatService {
 
   // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
-      omit: { messages: true, userId: true },
+      omit: { userId: true },
     });
   }
 
   // -- Get Chat by ID --
   async getChatById(userId: string, chatId: string) {
-    return await this.prisma.chats.findUnique({
+    return await this.prisma.chat.findUnique({
       where: { id: chatId, userId },
     });
   }
 
   // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
-    return await this.prisma.chats.update({
+    return await this.prisma.chat.update({
       where: { id, userId },
       data: updateChatDto,
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 
   // -- Delete chat --
   async remove(userId: string, id: string) {
-    const chat = await this.prisma.chats.findUnique({
+    const chat = await this.prisma.chat.findUnique({
       where: { id },
     });
     if (!chat) throw new BadRequestException('Chat not found');
     if (chat.userId !== userId)
       throw new ForbiddenException('User Unauthorized!');
 
-    return await this.prisma.chats.delete({
+    return await this.prisma.chat.delete({
       where: { id },
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 }
@@ -1518,6 +1697,79 @@ export class UpdateChatDto {
 
   @IsString({ message: 'projectId must be a string' })
   projectId?: string | null;
+}
+
+```
+
+### src\chat\memory\prisma-history.store.ts
+
+```ts
+import { BaseListChatMessageHistory } from '@langchain/core/chat_history';
+import {
+    BaseMessage,
+    HumanMessage,
+    AIMessage,
+    SystemMessage,
+} from '@langchain/core/messages';
+import { PrismaService } from '../../prisma/prisma.service';
+
+/**
+ * PrismaChatMessageHistory - Adapter for LangChain Memory
+ * Automatically saves and loads chat history from ChatMessage table
+ */
+export class PrismaChatMessageHistory extends BaseListChatMessageHistory {
+    lc_namespace = ['chat', 'memory'];
+
+    constructor(
+        private readonly chatId: string,
+        private readonly prisma: PrismaService,
+    ) {
+        super();
+    }
+
+    /**
+     * Load messages from DB and convert to LangChain format
+     */
+    async getMessages(): Promise<BaseMessage[]> {
+        const messages = await this.prisma.chatMessage.findMany({
+            where: { chatId: this.chatId },
+            orderBy: { createdAt: 'asc' },
+            take: 20, // Limit to last 20 messages to avoid context overflow
+        });
+
+        return messages.map((msg) => {
+            if (msg.role === 'user') return new HumanMessage(msg.content);
+            if (msg.role === 'assistant') return new AIMessage(msg.content);
+            return new SystemMessage(msg.content);
+        });
+    }
+
+    /**
+     * Save a new message to DB
+     */
+    async addMessage(message: BaseMessage): Promise<void> {
+        let role = 'user';
+        if (message instanceof AIMessage) role = 'assistant';
+        if (message instanceof SystemMessage) role = 'system';
+
+        await this.prisma.chatMessage.create({
+            data: {
+                chatId: this.chatId,
+                role,
+                content: message.content as string,
+                metadata: message.response_metadata || null,
+            },
+        });
+    }
+
+    /**
+     * Clear all messages for this chat
+     */
+    async clear(): Promise<void> {
+        await this.prisma.chatMessage.deleteMany({
+            where: { chatId: this.chatId },
+        });
+    }
 }
 
 ```
@@ -1703,6 +1955,11 @@ export const CHILD_CHUNK_OVERLAP = 150;
 export const CHUNK_SIZE = 1000;
 export const CHUNK_OVERLAP = 150;
 
+// Chat constants
+export const MAX_HISTORY_MESSAGES = 6;
+export const RETRIEVAL_K = 90;
+export const FINAL_K = 20;
+
 // Authorization
 
 export enum Role {
@@ -1856,14 +2113,20 @@ import { DocumentService } from './document.service';
 import { DocumentController } from './document.controller';
 import { IngestModule } from '../ingest/ingest.module';
 import { PrismaService } from '../prisma/prisma.service';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
-  imports: [IngestModule],
+  imports: [
+    IngestModule,
+    BullModule.registerQueue({
+      name: 'ingest-queue',
+    }),
+  ],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService, ConsoleLogger],
   exports: [DocumentService],
 })
-export class DocumentModule {}
+export class DocumentModule { }
 
 ```
 
@@ -1872,87 +2135,83 @@ export class DocumentModule {}
 ```ts
 import { ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { IngestService } from '../ingest/ingest.service';
 import { VectorService } from '../ingest/vector/vector.service';
 import { deleteFile } from './oss';
-import path from 'path';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { documents, DocumentStatus } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
 import { UploadMetadataDto } from './dto/upload-document.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { IngestJobData } from '../queue/ingest.processor';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    private readonly ingestService: IngestService,
+    @InjectQueue('ingest-queue') private ingestQueue: Queue<IngestJobData>,
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
   ) { }
 
-  //-- UPLOAD --
+  //-- UPLOAD (Non-blocking with Queue) --
   async uploadFiles(
     userId: string,
     files: Express.Multer.File[],
     projectId?: string,
     metadata?: UploadMetadataDto,
-  ): Promise<void> {
-    for (const file of files) {
-      let document: documents | null = null;
-      try {
-        // Pre create document record with 'processing' status
-        document = await this.createDocument({
-          projectId: projectId,
-          originalName: file.originalname,
-          filePath: file.path,
-          mimeType: file.mimetype,
-          size: file.size,
-          status: DocumentStatus.PROCESSING,
-          userId: userId,
-          accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
-          viewCount: 0, // TODO: default 0
-          pageCount: 0, // TODO: get real page count after OCR
-          authors: metadata?.authors || [],
-          description: metadata?.description || '',
-          publishedYear: metadata?.publishedYear || undefined,
-          subjects: metadata?.subjects || [],
-          tags: metadata?.tags || [],
-          title: metadata?.title || path.parse(file.originalname).name,
-          documentType: 'unknown',
-        });
+  ): Promise<{ documents: documents[]; jobIds: string[] }> {
+    const createdDocuments: documents[] = [];
+    const jobIds: string[] = [];
 
-        const chunks = await this.ingestService.ingestDocument(
-          file.path,
-          document.id,
+    for (const file of files) {
+      // 1. Create document record with PENDING status (immediate response)
+      const document = await this.createDocument({
+        projectId: projectId,
+        originalName: file.originalname,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        size: file.size,
+        status: DocumentStatus.PENDING,
+        userId: userId,
+        accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
+        viewCount: 0,
+        pageCount: 0,
+        authors: metadata?.authors || [],
+        description: metadata?.description || '',
+        publishedYear: metadata?.publishedYear || undefined,
+        subjects: metadata?.subjects || [],
+        tags: metadata?.tags || [],
+        title: metadata?.title || path.parse(file.originalname).name,
+        documentType: 'unknown',
+      });
+
+      createdDocuments.push(document);
+
+      // 2. Add job to queue (non-blocking, processed by worker)
+      const job = await this.ingestQueue.add(
+        'process-document',
+        {
+          fileId: document.id,
+          filePath: file.path,
           userId,
           projectId,
-          file.originalname,
-        );
+          originalFileName: file.originalname,
+        },
+        {
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 5000 },
+          removeOnComplete: true,
+        },
+      );
 
-        this.logger.log(
-          `✅ Ingested ${chunks.length} chunks for: ${file.originalname}`,
-        );
-
-        // If ingestion successful (has chunks), save document record in DB
-        if (chunks.length > 0) {
-          // update 'done' status
-          await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
-
-          this.logger.log(
-            `📝 Document record created for: ${file.originalname}`,
-          );
-        } else {
-          this.logger.warn(`⚠️ No chunks created for: ${file.originalname}`);
-        }
-      } catch (error) {
-        this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
-        // Optionally update 'error' status
-        if (document) {
-          await this.updateDocumentStatus(document.id, DocumentStatus.ERROR);
-        }
-      }
+      jobIds.push(job.id || document.id);
+      this.logger.log(`📤 Queued job ${job.id} for: ${file.originalname}`);
     }
+
+    return { documents: createdDocuments, jobIds };
   }
 
   // -- REMOVE --
@@ -2041,7 +2300,7 @@ export class DocumentService {
   async addDocumentsToProject(
     userId: string,
     projectId: string,
-    documentIds: string[]
+    documentIds: string[],
   ) {
     // 1. Check Project exists AND belongs to User
     const project = await this.prisma.projects.findFirst({
@@ -2135,7 +2394,7 @@ export class DocumentService {
       },
     });
 
-    console.log(docsRaw);
+
     // return docsRaw;
     return docsRaw.map((item) => {
       return {
@@ -2424,13 +2683,6 @@ export class UploadMetadataDto {
 
 ```
 
-### src\document\entities\document.entity.ts
-
-```ts
-export class Document {}
-
-```
-
 ### src\document\oss.ts
 
 ```ts
@@ -2529,8 +2781,6 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 ```ts
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { IngestService } from './ingest.service';
-import { PdfService } from './loaders/pdf.loader';
-import { OcrService } from './loaders/ocr.loader';
 import { TextSplitterService } from './splitters/text-splitter';
 import { VectorService } from './vector/vector.service';
 import { PgvectorService } from './vector/pgvector.client';
@@ -2540,8 +2790,6 @@ import { CloudService } from './loaders/cloud.loader';
 @Module({
   providers: [
     IngestService,
-    PdfService,
-    OcrService,
     CloudService,
     TextSplitterService,
     VectorService,
@@ -2569,7 +2817,7 @@ export class IngestService {
     private cloudService: CloudService,
     private textSplitterService: TextSplitterService,
     private vectorService: VectorService,
-  ) {}
+  ) { }
   /* 
     1. Load document (Text/PDF/Image)
     2. Split text into chunks
@@ -2607,11 +2855,6 @@ export class IngestService {
       originalFileName,
     };
 
-    console.log(
-      '💾 Saving to vector store with metadata:',
-      JSON.stringify(metadata),
-    );
-    // console.log('📦 Total chunks:', chunks);
 
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
@@ -2631,368 +2874,29 @@ export class IngestService {
 ```ts
 import { Injectable } from '@nestjs/common';
 import { LlamaParseReader } from 'llama-cloud-services';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CloudService {
   private reader: LlamaParseReader;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.reader = new LlamaParseReader({
-      apiKey: process.env.LLAMA_CLOUD_API_KEY,
-      // The parsing tier. Options: fast, cost_effective, agentic, agentic_plus
+      apiKey: this.configService.get<string>('LLAMA_CLOUD_API_KEY'),
       tier: 'cost_effective',
-      // The version of the parsing tier to use. Use 'latest' for the most recent version
       version: 'latest',
-      // Whether to use high resolution OCR (Slow)
       high_res_ocr: true,
-      // Adaptive long table. LlamaParse will try to detect long table and adapt the output
       adaptive_long_table: true,
-      // Whether to try to extract outlined tables
       outlined_table_extraction: true,
-      // Whether to output tables as HTML in the markdown output
       output_tables_as_HTML: true,
-      // The maximum number of pages to parse
       max_pages: 0,
-      // Whether to use precise bounding box extraction (experimental)
       precise_bounding_box: true,
     });
   }
   // docx, pdf, ... to markdown
   async load(fileUrl: string) {
     const results = await this.reader.parse(fileUrl);
-
-    //parse() returns an array of ParseResult objects
-    for (const result of results) {
-      console.log(`Job ID: ${result.job_id}`);
-      console.log(`File: ${result.file_path}`);
-      console.log(`Completed: ${result.is_completed}`);
-      console.log(`Number of pages: ${result.pages.length}`);
-      console.log('---');
-
-      // Access individual pages
-      for (const page of result.pages) {
-        // The page object structure depends on the parsing configuration
-        // It may contain: text, md, images, layout, structuredData, etc.
-        if (page.text) console.log('Text:', page.text);
-        if (page.md) console.log('Markdown:', page.md);
-        if (page.json) console.log('JSON:', page.json);
-      }
-    }
-
     return results;
-  }
-}
-
-```
-
-### src\ingest\loaders\ocr.loader.ts
-
-```ts
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import * as Tesseract from 'tesseract.js';
-import { fromPath } from 'pdf2pic';
-import * as fs from 'fs';
-import * as path from 'path';
-import pdf from 'pdf-parse';
-import sharp from 'sharp';
-
-@Injectable()
-export class OcrService implements OnModuleInit, OnModuleDestroy {
-  private workers: Tesseract.Worker[] = [];
-  private readonly WORKER_COUNT = 8; // Số workers song song
-
-  async onModuleInit() {
-    console.log('🔧 Initializing OCR worker pool...');
-    // Tạo worker pool để OCR song song
-    const workerPromises = Array.from(
-      { length: this.WORKER_COUNT },
-      async () => {
-        const worker = await Tesseract.createWorker('vie', 1, {
-          logger: () => {}, // Tắt log verbose
-        });
-
-        // Cấu hình tối ưu cho tiếng Việt
-        await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO, // Tự động detect layout
-          tessedit_char_whitelist: '', // Cho phép tất cả ký tự
-          preserve_interword_spaces: '1',
-          // Cải thiện nhận diện dấu tiếng Việt
-          textord_heavy_nr: '1',
-          // Giảm noise
-          edges_use_new_outline_complexity: '1',
-        });
-
-        return worker;
-      },
-    );
-
-    this.workers = await Promise.all(workerPromises);
-    console.log(`✅ Initialized ${this.workers.length} OCR workers`);
-  }
-
-  private getWorker(index: number): Tesseract.Worker {
-    return this.workers[index % this.workers.length];
-  }
-
-  // Handle
-  async load(filePath: string) {
-    try {
-      const ext = filePath.toLowerCase();
-      const isPdf = ext.endsWith('.pdf');
-
-      // Supported image formats for OCR
-      const isImage = /\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext);
-
-      // --- CASE 1: Image files only ---
-      if (isImage) {
-        const result = await this.workers[0].recognize(filePath);
-        return { text: result.data.text, confidence: result.data.confidence };
-      }
-
-      // --- CASE 2: Non-PDF and non-image files (e.g., .txt) ---
-      if (!isPdf) {
-        throw new Error(
-          `Unsupported file type for OCR. Only PDF and images are supported. Got: ${path.extname(filePath)}`,
-        );
-      }
-
-      // --- CASE 3: PDF files ---
-      // -- Get pageNumber --
-      const pdfBuffet = fs.readFileSync(filePath);
-      const pdfInfo = await pdf(pdfBuffet);
-
-      if (pdfInfo.text && pdfInfo.text.trim().length > 20) {
-        // Return if PDF has embedded text
-        console.log('📄 PDF has embedded text, skipping OCR.');
-        return { text: pdfInfo.text };
-      }
-
-      const pageCount = pdfInfo.numpages;
-
-      if (!pageCount || pageCount === 0) return { text: '' };
-
-      // Create: "uploads/temp" if not exists
-      const tempDir = path.join(process.cwd(), 'uploads', 'temp');
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      // List pages: convert(1) => page 1
-      console.log('📄 PDF scanned → OCR');
-      const convert = fromPath(filePath, {
-        density: 200, // Tăng DPI để OCR chính xác hơn (từ 200 lên 300)
-        saveFilename: `ocr-${Date.now()}`, // Temporary filename
-        savePath: tempDir,
-        format: 'png',
-        width: 1700, // Tăng kích thước để giữ chi tiết (từ 1200 lên 2400)
-        height: 2400,
-      });
-
-      const convertPromises: Promise<any>[] = [];
-      for (let page = 1; page <= pageCount; page++) {
-        convertPromises.push(convert(page, { responseType: 'image' }));
-      }
-      const pageImages = await Promise.all(convertPromises);
-      console.log('✅ PDF converted to images');
-
-      // 5️⃣ OCR tất cả trang song song với worker pool
-      console.log(`🔍 Running OCR on ${pageCount} pages...`);
-
-      const ocrPromises = pageImages.map(async (img: any, index: number) => {
-        const worker = this.getWorker(index);
-
-        const prep = await this.preprocessImage(img.path);
-
-        const res = await worker.recognize(prep);
-
-        return {
-          text: res.data.text,
-          path: img.path,
-          prepPath: prep, // Lưu đường dẫn file preprocessed
-          page: index + 1,
-        };
-      });
-
-      const results = await Promise.all(ocrPromises);
-      console.log('✅ OCR completed');
-
-      // 6️⃣ Ghép text theo thứ tự trang
-      const allText = results
-        .sort((a, b) => a.page - b.page)
-        .map((r) => this.normalizeText(r.text))
-        .join('\n');
-
-      // 7️⃣ Xoá file ảnh tạm (cả gốc và preprocessed)
-      results.forEach((r) => {
-        try {
-          // Xóa file gốc
-          if (fs.existsSync(r.path)) {
-            fs.unlinkSync(r.path);
-          }
-          // Xóa file preprocessed
-          if (r.prepPath && fs.existsSync(r.prepPath)) {
-            fs.unlinkSync(r.prepPath);
-          }
-        } catch (error) {
-          console.warn(`⚠️ Cannot delete temp file: ${r.path}`, error.message);
-        }
-      });
-
-      return { text: allText };
-    } catch (error) {
-      console.log('OCR Error: ', error);
-      throw error;
-    }
-  }
-
-  // Normalize text: nối từ ngắt dòng, gộp khoảng trắng, sửa lỗi OCR phổ biến tiếng Việt
-  private normalizeText(text: string): string {
-    const normalized = text
-      // Nối từ bị ngắt dòng
-      .replace(/-\s*\n\s*/g, '')
-      // Giữ nguyên xuống dòng đơn, chỉ gộp xuống dòng nhiều
-      .replace(/\n{3,}/g, '\n\n')
-      // Chuẩn hóa space (không gộp xuống dòng)
-      .replace(/[ \t]+/g, ' ')
-      // Remove brand watermarks
-      .replace(/Scanned with[\s\S]*$/gi, '')
-      // Sửa lỗi OCR phổ biến tiếng Việt
-      .replace(/\bl\b/g, 'I') // l đơn -> I
-      .replace(/ĐẠl/g, 'ĐẠI')
-      .replace(/HỘl/g, 'HỘI')
-      .replace(/TRUẬT/g, 'THUẬT')
-      .replace(/lẼN/g, 'MIỄN')
-      // Loại bỏ ký tự lỗi OCR phổ biến
-      .replace(/[¬]/g, '-')
-      .replace(/[‹›«»]/g, '"')
-      // Loại bỏ các ký tự lạ không phải chữ cái, số, dấu câu thông thường
-      .replace(
-        /[^\w\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđĐÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸ.,;:!?()\-"/\n]/g,
-        ' ',
-      )
-      // Gộp space thừa sau khi xử lý
-      .replace(/[ \t]+/g, ' ')
-      .trim();
-
-    // Đếm diacritics để debug
-    const diacriticCount = (
-      normalized.match(
-        /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/gi,
-      ) || []
-    ).length;
-    if (diacriticCount > 0) {
-      console.log(`Detected ${diacriticCount} diacritics`);
-    }
-
-    return normalized;
-  }
-
-  private async preprocessImage(imgPath: string): Promise<string> {
-    const outPath = imgPath.replace('.png', '-prep.png');
-
-    const img = sharp(imgPath);
-    const meta = await img.metadata();
-
-    const topCut = Math.floor(meta.height * 0.03); // 1000px => cut 30px
-    const bottomCut = Math.floor(meta.height * 0.03);
-
-    // Chỉ cắt trái/phải nếu ảnh quá rộng (scan lệch)
-    // aspect ratio: width / height
-    // < 1 là ảnh dọc, 0.75 là tỉ lệ phổ biến của trang A4
-    const sideCut =
-      meta.width / meta.height > 0.75 ? Math.floor(meta.width * 0.012) : 0;
-
-    await img
-      .extract({
-        left: sideCut,
-        top: topCut,
-        width: meta.width - sideCut * 2, // cut left/right
-        height: meta.height - topCut - bottomCut, // cut top/bottom
-      })
-      .grayscale()
-      .normalize()
-      .sharpen({ sigma: 0.5 })
-      // .threshold(115)
-      .median(1)
-      .toFile(outPath);
-
-    return outPath;
-  }
-
-  async onModuleDestroy() {
-    console.log('🛑 Terminating OCR workers...');
-    await Promise.all(this.workers.map((w) => w.terminate()));
-  }
-}
-
-```
-
-### src\ingest\loaders\pdf.loader.ts
-
-```ts
-import { Injectable } from '@nestjs/common';
-import pdfParse from 'pdf-parse';
-import * as fs from 'fs';
-
-// Type definitions for pdf.js objects
-interface TextItem {
-  str: string;
-  transform: number[];
-}
-
-interface TextContent {
-  items: TextItem[];
-}
-
-interface PageData {
-  pageNumber: number;
-  getTextContent(options?: {
-    normalizeWhitespace?: boolean;
-    disableCombineTextItems?: boolean;
-  }): Promise<TextContent>;
-}
-
-@Injectable()
-export class PdfService {
-  private pageTexts: Map<number, string> = new Map();
-
-  async load(filePath: string): Promise<{ page: number; text: string }[]> {
-    // Reset page texts for new document
-    this.pageTexts.clear();
-
-    // Read PDF file as buffer
-    const dataBuffer = fs.readFileSync(filePath);
-
-    // Parse PDF with pdf-parse
-    await pdfParse(dataBuffer, {
-      pagerender: (pageData: PageData) => this.renderPage(pageData),
-    });
-
-    // Convert Map to array sorted by page number
-    const result = Array.from(this.pageTexts.entries())
-      .sort((a, b) => a[0] - b[0])
-      .map(([pageNum, text]) => ({
-        page: pageNum,
-        text: text,
-      }));
-
-    return result;
-  }
-
-  private async renderPage(pageData: PageData): Promise<string> {
-    const render_options = {
-      normalizeWhitespace: false,
-      disableCombineTextItems: false,
-    };
-
-    const textContent = await pageData.getTextContent(render_options);
-    const strings = textContent.items.map((item) => item.str);
-    const pageText = strings.join(' ') + '\n';
-
-    // Store text by page number
-    this.pageTexts.set(pageData.pageNumber, pageText);
-
-    return pageText;
   }
 }
 
@@ -3003,8 +2907,7 @@ export class PdfService {
 ```ts
 import { Injectable, Logger } from '@nestjs/common';
 import { CHUNK_SIZE, CHUNK_OVERLAP } from '../../constant/index.constant.js';
-import { MarkdownTextSplitter } from '@langchain/textsplitters';
-import { randomUUID } from 'node:crypto';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
 export type ChunkResult = {
   content: string;
@@ -3014,21 +2917,14 @@ export type ChunkResult = {
 
 export type MarkdownProp = { content: string; page: number };
 
-// Alias for backward compatibility
 @Injectable()
 export class TextSplitterService {
   private readonly logger = new Logger(TextSplitterService.name);
 
-  // private readonly HEADER_TO_SPLIT = [
-  //   ['#', 'Header 1'],
-  //   ['##', 'Header 2'],
-  //   ['###', 'Header 3'],
-  // ];
-
   async splitToMarkdown(
     markdownInputs: MarkdownProp[],
   ): Promise<ChunkResult[]> {
-    if (!markdownInputs) {
+    if (!markdownInputs || markdownInputs.length === 0) {
       this.logger.warn('Empty markdown text received for splitting.');
       return [];
     }
@@ -3036,281 +2932,39 @@ export class TextSplitterService {
     const texts = markdownInputs.map((item) => item.content);
     const metadata = markdownInputs.map((item) => ({
       page: item.page,
-      // Thêm các metadata khác từ input nếu cần
     }));
 
-    const splitter = new MarkdownTextSplitter({
-      chunkSize: CHUNK_SIZE,
-      chunkOverlap: CHUNK_OVERLAP,
-      // keepSeparator: true,
+    // Logic: Cố gắng giữ văn bản liền mạch, chỉ cắt khi vượt quá CHUNK_SIZE
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: CHUNK_SIZE || 1000,
+      chunkOverlap: CHUNK_OVERLAP || 200,
+      separators: [
+        '\n\n', // Ưu tiên 1: Cắt theo đoạn văn (giữ header dính với body)
+        '\n', // Ưu tiên 2: Xuống dòng
+        '. ', // Ưu tiên 3: Kết thúc câu
+        '? ',
+        '! ',
+        ' ', // Ưu tiên 4: Dấu cách
+        '', // Cuối cùng: Cắt ký tự
+      ],
+      // keepSeparator: true, // Giữ lại ký tự phân cách để văn bản tự nhiên hơn
     });
 
     const docsSplitted = await splitter.createDocuments(texts, metadata);
+
     this.logger.log(
-      `Start splitting: Generated ${docsSplitted.length} parent chunks.`,
+      `Splitting completed: Processed ${texts.length} pages into ${docsSplitted.length} chunks.`,
     );
 
     let globalChildIndex = 0;
 
     return docsSplitted.map((doc) => ({
-      id: randomUUID(),
       content: doc.pageContent,
       chunkIndex: globalChildIndex++,
       metadata: doc.metadata || {},
     }));
   }
 }
-
-//  === SMALL TO BIG VERSION ===
-// export type ChildChunkResult = {
-//   id: string;
-//   content: string;
-//   chunkIndex: number;
-//   metadata: Record<string, any>;
-// };
-
-// export type ParentChunkResult = {
-//   content: string;
-//   metadata: Record<string, any>;
-//   children: ChildChunkResult[];
-// };
-// export class TextSplitterService {
-//   private readonly logger = new Logger(TextSplitterService.name);
-
-//   private readonly HEADER_TO_SPLIT = [
-//     ['#', 'Header 1'],
-//     ['##', 'Header 2'],
-//     ['###', 'Header 3'],
-//   ];
-
-//   async splitToMarkdown(markdownText: string[]): Promise<ParentChunkResult[]> {
-//     if (!markdownText) {
-//       this.logger.warn('Empty markdown text received for splitting.');
-//       return [];
-//     }
-
-//     const parentSplitter = new MarkdownTextSplitter({
-//       chunkSize: PARENT_CHUNK_SIZE,
-//       chunkOverlap: PARENT_CHUNK_OVERLAP,
-//       // keepSeparator: true,
-//     });
-
-//     const parentDocs = await parentSplitter.createDocuments(markdownText);
-//     this.logger.log(
-//       `Start splitting: Generated ${parentDocs.length} parent chunks.`,
-//     );
-
-//     const childrenSplitter = new MarkdownTextSplitter({
-//       chunkSize: CHILD_CHUNK_SIZE,
-//       chunkOverlap: CHILD_CHUNK_OVERLAP,
-//     });
-
-//     const result: ParentChunkResult[] = [];
-//     let globalChildIndex = 0;
-//     for (const parentDoc of parentDocs) {
-//       const childDocs = await childrenSplitter.createDocuments([
-//         parentDoc.pageContent,
-//       ]);
-
-//       // Map sang format ChildChunkResult
-//       const childrenNodes: ChildChunkResult[] = childDocs.map((child) => ({
-//         id: randomUUID(),
-//         content: child.pageContent,
-//         chunkIndex: globalChildIndex++,
-//         // Merge metadata của cha vào con (để sau này filter nếu cần)
-//         metadata: {
-//           ...parentDoc.metadata,
-//           ...child.metadata,
-//         },
-//       }));
-
-//       result.push({
-//         content: parentDoc.pageContent,
-//         metadata: parentDoc.metadata,
-//         children: childrenNodes,
-//       });
-//     }
-
-//     return result;
-//   }
-// }
-// OLD version
-
-// import { Injectable } from '@nestjs/common';
-// import { CHUNK_SIZE, CHUNK_OVERLAP } from '../../constant/index.constant.js';
-
-// export type ChunkResult = {
-//   text: string;
-//   page: number;
-//   chunkIndex: number;
-//   startOffset: number;
-//   endOffset: number;
-// };
-
-// @Injectable()
-// export class TextSplitterService {
-//   // Thứ tự ưu tiên: Ngắt đoạn đôi -> Đoạn đơn -> Câu -> Mệnh đề -> Từ
-//   private readonly SEPARATORS = [
-//     '\n\n',
-//     '\n',
-//     '. ',
-//     '? ',
-//     '! ',
-//     '; ',
-//     ': ', // Thêm dấu hai chấm
-//     ', ',
-//     ' ',
-//     '', // Fallback cuối cùng: cắt từng ký tự nếu không tìm thấy gì
-//   ];
-
-//   splitPdfPages(pages: { page: number; text: string }[]): ChunkResult[] {
-//     const chunks: ChunkResult[] = [];
-//     let globalOffset = 0;
-//     let chunkIndex = 0;
-
-//     for (const p of pages) {
-//       const pageText = p.text;
-
-//       // Xử lý trang rỗng
-//       if (!pageText || pageText.length === 0) {
-//         continue; // Offset không đổi vì độ dài = 0
-//       }
-
-//       let localStart = 0;
-
-//       while (localStart < pageText.length) {
-//         // 1. Xác định điểm cắt lý tưởng (Hard Limit)
-//         let localEnd = Math.min(localStart + CHUNK_SIZE, pageText.length);
-
-//         // 2. Tìm điểm cắt ngữ nghĩa (Semantic Boundary)
-//         // Chỉ tìm nếu chưa hết văn bản
-//         if (localEnd < pageText.length) {
-//           const semanticEnd = this.findNearestSeparator(
-//             pageText,
-//             localStart,
-//             localEnd,
-//           );
-//           if (semanticEnd !== -1) {
-//             localEnd = semanticEnd;
-//           }
-//         }
-
-//         // 3. Lấy raw text
-//         const rawChunkText = pageText.slice(localStart, localEnd);
-
-//         // 4. XỬ LÝ TRIM VÀ OFFSET CHÍNH XÁC (QUAN TRỌNG)
-//         // Ta cần tìm vị trí thực của chữ cái đầu tiên và cuối cùng trong rawChunkText
-//         // để offset trả về KHÔNG bao gồm khoảng trắng thừa ở đầu/cuối.
-//         if (rawChunkText.trim().length > 0) {
-//           // Tính toán offset nội bộ để trim
-//           const startTrimDelta =
-//             rawChunkText.length - rawChunkText.trimStart().length;
-//           const endTrimDelta =
-//             rawChunkText.length - rawChunkText.trimEnd().length;
-
-//           const realStartOffset = globalOffset + localStart + startTrimDelta;
-//           const realEndOffset = globalOffset + localEnd - endTrimDelta;
-
-//           chunks.push({
-//             text: rawChunkText.trim(),
-//             page: p.page,
-//             chunkIndex: chunkIndex,
-//             startOffset: realStartOffset,
-//             endOffset: realEndOffset,
-//           });
-//           chunkIndex++;
-//         }
-
-//         // 5. Chuẩn bị cho vòng lặp sau (Overlap)
-//         if (localEnd >= pageText.length) {
-//           break;
-//         }
-
-//         // Tính overlap
-//         const idealNextStart = Math.max(localStart, localEnd - CHUNK_OVERLAP);
-
-//         // Tìm điểm bắt đầu "đẹp" cho chunk sau (tránh cắt giữa từ)
-//         localStart = this.findSmartNextStart(
-//           pageText,
-//           idealNextStart,
-//           localEnd,
-//         );
-//       }
-
-//       globalOffset += pageText.length;
-//     }
-
-//     return chunks;
-//   }
-
-//   /**
-//    * TỐI ƯU HIỆU NĂNG:
-//    * Không dùng slice() để tạo chuỗi con mới. Dùng lastIndexOf với tham số position.
-//    */
-//   private findNearestSeparator(
-//     text: string,
-//     start: number,
-//     limit: number,
-//   ): number {
-//     // Chỉ tìm ngược lại trong khoảng 40% cuối của chunk
-//     // Để đảm bảo chunk không bị quá ngắn (ví dụ chunk 1000 mà cắt ở ký tự thứ 10)
-//     const minSearchIndex = Math.max(
-//       start,
-//       limit - Math.floor(CHUNK_SIZE * 0.4),
-//     );
-
-//     for (const sep of this.SEPARATORS) {
-//       if (sep === '') return limit; // Fallback hard cut
-
-//       // Tìm separator cuối cùng xuất hiện TRƯỚC limit
-//       const lastIndex = text.lastIndexOf(sep, limit);
-
-//       // Quan trọng: lastIndex phải >= minSearchIndex để đảm bảo chunk đủ dài
-//       if (lastIndex !== -1 && lastIndex >= minSearchIndex) {
-//         // Cắt SAU separator (ví dụ sau dấu chấm)
-//         return lastIndex + sep.length;
-//       }
-//     }
-
-//     return -1; // Fallback
-//   }
-
-//   private findSmartNextStart(
-//     text: string,
-//     idealStart: number,
-//     previousEnd: number,
-//   ): number {
-//     if (idealStart <= 0) return 0;
-//     if (idealStart >= text.length) return text.length;
-
-//     // Nếu ngay tại idealStart đã là ký tự bắt đầu từ mới (trước đó là space) -> Tốt
-//     if (text[idealStart - 1] === ' ' || text[idealStart - 1] === '\n') {
-//       return idealStart;
-//     }
-
-//     // Nếu không, lùi lại tìm khoảng trắng gần nhất
-//     // Giới hạn lùi tối đa 50 ký tự để tránh chunk sau bị overlap quá nhiều (thừa thãi)
-//     const searchLimit = Math.max(0, idealStart - 50);
-
-//     // Tìm space hoặc newline gần nhất phía trước
-//     const lastSpace = text.lastIndexOf(' ', idealStart);
-//     const lastNewline = text.lastIndexOf('\n', idealStart);
-
-//     const bestStart = Math.max(lastSpace, lastNewline);
-
-//     if (bestStart !== -1 && bestStart >= searchLimit) {
-//       return bestStart + 1; // Bắt đầu sau dấu cách
-//     }
-
-//     // Nếu từ quá dài (dài hơn 50 ký tự không có dấu cách), đành cắt giữa từ
-//     return idealStart;
-//   }
-
-//   splitText(text: string): ChunkResult[] {
-//     const pages = [{ page: 1, text }];
-//     return this.splitPdfPages(pages);
-//   }
-// }
 
 ```
 
@@ -3680,26 +3334,74 @@ bootstrap();
 
 ```
 
-### src\pipeline\pipeline.module.ts
+### src\notification\notification.controller.ts
 
 ```ts
-import { Module } from '@nestjs/common';
-import { PipelineService } from './pipeline.service';
+import { Controller, Query, Sse, Post, Body, Get } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { filter, fromEvent, map, Observable } from 'rxjs';
+import { Public } from '../auth/decorators/public.decorator';
 
-@Module({
-  providers: [PipelineService],
-})
-export class PipelineModule {}
+@Controller('notifications')
+export class NotificationController {
+    constructor(private eventEmitter: EventEmitter2) { }
+
+    @Sse('sse')
+    sse(@Query('userId') userId: string): Observable<MessageEvent> {
+        return fromEvent(this.eventEmitter, 'system.notification').pipe(
+            // filter event by userId
+            filter((event: any) => event.userId === userId),
+
+            // mapping to SSE format
+            map((event: any) => {
+                const { type, userId, ...payload } = event;
+                return {
+                    data: JSON.stringify({
+                        type,
+                        payload,
+                        timestamp: new Date().toISOString()
+                    })
+                } as MessageEvent
+            })
+        );
+    }
+
+    @Public()
+    @Post('test-emit')
+    testEmit(@Body() body: { userId: string; type: string; status: string; message: string }) {
+        const { userId, type, status, message } = body;
+
+        this.eventEmitter.emit('system.notification', {
+            type: type || 'DOCUMENT_PROCESSED',
+            userId: userId || 'test-user-001',
+            fileId: `test-file-${Date.now()}`,
+            projectId: 'test-project-001',
+            status: status || 'DONE',
+            message: message || 'Test notification',
+        });
+
+        return {
+            success: true,
+            message: 'Test notification emitted',
+            data: { userId, type, status }
+        };
+    }
+}
 
 ```
 
-### src\pipeline\pipeline.service.ts
+### src\notification\notification.module.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { NotificationController } from './notification.controller';
 
-@Injectable()
-export class PipelineService {}
+@Module({
+    imports: [],
+    controllers: [NotificationController],
+    providers: [],
+})
+export class NotificationModule { }
 
 ```
 
@@ -3798,13 +3500,6 @@ export class UpdateProjectDto {
   @IsBoolean({ message: 'isArchived must be a boolean' })
   isArchived?: boolean;
 }
-
-```
-
-### src\project\entities\project.entity.ts
-
-```ts
-export class Project {}
 
 ```
 
@@ -4007,7 +3702,7 @@ export class ProjectService {
     private prisma: PrismaService,
     private readonly chatService: ChatService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE NEW PROJECT --
   async createNewProject(createProjectDto: CreateProjectDto) {
@@ -4037,9 +3732,9 @@ export class ProjectService {
       );
     }
 
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       where: { projectId: projectId },
-      omit: { userId: true, projectId: true, messages: true },
+      omit: { userId: true, projectId: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -4051,7 +3746,7 @@ export class ProjectService {
   //   chatId: string,
   // ) {
   //   // TODO: CHECK EXISTED
-  //   return await this.prisma.chats.findUnique({
+  //   return await this.prisma.chat.findUnique({
   //     where: { id: chatId, userId: userId, projectId: projectId },
   //     omit: { userId: true, projectId: true },
   //   });
@@ -4113,6 +3808,148 @@ export class ProjectService {
     return `This action returns a #${id} project`;
   }
 }
+
+```
+
+### src\queue\ingest.processor.ts
+
+```ts
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
+import { Logger } from '@nestjs/common';
+import { IngestService } from '../ingest/ingest.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { DocumentStatus } from '@prisma/client';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
+export interface IngestJobData {
+    fileId: string;
+    filePath: string;
+    userId: string;
+    projectId?: string;
+    originalFileName?: string;
+}
+
+@Processor('ingest-queue')
+export class IngestProcessor extends WorkerHost {
+    private readonly logger = new Logger(IngestProcessor.name);
+
+    constructor(
+        private readonly ingestService: IngestService,
+        private readonly prisma: PrismaService,
+        private readonly eventEmitter: EventEmitter2,
+    ) {
+        super();
+    }
+
+    async process(job: Job<IngestJobData>): Promise<number> {
+        const { fileId, filePath, userId, projectId, originalFileName } = job.data;
+
+        this.logger.log(`🚀 Start processing job ${job.id} for file ${fileId}`);
+
+        try {
+            // 1. Update Status: PROCESSING
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: { status: DocumentStatus.PROCESSING },
+            });
+
+            // 2. Call existing Ingest logic (Cloud loader -> Split -> Embed -> PGVector)
+            const chunks = await this.ingestService.ingestDocument(
+                filePath,
+                fileId,
+                userId,
+                projectId,
+                originalFileName,
+            );
+
+            // 3. Update Status: DONE
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: {
+                    status: DocumentStatus.DONE,
+                    pageCount: chunks.length, // TODO: Wrong pageCount
+                },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'DONE',
+                message: 'Xử lý thành công',
+            });
+
+            this.logger.log(
+                `✅ Completed job ${job.id}. Processed ${chunks.length} chunks.`,
+            );
+
+            return chunks.length;
+        } catch (error) {
+            this.logger.error(`❌ Job ${job.id} failed: ${error.message}`);
+
+            // 4. Update Status: ERROR with error message
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: {
+                    status: DocumentStatus.ERROR,
+                    errorMessage: error.message?.substring(0, 500), // Truncate long errors
+                },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'ERROR',
+                message: 'Xử lý thất bại',
+            });
+
+            throw error; // Re-throw for BullMQ retry mechanism
+        }
+    }
+}
+
+```
+
+### src\queue\queue.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { IngestProcessor } from './ingest.processor';
+import { IngestModule } from '../ingest/ingest.module';
+import { PrismaModule } from '../prisma/prisma.module';
+
+@Module({
+    imports: [
+        // BullModule.forRootAsync({
+        //     imports: [ConfigModule],
+        //     useFactory: (configService: ConfigService) => ({
+        //         connection: {
+        //             host: configService.get<string>('REDIS_HOST'),
+        //             port: configService.get<number>('REDIS_PORT'),
+        //             username: configService.get<string>('REDIS_USERNAME') || 'default',
+        //             password: configService.get<string>('REDIS_PASSWORD'),
+        //         },
+        //     }),
+        //     inject: [ConfigService],
+        // }),
+        BullModule.registerQueue({
+            name: 'ingest-queue',
+        }),
+        IngestModule,
+        PrismaModule,
+    ],
+    providers: [IngestProcessor],
+    exports: [BullModule],
+})
+export class QueueModule { }
 
 ```
 
@@ -4233,6 +4070,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
 import { CohereRerank } from '@langchain/cohere';
 import { Document } from '@langchain/core/documents';
+import { ConfigService } from '@nestjs/config';
 
 type MetadataDoc = {
   fileId?: string;
@@ -4246,7 +4084,7 @@ type MetadataDoc = {
   page?: number;
   title?: string;
   originalFileName?: string;
-};  
+};
 
 export interface ScoredDocument {
   pageContent: string;
@@ -4270,6 +4108,7 @@ export class RetrievalService {
   constructor(
     private vectorService: VectorService,
     private logger: Logger,
+    private configService: ConfigService,
   ) { }
 
   /**
@@ -4302,8 +4141,8 @@ export class RetrievalService {
     });
 
     const cohereRerank = new CohereRerank({
-      apiKey: process.env.COHERE_API_KEY, // Default
-      topN: this.FINAL_K, // Default 8
+      apiKey: this.configService.get<string>('COHERE_API_KEY'),
+      topN: this.FINAL_K,
       model: 'rerank-v4.0-pro',
     });
 
@@ -4312,7 +4151,7 @@ export class RetrievalService {
       query,
     );
 
-    console.log(rerankedDocuments);
+
 
     // Chuẩn hóa documents sang format dễ xử lý
     const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({
@@ -4377,13 +4216,6 @@ export class UpdateUserDto {
   name?: string;
   password?: string;
 }
-
-```
-
-### src\user\entities\user.entity.ts
-
-```ts
-export class User {}
 
 ```
 
@@ -4518,17 +4350,21 @@ export class UserService {
 
 ```
 
+### .env.example
+
+*(Unsupported file type)*
+
 ### API_ENDPOINTS.md
 
 ```md
 # 📘 Chatnary Backend API Endpoints
 
-*(NestJS · Prisma · PGVector · LangChainJS)*
+_(NestJS · Prisma · PGVector · LangChainJS)_
 
 ## Base URL
 
 ```
-http://localhost:8000/api/v1
+http://localhost:8080/api/v1
 ```
 
 ---
@@ -4537,7 +4373,7 @@ http://localhost:8000/api/v1
 
 ### **GET** `/docs`
 
-* API documents Backend
+- API documents Backend
 
 ---
 
@@ -4675,12 +4511,11 @@ authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjd
     "message": "User logged out successfully"
   }
 }
-
 ```
 
 # 📁 Projects
 
-*(Giống ChatGPT workspace — quản lý không gian dự án)*
+_(Giống ChatGPT workspace — quản lý không gian dự án)_
 
 ## Create Project
 
@@ -5042,7 +4877,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 // "data" exmaple
 // {
-//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link 
+//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link
 //   "title": "Tên hiển thị (Optional)",
 //   "description": "Mô tả ngắn",
 //   "authors": ["Tác giả A", "Tác giả B"],
@@ -5052,7 +4887,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 //   "accessLevel": "PRIVATE"  // hoặc "PUBLIC", "RESTRICTED"
 // }
 
-// FE phải stringify object này trước khi gửi 
+// FE phải stringify object này trước khi gửi
 // formData.append('data', JSON.stringify(metadata));
 
 ```
@@ -5224,13 +5059,9 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
       "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
       "title": "Giáo trình AI",
       "description": "Demo upload",
-      "authors": [
-        "Teacher A"
-      ],
+      "authors": ["Teacher A"],
       "subjects": [],
-      "tags": [
-        "AI"
-      ],
+      "tags": ["AI"],
       "documentType": "unknown",
       "publishedYear": 2024,
       "accessLevel": "PRIVATE",
@@ -5284,13 +5115,9 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
     "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
     "title": "Giáo trình AI",
     "description": "Demo upload",
-    "authors": [
-      "Teacher A"
-    ],
+    "authors": ["Teacher A"],
     "subjects": [],
-    "tags": [
-      "AI"
-    ],
+    "tags": ["AI"],
     "documentType": "unknown",
     "publishedYear": 2024,
     "accessLevel": "PRIVATE",
@@ -5363,12 +5190,14 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
   }
 }
 ```
+
 <!-- --------------------- CHAT MODULE --------------------- -->
+
 # 💬 Chat RAG Module
 
 ## Chat global
 
-*Will have projectId = null
+\*Will have projectId = null
 
 ### **POST** `/chat/global`
 
@@ -5453,7 +5282,145 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 }
 ```
 
-## New chat and Chat Session
+## Chat Stream (SSE)
+
+_Real-time streaming chat responses using Server-Sent Events_
+
+### **GET** `/chat/stream`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time streaming chat responses. Returns AI responses token-by-token with citations.
+
+**Query Parameters:**
+
+```
+message (required) - The user's question
+projectId (optional) - Project context for the chat
+chatId (optional) - Existing chat session ID
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <accessToken>
+Accept: text/event-stream
+```
+
+**Event Stream Format:**
+
+The endpoint sends multiple SSE events in sequence:
+
+1. **CITATIONS Event** - Document references found for the question
+
+```json
+{
+  "data": {
+    "type": "CITATIONS",
+    "content": [
+      {
+        "index": 0,
+        "snippet": "Preview text...",
+        "text": "Full chunk content",
+        "fileId": "uuid",
+        "fileUrl": "path/to/file.pdf",
+        "page": 1,
+        "score": 0.95,
+        "startOffset": 0,
+        "endOffset": 100,
+        "projectId": "uuid"
+      }
+    ],
+    "chatId": "uuid"
+  }
+}
+```
+
+2. **TOKEN Events** - AI response streamed word-by-word
+
+```json
+{
+  "data": {
+    "type": "TOKEN",
+    "content": "word "
+  }
+}
+```
+
+3. **DONE Event** - Signals completion
+
+```json
+{
+  "data": {
+    "type": "DONE"
+  }
+}
+```
+
+4. **ERROR Event** - If an error occurs
+
+```json
+{
+  "data": {
+    "type": "ERROR",
+    "content": "Error message"
+  }
+}
+```
+
+**Example Usage (JavaScript/TypeScript):**
+
+```javascript
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/chat/stream?message=${encodeURIComponent('Your question')}`,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  },
+);
+
+let fullAnswer = '';
+let citations = [];
+let chatId = null;
+
+eventSource.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+
+  switch (data.data.type) {
+    case 'CITATIONS':
+      citations = data.data.content;
+      chatId = data.data.chatId;
+      break;
+
+    case 'TOKEN':
+      fullAnswer += data.data.content;
+      // Update UI with streaming text
+      break;
+
+    case 'DONE':
+      eventSource.close();
+      // Finalize UI
+      break;
+
+    case 'ERROR':
+      console.error(data.data.content);
+      eventSource.close();
+      break;
+  }
+});
+
+eventSource.addEventListener('error', (error) => {
+  console.error('SSE connection error:', error);
+  eventSource.close();
+});
+```
+
+**Example cURL:**
+
+```bash
+curl -N -X GET "http://localhost:8080/api/v1/chat/stream?message=Your%20question" \
+  -H "Authorization: Bearer eyJhbGci..." \
+  -H "Accept: text/event-stream"
+```
 
 ### **POST** `/project/:projectId/chats/messages`
 
@@ -5462,8 +5429,8 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 **Query**:
 
-``` json
-// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat 
+```json
+// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat
 chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 ```
 
@@ -5521,7 +5488,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
             "endOffset": 7353,
             "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
             "startOffset": 6616
-          },
+          }
           // ...
         ]
       }
@@ -5572,9 +5539,9 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ```json
 {
-    // Just update 2 fields
-    "title": "Sinoo chat",
-    "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
+  // Just update 2 fields
+  "title": "Sinoo chat",
+  "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
 }
 ```
 
@@ -5616,6 +5583,96 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
   }
 }
 ```
+
+---
+
+# � Notifications (SSE)
+
+## Connect to SSE Stream
+
+### **GET** `/notifications/sse`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time notifications. Events are filtered by userId.
+
+**Query Parameters:**
+
+- `userId` (required): User ID to filter notifications
+
+**Authentication:** Required (JWT Bearer Token)
+
+**Example Connection:**
+
+```javascript
+const userId = 'user-123';
+const token = 'your-jwt-token';
+
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/notifications/sse?userId=${userId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  },
+);
+
+eventSource.onopen = () => {
+  console.log('✅ SSE Connected');
+};
+
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('📨 Notification:', data);
+
+  // Handle different event types
+  switch (data.type) {
+    case 'DOCUMENT_PROCESSED':
+      handleDocumentProcessed(data.payload);
+      break;
+    // Add more event types as needed
+  }
+};
+
+eventSource.onerror = (error) => {
+  console.error('❌ SSE Error:', error);
+  // Implement reconnection logic
+};
+
+// Clean up on component unmount
+// eventSource.close();
+```
+
+**Event Format:**
+
+```json
+{
+  "type": "DOCUMENT_PROCESSED",
+  "payload": {
+    "fileId": "abc-123",
+    "projectId": "project-456",
+    "status": "DONE",
+    "message": "Xử lý thành công"
+  },
+  "timestamp": "2026-01-15T03:30:00.000Z"
+}
+```
+
+**Event Types:**
+
+| Type                 | Description                   | Payload Fields                             |
+| -------------------- | ----------------------------- | ------------------------------------------ |
+| `DOCUMENT_PROCESSED` | Document processing completed | `fileId`, `projectId`, `status`, `message` |
+
+**Status Values:**
+
+- `DONE`: Processing completed successfully
+- `ERROR`: Processing failed
+
+**Notes:**
+
+- SSE connection is persistent and will automatically push events when they occur
+- No polling required
+- Events are only sent to the user who owns the resource
+- Connection will auto-reconnect on network issues (browser default behavior)
 
 ---
 
@@ -5669,9 +5726,11 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
     "@langchain/core": "^1.0.6",
     "@langchain/openai": "^1.1.2",
     "@langchain/textsplitters": "^1.0.0",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/event-emitter": "^3.0.1",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
@@ -5681,9 +5740,11 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
     "@prisma/adapter-pg": "6.9.0",
     "@prisma/client": "6.9.0",
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.66.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "express": "^5.2.1",
+    "ioredis": "^5.9.1",
     "joi": "^18.0.2",
     "llama-cloud-services": "^0.5.1",
     "lodash": "^4.17.21",

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -8,7 +8,7 @@ async function main() {
 
   const passwordHash = await bcrypt.hash('123456', 10);
 
-  const user = await prisma.users.upsert({
+  const user = await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {},
     create: {
@@ -16,11 +16,25 @@ async function main() {
       username: 'admin',
       name: 'Administrator',
       password: passwordHash,
+      role: Role.ADMIN,
+    },
+  });
+
+  // Create guest user
+  await prisma.user.upsert({
+    where: { email: 'sinoo@example.com' },
+    update: {},
+    create: {
+      email: 'sinoo@example.com',
+      username: 'sinoo',
+      name: 'sinoo',
+      password: passwordHash,
+      role: Role.USER,
     },
   });
 
   // 2. Create sample projects for this user
-  const project1 = await prisma.projects.create({
+  const project1 = await prisma.project.create({
     data: {
       name: 'AI Văn Bản',
       description: 'Project dùng để test RAG + OCR',
@@ -28,7 +42,7 @@ async function main() {
     },
   });
 
-  const project2 = await prisma.projects.create({
+  const project2 = await prisma.project.create({
     data: {
       name: 'Thư Viện Số',
       description: 'Project số hóa tài liệu PDF',

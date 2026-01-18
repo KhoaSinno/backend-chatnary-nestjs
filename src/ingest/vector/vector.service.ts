@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PgvectorService } from './pgvector.client';
 import { ChunkResult } from '../splitters/text-splitter';
+import { PrismaService } from '../../prisma/prisma.service';
 
 type Metadata = {
   fileId: string;
@@ -10,7 +11,7 @@ type Metadata = {
 };
 @Injectable()
 export class VectorService {
-  constructor(private readonly pgvectorService: PgvectorService) { }
+  constructor(private readonly pgvectorService: PgvectorService, private readonly prisma: PrismaService) { }
 
   // -- ADD DOCUMENTS TO VECTOR STORE --
   async addDocuments({
@@ -42,9 +43,11 @@ export class VectorService {
     projectId?: string,
   ) {
     const vectorStore = await this.pgvectorService.initVectorStore();
-    const filter: { userId: string; projectId?: string } = { userId };
-
-    if (projectId) filter.projectId = projectId;
+    // If projectId provided → filter by project only (for project members)
+    // If no projectId → filter by userId (global chat)
+    const filter: { userId?: string; projectId?: string } = projectId
+      ? { projectId }
+      : { userId };
 
     const results = await vectorStore.similaritySearch(query, k, filter);
     return results;
@@ -58,20 +61,41 @@ export class VectorService {
     projectId?: string,
   ) {
     const vectorStore = await this.pgvectorService.initVectorStore();
+    // If projectId provided → filter by project only (for project members)
+    // If no projectId → filter by userId (global chat)
+    const filter: { userId?: string; projectId?: string, fileId?: { in: string[] } } = projectId
+      ? { projectId }
+      : { userId };
 
-    const filter: { userId: string; projectId?: string } = { userId };
+    let filnalFilter = { ...filter };
 
-    if (projectId) filter.projectId = projectId;
+    if (projectId) {
+      // Fetch + Add fillter doc have isSelected = true
+      const activeDocs = await this.prisma.projectResources.findMany({
+        where: {
+          projectId,
+          isSelected: true,
+        }
+      })
+
+      const activeDocIds = activeDocs.map((doc) => doc.documentId);
+
+      if (projectId && activeDocIds.length === 0) {
+        return []; // Don't waste tokens searching if nothing is selected
+      }
+
+      filnalFilter = {
+        fileId: {
+          in: activeDocIds,
+        },
+      };
+    }
 
     const results = await vectorStore.similaritySearchWithScore(
       query,
       k,
-      filter,
+      filnalFilter,
     );
-
-    //  for (const [doc, score] of similaritySearchWithScoreResults) {
-    //   console.log(`* [SIM=${score.toFixed(3)}] ${doc.pageContent} [${JSON.stringify(doc.metadata)}]`);
-    // }
 
     return results;
   }

@@ -1,11 +1,11 @@
 # 📘 Chatnary Backend API Endpoints
 
-*(NestJS · Prisma · PGVector · LangChainJS)*
+_(NestJS · Prisma · PGVector · LangChainJS)_
 
 ## Base URL
 
 ```
-http://localhost:8000/api/v1
+http://localhost:8080/api/v1
 ```
 
 ---
@@ -14,7 +14,7 @@ http://localhost:8000/api/v1
 
 ### **GET** `/docs`
 
-* API documents Backend
+- API documents Backend
 
 ---
 
@@ -152,12 +152,11 @@ authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjd
     "message": "User logged out successfully"
   }
 }
-
 ```
 
 # 📁 Projects
 
-*(Giống ChatGPT workspace — quản lý không gian dự án)*
+_(Giống ChatGPT workspace — quản lý không gian dự án)_
 
 ## Create Project
 
@@ -519,7 +518,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 // "data" exmaple
 // {
-//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link 
+//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link
 //   "title": "Tên hiển thị (Optional)",
 //   "description": "Mô tả ngắn",
 //   "authors": ["Tác giả A", "Tác giả B"],
@@ -529,7 +528,7 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 //   "accessLevel": "PRIVATE"  // hoặc "PUBLIC", "RESTRICTED"
 // }
 
-// FE phải stringify object này trước khi gửi 
+// FE phải stringify object này trước khi gửi
 // formData.append('data', JSON.stringify(metadata));
 
 ```
@@ -701,13 +700,9 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
       "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
       "title": "Giáo trình AI",
       "description": "Demo upload",
-      "authors": [
-        "Teacher A"
-      ],
+      "authors": ["Teacher A"],
       "subjects": [],
-      "tags": [
-        "AI"
-      ],
+      "tags": ["AI"],
       "documentType": "unknown",
       "publishedYear": 2024,
       "accessLevel": "PRIVATE",
@@ -761,13 +756,9 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
     "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
     "title": "Giáo trình AI",
     "description": "Demo upload",
-    "authors": [
-      "Teacher A"
-    ],
+    "authors": ["Teacher A"],
     "subjects": [],
-    "tags": [
-      "AI"
-    ],
+    "tags": ["AI"],
     "documentType": "unknown",
     "publishedYear": 2024,
     "accessLevel": "PRIVATE",
@@ -840,12 +831,14 @@ documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
   }
 }
 ```
+
 <!-- --------------------- CHAT MODULE --------------------- -->
+
 # 💬 Chat RAG Module
 
 ## Chat global
 
-*Will have projectId = null
+\*Will have projectId = null
 
 ### **POST** `/chat/global`
 
@@ -930,7 +923,145 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 }
 ```
 
-## New chat and Chat Session
+## Chat Stream (SSE)
+
+_Real-time streaming chat responses using Server-Sent Events_
+
+### **GET** `/chat/stream`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time streaming chat responses. Returns AI responses token-by-token with citations.
+
+**Query Parameters:**
+
+```
+message (required) - The user's question
+projectId (optional) - Project context for the chat
+chatId (optional) - Existing chat session ID
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <accessToken>
+Accept: text/event-stream
+```
+
+**Event Stream Format:**
+
+The endpoint sends multiple SSE events in sequence:
+
+1. **CITATIONS Event** - Document references found for the question
+
+```json
+{
+  "data": {
+    "type": "CITATIONS",
+    "content": [
+      {
+        "index": 0,
+        "snippet": "Preview text...",
+        "text": "Full chunk content",
+        "fileId": "uuid",
+        "fileUrl": "path/to/file.pdf",
+        "page": 1,
+        "score": 0.95,
+        "startOffset": 0,
+        "endOffset": 100,
+        "projectId": "uuid"
+      }
+    ],
+    "chatId": "uuid"
+  }
+}
+```
+
+2. **TOKEN Events** - AI response streamed word-by-word
+
+```json
+{
+  "data": {
+    "type": "TOKEN",
+    "content": "word "
+  }
+}
+```
+
+3. **DONE Event** - Signals completion
+
+```json
+{
+  "data": {
+    "type": "DONE"
+  }
+}
+```
+
+4. **ERROR Event** - If an error occurs
+
+```json
+{
+  "data": {
+    "type": "ERROR",
+    "content": "Error message"
+  }
+}
+```
+
+**Example Usage (JavaScript/TypeScript):**
+
+```javascript
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/chat/stream?message=${encodeURIComponent('Your question')}`,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  },
+);
+
+let fullAnswer = '';
+let citations = [];
+let chatId = null;
+
+eventSource.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+
+  switch (data.data.type) {
+    case 'CITATIONS':
+      citations = data.data.content;
+      chatId = data.data.chatId;
+      break;
+
+    case 'TOKEN':
+      fullAnswer += data.data.content;
+      // Update UI with streaming text
+      break;
+
+    case 'DONE':
+      eventSource.close();
+      // Finalize UI
+      break;
+
+    case 'ERROR':
+      console.error(data.data.content);
+      eventSource.close();
+      break;
+  }
+});
+
+eventSource.addEventListener('error', (error) => {
+  console.error('SSE connection error:', error);
+  eventSource.close();
+});
+```
+
+**Example cURL:**
+
+```bash
+curl -N -X GET "http://localhost:8080/api/v1/chat/stream?message=Your%20question" \
+  -H "Authorization: Bearer eyJhbGci..." \
+  -H "Accept: text/event-stream"
+```
 
 ### **POST** `/project/:projectId/chats/messages`
 
@@ -939,8 +1070,8 @@ projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 **Query**:
 
-``` json
-// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat 
+```json
+// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat
 chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
 ```
 
@@ -998,7 +1129,7 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
             "endOffset": 7353,
             "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
             "startOffset": 6616
-          },
+          }
           // ...
         ]
       }
@@ -1049,9 +1180,9 @@ chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
 
 ```json
 {
-    // Just update 2 fields
-    "title": "Sinoo chat",
-    "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
+  // Just update 2 fields
+  "title": "Sinoo chat",
+  "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
 }
 ```
 
@@ -1093,6 +1224,352 @@ chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
   }
 }
 ```
+
+---
+
+# 🪧 Notifications (SSE)
+
+## Connect to SSE Stream
+
+### **GET** `/notifications/sse`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time notifications. Events are filtered by userId.
+
+**Query Parameters:**
+
+- `userId` (required): User ID to filter notifications
+
+**Authentication:** Required (JWT Bearer Token)
+
+**Example Connection:**
+
+```javascript
+const userId = 'user-123';
+const token = 'your-jwt-token';
+
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/notifications/sse?userId=${userId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  },
+);
+
+eventSource.onopen = () => {
+  console.log('✅ SSE Connected');
+};
+
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('📨 Notification:', data);
+
+  // Handle different event types
+  switch (data.type) {
+    case 'DOCUMENT_PROCESSED':
+      handleDocumentProcessed(data.payload);
+      break;
+    // Add more event types as needed
+  }
+};
+
+eventSource.onerror = (error) => {
+  console.error('❌ SSE Error:', error);
+  // Implement reconnection logic
+};
+
+// Clean up on component unmount
+// eventSource.close();
+```
+
+# 📚 Quiz
+
+## Generate Quiz
+
+### **POST** `/quiz/generate`
+
+**Body**
+
+```json
+{
+  "projectId": "${[ PROJECT_ID ]}",
+  "topic": "AI he sinh",
+  "numQuestions": 10,
+  "difficulty": "MEDIUM",
+  "timeLimit": 30
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "id": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+    "title": "AI he sinh",
+    "projectId": "776fb636-f29d-4419-8b6d-afe47b427425",
+    "difficulty": "MEDIUM",
+    "timeLimit": 30,
+    "createdAt": "2026-01-15T10:59:22.343Z",
+    "questions": [
+      {
+        "id": "076e267c-654f-4e78-aacc-cff56dc6f0cd",
+        "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+        "questionText": "Thành phần nào sau đây KHÔNG phải là một phần của hệ sinh (production system)?",
+        "options": [
+          "A. Tập luật sinh (production rules)",
+          "B. Bộ nhớ làm việc (working memory)",
+          "C. Bộ giải quyết tranh chấp (conflict resolver)",
+          "D. Bộ giải mã tín hiệu (signal decoder)"
+        ],
+        "correctAnswer": "D",
+        "explanation": "Hệ sinh bao gồm tập luật sinh, bộ nhớ làm việc, và cơ chế giải quyết tranh chấp. Bộ giải mã tín hiệu không phải là thành phần của hệ sinh.",
+        "referenceChunkId": null
+      },
+      {
+        "id": "3e1b078f-3fb4-4fab-86d0-4fcd11a4217a",
+        "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+        "questionText": "Trong hệ sinh, phần điều kiện của một luật sinh có vai trò gì?",
+        "options": [
+          "A. Xác định khi nào luật có thể áp dụng",
+          "B. Thực hiện các bước giải toán",
+          "C. Lưu trữ trạng thái hiện tại",
+          "D. Giải quyết tranh chấp giữa các luật"
+        ],
+        "correctAnswer": "A",
+        "explanation": "Phần điều kiện của luật sinh là mẫu để đối sánh với bộ nhớ làm việc, xác định khi nào luật có thể áp dụng.",
+        "referenceChunkId": null
+      },
+      {
+        "id": "03e3183f-a8ac-48ac-a6ec-5fc7913ed4a4",
+        "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+        "questionText": "Tính module của luật sinh trong hệ sinh thể hiện ở điểm nào?",
+        "options": [
+          "A. Các luật sinh có thể gọi trực tiếp các luật khác",
+          "B. Các luật sinh không có sự tương tác cú pháp với nhau",
+          "C. Các luật sinh chia sẻ biến toàn cục",
+          "D. Các luật sinh luôn thực hiện theo thứ tự cố định"
+        ],
+        "correctAnswer": "B",
+        "explanation": "Tính module nghĩa là các luật sinh độc lập về cú pháp, không gọi trực tiếp nhau và chỉ tác động gián tiếp qua bộ nhớ làm việc.",
+        "referenceChunkId": null
+      }
+      // ...
+    ],
+    "project": {
+      "id": "776fb636-f29d-4419-8b6d-afe47b427425",
+      "name": "AI Văn Bản"
+    }
+  }
+}
+```
+
+## Submit Quiz
+
+### **POST** `/quiz/submit`
+
+**Body**
+
+```json
+{
+  "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+  "answers": {
+    "076e267c-654f-4e78-aacc-cff56dc6f0cd": "D",
+    "3e1b078f-3fb4-4fab-86d0-4fcd11a4217a": "A",
+    "03e3183f-a8ac-48ac-a6ec-5fc7913ed4a4": "A",
+    "df401e5e-6ee3-440f-a54f-f884f96e2c38": "A",
+    "45bd4c15-d97b-45e1-bb65-a7a72da1e302": "A"
+    // ...
+  }
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "attemptId": "2d51321a-b98f-4097-ad6e-4fb1f084619e",
+    "score": 2,
+    "totalQuestions": 10,
+    "details": [
+      {
+        "questionId": "076e267c-654f-4e78-aacc-cff56dc6f0cd",
+        "userAnswer": "D",
+        "correctAnswer": "D",
+        "isCorrect": true,
+        "explanation": "Hệ sinh bao gồm tập luật sinh, bộ nhớ làm việc, và cơ chế giải quyết tranh chấp. Bộ giải mã tín hiệu không phải là thành phần của hệ sinh."
+      },
+      {
+        "questionId": "3e1b078f-3fb4-4fab-86d0-4fcd11a4217a",
+        "userAnswer": "A",
+        "correctAnswer": "A",
+        "isCorrect": true,
+        "explanation": "Phần điều kiện của luật sinh là mẫu để đối sánh với bộ nhớ làm việc, xác định khi nào luật có thể áp dụng."
+      },
+      {
+        "questionId": "03e3183f-a8ac-48ac-a6ec-5fc7913ed4a4",
+        "userAnswer": "A",
+        "correctAnswer": "B",
+        "isCorrect": false,
+        "explanation": "Tính module nghĩa là các luật sinh độc lập về cú pháp, không gọi trực tiếp nhau và chỉ tác động gián tiếp qua bộ nhớ làm việc."
+      },
+      {
+        "questionId": "df401e5e-6ee3-440f-a54f-f884f96e2c38",
+        "userAnswer": "A",
+        "correctAnswer": "B",
+        "isCorrect": false,
+        "explanation": "Chiến lược tính chi tiết ưu tiên luật có nhiều điều kiện hơn, vì nó đối sánh với ít mẫu hơn và cụ thể hơn."
+      },
+      {
+        "questionId": "45bd4c15-d97b-45e1-bb65-a7a72da1e302",
+        "userAnswer": "A",
+        "correctAnswer": "C",
+        "isCorrect": false,
+        "explanation": "Theo tập luật sinh của trò đố 8 ô, nếu ô trống không ở cạnh phải thì hành động là chuyển ô trống sang phải."
+      }
+      // ...
+    ]
+  }
+}
+```
+
+## Get history attempts
+
+### **GET** `/quiz/history`
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "2d51321a-b98f-4097-ad6e-4fb1f084619e",
+      "userId": "3869ede8-8ca8-4a25-8d67-688cf7d55f9d",
+      "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+      "score": 2,
+      "userAnswers": {
+        "03e3183f-a8ac-48ac-a6ec-5fc7913ed4a4": "A",
+        "076e267c-654f-4e78-aacc-cff56dc6f0cd": "D",
+        "3e1b078f-3fb4-4fab-86d0-4fcd11a4217a": "A",
+        "45bd4c15-d97b-45e1-bb65-a7a72da1e302": "A",
+        "df401e5e-6ee3-440f-a54f-f884f96e2c38": "A"
+      },
+      "startedAt": "2026-01-16T01:44:16.983Z",
+      "finishedAt": "2026-01-16T01:44:16.983Z",
+      "quiz": {
+        "title": "AI he sinh",
+        "difficulty": "MEDIUM"
+      }
+    }
+  ]
+}
+```
+
+## Get history attempts detail
+
+### **GET** `/quiz/history/:attemptId`
+
+**Params**: `attemptId`: uuid
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "2d51321a-b98f-4097-ad6e-4fb1f084619e",
+    "userId": "3869ede8-8ca8-4a25-8d67-688cf7d55f9d",
+    "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+    "score": 2,
+    "userAnswers": {
+      "03e3183f-a8ac-48ac-a6ec-5fc7913ed4a4": "A",
+      "076e267c-654f-4e78-aacc-cff56dc6f0cd": "D"
+    },
+    "startedAt": "2026-01-16T01:44:16.983Z",
+    "finishedAt": "2026-01-16T01:44:16.983Z",
+    "quiz": {
+      "id": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+      "title": "AI he sinh",
+      "projectId": "776fb636-f29d-4419-8b6d-afe47b427425",
+      "difficulty": "MEDIUM",
+      "timeLimit": 30,
+      "createdAt": "2026-01-15T10:59:22.343Z",
+      "questions": [
+        {
+          "id": "076e267c-654f-4e78-aacc-cff56dc6f0cd",
+          "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+          "questionText": "Thành phần nào sau đây KHÔNG phải là một phần của hệ sinh (production system)?",
+          "options": [
+            "A. Tập luật sinh (production rules)",
+            "B. Bộ nhớ làm việc (working memory)",
+            "C. Bộ giải quyết tranh chấp (conflict resolver)",
+            "D. Bộ giải mã tín hiệu (signal decoder)"
+          ],
+          "correctAnswer": "D",
+          "explanation": "Hệ sinh bao gồm tập luật sinh, bộ nhớ làm việc, và cơ chế giải quyết tranh chấp. Bộ giải mã tín hiệu không phải là thành phần của hệ sinh.",
+          "referenceChunkId": null
+        },
+        {
+          "id": "3e1b078f-3fb4-4fab-86d0-4fcd11a4217a",
+          "quizId": "52dcfb89-d673-4b3c-801b-2a58dde3b701",
+          "questionText": "Trong hệ sinh, phần điều kiện của một luật sinh có vai trò gì?",
+          "options": [
+            "A. Xác định khi nào luật có thể áp dụng",
+            "B. Thực hiện các bước giải toán",
+            "C. Lưu trữ trạng thái hiện tại",
+            "D. Giải quyết tranh chấp giữa các luật"
+          ],
+          "correctAnswer": "A",
+          "explanation": "Phần điều kiện của luật sinh là mẫu để đối sánh với bộ nhớ làm việc, xác định khi nào luật có thể áp dụng.",
+          "referenceChunkId": null
+        }
+        // ...
+      ]
+    }
+  }
+}
+```
+
+**Event Format:**
+
+```json
+{
+  "type": "DOCUMENT_PROCESSED",
+  "payload": {
+    "fileId": "abc-123",
+    "projectId": "project-456",
+    "status": "DONE",
+    "message": "Xử lý thành công"
+  },
+  "timestamp": "2026-01-15T03:30:00.000Z"
+}
+```
+
+**Event Types:**
+
+| Type                 | Description                   | Payload Fields                             |
+| -------------------- | ----------------------------- | ------------------------------------------ |
+| `DOCUMENT_PROCESSED` | Document processing completed | `fileId`, `projectId`, `status`, `message` |
+
+**Status Values:**
+
+- `DONE`: Processing completed successfully
+- `ERROR`: Processing failed
+
+**Notes:**
+
+- SSE connection is persistent and will automatically push events when they occur
+- No polling required
+- Events are only sent to the user who owns the resource
+- Connection will auto-reconnect on network issues (browser default behavior)
 
 ---
 

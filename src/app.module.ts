@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -22,10 +21,19 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { RetrievalModule } from './retrieval/retrieval.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file'; // Import if using rotation
-
+import 'winston-daily-rotate-file';
+import { BullModule } from '@nestjs/bullmq';
+import { QueueModule } from './queue/queue.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationModule } from './notification/notification.module';
+import { QuizModule } from './quiz/quiz.module';
+import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
+
+    // Event emitter
+    EventEmitterModule.forRoot(),
     // Serve static files from the "uploads" directory
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
@@ -94,6 +102,12 @@ import 'winston-daily-rotate-file'; // Import if using rotation
           .valid('ERROR', 'WARN', 'INFO', 'DEBUG')
           .optional()
           .default('INFO'),
+
+        // Redis (BullMQ)
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
+        REDIS_USERNAME: Joi.string().optional().default('default'),
+        REDIS_PASSWORD: Joi.string().required(),
       }),
     }),
     WinstonModule.forRoot({
@@ -149,13 +163,29 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     IngestModule,
     DocumentModule,
     ChatModule,
-    PipelineModule,
     OpenaiModule,
     PrismaModule,
     ProjectModule,
     AuthModule,
     UserModule,
     RetrievalModule,
+    // BullMQ Global Configuration
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          username: configService.get<string>('REDIS_USERNAME') || 'default',
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    QueueModule,
+    NotificationModule,
+    QuizModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
@@ -173,4 +203,4 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
