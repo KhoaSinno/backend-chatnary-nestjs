@@ -1,0 +1,159 @@
+hybrid search không trả lời được => fail 
+
+{
+  "message": "Hệ sinh là gì, ví dụ cụ thể đi"
+}
+
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Tài liệu hiện tại không chứa thông tin về vấn đề này.",
+    "citations": [
+      {
+        "index": 6,
+        "snippet": "kiến trúc và dữ liệu huấn luyện gpt 3 và các thế hệ kế nhiệm được xây dựng trên kiến trúc transformer huấn luyện trên tập dữ liệu văn bản khổng lồ hàn...",
+        "text": "kiến trúc và dữ liệu huấn luyện gpt 3 và các thế hệ kế nhiệm được xây dựng trên kiến trúc transformer huấn luyện trên tập dữ liệu văn bản khổng lồ hàng trăm tỷ từ bao gồm nhiều nguồn khác nhau 11 quy mô tham số cực lớn gpt 3 có 175 tỷ tham số cho phép mô hình học được biểu diễn ngôn ngữ rất đa dạng làm nền tảng cho hiệu suất cao trên nhiều nhiệm vụ khả năng học từ ít ví dụ gpt 3 có khả năng thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ hoặc thậm chí không cần ví dụ minh họa few shot learning mô hình hiểu yêu cầu từ ngữ cảnh và tự suy luận để giải quyết nhiệm vụ một năng lực tổng quát hóa mới chỉ xuất hiện khi mô hình đạt quy mô rất lớn gpt 2 trở về trước chưa thể hiện rõ khả năng này 12 hiệu năng trên các tác vụ nlp không cần tinh chỉnh tham số cho từng bài toán cụ thể gpt 3 đã đạt kết quả xuất sắc trên nhiều nhiệm vụ nlp phổ biến như dịch máy trả lời câu hỏi điền từ vào",
+        "fileId": "4dda3252-d48d-4298-8d46-3df8af0c35ff",
+        "fileUrl": "uploads\\documents\\1767692635776-607491631.pdf",
+        "page": 2,
+        "score": 0.040302187,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 5,
+        "snippet": "các mô hình được huấn luyện chuyên biệt cho tác vụ tương ứng, cho thấy hiệu quả của việc mở rộng\nquy mô và học từ ngữ cảnh 12 .\n\nMột công trình nghiên...",
+        "text": "các mô hình được huấn luyện chuyên biệt cho tác vụ tương ứng, cho thấy hiệu quả của việc mở rộng\nquy mô và học từ ngữ cảnh 12 .\n\nMột công trình nghiên cứu tiêu biểu đã tổng kết các đặc điểm chính của mô hình GPT-3 và dòng LLM hiện\nđại như sau 11 :",
+        "fileId": "4dda3252-d48d-4298-8d46-3df8af0c35ff",
+        "fileUrl": "uploads\\documents\\1767692635776-607491631.pdf",
+        "page": 2,
+        "score": 0.036271968300000006,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 7,
+        "snippet": "đạt kết quả xuất sắc trên nhiều nhiệm vụ NLP phổ biến (như dịch máy, trả lời câu hỏi, điền từ vào\nchỗ trống). Thậm chí, mô hình còn vượt qua các mô hì...",
+        "text": "đạt kết quả xuất sắc trên nhiều nhiệm vụ NLP phổ biến (như dịch máy, trả lời câu hỏi, điền từ vào\nchỗ trống). Thậm chí, mô hình còn vượt qua các mô hình chuyên biệt trong một số trường hợp, ví\ndụ GPT-3 có thể dịch một câu từ tiếng Anh sang tiếng Pháp chỉ dựa trên ngữ cảnh mà vẫn\nchính xác tương đương mô hình dịch thuật được huấn luyện bài bản 12 .\n- Hạn chế: Mặc dù rất mạnh mẽ, GPT-3 vẫn bộc lộ một số hạn chế. Mô hình có thể sinh ra nội dung\nsai lệch hoặc không phù hợp – ví dụ đôi khi tạo văn bản nghe có vẻ hợp lý nhưng thực chất thiếu\nchính xác về mặt dữ kiện hoặc mang định kiến 13 . Điều này bắt nguồn từ việc mô hình chưa\nthực sự “hiểu” ý nghĩa sâu xa của ngôn ngữ mà chỉ dự đoán theo thống kê. Bên cạnh đó, chi phí\ntính toán để huấn luyện và vận hành những mô hình lớn như GPT-3 là rất cao, đòi hỏi tài nguyên\nphần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm cải\nthiện hiệu quả tính toán, giúp mô hình chạy nhanh hơn với chi phí thấp hơn 14 .",
+        "fileId": "4dda3252-d48d-4298-8d46-3df8af0c35ff",
+        "fileUrl": "uploads\\documents\\1767692635776-607491631.pdf",
+        "page": 2,
+        "score": 0.036271968300000006,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 4,
+        "snippet": "hỏi về những lĩnh vực khác nhau dù không được huấn luyện chuyên biệt cho nhiệm vụ đó, điều mà phiên bản tiền nhiệm GPT-2 (chỉ 1,5 tỷ tham số) hầu như ...",
+        "text": "hỏi về những lĩnh vực khác nhau dù không được huấn luyện chuyên biệt cho nhiệm vụ đó, điều mà phiên bản tiền nhiệm GPT-2 (chỉ 1,5 tỷ tham số) hầu như chưa làm được [11]. Thậm chí, trong một số bài toán, GPT-3 đạt độ chính xác tiệm cận hoặc vượt qua",
+        "fileId": "4dda3252-d48d-4298-8d46-3df8af0c35ff",
+        "fileUrl": "uploads\\documents\\1767692635776-607491631.pdf",
+        "page": 1,
+        "score": 0.0322417496,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 8,
+        "snippet": "Nhìn sang thế hệ mô hình mới hơn, ChatGPT (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và Google\nGemini (mô hình đa phương thức tiên tiến) là hai đại diệ...",
+        "text": "Nhìn sang thế hệ mô hình mới hơn, ChatGPT (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và Google\nGemini (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho nền tảng LLM thương mại vào năm\n2025. Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng mỗi mô hình có thế mạnh\nriêng. Theo báo cáo của Google, Gemini Ultra (phiên bản mạnh nhất của Gemini) đã vượt trội hơn các\nmô hình tương đương trên nhiều thước đo tiêu chuẩn: ví dụ, Gemini Ultra đạt kết quả cao hơn so với\nClaude 2, GPT-4 (ChatGPT) và Llama 2 trong các bài kiểm tra GSM8K (đánh giá khả năng toán học),\nHumanEval (đánh giá sinh mã lập trình) và MMLU (đánh giá hiểu biết ngôn ngữ đa lĩnh vực) 15 . Đáng\nchú ý, Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU,\ncho thấy tiềm năng xuất sắc về kiến thức và suy luận. Tuy nhiên, ở bài kiểm tra HellaSwag về suy luận\nthường thức, GPT-4 (ChatGPT) lại nhỉnh hơn Gemini Ultra đôi chút, phản ánh rằng mô hình của OpenAI",
+        "fileId": "4dda3252-d48d-4298-8d46-3df8af0c35ff",
+        "fileUrl": "uploads\\documents\\1767692635776-607491631.pdf",
+        "page": 2,
+        "score": 0.0322417496,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 6,
+        "snippet": "tìm kiếm sâu như vừa được trình bày sẽ không sử dụng hết sức mạnh của phép đệ quy nó vẫn còn khả năng đơn giản hóa thủ tục bằng cách sử dụng chính phé...",
+        "text": "tìm kiếm sâu như vừa được trình bày sẽ không sử dụng hết sức mạnh của phép đệ quy nó vẫn còn khả năng đơn giản hóa thủ tục bằng cách sử dụng chính phép đệ quy thay gì một danh sách open để sắp xếp các trạng thái trong không gian trạng thái trong phiên bản này của thuật toán một danh sách closed toàn cục sẽ được dùng để phát hiện các trạng thái lặp lại còn danh sách open thì tiềm ẩn trong các mẩu tin hoạt động của môi trường đệ quy",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.022169497,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 5,
+        "snippet": "## I.1 Tìm kiếm đệ quy\n\nMột chuyển đổi trực tiếp của thuật toán tìm kiếm sâu thành dạng đệ quy sẽ minh họa cho sự tương đương của đệ quy và lặp lại đơ...",
+        "text": "## I.1 Tìm kiếm đệ quy\n\nMột chuyển đổi trực tiếp của thuật toán tìm kiếm sâu thành dạng đệ quy sẽ minh họa cho sự tương đương của đệ quy và lặp lại đơn giản. Thuật toán này sử dụng các biến toàn cục closed và open để duy trì danh sách các trạng thái:\n\n```pascal\nFunction Depthsearch;                                            % open và closed toàn cục\nBegin\n    If open rỗng then trả lời (thất bại);\n    Trạng thái hiện hành := phần tử đầu tiên của open;\n    If trạng thái hiện hành là trạng thái đích\n        then trả lời (thành công)\n    Else\n        begin\n            Open := open - phần tử đầu tiên của open;\n            Closed := closed + trạng thái hiện hành;\n            For mỗi trạng thái con của trạng thái hiện hành do\n                If chưa có trong closed hay open          % xây dựng ngăn xếp\n                    then bổ sung con đó vào đầu danh sách open\n        end;\n    Tìm kiếm sâu;                                                      % đệ quy\nEnd;",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.0199525473,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 7,
+        "snippet": "```pascal\nFunction Depthsearch (trạng thái hiện hành);                       % closed toàn cục\nBegin\n    If trạng thái hiện hành là trạng thái đích th...",
+        "text": "```pascal\nFunction Depthsearch (trạng thái hiện hành);                       % closed toàn cục\nBegin\n    If trạng thái hiện hành là trạng thái đích then\n        trả lời (thành công);\n    For mỗi trạng thái hiện hành có con chưa được kiểm tra do\n        begin\n            Con := con chưa được kiểm tra kế tiếp;\n            If con không phải là thành viên của closed\n                then if depthsearch (con) = thành công\n                    then trả lời (thành công);\n        end;\n    Trả lời (thất bại);\nEnd;                                                               % tìm kiếm đã đến cùng",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.0199525473,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 0,
+        "snippet": "thông báo về các chế độ chính sách miễn giảm học phí cho sinh viên chính quy học kỳ i năm học 2025 2026 căn cứ nghị định số 238 2025 nd cp ngày 03 thá...",
+        "text": "thông báo về các chế độ chính sách miễn giảm học phí cho sinh viên chính quy học kỳ i năm học 2025 2026 căn cứ nghị định số 238 2025 nd cp ngày 03 tháng 9 năm 2025 của chính phủ quy định về chính sách học phí miễn giảm hỗ trợ học phí hỗ trợ chi phí học tập và giá dịch vụ trong lĩnh vực giáo dục đào tạo trường đại học kỹ thuật công nghệ cần thơ thông báo đến lãnh đạo các khoa cố vấn học tập và toàn thể sinh viên chính quy các nội dung sau i đối tượng được miễn giảm sinh viên thuộc đối tượng được miễn giảm học phí phải đủ 02 điều kiện sau 1 thường trú tại thành phố cần thơ sau sáp nhập 2 thuộc đối tượng được miễn giảm theo nghị định số 238 2025 nd cp được nêu cụ thể tại phần thủ tục thực hiện ii thủ tục thực hiện sinh viên thuộc đối tượng được miễn giảm học phí cần nộp hồ sơ để được xét miễn giảm học phí cụ thể như sau table thead tr th 1 đối tượng miễn học phí th th hồ sơ cần thực hiện th tr tr th đối tượng 1 khoản 2 điều 15 th th th tr tr th con của người hoạt động cách mạng trước tháng 08 1945 con của anh hùng lực lượng vũ trang nhân dân anh hùng lao động trong thời kỳ kháng chiến con của liệt sĩ thương binh bệnh binh được hưởng chính sách như thương binh bệnh binh con của người hoạt động kháng chiến bị nhiễm chất độc hóa học th th đơn đề nghị miễn giảm học phí theo mẫu th tr tr th th th bản sao có công chứng giấy xác nhận đối tượng do cơ quan quản lý đối với người có công th tr tr th đối tượng 2 khoản 3 điều 15 th th th tr tr th sinh viên khuyết tật th th đơn đề nghị miễn giảm học phí theo mẫu th tr tr th th th bản sao có công chứng giấy xác nhận khuyết tật th tr thead table",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 1,
+        "score": 0.017905358,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 4,
+        "snippet": "# I TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI...",
+        "text": "# I TÌM KIẾM DỰA TRÊN CƠ SỞ ĐỆ QUI",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.0177355976,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 8,
+        "snippet": "```\n\nThay vì phát sinh tất cả các con của một trạng thái và đưa chúng vào danh sách open, thuật toán này phát sinh mỗi lần một con và tìm kiếm theo ph...",
+        "text": "```\n\nThay vì phát sinh tất cả các con của một trạng thái và đưa chúng vào danh sách open, thuật toán này phát sinh mỗi lần một con và tìm kiếm theo phép đệ quy các nút cháu của từng con đó trước khi phát sinh các anh em của nó. Thuật toán này sẽ gán một thứ tự cho các bước",
+        "fileId": "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+        "fileUrl": "uploads\\documents\\1767688793632-66975445.pdf",
+        "page": 2,
+        "score": 0.0177355976,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 1,
+        "snippet": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;...",
+        "text": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao có công chứng Quyết định về việc trợ cấp xã hội.</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Sinh viên từ 16 tuổi đến 22 tuổi đang học văn bằng thứ nhất không có nguồn nuôi dưỡng thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/ND-CP.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 4: (Khoản 7 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Giấy chứng nhận hộ nghèo, hộ cận nghèo.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 5: (Khoản 10 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**2. Đối tượng giảm 70% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 6: (Khoản 1 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**3. Đối tượng giảm 50% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 7: (Khoản 2 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Quyết định hưởng trợ cấp hàng tháng của cha hoặc mẹ bị tai nạn lao động hoặc mắc bệnh nghề nghiệp do tổ chức Bảo hiểm xã hội cấp.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Lưu ý:**</td>\n<td></td>\n    </tr>\n<tr>\n        <td>(1) Sinh viên thuộc diện miễn, giảm học phí cùng lúc hưởng nhiều chính sách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.</td>\n<td></td>\n    </tr>\n  </tbody>\n</table>\n\nScanned with<br>CS CamScanner™",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 2,
+        "score": 0.0161148222,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 2,
+        "snippet": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo ...",
+        "text": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo này. Sinh viên cần có theo địa chỉ thường trú trước sáp nhập để xét.\n\nIII. Thời gian và địa điểm nộp hồ sơ:\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui lòng liên hệ Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp (Cô Đinh Việt Tuyết Hiền, ĐT: 0919.232.577).\n\nNoi nhận:\n- Các đơn vị;\n- website Phòng QLSV;\n- Lưu: VT, QLSV.\n(Hiện)\n\nKT. HIỆU TRƯỞNG\nPHÓ HIỆU TRƯỞNG\nNguyễn Thị Yên Chi",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 3,
+        "score": 0.0143242864,
+        "startOffset": 0,
+        "endOffset": 0
+      }
+    ],
+    "chatId": "8168855e-a30c-47ac-8221-f0a1dc404908"
+  }
+}

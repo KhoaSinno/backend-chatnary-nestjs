@@ -6,9 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  Headers,
   Query,
   Req,
+  Sse,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -17,7 +17,32 @@ import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) { }
+
+  // -- CHAT STREAM --
+  // Note: SSE uses GET, so we use Query params instead of Body
+  @Sse('/stream')
+  chatStream(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Query('message') message: string,
+    @Query('projectId') projectId?: string,
+    @Query('chatId') chatId?: string,
+  ) {
+    // Debug: Log user info
+    console.log('SSE Stream - req.user:', req.user);
+
+    if (!req.user || !req.user.userId) {
+      throw new Error('User not authenticated');
+    }
+
+    const chatDto: ChatDto = {
+      message,
+      projectId,
+      chatId,
+      userId: req.user.userId,
+    };
+    return this.chatService.chatStream(chatDto);
+  }
 
   // -- CHAT LITE --
   @Post('/global')

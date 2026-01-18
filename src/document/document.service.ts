@@ -1,92 +1,87 @@
 import { ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { IngestService } from '../ingest/ingest.service';
 import { VectorService } from '../ingest/vector/vector.service';
 import { deleteFile } from './oss';
-import path from 'path';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { documents, DocumentStatus } from '@prisma/client';
-import { AccessLevelDoc } from '../constant/index.constant';
+import { Document, DocumentStatus, AccessLevelDoc } from '@prisma/client';
 import { UploadMetadataDto } from './dto/upload-document.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { IngestJobData } from '../queue/ingest.processor';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    private readonly ingestService: IngestService,
+    @InjectQueue('ingest-queue') private ingestQueue: Queue<IngestJobData>,
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
-  //-- UPLOAD --
+  //-- UPLOAD (Non-blocking with Queue) --
   async uploadFiles(
     userId: string,
     files: Express.Multer.File[],
     projectId?: string,
     metadata?: UploadMetadataDto,
-  ): Promise<void> {
-    for (const file of files) {
-      let document: documents | null = null;
-      try {
-        // Pre create document record with 'processing' status
-        document = await this.createDocument({
-          projectId: projectId,
-          originalName: file.originalname,
-          filePath: file.path,
-          mimeType: file.mimetype,
-          size: file.size,
-          status: DocumentStatus.PROCESSING,
-          userId: userId,
-          accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
-          viewCount: 0, // TODO: default 0
-          pageCount: 0, // TODO: get real page count after OCR
-          authors: metadata?.authors || [],
-          description: metadata?.description || '',
-          publishedYear: metadata?.publishedYear || undefined,
-          subjects: metadata?.subjects || [],
-          tags: metadata?.tags || [],
-          title: metadata?.title || path.parse(file.originalname).name,
-          documentType: 'unknown',
-        });
+  ): Promise<{ documents: Document[]; jobIds: string[] }> {
+    const createdDocuments: Document[] = [];
+    const jobIds: string[] = [];
 
-        const chunks = await this.ingestService.ingestDocument(
-          file.path,
-          document.id,
+    for (const file of files) {
+      // 1. Create document record with PENDING status (immediate response)
+      const document = await this.createDocument({
+        projectId: projectId,
+        originalName: file.originalname,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        size: file.size,
+        status: DocumentStatus.PENDING,
+        userId: userId,
+        accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
+        viewCount: 0,
+        pageCount: 0,
+        authors: metadata?.authors || [],
+        description: metadata?.description || '',
+        publishedYear: metadata?.publishedYear || undefined,
+        subjects: metadata?.subjects || [],
+        tags: metadata?.tags || [],
+        title: metadata?.title || path.parse(file.originalname).name,
+        documentType: 'unknown',
+      });
+
+      createdDocuments.push(document);
+
+      // 2. Add job to queue (non-blocking, processed by worker)
+      const job = await this.ingestQueue.add(
+        'process-document',
+        {
+          fileId: document.id,
+          filePath: file.path,
           userId,
           projectId,
-          file.originalname,
-        );
+          originalFileName: file.originalname,
+        },
+        {
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 5000 },
+          removeOnComplete: true,
+        },
+      );
 
-        this.logger.log(
-          `✅ Ingested ${chunks.length} chunks for: ${file.originalname}`,
-        );
-
-        // If ingestion successful (has chunks), save document record in DB
-        if (chunks.length > 0) {
-          // update 'done' status
-          await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
-
-          this.logger.log(
-            `📝 Document record created for: ${file.originalname}`,
-          );
-        } else {
-          this.logger.warn(`⚠️ No chunks created for: ${file.originalname}`);
-        }
-      } catch (error) {
-        this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
-        // Optionally update 'error' status
-        if (document) {
-          await this.updateDocumentStatus(document.id, DocumentStatus.ERROR);
-        }
-      }
+      jobIds.push(job.id || document.id);
+      this.logger.log(`📤 Queued job ${job.id} for: ${file.originalname}`);
     }
+
+    return { documents: createdDocuments, jobIds };
   }
 
   // -- REMOVE --
   async removeDocument(fileId: string, userId: string) {
     //  1. Check doc exists & Ownership
-    const document = await this.prisma.documents.findUnique({
+    const document = await this.prisma.document.findUnique({
       where: { id: fileId },
     });
     if (!document) throw new NotFoundException('Document not found');
@@ -106,14 +101,14 @@ export class DocumentService {
     }
 
     // 4. Delete Record => Cascade delete `project_resources`
-    return await this.prisma.documents.delete({
+    return await this.prisma.document.delete({
       where: { id: fileId },
     });
   }
 
   // -- UNLINK DOCUMENT FROM PROJECT --
   async unlinkDocumentFromProject(docId: string, projId: string) {
-    return await this.prisma.project_resources.deleteMany({
+    return await this.prisma.projectResources.deleteMany({
       where: {
         projectId: projId,
         documentId: docId,
@@ -125,7 +120,7 @@ export class DocumentService {
   async createDocument(documentDto: CreateDocumentDto) {
     // Validate project exists if projectId provided
 
-    const document = await this.prisma.documents.create({
+    const document = await this.prisma.document.create({
       data: {
         userId: documentDto.userId,
         title: documentDto.title,
@@ -149,7 +144,7 @@ export class DocumentService {
     });
 
     if (documentDto.projectId) {
-      await this.prisma.project_resources.create({
+      await this.prisma.projectResources.create({
         data: {
           projectId: documentDto.projectId,
           documentId: document.id,
@@ -172,7 +167,7 @@ export class DocumentService {
     documentIds: string[],
   ) {
     // 1. Check Project exists AND belongs to User
-    const project = await this.prisma.projects.findFirst({
+    const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
         userId: userId,
@@ -186,7 +181,7 @@ export class DocumentService {
     }
 
     // 2. Validate Documents (Security Check)
-    const validDocuments = await this.prisma.documents.findMany({
+    const validDocuments = await this.prisma.document.findMany({
       where: {
         id: { in: documentIds },
         OR: [
@@ -212,16 +207,35 @@ export class DocumentService {
       isSelected: true,
     }));
 
-    // 4. Create links
-    return await this.prisma.project_resources.createMany({
-      data: dataToInput,
-      skipDuplicates: true,
-    });
+    // 4. Update vector store and create DB links in parallel (Performance Optimization)
+    const [_, result] = await Promise.all([
+      this.vectorService.link2Project(validDocIds, projectId),
+      this.prisma.projectResources.createMany({
+        data: dataToInput,
+        skipDuplicates: true,
+      }),
+    ]);
+
+    return result;
+  }
+
+  async removeDocumentsOutProject(projectId: string, documentIds: string[]) {
+    // Delete from vector store and database in parallel
+    const [_, res] = await Promise.all([
+      this.vectorService.removeOutProject(documentIds, projectId),
+      this.prisma.projectResources.deleteMany({
+        where: {
+          projectId: projectId,
+          documentId: { in: documentIds },
+        },
+      }),
+    ]);
+    return res;
   }
 
   // -- Unlink ALL DOCUMENTS IN PROJECT --
   async unlinkAllDocumentsInProject(projectId: string) {
-    return await this.prisma.project_resources.deleteMany({
+    return await this.prisma.projectResources.deleteMany({
       where: {
         projectId: projectId,
       },
@@ -232,7 +246,7 @@ export class DocumentService {
   async getDocumentsInProject(userId: string, projectId: string) {
     // Check exist project
 
-    const docsRaw = await this.prisma.project_resources.findMany({
+    const docsRaw = await this.prisma.projectResources.findMany({
       where: { projectId: projectId, document: { userId: userId } },
       include: {
         document: {
@@ -244,7 +258,7 @@ export class DocumentService {
       },
     });
 
-    console.log(docsRaw);
+
     // return docsRaw;
     return docsRaw.map((item) => {
       return {
@@ -261,7 +275,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT NOT IN PROJECT --
   async getDocumentsNotInProject(userId: string, projectId: string) {
-    return await this.prisma.documents.findMany({
+    return await this.prisma.document.findMany({
       where: {
         OR: [{ userId: userId }, { accessLevel: AccessLevelDoc.PUBLIC }],
         NOT: {
@@ -285,7 +299,7 @@ export class DocumentService {
 
   // -- GET ALL DOCUMENTS --
   async getAllDocuments(userId: string) {
-    return await this.prisma.documents.findMany({
+    return await this.prisma.document.findMany({
       where: {
         userId: userId,
       },
@@ -308,7 +322,7 @@ export class DocumentService {
 
   // -- GET DOCUMENT DETAIL --
   async getDocumentDetail(userId: string, id: string) {
-    return await this.prisma.documents.findFirst({
+    return await this.prisma.document.findFirst({
       where: {
         id: id,
         userId: userId,
@@ -330,9 +344,37 @@ export class DocumentService {
     });
   }
 
+  // -- TOOGLE DOCUMENT -- 
+
+  async toggleDocumentSelection(userId: string, projectId: string, docId: string) {
+    // Check exist project
+    const projectRes = await this.prisma.projectResources.findFirst({
+      where: {
+        projectId: projectId,
+        documentId: docId,
+      },
+    });
+
+    if (!projectRes) {
+      throw new NotFoundException('Không tìm thấy tài liệu trong dự án');
+    }
+
+    // Update
+    return await this.prisma.projectResources.update({
+      where: {
+        id: projectRes.id,
+      },
+      data: {
+        isSelected: !projectRes.isSelected,
+      },
+    });
+
+
+  }
+
   // -- UPDATE DOCUMENT --
   async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
-    return await this.prisma.documents.update({
+    return await this.prisma.document.update({
       where: { id: id },
       data: {
         title: updateDocumentDto.title,
@@ -346,7 +388,7 @@ export class DocumentService {
       throw new Error('Invalid status value');
     }
 
-    return await this.prisma.documents.update({
+    return await this.prisma.document.update({
       where: { id: id },
       data: {
         status: status,

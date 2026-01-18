@@ -8,8 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { AccessLevelDoc } from '../../constant/index.constant';
-import { DocumentStatus } from '@prisma/client';
+import { DocumentStatus, AccessLevelDoc } from '@prisma/client';
 
 export class CreateDocumentDto {
   // Out info

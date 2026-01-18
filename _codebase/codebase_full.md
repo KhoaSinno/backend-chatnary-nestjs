@@ -2,12 +2,13 @@
 
 ## Project Statistics
 
-- Total files: 70
+- Total files: 69
 
 ## Folder Structure
 
 ```
-API_ENDPOINTS.md
+prisma
+  schema.prisma
 src
   app.controller.spec.ts
   app.controller.ts
@@ -40,6 +41,8 @@ src
     dto
       chat.dto.ts
       update-chat.dto.ts
+    memory
+      prisma-history.store.ts
   common
     pipes
       parse-json.pipe.ts
@@ -57,16 +60,13 @@ src
       create-document.dto.ts
       update-document.dto.ts
       upload-document.dto.ts
-    entities
-      document.entity.ts
     oss.ts
   http-exception.filter.ts
   ingest
     ingest.module.ts
     ingest.service.ts
     loaders
-      ocr.loader.ts
-      pdf.loader.ts
+      cloud.loader.ts
     splitters
       text-splitter.ts
     vector
@@ -77,9 +77,9 @@ src
       openai.module.ts
       openai.service.ts
   main.ts
-  pipeline
-    pipeline.module.ts
-    pipeline.service.ts
+  notification
+    notification.controller.ts
+    notification.module.ts
   prisma
     prisma.module.ts
     prisma.service.ts
@@ -87,11 +87,12 @@ src
     dto
       create-project.dto.ts
       update-project.dto.ts
-    entities
-      project.entity.ts
     project.controller.ts
     project.module.ts
     project.service.ts
+  queue
+    ingest.processor.ts
+    queue.module.ts
   response.interceptor.ts
   retrieval
     retrieval.module.ts
@@ -100,1293 +101,18 @@ src
     dto
       create-user.dto.ts
       update-user.dto.ts
-    entities
-      user.entity.ts
     user.controller.ts
     user.module.ts
     user.service.ts
-prisma
-  schema.prisma
-  seed.ts
+.env.example
+API_ENDPOINTS.md
 package.json
 
 ```
 
-### API_ENDPOINTS.md
+### prisma\schema.prisma
 
-```md
-# 📘 Chatnary Backend API Endpoints
-
-*(NestJS · Prisma · PGVector · LangChainJS)*
-
-## Base URL
-
-```
-http://localhost:8000/api/v1
-```
-
----
-
-# 🏠 Root
-
-### **GET** `/docs`
-
-* API documents Backend
-
----
-
-# 🔑 Authentication
-
-## Register
-
-### **POST** `/auth/register`
-
-**Body**
-
-```json
-{
-  "email": "user1@example.com",
-  "password": "123456"
-}
-```
-
-**Response**
-
-```json
-// Success
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "message": "User registered successfully"
-  }
-}
-
-// Error
-{
-  "statusCode": 403,
-  "success": false,
-  "message": {
-    "message": "User already exists",
-    "error": "Forbidden",
-    "statusCode": 403
-  },
-  "timestamp": "2025-12-13T08:34:50.308Z",
-  "path": "/api/v1/auth/register"
-}
-```
-
-## Login
-
-### **POST** `/auth/login`
-
-**Body**
-
-```json
-{
-  "email": "admin@example.com",
-  "password": "123456"
-}
-```
-
-**Response**
-
-```json
-// Success
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjU2MDA3NjJ9.OlDUVXNx2FNlF7g7ldbuiHFFueiexPW6dvSj0jIQNsM",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjYyMDQ2NjJ9.tiCXjCNmMOrzdZYKmgoEXQvgFvViZAWd8IhFn8bIYIE",
-    "user": {
-      "id": "bbe027d0-74ea-4630-a846-5040a9772d19",
-      "email": "admin@example.com",
-      "username": "admin",
-      "name": "Administrator",
-      "refreshToken": "$2b$10$L/FBJkavJpoQMrz3dgjg7.MdglrEahBl6dS77syc.P08fkXyHjGuu",
-      "role": "ADMIN"
-    }
-  }
-}
-
-// Error
-{
-  "statusCode": 500,
-  "success": false,
-  "message": "Invalid credentials",
-  "timestamp": "2025-12-13T08:58:05.663Z",
-  "path": "/api/v1/auth/login"
-}
-```
-
-## Refresh token
-
-### **POST** `/auth/refresh`
-
-**Headers(Bearer header)**
-authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro
-
-**Response**
-
-```json
-// Success
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjU0NDQwMTl9.822N8k9AZQ5Yk3KT1gwd-NI77ujFDFd7TjR_yainwQk",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro"
-  }
-}
-
-// Error
-{
-  "statusCode": 403,
-  "success": false,
-  "message": {
-    "message": "Access Denied",
-    "error": "Forbidden",
-    "statusCode": 403
-  },
-  "timestamp": "2025-12-13T09:00:00.471Z",
-  "path": "/api/v1/auth/refresh"
-}
-```
-
-## Logout
-
-### **POST** `/auth/logout`
-
-**Response**
-
-```json
-// Success
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "message": "User logged out successfully"
-  }
-}
-
-```
-
-# 📁 Projects
-
-*(Giống ChatGPT workspace — quản lý không gian dự án)*
-
-## Create Project
-
-### **POST** `/project`
-
-**Body**
-
-```json
-{
-  "name": "Sinoo khung bo",
-  "description": "Desc ...",
-  "color": "#3B82F6",
-  "isArchived": false
-}
-```
-
-**Response**
-
-```json
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "id": "0c08f09e-f996-454c-a9b0-055c35658fea",
-    "name": "Sinoo khung bo",
-    "description": "Desc ...",
-    "color": "#3B82F6",
-    "isArchived": false,
-    "createdAt": "2025-12-25T05:33:54.970Z",
-    "updatedAt": "2025-12-25T05:33:54.970Z"
-  }
-}
-```
-
-## List Projects by user
-
-### **GET** `/project`
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "cf3ad296-3044-451f-84db-9fc99c9e327d",
-      "name": "AI Văn Bản",
-      "description": "Project dùng để test RAG + OCR",
-      "color": "#3B82F6",
-      "isArchived": false,
-      "createdAt": "2025-12-23T16:52:10.813Z",
-      "updatedAt": "2025-12-23T16:52:10.813Z"
-    },
-    {
-      "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-      "name": "Thư Viện Số",
-      "description": "Project số hóa tài liệu PDF",
-      "color": "#3B82F6",
-      "isArchived": false,
-      "createdAt": "2025-12-23T16:52:10.972Z",
-      "updatedAt": "2025-12-23T16:52:10.972Z"
-    },
-    {
-      "id": "0c08f09e-f996-454c-a9b0-055c35658fea",
-      "name": "Sinoo khung bo",
-      "description": "Desc ...",
-      "color": "#3B82F6",
-      "isArchived": false,
-      "createdAt": "2025-12-25T05:33:54.970Z",
-      "updatedAt": "2025-12-25T05:33:54.970Z"
-    }
-  ]
-}
-```
-
-## List Chats in Project
-
-### **GET** `/project/:projectId/chats`
-
-**Param**:
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "1d86b1ef-f248-420b-9413-21747c92bd9c",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T06:54:02.583Z",
-      "updatedAt": "2025-12-25T06:54:05.592Z"
-    },
-    {
-      "id": "62dc4be3-deeb-4360-bf90-c6613efaea4a",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T06:52:14.196Z",
-      "updatedAt": "2025-12-25T06:52:16.691Z"
-    },
-    {
-      "id": "3538ea80-e655-45e2-ad7a-5952871e1f2c",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T06:44:56.699Z",
-      "updatedAt": "2025-12-25T06:45:04.120Z"
-    },
-    {
-      "id": "84cf2155-4fde-4f61-ae96-21a9f113bc85",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T06:44:08.271Z",
-      "updatedAt": "2025-12-25T06:44:11.607Z"
-    },
-    {
-      "id": "e2c71722-deea-4568-ad41-e385493ab389",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T06:43:52.259Z",
-      "updatedAt": "2025-12-25T06:43:54.114Z"
-    }
-  ]
-}
-```
-
-## List Documents in Project
-
-### **GET** `/project/:projectId/documents`
-
-**Param**: projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "addedAt": "2025-12-25T06:42:10.797Z",
-      "isSelected": true,
-      "linkId": "bcc2b031-8d14-4fe2-9b66-190090faa263",
-      "id": "b75e74c0-58a1-4d11-ba67-3842e938211e",
-      "title": "MGHP HK1(2025-2026).pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "MGHP HK1(2025-2026).pdf",
-      "filePath": "uploads\\documents\\1766638685745-591043014.pdf",
-      "mimeType": "application/pdf",
-      "size": 2751843,
-      "pageCount": 0,
-      "status": "done",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T04:58:05.759Z",
-      "updatedAt": "2025-12-25T04:58:16.140Z"
-    },
-    {
-      "addedAt": "2025-12-25T06:42:10.797Z",
-      "isSelected": true,
-      "linkId": "1169513b-68b6-44dd-9c62-8802e1a99ae3",
-      "id": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
-      "title": "LV_CTUET_ThinhNhat.pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "LV_CTUET_ThinhNhat.pdf",
-      "filePath": "uploads\\documents\\1766638903777-216667186.pdf",
-      "mimeType": "application/pdf",
-      "size": 2743322,
-      "pageCount": 0,
-      "status": "done",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T05:01:43.787Z",
-      "updatedAt": "2025-12-25T05:01:58.145Z"
-    },
-    {
-      "addedAt": "2025-12-23T17:06:25.989Z",
-      "isSelected": true,
-      "linkId": "866d7528-48f0-4a8b-9594-680f4551c0b4",
-      "id": "1c375418-270c-4a60-ac88-13aa5fb885f9",
-      "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-      "filePath": "uploads\\documents\\1766509585247-333190162.pdf",
-      "mimeType": "application/pdf",
-      "size": 39998,
-      "pageCount": 0,
-      "status": "done",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-23T17:06:25.897Z",
-      "updatedAt": "2025-12-23T17:06:30.157Z"
-    }
-  ]
-}
-```
-
-## Update Project
-
-### **PATCH** `/project/:projectId`
-
-**Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Body**
-
-```json
-// some fields:  name, description, color, isArchived
-{
-  "name": "Sinoo khung bo 1101"
-  // ... some fields to update
-}
-```
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
-    "name": "Sinoo khung bo 1101",
-    "description": "Desc ...",
-    "color": "#3B82F6",
-    "isArchived": false,
-    "createdAt": "2025-12-08T15:48:49.375Z",
-    "updatedAt": "2025-12-08T15:53:24.488Z",
-    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
-  }
-}
-```
-
-## Delete Project
-
-### **DELETE** `/project/:projectId`
-
-**Param**
-projectId = eae33420-8426-4f3e-b055-d4afeefad60b
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
-      "name": "MGHP HK1(2025-2026).pdf",
-      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
-      "mimeType": "application/pdf",
-      "size": 2751843,
-      "status": "done",
-      "createdAt": "2025-12-07T04:08:06.354Z"
-    }
-  ]
-}
-```
-
----
-
-# 📄 Documents
-
-## Access static file
-
-`http://localhost:8000/uploads/documents/1765080486331-485462277.pdf`
-
-## Upload Document (Auto Ingest)
-
-### **POST** `/document/upload/files`
-
-**Headers**: Content-Type: multipart/form-data
-
-**Mulit-Part (Body)**
-
-```json
-// multi part
-{
-  "files": "File[]",// multi-part... from form input
-  "data": //Chuỗi JSON String. FE cần JSON.stringify(metadataObj) trước khi gửi.
-}
-
-// "data" exmaple
-// {
-//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link 
-//   "title": "Tên hiển thị (Optional)",
-//   "description": "Mô tả ngắn",
-//   "authors": ["Tác giả A", "Tác giả B"],
-//   "tags": ["Tag1", "Tag2"],
-//   "subjects": ["Chủ đề 1"],
-//   "publishedYear": 2024,
-//   "accessLevel": "PRIVATE"  // hoặc "PUBLIC", "RESTRICTED"
-// }
-
-// FE phải stringify object này trước khi gửi 
-// formData.append('data', JSON.stringify(metadata));
-
-```
-
-**Response**
-
-```json
-{
-  "statusCode": 201,
-  "success": true,
-  "data": [
-    {
-      "url": "/uploads/documents/1764829198418-674679539.pdf"
-    }
-  ]
-}
-```
-
-## Get All Document by user
-
-### **GET** `/document`
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "1c375418-270c-4a60-ac88-13aa5fb885f9",
-      "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-      "filePath": "uploads\\documents\\1766509585247-333190162.pdf",
-      "mimeType": "application/pdf",
-      "size": 39998,
-      "pageCount": 0,
-      "status": "PROCESSING",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-23T17:06:25.897Z",
-      "updatedAt": "2025-12-23T17:06:30.157Z",
-      "indexedAt": null,
-      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-      "linkedProjects": [
-        {
-          "id": "866d7528-48f0-4a8b-9594-680f4551c0b4",
-          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-          "documentId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
-          "isSelected": true,
-          "addedAt": "2025-12-23T17:06:25.989Z",
-          "project": {
-            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-            "name": "Thư Viện Số",
-            "description": "Project số hóa tài liệu PDF",
-            "color": "#3B82F6"
-          }
-        }
-      ]
-    },
-    {
-      "id": "b75e74c0-58a1-4d11-ba67-3842e938211e",
-      "title": "MGHP HK1(2025-2026).pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "MGHP HK1(2025-2026).pdf",
-      "filePath": "uploads\\documents\\1766638685745-591043014.pdf",
-      "mimeType": "application/pdf",
-      "size": 2751843,
-      "pageCount": 0,
-      "status": "PROCESSING",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T04:58:05.759Z",
-      "updatedAt": "2025-12-25T04:58:16.140Z",
-      "indexedAt": null,
-      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-      "linkedProjects": [
-        {
-          "id": "bcc2b031-8d14-4fe2-9b66-190090faa263",
-          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-          "documentId": "b75e74c0-58a1-4d11-ba67-3842e938211e",
-          "isSelected": true,
-          "addedAt": "2025-12-25T06:42:10.797Z",
-          "project": {
-            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-            "name": "Thư Viện Số",
-            "description": "Project số hóa tài liệu PDF",
-            "color": "#3B82F6"
-          }
-        }
-      ]
-    },
-    {
-      "id": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
-      "title": "HTTT_CTDH_2022.pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "HTTT_CTDH_2022.pdf",
-      "filePath": "uploads\\documents\\1766638786657-7059145.pdf",
-      "mimeType": "application/pdf",
-      "size": 24305987,
-      "pageCount": 0,
-      "status": "PROCESSING",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T04:59:46.711Z",
-      "updatedAt": "2025-12-25T05:01:02.794Z",
-      "indexedAt": null,
-      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-      "linkedProjects": []
-    },
-    {
-      "id": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
-      "title": "LV_CTUET_ThinhNhat.pdf",
-      "description": "",
-      "authors": [],
-      "subjects": [],
-      "tags": [],
-      "documentType": "unknown",
-      "publishedYear": null,
-      "accessLevel": "PRIVATE",
-      "originalName": "LV_CTUET_ThinhNhat.pdf",
-      "filePath": "uploads\\documents\\1766638903777-216667186.pdf",
-      "mimeType": "application/pdf",
-      "size": 2743322,
-      "pageCount": 0,
-      "status": "PROCESSING",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T05:01:43.787Z",
-      "updatedAt": "2025-12-25T05:01:58.145Z",
-      "indexedAt": null,
-      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-      "linkedProjects": [
-        {
-          "id": "1169513b-68b6-44dd-9c62-8802e1a99ae3",
-          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-          "documentId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
-          "isSelected": true,
-          "addedAt": "2025-12-25T06:42:10.797Z",
-          "project": {
-            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-            "name": "Thư Viện Số",
-            "description": "Project số hóa tài liệu PDF",
-            "color": "#3B82F6"
-          }
-        }
-      ]
-    },
-    {
-      "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
-      "title": "Giáo trình AI",
-      "description": "Demo upload",
-      "authors": [
-        "Teacher A"
-      ],
-      "subjects": [],
-      "tags": [
-        "AI"
-      ],
-      "documentType": "unknown",
-      "publishedYear": 2024,
-      "accessLevel": "PRIVATE",
-      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-      "filePath": "uploads\\documents\\1766670753505-891084681.pdf",
-      "mimeType": "application/pdf",
-      "size": 39998,
-      "pageCount": 0,
-      "status": "DONE",
-      "metadata": null,
-      "viewCount": 0,
-      "createdAt": "2025-12-25T13:52:33.512Z",
-      "updatedAt": "2025-12-25T13:52:37.474Z",
-      "indexedAt": null,
-      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-      "linkedProjects": [
-        {
-          "id": "5154c96d-c0a5-43d4-9452-c7a284e53963",
-          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-          "documentId": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
-          "isSelected": true,
-          "addedAt": "2025-12-25T13:52:33.906Z",
-          "project": {
-            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-            "name": "Thư Viện Số",
-            "description": "Project số hóa tài liệu PDF",
-            "color": "#3B82F6"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-## Get Document Detail by user
-
-### **GET** `/document/:documentId`
-
-**Param**
-
-documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
-    "title": "Giáo trình AI",
-    "description": "Demo upload",
-    "authors": [
-      "Teacher A"
-    ],
-    "subjects": [],
-    "tags": [
-      "AI"
-    ],
-    "documentType": "unknown",
-    "publishedYear": 2024,
-    "accessLevel": "PRIVATE",
-    "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-    "filePath": "uploads\\documents\\1766670753505-891084681.pdf",
-    "mimeType": "application/pdf",
-    "size": 39998,
-    "pageCount": 0,
-    "status": "DONE",
-    "metadata": null,
-    "viewCount": 0,
-    "createdAt": "2025-12-25T13:52:33.512Z",
-    "updatedAt": "2025-12-25T13:52:37.474Z",
-    "indexedAt": null,
-    "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
-    "linkedProjects": [
-      {
-        "id": "5154c96d-c0a5-43d4-9452-c7a284e53963",
-        "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-        "documentId": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
-        "isSelected": true,
-        "addedAt": "2025-12-25T13:52:33.906Z",
-        "project": {
-          "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
-          "name": "Thư Viện Số",
-          "description": "Project số hóa tài liệu PDF",
-          "color": "#3B82F6"
-        }
-      }
-    ]
-  }
-}
-```
-
-## Delete Document
-
-### **DELETE** `/document/:documentId`
-
-**Param**
-documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "6b4c5bb7-a05b-4661-8d1c-abf437e3ec9c",
-    "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-    "description": "",
-    "authors": [],
-    "subjects": [],
-    "tags": [],
-    "documentType": "unknown",
-    "publishedYear": null,
-    "accessLevel": "PRIVATE",
-    "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
-    "filePath": "uploads\\documents\\1766654367238-651959962.pdf",
-    "mimeType": "application/pdf",
-    "size": 39998,
-    "pageCount": 0,
-    "status": "done",
-    "metadata": null,
-    "viewCount": 0,
-    "createdAt": "2025-12-25T09:19:27.249Z",
-    "updatedAt": "2025-12-25T09:19:33.060Z",
-    "indexedAt": null,
-    "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717"
-  }
-}
-```
-<!-- --------------------- CHAT MODULE --------------------- -->
-# 💬 Chat RAG Module
-
-## Chat global
-
-*Will have projectId = null
-
-### **POST** `/chat/global`
-
-**Query**
-chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
-
-**Body**
-
-```json
-{
-  "message": "Cho tôi biết kiến trúc hệ thống của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
-}
-```
-
-**Response**
-
-```json
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "answer": "Theo tài liệu, hệ thống trong luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật được xây dựng với các thành phần chính như sau:\n\n- LLM (Large Language Model): Được sử dụng để hiểu ngữ cảnh và câu hỏi của người dùng, đóng vai trò cốt lõi trong việc xử lý ngôn ngữ tự nhiên.\n- Embeddings: Các văn bản được số hóa thành các vector số (embeddings) để hỗ trợ việc tìm kiếm thông tin nhanh và hiệu quả hơn.\n- PDFs: Bộ tài liệu hành chính được đóng gói trong một thư mục, AI sẽ truy xuất và sử dụng các tài liệu này để trả lời chính xác cho người dùng.\n- Chatbot: Lớp độc lập có chức năng tạo đoạn chat, hỗ trợ người dùng tương tác với hệ thống.\n- Các lớp quản lý người dùng như Cán bộ, Sinh viên, Tài khoản, với các chức năng như phân quyền, thêm/xóa tệp, v.v.\n\nLuồng xử lý cơ bản: Người dùng gửi câu hỏi → Hệ thống sử dụng embeddings để tìm kiếm thông tin liên quan trong các file PDF → LLM xử lý và tạo câu trả lời dựa trên thông tin tìm được → Trả lời cho người dùng qua chatbot [#105][#107].\n\nSo sánh với kiến trúc RAG (Retrieval-Augmented Generation):\n\n- Kiến trúc RAG tiêu chuẩn gồm hai thành phần chính: bộ truy xuất (retriever) để tìm kiếm các đoạn văn bản liên quan từ kho dữ liệu, và bộ sinh (generator, thường là LLM) để tổng hợp, tạo ra câu trả lời dựa trên các đoạn truy xuất được.\n- Hệ thống trong luận văn cũng có các thành phần tương tự: sử dụng embeddings để tìm kiếm (retrieval) và LLM để sinh câu trả lời (generation).\n- Tuy nhiên, tài liệu không mô tả chi tiết về việc tích hợp chặt chẽ giữa hai thành phần này như trong RAG chuẩn (ví dụ: có sử dụng cross-attention giữa retrieved context và prompt đầu vào hay không), cũng như không đề cập đến các kỹ thuật tối ưu hóa hoặc fine-tuning đặc thù cho RAG.\n\nKết luận:  \nKiến trúc hệ thống của luận văn có các thành phần và luồng xử lý tương tự với kiến trúc RAG, nhưng có thể xem là một phiên bản đơn giản hơn, chưa đầy đủ hoặc tối ưu như RAG chuẩn trong nghiên cứu hiện đại [#105][#107].",
-    "citations": [
-      {
-        "index": 56,
-        "snippet": "cân nhắc trong các ứng dụng đòi hỏi độ chính xác và tính cập nhật cao. 2.  Trí tuệ nhân tạo tạo sinh – Generative artificial intelligence (GenAI) 2.1....",
-        "text": "cân nhắc trong các ứng dụng đòi hỏi độ chính xác và tính cập nhật cao. 2.  Trí tuệ nhân tạo tạo sinh – Generative artificial intelligence (GenAI) 2.1.  GenAI là gì? Gen AI là một lĩnh vực của trí tuệ nhân tạo tập trung vào việc tạo ra nội dung, dữ liệu hoặc thông tin mới mà không cần lập trình rõ ràng. Hệ thống hoạt động dựa trên các mô hình được đào tạo trên các tập dữ liệu lớn để tự động tạo nội dung. Các mô hình này học các mẫu và mối quan hệ từ các tập dữ liệu rộng lớn và sau đó có thể tạo ra văn bản, hình ảnh hoặc các dạng nội dung khác. Một loại GenAI cụ thể, các mô hình ngôn ngữ lớn, có tiềm năng to lớn để thay đổi cách thức làm việc của con người. 2.2.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 22,
-        "score": 0.8836096450439399,
-        "startOffset": 29397,
-        "endOffset": 30065
-      },
-      {
-        "index": 191,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có ...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên 49 Em chưa biết lập trình thì em có thể theo học ngành này tại trường hay không? Có thể, Khi vào học các chương trình của Trường, em sẽ có nhiều cơ hội học bổ sung những mảng kiến thức để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Khi vào học chương trình Hệ thống thông tin tại Trường ĐH Kỹ thuật - Công nghệ Cần Thơ, em sẽ được học bổ sung những kiến thức cần thiết để hỗ trợ cho định hướng nghề nghiệp trong tương lai. Tuy nhiên, việc biết lập trình sẽ là một lợi thế trong việc học ngành này, vì lập trình là một trong những kỹ năng quan trọng trong lĩnh vực Hệ thống thông tin. Nếu em chưa biết lập trình, em vẫn có thể học ngành này, nhưng em nên sẵn sàng học và nắm vững kiến thức lập trình trong quá trình học tập.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 93,
-        "score": 0.8819597740149363,
-        "startOffset": 102095,
-        "endOffset": 102891
-      },
-      {
-        "index": 69,
-        "snippet": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự....",
-        "text": "Thiếu khả năng nhận thức thực: OpenAI phản hồi dựa trên mẫu ngôn ngữ và không có khả năng hiểu cảm xúc hoặc tình huống phức tạp như con người thật sự. • Kết luận: OpenAI là một mô hình GenAI mạnh mẽ và nổi tiếng nhất hiện nay, họ đã cải tiến việc nhận dạng bằng hình ảnh hay có thể chuyển đổi từ PDF sang Word hoặc ngược lại, nhưng vì được quá nhiều người biết đến, việc lạm dụng OpenAI vào các bài viết tiểu luận, luận văn ngày một nhiều hơn làm mất tính minh bạch. 14",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 25,
-        "score": 0.8818111457599573,
-        "startOffset": 35844,
-        "endOffset": 36313
-      },
-      {
-        "index": 45,
-        "snippet": "vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman. ...",
-        "text": "vào việc giới thiệu mô hình Transformer có khả năng xử lý văn bản dài, được thực hiện bởi nhóm tác giả: Beltagy, Iz Peters, Matthew E và Cohan Arman. Bài viết khai thác về các kiến trúc mô hình ngôn ngữ lớn và khả năng tổng quát hóa trong máy học với 175 tỷ tham số, bao gồm các nội dung chính sau • kiến trúc và mô hình: GPT-3 và các phiên bản đời sau sử dụng Transformer, được huấn luyên trên một tập dữ liệu lớn từ nhiều nguồn khác nhau. • Khả năng ví dụ học hỏi: GPT có thể thực hiện nhiều nhiệm vụ chỉ dựa trên một vài ví dụ, một ví dụ, hoặc khồng cần ví dụ. • Đánh giá: GPT vượt trội trong nhiều bài toán NLP(Natural Language Processing) mà không cần tỉnh chỉnh, đạt kết quả gần ngang hoặc tốt hơn với các mô hình huấn luyện đặc thù.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 18,
-        "score": 0.8813174851319173,
-        "startOffset": 23096,
-        "endOffset": 23835
-      },
-      {
-        "index": 105,
-        "snippet": "thống và tương tác với hệ thống. • Trò chuyện với AI: Giảng viên có thể sử dụng chức năng chat với AI bằng tài khoản được cung cấp bởi trường đại học....",
-        "text": "thống và tương tác với hệ thống. • Trò chuyện với AI: Giảng viên có thể sử dụng chức năng chat với AI bằng tài khoản được cung cấp bởi trường đại học. AI: Đóng vai trò cốt lõi trong hệ thống, được xây dựng với tiêu chí hỗ trợ không ngừng nghỉ cho người dùng các thành phần mà AI xử lý sau khi nhận được văn bản từ người dùng như sau: • LLM: Là ngôn ngữ lớn để hiểu được ngữ cảnh của mạch chuyện câu hỏi người dùng là việc không thể thiếu. • Embeddings: Mỗi văn bản sẽ được số hóa có thể lên đến hàng nghìn hàng triệu mã số, vì vậy với quá trình này sẽ giúp máy học có thể tìm kiếm văn bản nhanh hơn. • PDFs: Là một bộ tư liệu về hành chính được đóng gói trong một thư mục, AI sẽ lấy tài liệu được cung cấp trong đây để trả lời chính xác cho người dùng. 26",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 37,
-        "score": 0.8812226939930137,
-        "startOffset": 54970,
-        "endOffset": 55725
-      },
-      {
-        "index": 150,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên lý thông tin của hệ thống trên nhiều dạng câu hỏi với độ phức tạp khác nhau, từ việc...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên lý thông tin của hệ thống trên nhiều dạng câu hỏi với độ phức tạp khác nhau, từ việc truy xuất thông tin đơn giản đến việc tổng hợp và suy luận thông tin phức tạp. Hình 4.21: Biểu đồ tỉ lệ câu trả lời đúng và sai Biểu đồ cột trong Hình 4.21 cho thấy kết quả khả quan về tỉ lệ trả lời đúng của hệ thống, phản ánh mức độ chính xác của hệ thống khi phản hồi người dùng. Cụ thể, hệ thống đạt tỉ lệ chính xác cao ở cả ba mức độ câu hỏi: Dễ (96%), Trung bình (95%) và Khó (85%). Để đánh giá mức độ khó của câu hỏi, chúng tôi sử dụng các tiêu chí sau: • Dễ: Câu hỏi có nội dung đơn giản, thông tin trả lời nằm rõ ràng trong một tệp PDF duy nhất. Ví dụ, câu hỏi về thời hạn nộp học phí, quy định về điểm danh,...",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 68,
-        "score": 0.8812082367055191,
-        "startOffset": 80600,
-        "endOffset": 81370
-      },
-      {
-        "index": 35,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên use-case, sơ đồ lớp, sơ đồ hoạt động để minh họa rõ ràng cấu trúc, chức năng và luồn...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên use-case, sơ đồ lớp, sơ đồ hoạt động để minh họa rõ ràng cấu trúc, chức năng và luồng xử lý của hệ thống. • Chương 4: Xây dựng hệ thống , tập trung vào quá trình triển khai hệ thống. Các công cụ, ngôn ngữ lập trình, framework, thư viện được sử dụng sẽ được giới thiệu. Đồ án trình bày chi tiết về thuật toán, mã nguồn, giao diện người dùng và quy trình tích hợp các thành phần của hệ thống. Kết quả thử nghiệm, đánh giá hiệu năng và độ chính xác của hệ thống cũng sẽ được trình bày. • Chương 5: Kết Luận , là chương cuối cùng tóm tắt lại những kết quả đạt được của luận văn, bao gồm việc xây dựng thành công hệ thống hỗ trợ hành chính tự động, những đóng góp về mặt khoa học và thực tiễn.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 16,
-        "score": 0.8805841582491243,
-        "startOffset": 18549,
-        "endOffset": 19303
-      },
-      {
-        "index": 107,
-        "snippet": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Cán bộ: Lớp này có thêm các phương thức (method) PhanQuyen() (phân quyền), ThemFil...",
-        "text": "Xây dựng ứng dụng học máy hỗ trợ thủ tục hành chính cho sinh viên • Cán bộ: Lớp này có thêm các phương thức (method) PhanQuyen() (phân quyền), ThemFile() (thêm tệp) và XoaFile() (xóa tệp), cho thấy cán bộ có quyền quản lý tài khoản và tệp tin trong hệ thống. • Chatbot: Đây là một lớp độc lập, có chức năng TaoDoanChat() (tạo đoạn chat), có thể được sử dụng để hỗ trợ người dùng tương tác với hệ thống. • Pdf: Đây là một lớp độc lập, đại diện cho các tệp tin PDF trong hệ thống. Các mối quan hệ giữa các lớp được biểu diễn bằng các đường nối và các ký hiệu: • Mũi tên kế thừa: Biểu thị mối quan hệ kế thừa (inheritance), ví dụ, lớp Sinh viên kế thừa từ lớp Tài khoản. • Mũi tên liên kết: Biểu thị mối quan hệ liên kết (association), ví dụ, Tài khoản liên kết với Chatbot.",
-        "fileId": "f6aedd7a-6802-40b6-851a-bd77e52bc693",
-        "fileUrl": "uploads\\documents\\1767153490384-887585498.pdf",
-        "page": 39,
-        "score": 0.8788569499084086,
-        "startOffset": 56445,
-        "endOffset": 57216
-      }
-    ],
-    "chatId": "18bd4935-9ad9-4f4b-968c-2a5a73a4fbc4"
-  }
-}
-```
-
-## New chat and Chat Session
-
-### **POST** `/project/:projectId/chats/messages`
-
-**Param**:
-projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
-
-**Query**:
-
-``` json
-// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat 
-chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
-```
-
-**Body**
-
-```json
-{
-  "message": "IG, entropy la gi, tinh nhu nao, trinh bay lai step by step cho toi de hieu di"
-}
-```
-
-**Response**
-
-``` json
-{
-  "statusCode": 201,
-  "success": true,
-  "data": {
-    "answer": "IG (Information Gain) và entropy là hai khái niệm quan trọng trong lĩnh vực cây quyết định (decision trees) của học máy. Dưới đây là giải thích chi tiết và từng bước cách tính toán:\n\n1. Entropy là gì?\n- Entropy là một đại lượng đo lường mức độ không chắc chắn (uncertainty) hoặc độ hỗn loạn của một tập dữ liệu. Nếu một tập dữ liệu có các nhãn phân bố đều, entropy sẽ cao; nếu tất cả các nhãn giống nhau, entropy sẽ thấp (bằng 0).\n- Công thức tính entropy cho một tập dữ liệu S với k lớp:\n  \n  Entropy(S) = - ∑ (p_i * log2(p_i))\n  \n  Trong đó, p_i là xác suất xuất hiện của lớp i trong tập S.\n\n2. Information Gain (IG) là gì?\n- IG (Information Gain) là lượng thông tin thu được khi chia tập dữ liệu S theo một thuộc tính (feature) nào đó. Nó đo lường mức giảm entropy sau khi chia.\n- Công thức:\n  \n  IG(S, A) = Entropy(S) - ∑ (|S_v| / |S|) * Entropy(S_v)\n  \n  Trong đó:\n  - S: tập dữ liệu gốc\n  - A: thuộc tính dùng để chia\n  - S_v: tập con của S với thuộc tính A có giá trị v\n  - |S_v|: số lượng phần tử trong S_v\n  - |S|: số lượng phần tử trong S\n\n3. Các bước tính toán (step by step):\n\nBước 1: Tính entropy của tập dữ liệu gốc S.\n- Đếm số lượng phần tử của từng lớp trong S.\n- Tính xác suất p_i cho từng lớp.\n- Áp dụng công thức entropy.\n\nBước 2: Chia tập dữ liệu S theo thuộc tính A thành các tập con S_v.\n\nBước 3: Tính entropy cho từng tập con S_v.\n\nBước 4: Tính entropy trung bình sau khi chia theo thuộc tính A:\n- Lấy entropy của từng S_v nhân với tỷ lệ |S_v| / |S|, rồi cộng lại.\n\nBước 5: Tính IG:\n- IG(S, A) = Entropy(S) - entropy trung bình sau khi chia.\n\nTóm lại, IG giúp chọn thuộc tính nào để chia dữ liệu tại mỗi bước của cây quyết định, bằng cách chọn thuộc tính làm giảm entropy nhiều nhất (tức là tăng \"thông tin\" nhiều nhất) [#10].",
-    "citations": [
-      {
-        "index": 22,
-        "snippet": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n...",
-        "text": "ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận\n\n Câu hỏi mở: Iàm thế nào đề kết hợp với học máy?\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nLogic\nMotivation: virtual assistant\nTell inlormation Âsk questlons\nIE :2 4E z1\n\nUse natural languagel\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\n984/ch problems\n\nMakoydecslonrocesesi Conslraint satisdaction problems\n\nAdversarial games Bayesian neluorls\nReflex 9tates Variables Logic\nnu\nLạt-leedl intellgene \"High-leel inteligene \n\nMachine learming\n\nTypes of models that we can use to represenlt real-world tasks",
-        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
-        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
-        "page": 1,
-        "score": 0.2769574737485445,
-        "startOffset": 13200,
-        "endOffset": 13893,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 155,
-        "snippet": "Thu ộ c tính và giá tr ị   ở   đ ây là các ký hi ệ u.  Sau khi h ọ c xong, ID3 bi ể u di ễ n khái ni ệ m h ọ c  đượ c b ằ ng m ộ t cây quy ế t  đị nh....",
-        "text": "Thu ộ c tính và giá tr ị   ở   đ ây là các ký hi ệ u.  Sau khi h ọ c xong, ID3 bi ể u di ễ n khái ni ệ m h ọ c  đượ c b ằ ng m ộ t cây quy ế t  đị nh.  −   Ti ế p c ậ n k ế t n ố i hay m ạ ng neuron mô ph ỏ ng h ệ  th ầ n kinh c ủ a con ng ườ i  để  h ọ c  đượ c  các  khái  ni ệ m  mà  không  s ử  d ụ ng  ký  hi ệ u  để   bi ể u  di ễ n  v ấ n  đề .  M ạ ng  đơ n  t ầ ng  perceptron  cho  th ấ y  s ứ c  m ạ nh  c ủ a  m ạ ng  neuron,  tuy  nhiên  kh ả  n ă ng  áp  d ụ ng  c ủ a  chúng ch ỉ  h ạ n ch ế  cho các bài toán có tính tách r ờ i tuy ế n tính. M ạ ng  đ a t ầ ng áp d ụ ng  gi ả i  thu ậ t  h ọ c  lan  truy ề n  ng ượ c  đ ã  v ượ t  qua  nh ữ ng  h ạ n  ch ế  c ủ a  m ạ ng  perceptron,   ch ứ ng t ỏ   đượ c s ứ c m ạ nh th ự c s ự  c ủ a ti ế p c ậ n này.",
-        "fileId": "41a0ff87-6436-4a76-bf1e-f1b5212a4aa0",
-        "fileUrl": "uploads\\documents\\1766903551498-390414281.pdf",
-        "page": 32,
-        "score": 0.27663375660482803,
-        "startOffset": 85025,
-        "endOffset": 85798,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 35,
-        "snippet": "IE-TẾ\n\n chứa cặp oondiiion,\n\nactlon (;Í ooldifion then acion\n\nmô tả các sự kiện, và trình\n\nbiên dịch điều khiển việc áp dụng các luật, và các sự kiện\n...",
-        "text": "IE-TẾ\n\n chứa cặp oondiiion,\n\nactlon (;Í ooldifion then acion\n\nmô tả các sự kiện, và trình\n\nbiên dịch điều khiển việc áp dụng các luật, và các sự kiện\n\nđược cho.\n\nSử dụng suy diễn tiền (đi tử dữ Iội đồn mục tiêu) hoặc suy\ndiện Iùi (đi từ mục tiêu về dữ liệu)\nHệ luật sinh\n\nVD; Hệ luật sinh đơn giản dùng đồ sắp xếp một d3 các chữ cái a, b,c\ntheo thứ tự từ điện\nProduction set\n\n1. ba ab\n2. ca - ac\n\n4z g4 .: À 3. cb 1 bc\nIặp đền khi mẫu\n\ntrong bộ nhớ Iàm Heration Workingmemory Conflictset Hule fired\nvệc không còn 0 cbaca 1,2,3 1\n\nkhớp với đều liện\n\ncủi bắt Iỳ luật sinh u cabca 2 :\n\nnao, 2 acbca 2.3 2\nBiểu diễn mạng\n( efwork represen(aflon)\nBiểu diễn mạnp\n\nTrị thức được biểu diện dưới dạng đồ thị: các định Ià các đôi\ntượng hoặc khái miệm, các cung Ià quan hệ giữa chúng",
-        "fileId": "9234d71b-d05a-497b-94a4-2bbf969673a1",
-        "fileUrl": "uploads\\documents\\1766903551408-721977946.pdf",
-        "page": 1,
-        "score": 0.2759722599676925,
-        "startOffset": 20719,
-        "endOffset": 21491,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 8,
-        "snippet": "¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic m ệ nh  đề .  ...",
-        "text": "¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic m ệ nh  đề .  ¾   V ậ n  d ụ ng  gi ả i  thu ậ t  H ợ p  Gi ả i  để   ch ứ ng  minh  các  v ấ n  đề   đượ c  bi ể u  di ễ n  b ằ ng  ngôn ng ữ  logic v ị  t ừ    Ki ế n th ứ c tiên quy ế t : Ngôn ng ữ  logic m ệ nh  đề , ngôn ng ữ  logic v ị  t ừ , ph ươ ng pháp ch ứ ng  minh d ẫ n xu ấ t, phép  đố i sánh m ẫ u trong logic v ị  t ừ .  Tài li ệ u tham kh ả o :   [1]  Geogre F. Luger –  Artificial Intelligence, Structures and  Strategies for Complex Problem  Solving 4 th  Ed. –  Addison-Wesley Publishing Company, Inc – 2002  (trang 509 – trang 552)   [2]   Elaine  Rich,  Kevin  Knight  –   Artificial  Intelligence,  2 nd   Ed.",
-        "fileId": "cb98ee69-32ce-4dd4-989c-88ec42b035f7",
-        "fileUrl": "uploads\\documents\\1766903551502-901921657.pdf",
-        "page": 2,
-        "score": 0.2759576725959778,
-        "startOffset": 4278,
-        "endOffset": 5046,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 21,
-        "snippet": "81519J716/1/407 3\nVanables 41 J 3 iJ J42isjals3lils1\nnu lj 6 111)3J912/4J81516\nô 218 916/1J5)317/21814\n4J1)9 2181714J1/9/603)5\nI 119 314J512J81611/7)3...",
-        "text": "81519J716/1/407 3\nVanables 41 J 3 iJ J42isjals3lils1\nnu lj 6 111)3J912/4J81516\nô 218 916/1J5)317/21814\n4J1)9 2181714J1/9/603)5\nI 119 314J512J81611/7)3\n\n604l: put dglts In blank squares so each row, column, and 3 3 sub-block\nhas dgls 1-9\n\nNote: order of flling squares doesn t matter in the evaluation criterial\n\n0591 / Alturin 2018 / Lang\n(ác phương pháp xây dựng ứng dụng TTN \ntheo mức độ thông minh\n\n(ongirasint satiacton problms hard consrainis (eg, SUdoku\nsthedling)\n\n(0 stralnt salisdfactlon problems\n\nBayeslan neworls\n\nVariables\n\nBayeslan nehuorls: soft _ Ẹ, 1racling ca s from sensors)\n\n114\n\n(0921 / Attumn 2018 / La 1\n(ác phương pháp xây dựng ứng dụng TĨNT\ntheo mức độ thông minh\n\nLo ic\nLogic: thông trị AI từ những năm 1980-1980, vân hữu ích trong\ncác hệ thông Iập trình\nKiên hức và Iý luận",
-        "fileId": "a74da6c0-f14f-4d16-bb5d-80fdb0cfd316",
-        "fileUrl": "uploads\\documents\\1766903551419-47988989.pdf",
-        "page": 1,
-        "score": 0.2757757830619812,
-        "startOffset": 12549,
-        "endOffset": 13348,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 113,
-        "snippet": "đ ã cho th ấ y  tính  hi ệ u  qu ả  c ủ a  tri  th ứ c  ư u  tiên  trong  quá  trình  h ọ c  (mitchell  et  al.  1986,  dejong  and   mooney 1986).  S...",
-        "text": "đ ã cho th ấ y  tính  hi ệ u  qu ả  c ủ a  tri  th ứ c  ư u  tiên  trong  quá  trình  h ọ c  (mitchell  et  al.  1986,  dejong  and   mooney 1986).  S ự  thành công c ủ a các ch ươ ng trình h ọ c máy thuy ế t ph ụ c r ằ ng có th ể  t ồ n t ạ i m ộ t t ậ p h ợ p các  nguyên t ắ c h ọ c t ổ ng quát cho phép xây d ự ng nên các ch ươ ng trình có kh ả  n ă ng h ọ c t ậ p trong  nhi ề u l ĩ nh v ự c th ự c t ế .  III.9   X ử  lý phân tán song song và tính toán ki ể u n ả y sinh  H ầ u h ế t các k ỹ  thu ậ t nói  đế n trong tài li ệ u này  đề u s ử  d ụ ng tri th ứ c  đượ c bi ể u di ễ n rõ ràng và  các thu ậ t toán tìm ki ế m  đượ c thi ế t k ế  m ộ t cách c ẩ n th ậ n  để  cài  đặ t trí tu ệ .",
-        "fileId": "3b6fd126-c315-4b6e-88ba-cdd0d0b5e8e8",
-        "fileUrl": "uploads\\documents\\1766903551515-581923689.pdf",
-        "page": 15,
-        "score": 0.2756116038196321,
-        "startOffset": 57626,
-        "endOffset": 58323,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 8,
-        "snippet": "Heaviside step function Gọi x là tổng kết hợp trong công thức (1) g ( x ) =      1 , if x > 0 0 , elsewhere (2) còn được gọi à Heaviside step fun...",
-        "text": "Heaviside step function Gọi x là tổng kết hợp trong công thức (1) g ( x ) =      1 , if x > 0 0 , elsewhere (2) còn được gọi à Heaviside step function www.ctuet.edu.vn Perceptron 9 / 41",
-        "fileId": "a0e80837-b7af-49d1-9414-04f2df731911",
-        "fileUrl": "uploads\\documents\\1766903551471-182850855.pdf",
-        "page": 9,
-        "score": 0.2753538638564265,
-        "startOffset": 1673,
-        "endOffset": 1863,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      },
-      {
-        "index": 10,
-        "snippet": "Trình tự thực hiện if-else Giải thuật decision trees tuần tự thực hiện từng cột dữ liệu, hay gọi là từng feature Kết quả của sự chia feature trước sẽ ...",
-        "text": "Trình tự thực hiện if-else Giải thuật decision trees tuần tự thực hiện từng cột dữ liệu, hay gọi là từng feature Kết quả của sự chia feature trước sẽ ảnh hưởng đến sự chia feature sau Nguyên tắc chọn câu hỏi if-else là sao cho quá trình chia feature, giảm sự không chắc chắn (the amount of uncertainty) Giá trị thể hiện sự không chắc chắn được gọi là entropy www.ctuet.edu.vn Decision trees 10 / 28",
-        "fileId": "00cf3364-9710-44a0-8181-848bffd5e6a6",
-        "fileUrl": "uploads\\documents\\1766903551480-321544779.pdf",
-        "page": 10,
-        "score": 0.27511617422103885,
-        "startOffset": 1706,
-        "endOffset": 2104,
-        "projectId": "f9b71db0-5c12-47b0-b0ec-de861e6b924d"
-      }
-    ],
-    "chatId": "3ef5d8bd-2149-47bd-9baa-ae070977ea03"
-  }
-}
-```
-
-## Get Chat Detail
-
-### **GET** `/chat/:chatId/messages`
-
-**Param**
-chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "bdb88320-5a0a-4153-8f9a-1d1a9e43d3eb",
-    "title": "New Chat",
-    "createdAt": "2025-12-28T08:17:52.074Z",
-    "updatedAt": "2025-12-28T08:17:55.145Z",
-    "userId": "977a368e-abfe-4a38-adbe-4625cce8d500",
-    "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-    "messages": [
-      {
-        "role": "user",
-        "content": "Cho tôi biết kiến trúc hệ thống và công nghệ của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
-      },
-      {
-        "role": "assistant",
-        "content": "Tài liệu hiện tại không chứa thông tin về kiến trúc hệ thống và công nghệ của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật, cũng như không đề cập đến việc kiến trúc này có giống kiến trúc RAG hay chỉ là một phiên bản đơn giản hơn. Nội dung tài liệu chủ yếu tập trung vào các mô hình ngôn ngữ lớn như ChatGPT và Gemini, cùng các công nghệ liên quan đến LLM hiện đại [#0][#5][#10][#12].",
-        "citation": [
-          {
-            "page": 2,
-            "text": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tuy nhiên,  ở bài kiểm tra HellaSwag về suy luận thường thức ,   GPT-4 (ChatGPT)  lại    nhỉnh hơn Gemini Ultra  đôi chút, phản ánh rằng  mô hình của OpenAI vẫn dẫn trước về một số khả năng hiểu biết ngữ cảnh thường nhật . Điều này gợi ý rằng  hiệu suất của LLM  phụ thuộc vào tính chất của từng nhiệm vụ cũng như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay.",
-            "index": 12,
-            "score": 0.9077052703255086,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tu...",
-            "endOffset": 7353,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 6616
-          },
-          {
-            "page": 2,
-            "text": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tuy nhiên,  ở bài kiểm tra HellaSwag về suy luận thường thức ,   GPT-4 (ChatGPT)  lại    nhỉnh hơn Gemini Ultra  đôi chút, phản ánh rằng  mô hình của OpenAI vẫn dẫn trước về một số khả năng hiểu biết ngữ cảnh thường nhật . Điều này gợi ý rằng  hiệu suất của LLM  phụ thuộc vào tính chất của từng nhiệm vụ cũng như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay.",
-            "index": 12,
-            "score": 0.907649701833725,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tu...",
-            "endOffset": 7353,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 6616
-          },
-          {
-            "page": 2,
-            "text": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng .",
-            "index": 10,
-            "score": 0.9029724299907684,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. ...",
-            "endOffset": 6205,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 5591
-          },
-          {
-            "page": 2,
-            "text": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. Các hướng nghiên cứu mới (như kiến trúc MoE) đang được triển khai nhằm  cải thiện hiệu quả tính toán , giúp mô hình  chạy nhanh hơn với chi phí thấp hơn . Nhìn sang  thế hệ mô hình mới hơn ,   ChatGPT  (dựa trên GPT-3.5/GPT-4, có áp dụng RLHF) và  Google Gemini  (mô hình đa phương thức tiên tiến) là hai đại diện nổi bật cho  nền tảng LLM thương mại vào năm 2025 . Cả hai đều thể hiện hiệu suất ấn tượng trên nhiều nhiệm vụ, nhưng  mỗi mô hình có thế mạnh riêng .",
-            "index": 10,
-            "score": 0.9029724299907684,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "thống kê. Bên cạnh đó,  chi phí tính toán  để huấn luyện và vận hành những mô hình lớn như GPT-3 là  rất cao , đòi hỏi tài nguyên phần cứng khổng lồ. ...",
-            "endOffset": 6205,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 5591
-          },
-          {
-            "page": 1,
-            "text": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng cho từng tác vụ .",
-            "index": 5,
-            "score": 0.9004563748836517,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . V...",
-            "endOffset": 3416,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 2845
-          },
-          {
-            "page": 1,
-            "text": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . Việc     gia tăng quy mô mô hình  (số lượng tham số) đi cùng  khối lượng dữ liệu huấn luyện khổng lồ  đã dẫn đến  những bước nhảy vọt về năng lực  của LLM.  GPT-3    của OpenAI (ra mắt 2020) là một ví dụ tiêu biểu: với  175 tỷ tham số , GPT-3 được huấn luyện trên  khối lượng dữ liệu văn bản ~570 GB  và có thể  thực hiện đa dạng nhiệm vụ NLP  chỉ thông qua  gợi ý ngữ cảnh ,   không cần tinh chỉnh riêng cho từng tác vụ .",
-            "index": 5,
-            "score": 0.9003304779332589,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "hệ ngữ cảnh giữa các từ trong chuỗi dữ liệu hiệu quả hơn so với các mô hình trước đó, đặt nền móng cho sự ra đời của  các mô hình ngôn ngữ cực lớn . V...",
-            "endOffset": 3416,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 2845
-          },
-          {
-            "page": 1,
-            "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
-            "index": 0,
-            "score": 0.8964306837742281,
-            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
-            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
-            "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
-            "endOffset": 768,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 0
-          },
-          {
-            "page": 1,
-            "text": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng thực tế của các mô hình ngôn ngữ lớn (LLM)  trong nhiều lĩnh vực. Nhìn chung, LLM hiện đại đã  tạo nên bước đột phá trong xử lý ngôn ngữ tự nhiên (NLP) , cho phép máy tính không chỉ hiểu và sinh ngôn ngữ mà còn  suy luận dựa trên ngôn ngữ . Những mô hình như  ChatGPT của OpenAI  và    Gemini của Google  đã mở rộng đáng kể khả năng của AI nhờ áp dụng các kỹ thuật tiên tiến – ví dụ như  học tăng cường từ phản hồi của con người (RLHF)  để nâng cao tính mạch lạc trong hội thoại, hay  kiến trúc đa phương thức  để xử lý đồng thời văn bản, hình ảnh, âm thanh – qua đó  mở rộng phạm vi ứng dụng của LLM  trong thực tiễn .",
-            "index": 0,
-            "score": 0.8961400389671326,
-            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
-            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
-            "snippet": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini Các nghiên cứu quốc tế gần đây tập trung làm rõ vai trò và  ứng dụng t...",
-            "endOffset": 768,
-            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
-            "startOffset": 0
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-## Get Global Chats
-
-### **GET** `/chat/user/global`
-
-**Note:** Get all chats that have `projectId` = null
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": [
-    {
-      "id": "05db033f-643d-4cbc-92cc-8b13538eb217",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T05:07:23.316Z",
-      "updatedAt": "2025-12-25T05:07:32.142Z",
-      "projectId": null
-    },
-    {
-      "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
-      "title": "New Chat",
-      "createdAt": "2025-12-25T05:04:19.340Z",
-      "updatedAt": "2025-12-25T05:04:23.696Z",
-      "projectId": null
-    }
-  ]
-}
-```
-
-## Update chat
-
-### **PATCH** `/chat/user/:chatId`
-
-**Param**
-chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
-
-**Body**
-
-```json
-{
-    // Just update 2 fields
-    "title": "Sinoo chat",
-    "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
-}
-```
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
-    "title": "Sinoo chat moved",
-    "createdAt": "2025-12-25T05:04:19.340Z",
-    "updatedAt": "2025-12-25T14:23:51.997Z",
-    "projectId": "cf3ad296-3044-451f-84db-9fc99c9e327d"
-  }
-}
-```
-
-## Delete chat
-
-### **DELETE** `/chat/user/:chatId`
-
-**Param**
-chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
-
-**Response**
-
-```json
-{
-  "statusCode": 200,
-  "success": true,
-  "data": {
-    "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
-    "title": "Sinoo chat moved",
-    "createdAt": "2025-12-25T05:04:19.340Z",
-    "updatedAt": "2025-12-25T14:23:51.997Z",
-    "projectId": "cf3ad296-3044-451f-84db-9fc99c9e327d"
-  }
-}
-```
-
----
-
-# 📙 Response Format
-
-## Success Response
-
-```json
-{
-  "statusCode": 200, // 201, 400, 500
-  "success": true,
-  "data": // {} or [],
-}
-```
-
-```
+*(Unsupported file type)*
 
 ### src\app.controller.spec.ts
 
@@ -1438,13 +164,12 @@ export class AppController {
 
 ```ts
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { PipelineModule } from './pipeline/pipeline.module';
 import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
@@ -1461,10 +186,17 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { RetrievalModule } from './retrieval/retrieval.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file'; // Import if using rotation
-
+import 'winston-daily-rotate-file';
+import { BullModule } from '@nestjs/bullmq';
+import { QueueModule } from './queue/queue.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationModule } from './notification/notification.module';
 @Module({
   imports: [
+
+    // Event emitter
+    EventEmitterModule.forRoot(),
     // Serve static files from the "uploads" directory
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
@@ -1533,6 +265,12 @@ import 'winston-daily-rotate-file'; // Import if using rotation
           .valid('ERROR', 'WARN', 'INFO', 'DEBUG')
           .optional()
           .default('INFO'),
+
+        // Redis (BullMQ)
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
+        REDIS_USERNAME: Joi.string().optional().default('default'),
+        REDIS_PASSWORD: Joi.string().required(),
       }),
     }),
     WinstonModule.forRoot({
@@ -1588,13 +326,27 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     IngestModule,
     DocumentModule,
     ChatModule,
-    PipelineModule,
     OpenaiModule,
     PrismaModule,
     ProjectModule,
     AuthModule,
     UserModule,
     RetrievalModule,
+    // BullMQ Global Configuration
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          username: configService.get<string>('REDIS_USERNAME') || 'default',
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    QueueModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
@@ -1612,7 +364,7 @@ import 'winston-daily-rotate-file'; // Import if using rotation
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
 
 ```
 
@@ -1738,6 +490,19 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Role } from '../constant/index.constant';
+import { $Enums } from '@prisma/client';
+
+type UserType = {
+  id: string;
+  name: string | null;
+  role: $Enums.Role;
+  email: string;
+  username: string;
+  password: string;
+  refreshToken: string | null;
+  storageUsed: bigint;
+  storageLimit: bigint;
+};
 
 @Injectable()
 export class AuthService {
@@ -1812,7 +577,7 @@ export class AuthService {
         ...userSafe,
         storageUsed: Number(storageUsed),
         storageLimit: Number(storageLimit),
-      } as any,
+      } as unknown as UserType,
     };
   }
 
@@ -2028,6 +793,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class OwnerGuard implements CanActivate {
@@ -2038,7 +804,7 @@ export class OwnerGuard implements CanActivate {
     const userId = req.user.userId;
     const ownerId = await this.getOwnerIdFn(req);
 
-    if (ownerId !== userId && req.user.role !== 'ADMIN') {
+    if (ownerId !== userId && req.user.role !== Role.ADMIN) {
       throw new ForbiddenException('Not allowed: not owner');
     }
 
@@ -2189,9 +955,9 @@ import {
   Patch,
   Param,
   Delete,
-  Headers,
   Query,
   Req,
+  Sse,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -2200,7 +966,32 @@ import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) { }
+
+  // -- CHAT STREAM --
+  // Note: SSE uses GET, so we use Query params instead of Body
+  @Sse('/stream')
+  chatStream(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Query('message') message: string,
+    @Query('projectId') projectId?: string,
+    @Query('chatId') chatId?: string,
+  ) {
+    // Debug: Log user info
+    console.log('SSE Stream - req.user:', req.user);
+
+    if (!req.user || !req.user.userId) {
+      throw new Error('User not authenticated');
+    }
+
+    const chatDto: ChatDto = {
+      message,
+      projectId,
+      chatId,
+      userId: req.user.userId,
+    };
+    return this.chatService.chatStream(chatDto);
+  }
 
   // -- CHAT LITE --
   @Post('/global')
@@ -2290,6 +1081,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { OpenaiService } from '../llm/openai/openai.service';
@@ -2300,6 +1092,8 @@ import {
   RetrievalService,
   ScoredDocument,
 } from '../retrieval/retrieval.service';
+import * as path from 'node:path';
+import { Observable, Subject } from 'rxjs';
 
 type MessageType = {
   role: 'system' | 'user' | 'assistant';
@@ -2319,26 +1113,35 @@ type CitationType = {
   projectId: string;
 };
 
+// Custom SSE message type for streaming responses
+type SSEMessage = {
+  data: {
+    type: 'TOKEN' | 'CITATIONS' | 'CHAT_ID' | 'ERROR' | 'DONE';
+    content?: string | CitationType[];
+    chatId?: string;
+  };
+};
+
 type BaseMessage =
   | {
-      answer: string;
-      citations?: undefined;
-      chat?: undefined;
-    }
+    answer: string;
+    citations?: undefined;
+    chat?: undefined;
+  }
   | {
-      answer: string | (ContentBlock | ContentBlock.Text)[];
-      citations: CitationType[];
-      // chat: {
-      //   id: string;
-      //   userId: string;
-      //   title: string;
-      //   messages: JsonValue[];
-      //   createdAt: Date;
-      //   updatedAt: Date;
-      //   projectId: string | null;
-      // };
-      chatId: string;
-    };
+    answer: string | (ContentBlock | ContentBlock.Text)[];
+    citations: CitationType[];
+    // chat: {
+    //   id: string;
+    //   userId: string;
+    //   title: string;
+    //   messages: JsonValue[];
+    //   createdAt: Date;
+    //   updatedAt: Date;
+    //   projectId: string | null;
+    // };
+    chatId: string;
+  };
 
 // 1. Grouping: Gom các chunk về theo từng File
 // Mục đích: Không để chunk của file A nằm xen kẽ file B, gây lú ngữ cảnh.
@@ -2350,17 +1153,134 @@ type FileGroup = {
 };
 @Injectable()
 export class ChatService {
+  // logger
+  private readonly logger = new Logger(ChatService.name);
   constructor(
     private readonly openaiService: OpenaiService,
     private prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
-  ) {}
+  ) { }
 
   // -- CORE CHAT FUNCTIONALITY --
-  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
-    // -- VALIDATIONS -- TODO: update with joi
 
-    const historyNum = 6;
+  chatStream(chatDto: ChatDto): Observable<SSEMessage> {
+    const subject = new Subject<SSEMessage>();
+
+    (async () => {
+      try {
+        const preparedData = await this.prepareRagContext(chatDto);
+
+        // Xử lý case không tìm thấy tài liệu
+        if ('answer' in preparedData) {
+          subject.next({ data: { type: 'ERROR', content: preparedData.answer } });
+          subject.complete();
+          return;
+        }
+
+        const { chatId, messages, citations } = preparedData;
+
+        subject.next({
+          data: { type: 'CITATIONS', content: citations, chatId }
+        });
+
+        // Call stream llm
+        const stream = await this.openaiService.getChatModel().stream(messages);
+
+        let fullAnswer = ''; // Biến gom text để lưu DB
+
+        for await (const chunk of stream) {
+          const token = chunk.content as string;
+          if (token) {
+            fullAnswer += token;
+            // Send token to client
+            subject.next({ data: { type: 'TOKEN', content: token } });
+          }
+        }
+
+        // Call save db
+        await this.saveChatToDb(chatId, chatDto.message, fullAnswer, citations);
+
+        // Send done to client
+        subject.next({ data: { type: 'DONE' } });
+        subject.complete();
+
+
+      } catch (error) {
+        this.logger.error(error);
+        subject.next({ data: { type: 'ERROR', content: 'Có lỗi xảy ra khi xử lý.' } });
+        subject.complete();
+      }
+    })()
+
+    return subject.asObservable();
+  }
+
+  // === DRY === 
+
+  private async prepareRagContext(chatDto: ChatDto): Promise<
+    | { answer: string } // Case không tìm thấy docs
+    | { chatId: string; messages: any[]; citations: CitationType[] } // Case thành công
+  > {
+    const MAX_HISTORY_MESSAGES = 6;
+
+    // 1. Ensure Chat & Load History
+    const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
+
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
+    });
+
+    const contentHistory = historyMessages
+      .filter((m) => m.role && m.content)
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
+
+    // 2. Rewrite Question
+    let finalQuestion = chatDto.message;
+    if (contentHistory.length > 0) {
+      finalQuestion = await this.createStandaloneQuestion(contentHistory, chatDto.message);
+    }
+
+    // 3. Retrieve & Rerank
+    const scoredDocs = await this.callRetrieveAndRerank(
+      finalQuestion,
+      chatDto.userId as string,
+      chatDto.projectId as string,
+    );
+
+    if (!scoredDocs || scoredDocs.length === 0) {
+      return {
+        answer: 'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn.',
+      };
+    }
+
+    // 4. Build Context
+    const fileGroups = this.createFileGroups(scoredDocs);
+    const contextStr = this.createContextFromFileGroups(fileGroups);
+    const messages = this.createFinalInputLlm(contextStr, chatDto.message, contentHistory);
+
+    // 5. Build Citations (Logic map cũ của em)
+    const citations: CitationType[] = scoredDocs.map((doc) => ({
+      index: doc.metadata.chunkIndex as number,
+      snippet: doc.pageContent.substring(0, 150) + '...',
+      text: doc.pageContent,
+      fileId: doc.metadata.fileId as string,
+      fileUrl: (doc.metadata.fileUrl as string) || '',
+      page: (doc.metadata.page as number) || 0,
+      score: doc.finalScore,
+      startOffset: (doc.metadata.startOffset as number) || 0,
+      endOffset: (doc.metadata.endOffset as number) || 0,
+      projectId: doc.metadata.projectId as string,
+    }));
+
+    return { chatId: chatId as string, messages, citations };
+  }
+
+
+
+  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
+    const MAX_HISTORY_MESSAGES = 6;
 
     // Ensure chat exists
     const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
@@ -2368,17 +1288,16 @@ export class ChatService {
     // Rewrite question to standalone if chatId provided
     let finalQuestion = chatDto.message;
 
-    const historyMessages = await this.prisma.chats.findUnique({
-      where: { id: chatId },
-      select: { messages: true },
+    // Load history from ChatMessage table (not JSON)
+    const historyMessages = await this.prisma.chatMessage.findMany({
+      where: { chatId: chatId },
+      orderBy: { createdAt: 'asc' },
+      take: MAX_HISTORY_MESSAGES,
     });
 
-    const contentHistory: MessageType[] = (
-      (historyMessages?.messages ?? []) as MessageType[]
-    )
-      .slice(-historyNum)
+    const contentHistory: MessageType[] = historyMessages
       .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role, content: m.content }));
+      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
 
     if (contentHistory.length > 0) {
       finalQuestion = await this.createStandaloneQuestion(
@@ -2404,24 +1323,17 @@ export class ChatService {
       };
     }
 
-    // Debug: Log kết quả sau khi Rerank
-    console.log(`📋 Top ${scoredDocs.length} Documents after Rerank:`);
-    scoredDocs.slice(0, 3).forEach((doc, idx) => {
-      console.log(
-        `  ${idx + 1}. [Score=${doc.finalScore?.toFixed(3)}] ${doc.pageContent.substring(0, 50)}...`,
-      );
-    });
 
     // -- HELPER: Create File Groups from Scored Docs --
     const fileGroups = this.createFileGroups(scoredDocs);
 
     // -- HELPER: Create Context from File Groups --
-    const context = this.createContextFromFileGroups(fileGroups);
-    console.log('Final Context passed to LLM:\n', context);
+    const contextStr = this.createContextFromFileGroups(fileGroups);
+
 
     // -- HELPER: Create final inputLlm for LLM --
     const inputLlm = this.createFinalInputLlm(
-      context,
+      contextStr,
       chatDto.message,
       contentHistory,
     );
@@ -2430,9 +1342,7 @@ export class ChatService {
     const response = await this.openaiService.getChatModel().invoke(inputLlm);
     const aiAnswer = response.content as string;
 
-    // ---------------------------------------------------------
     // 5. PREPARE CITATIONS (FE will controll it)
-    // ---------------------------------------------------------
     // Map từ ScoredDocument sang CitationType
     const citations: CitationType[] = scoredDocs.map((doc) => ({
       index: doc.metadata.chunkIndex as number,
@@ -2448,28 +1358,25 @@ export class ChatService {
       projectId: doc.metadata.projectId as string,
     }));
 
-    // ---------------------------------------------------------
-    // 6. SAVE & RETURN
-    // ---------------------------------------------------------
-    const updatedMessages = [
-      ...((historyMessages?.messages as MessageType[]) || []),
-      { role: 'user', content: chatDto.message },
-      {
+    // 6. SAVE MESSAGES TO ChatMessage TABLE
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
+        role: 'user',
+        content: chatDto.message,
+      },
+    });
+
+    // Save assistant message with citations
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId: chatId!,
         role: 'assistant',
         content: aiAnswer,
-        citation: citations,
+        metadata: { citations },
       },
-    ];
-
-    // Update async
-    this.prisma.chats
-      .update({
-        where: { id: chatId },
-        data: { messages: updatedMessages },
-      })
-      .catch((err) => {
-        console.error('Error updating chat messages:', err);
-      });
+    });
 
     return {
       answer: aiAnswer,
@@ -2497,9 +1404,7 @@ export class ChatService {
     message: string,
     contentHistory: MessageType[],
   ) {
-    // ---------------------------------------------------------
     // 3. PROMPT ENGINEERING (Tinh chỉnh cho Rerank)
-    // ---------------------------------------------------------
     const SYSTEM_PROMPT = `
       Bạn là trợ lý AI chuyên nghiệp, nhiệm vụ là trả lời câu hỏi dựa trên các tài liệu được cung cấp.
 
@@ -2527,10 +1432,7 @@ export class ChatService {
       ${message}
     `;
 
-    // ---------------------------------------------------------
     // 4. HISTORY & LLM CALL (Logic giữ nguyên, chỉ thay đổi input)
-    // ---------------------------------------------------------
-
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT.trim() },
       ...contentHistory,
@@ -2573,9 +1475,7 @@ export class ChatService {
   private createFileGroups(
     scoredDocs: ScoredDocument[],
   ): Map<string, FileGroup> {
-    // ---------------------------------------------------------
     // 2. CONTEXT CONSTRUCTION (Learn Logic from "NotebookLM")
-    // ---------------------------------------------------------
     // Gom nhóm chunk theo File để LLM hiểu ngữ cảnh của từng tài liệu
     const fileGroups = new Map<string, FileGroup>();
 
@@ -2594,7 +1494,8 @@ export class ChatService {
       if (!fileGroups.has(fileId)) {
         fileGroups.set(fileId, {
           fileId,
-          fileName,
+          // remove extension from file name
+          fileName: path.parse(fileName).name,
           maxScore: 0,
           chunks: [],
         });
@@ -2631,16 +1532,38 @@ export class ChatService {
     return scoredDocs;
   }
 
+
+  // -- HELPER: Save chat to db --
+  private async saveChatToDb(
+    chatId: string,
+    userMsg: string,
+    aiMsg: string,
+    citations: CitationType[]
+  ) {
+    // Save user message
+    await this.prisma.chatMessage.create({
+      data: { chatId, role: 'user', content: userMsg },
+    });
+
+    // Save assistant message
+    await this.prisma.chatMessage.create({
+      data: {
+        chatId,
+        role: 'assistant',
+        content: aiMsg,
+        metadata: { citations } // Lưu citations vào metadata để truy xuất sau
+      },
+    });
+  }
+
   // -- HELPER: Ensure chat exists or create it --
   private async ensureChatExists(chatId: string | undefined, chatDto: ChatDto) {
     let chatIdLocal = chatId;
     if (!chatId) {
-      const created = await this.prisma.chats.create({
+      const created = await this.prisma.chat.create({
         data: {
-          messages: [],
           userId: chatDto.userId as string,
           projectId: chatDto.projectId as string,
-          // Title là câu hỏi được slice tròn câu để tránh quá dài
           title:
             chatDto.message.length > 50
               ? chatDto.message.slice(0, 50) + '...'
@@ -2689,7 +1612,7 @@ export class ChatService {
 
   // -- Get all user chats --
   // async getAllUserChat(userId: string) {
-  //   return await this.prisma.chats.findMany({
+  //   return await this.prisma.chat.findMany({
   //     orderBy: { updatedAt: 'desc' },
   //     where: { userId },
   //     omit: { messages: true, userId: true },
@@ -2698,41 +1621,41 @@ export class ChatService {
 
   // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
-      omit: { messages: true, userId: true },
+      omit: { userId: true },
     });
   }
 
   // -- Get Chat by ID --
   async getChatById(userId: string, chatId: string) {
-    return await this.prisma.chats.findUnique({
+    return await this.prisma.chat.findUnique({
       where: { id: chatId, userId },
     });
   }
 
   // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
-    return await this.prisma.chats.update({
+    return await this.prisma.chat.update({
       where: { id, userId },
       data: updateChatDto,
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 
   // -- Delete chat --
   async remove(userId: string, id: string) {
-    const chat = await this.prisma.chats.findUnique({
+    const chat = await this.prisma.chat.findUnique({
       where: { id },
     });
     if (!chat) throw new BadRequestException('Chat not found');
     if (chat.userId !== userId)
       throw new ForbiddenException('User Unauthorized!');
 
-    return await this.prisma.chats.delete({
+    return await this.prisma.chat.delete({
       where: { id },
-      omit: { userId: true, messages: true },
+      omit: { userId: true },
     });
   }
 }
@@ -2774,6 +1697,79 @@ export class UpdateChatDto {
 
   @IsString({ message: 'projectId must be a string' })
   projectId?: string | null;
+}
+
+```
+
+### src\chat\memory\prisma-history.store.ts
+
+```ts
+import { BaseListChatMessageHistory } from '@langchain/core/chat_history';
+import {
+    BaseMessage,
+    HumanMessage,
+    AIMessage,
+    SystemMessage,
+} from '@langchain/core/messages';
+import { PrismaService } from '../../prisma/prisma.service';
+
+/**
+ * PrismaChatMessageHistory - Adapter for LangChain Memory
+ * Automatically saves and loads chat history from ChatMessage table
+ */
+export class PrismaChatMessageHistory extends BaseListChatMessageHistory {
+    lc_namespace = ['chat', 'memory'];
+
+    constructor(
+        private readonly chatId: string,
+        private readonly prisma: PrismaService,
+    ) {
+        super();
+    }
+
+    /**
+     * Load messages from DB and convert to LangChain format
+     */
+    async getMessages(): Promise<BaseMessage[]> {
+        const messages = await this.prisma.chatMessage.findMany({
+            where: { chatId: this.chatId },
+            orderBy: { createdAt: 'asc' },
+            take: 20, // Limit to last 20 messages to avoid context overflow
+        });
+
+        return messages.map((msg) => {
+            if (msg.role === 'user') return new HumanMessage(msg.content);
+            if (msg.role === 'assistant') return new AIMessage(msg.content);
+            return new SystemMessage(msg.content);
+        });
+    }
+
+    /**
+     * Save a new message to DB
+     */
+    async addMessage(message: BaseMessage): Promise<void> {
+        let role = 'user';
+        if (message instanceof AIMessage) role = 'assistant';
+        if (message instanceof SystemMessage) role = 'system';
+
+        await this.prisma.chatMessage.create({
+            data: {
+                chatId: this.chatId,
+                role,
+                content: message.content as string,
+                metadata: message.response_metadata || null,
+            },
+        });
+    }
+
+    /**
+     * Clear all messages for this chat
+     */
+    async clear(): Promise<void> {
+        await this.prisma.chatMessage.deleteMany({
+            where: { chatId: this.chatId },
+        });
+    }
 }
 
 ```
@@ -2950,8 +1946,19 @@ export const getPgConfigNeon = getPgConfig;
 ### src\constant\index.constant.ts
 
 ```ts
-export const CHUNK_SIZE = 800; // recommended
-export const CHUNK_OVERLAP = 150; // recommended
+export const PARENT_CHUNK_SIZE = 3000;
+export const PARENT_CHUNK_OVERLAP = 300;
+
+export const CHILD_CHUNK_SIZE = 900;
+export const CHILD_CHUNK_OVERLAP = 150;
+
+export const CHUNK_SIZE = 1000;
+export const CHUNK_OVERLAP = 150;
+
+// Chat constants
+export const MAX_HISTORY_MESSAGES = 6;
+export const RETRIEVAL_K = 90;
+export const FINAL_K = 20;
 
 // Authorization
 
@@ -3106,14 +2113,20 @@ import { DocumentService } from './document.service';
 import { DocumentController } from './document.controller';
 import { IngestModule } from '../ingest/ingest.module';
 import { PrismaService } from '../prisma/prisma.service';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
-  imports: [IngestModule],
+  imports: [
+    IngestModule,
+    BullModule.registerQueue({
+      name: 'ingest-queue',
+    }),
+  ],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService, ConsoleLogger],
   exports: [DocumentService],
 })
-export class DocumentModule {}
+export class DocumentModule { }
 
 ```
 
@@ -3122,87 +2135,83 @@ export class DocumentModule {}
 ```ts
 import { ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { IngestService } from '../ingest/ingest.service';
 import { VectorService } from '../ingest/vector/vector.service';
 import { deleteFile } from './oss';
-import path from 'path';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { documents, DocumentStatus } from '@prisma/client';
 import { AccessLevelDoc } from '../constant/index.constant';
 import { UploadMetadataDto } from './dto/upload-document.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { IngestJobData } from '../queue/ingest.processor';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    private readonly ingestService: IngestService,
+    @InjectQueue('ingest-queue') private ingestQueue: Queue<IngestJobData>,
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
-  //-- UPLOAD --
+  //-- UPLOAD (Non-blocking with Queue) --
   async uploadFiles(
     userId: string,
     files: Express.Multer.File[],
     projectId?: string,
     metadata?: UploadMetadataDto,
-  ): Promise<void> {
-    for (const file of files) {
-      let document: documents | null = null;
-      try {
-        // Pre create document record with 'processing' status
-        document = await this.createDocument({
-          projectId: projectId,
-          originalName: file.originalname,
-          filePath: file.path,
-          mimeType: file.mimetype,
-          size: file.size,
-          status: DocumentStatus.PROCESSING,
-          userId: userId,
-          accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
-          viewCount: 0, // TODO: default 0
-          pageCount: 0, // TODO: get real page count after OCR
-          authors: metadata?.authors || [],
-          description: metadata?.description || '',
-          publishedYear: metadata?.publishedYear || undefined,
-          subjects: metadata?.subjects || [],
-          tags: metadata?.tags || [],
-          title: metadata?.title || path.parse(file.originalname).name,
-          documentType: 'unknown',
-        });
+  ): Promise<{ documents: documents[]; jobIds: string[] }> {
+    const createdDocuments: documents[] = [];
+    const jobIds: string[] = [];
 
-        const chunksCount = await this.ingestService.ingestDocument(
-          file.path,
-          document.id,
+    for (const file of files) {
+      // 1. Create document record with PENDING status (immediate response)
+      const document = await this.createDocument({
+        projectId: projectId,
+        originalName: file.originalname,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        size: file.size,
+        status: DocumentStatus.PENDING,
+        userId: userId,
+        accessLevel: metadata?.accessLevel || AccessLevelDoc.PRIVATE,
+        viewCount: 0,
+        pageCount: 0,
+        authors: metadata?.authors || [],
+        description: metadata?.description || '',
+        publishedYear: metadata?.publishedYear || undefined,
+        subjects: metadata?.subjects || [],
+        tags: metadata?.tags || [],
+        title: metadata?.title || path.parse(file.originalname).name,
+        documentType: 'unknown',
+      });
+
+      createdDocuments.push(document);
+
+      // 2. Add job to queue (non-blocking, processed by worker)
+      const job = await this.ingestQueue.add(
+        'process-document',
+        {
+          fileId: document.id,
+          filePath: file.path,
           userId,
           projectId,
-          file.originalname,
-        );
+          originalFileName: file.originalname,
+        },
+        {
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 5000 },
+          removeOnComplete: true,
+        },
+      );
 
-        this.logger.log(
-          `✅ Ingested ${chunksCount} chunks for: ${file.originalname}`,
-        );
-
-        // If ingestion successful (has chunks), save document record in DB
-        if (chunksCount > 0) {
-          // update 'done' status
-          await this.updateDocumentStatus(document.id, DocumentStatus.DONE);
-
-          this.logger.log(
-            `📝 Document record created for: ${file.originalname}`,
-          );
-        } else {
-          this.logger.warn(`⚠️ No chunks created for: ${file.originalname}`);
-        }
-      } catch (error) {
-        this.logger.error(`❌ Failed to ingest ${file.originalname}:`, error);
-        // Optionally update 'error' status
-        if (document) {
-          await this.updateDocumentStatus(document.id, DocumentStatus.ERROR);
-        }
-      }
+      jobIds.push(job.id || document.id);
+      this.logger.log(`📤 Queued job ${job.id} for: ${file.originalname}`);
     }
+
+    return { documents: createdDocuments, jobIds };
   }
 
   // -- REMOVE --
@@ -3334,11 +2343,30 @@ export class DocumentService {
       isSelected: true,
     }));
 
-    // 4. Create links
-    return await this.prisma.project_resources.createMany({
-      data: dataToInput,
-      skipDuplicates: true,
-    });
+    // 4. Update vector store and create DB links in parallel (Performance Optimization)
+    const [_, result] = await Promise.all([
+      this.vectorService.link2Project(validDocIds, projectId),
+      this.prisma.project_resources.createMany({
+        data: dataToInput,
+        skipDuplicates: true,
+      }),
+    ]);
+
+    return result;
+  }
+
+  async removeDocumentsOutProject(projectId: string, documentIds: string[]) {
+    // Delete from vector store and database in parallel
+    const [_, res] = await Promise.all([
+      this.vectorService.removeOutProject(documentIds, projectId),
+      this.prisma.project_resources.deleteMany({
+        where: {
+          projectId: projectId,
+          documentId: { in: documentIds },
+        },
+      }),
+    ]);
+    return res;
   }
 
   // -- Unlink ALL DOCUMENTS IN PROJECT --
@@ -3366,7 +2394,7 @@ export class DocumentService {
       },
     });
 
-    console.log(docsRaw);
+
     // return docsRaw;
     return docsRaw.map((item) => {
       return {
@@ -3655,13 +2683,6 @@ export class UploadMetadataDto {
 
 ```
 
-### src\document\entities\document.entity.ts
-
-```ts
-export class Document {}
-
-```
-
 ### src\document\oss.ts
 
 ```ts
@@ -3760,18 +2781,16 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 ```ts
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { IngestService } from './ingest.service';
-import { PdfService } from './loaders/pdf.loader';
-import { OcrService } from './loaders/ocr.loader';
 import { TextSplitterService } from './splitters/text-splitter';
 import { VectorService } from './vector/vector.service';
 import { PgvectorService } from './vector/pgvector.client';
 import { OpenaiService } from '../llm/openai/openai.service';
+import { CloudService } from './loaders/cloud.loader';
 
 @Module({
   providers: [
     IngestService,
-    PdfService,
-    OcrService,
+    CloudService,
     TextSplitterService,
     VectorService,
     PgvectorService,
@@ -3789,19 +2808,16 @@ export class IngestModule {}
 ```ts
 import { Injectable } from '@nestjs/common';
 import { VectorService } from './vector/vector.service';
-import { PdfService } from './loaders/pdf.loader';
 import { TextSplitterService } from './splitters/text-splitter';
-import { OcrService } from './loaders/ocr.loader';
-// import * as fs from 'fs';
+import { CloudService } from './loaders/cloud.loader';
 
 @Injectable()
 export class IngestService {
   constructor(
-    private pdfService: PdfService,
-    private ocrService: OcrService,
+    private cloudService: CloudService,
     private textSplitterService: TextSplitterService,
     private vectorService: VectorService,
-  ) {}
+  ) { }
   /* 
     1. Load document (Text/PDF/Image)
     2. Split text into chunks
@@ -3814,22 +2830,22 @@ export class IngestService {
     projectId?: string,
     originalFileName?: string,
   ) {
-    const pdfPages = await this.pdfService.load(filePath);
+    const markdownResult = await this.cloudService.load(filePath);
 
-    // OCR handle
-    let pagesToSplit = pdfPages;
-    if (
-      !pdfPages ||
-      pdfPages.length === 0 ||
-      pdfPages.every((p) => p.text.trim().length < 5)
-    ) {
-      console.log('📄 PDF scanned → OCR');
-      const ocrResult = await this.ocrService.load(filePath);
-      pagesToSplit = [{ page: 1, text: ocrResult.text }];
-    }
+    // console.log(JSON.stringify(markdownResult));
 
     // 2. Split text into chunks
-    const chunks = this.textSplitterService.splitPdfPages(pagesToSplit);
+    // Extract markdown text from ParseResult array
+    const markdownList = markdownResult
+      .flatMap((result) =>
+        result.pages.map((page) => ({
+          content: (page.md || page.text || '') as string,
+          page: page.page as number,
+        })),
+      )
+      .filter((item) => item.content.trim().length > 0); // Filter dựa trên thuộc tính .content
+
+    const chunks = await this.textSplitterService.splitToMarkdown(markdownList);
 
     const metadata = {
       fileId,
@@ -3839,11 +2855,6 @@ export class IngestService {
       originalFileName,
     };
 
-    console.log(
-      '💾 Saving to vector store with metadata:',
-      JSON.stringify(metadata),
-    );
-    console.log('📦 Total chunks:', chunks.length);
 
     // 3. Create embeddings => Store embeddings in vector database
     await this.vectorService.addDocuments({
@@ -3852,320 +2863,40 @@ export class IngestService {
     });
 
     // Return number of chunks processed
-    return chunks.length;
+    return chunks;
   }
 }
 
 ```
 
-### src\ingest\loaders\ocr.loader.ts
-
-```ts
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import * as Tesseract from 'tesseract.js';
-import { fromPath } from 'pdf2pic';
-import * as fs from 'fs';
-import * as path from 'path';
-import pdf from 'pdf-parse';
-import sharp from 'sharp';
-
-@Injectable()
-export class OcrService implements OnModuleInit, OnModuleDestroy {
-  private workers: Tesseract.Worker[] = [];
-  private readonly WORKER_COUNT = 8; // Số workers song song
-
-  async onModuleInit() {
-    console.log('🔧 Initializing OCR worker pool...');
-    // Tạo worker pool để OCR song song
-    const workerPromises = Array.from(
-      { length: this.WORKER_COUNT },
-      async () => {
-        const worker = await Tesseract.createWorker('vie', 1, {
-          logger: () => {}, // Tắt log verbose
-        });
-
-        // Cấu hình tối ưu cho tiếng Việt
-        await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO, // Tự động detect layout
-          tessedit_char_whitelist: '', // Cho phép tất cả ký tự
-          preserve_interword_spaces: '1',
-          // Cải thiện nhận diện dấu tiếng Việt
-          textord_heavy_nr: '1',
-          // Giảm noise
-          edges_use_new_outline_complexity: '1',
-        });
-
-        return worker;
-      },
-    );
-
-    this.workers = await Promise.all(workerPromises);
-    console.log(`✅ Initialized ${this.workers.length} OCR workers`);
-  }
-
-  private getWorker(index: number): Tesseract.Worker {
-    return this.workers[index % this.workers.length];
-  }
-
-  // Handle
-  async load(filePath: string) {
-    try {
-      const ext = filePath.toLowerCase();
-      const isPdf = ext.endsWith('.pdf');
-
-      // Supported image formats for OCR
-      const isImage = /\.(jpg|jpeg|png|bmp|tiff|webp)$/i.test(ext);
-
-      // --- CASE 1: Image files only ---
-      if (isImage) {
-        const result = await this.workers[0].recognize(filePath);
-        return { text: result.data.text, confidence: result.data.confidence };
-      }
-
-      // --- CASE 2: Non-PDF and non-image files (e.g., .txt) ---
-      if (!isPdf) {
-        throw new Error(
-          `Unsupported file type for OCR. Only PDF and images are supported. Got: ${path.extname(filePath)}`,
-        );
-      }
-
-      // --- CASE 3: PDF files ---
-      // -- Get pageNumber --
-      const pdfBuffet = fs.readFileSync(filePath);
-      const pdfInfo = await pdf(pdfBuffet);
-
-      if (pdfInfo.text && pdfInfo.text.trim().length > 20) {
-        // Return if PDF has embedded text
-        console.log('📄 PDF has embedded text, skipping OCR.');
-        return { text: pdfInfo.text };
-      }
-
-      const pageCount = pdfInfo.numpages;
-
-      if (!pageCount || pageCount === 0) return { text: '' };
-
-      // Create: "uploads/temp" if not exists
-      const tempDir = path.join(process.cwd(), 'uploads', 'temp');
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      // List pages: convert(1) => page 1
-      console.log('📄 PDF scanned → OCR');
-      const convert = fromPath(filePath, {
-        density: 200, // Tăng DPI để OCR chính xác hơn (từ 200 lên 300)
-        saveFilename: `ocr-${Date.now()}`, // Temporary filename
-        savePath: tempDir,
-        format: 'png',
-        width: 1700, // Tăng kích thước để giữ chi tiết (từ 1200 lên 2400)
-        height: 2400,
-      });
-
-      const convertPromises: Promise<any>[] = [];
-      for (let page = 1; page <= pageCount; page++) {
-        convertPromises.push(convert(page, { responseType: 'image' }));
-      }
-      const pageImages = await Promise.all(convertPromises);
-      console.log('✅ PDF converted to images');
-
-      // 5️⃣ OCR tất cả trang song song với worker pool
-      console.log(`🔍 Running OCR on ${pageCount} pages...`);
-
-      const ocrPromises = pageImages.map(async (img: any, index: number) => {
-        const worker = this.getWorker(index);
-
-        const prep = await this.preprocessImage(img.path);
-
-        const res = await worker.recognize(prep);
-
-        return {
-          text: res.data.text,
-          path: img.path,
-          prepPath: prep, // Lưu đường dẫn file preprocessed
-          page: index + 1,
-        };
-      });
-
-      const results = await Promise.all(ocrPromises);
-      console.log('✅ OCR completed');
-
-      // 6️⃣ Ghép text theo thứ tự trang
-      const allText = results
-        .sort((a, b) => a.page - b.page)
-        .map((r) => this.normalizeText(r.text))
-        .join('\n');
-
-      // 7️⃣ Xoá file ảnh tạm (cả gốc và preprocessed)
-      results.forEach((r) => {
-        try {
-          // Xóa file gốc
-          if (fs.existsSync(r.path)) {
-            fs.unlinkSync(r.path);
-          }
-          // Xóa file preprocessed
-          if (r.prepPath && fs.existsSync(r.prepPath)) {
-            fs.unlinkSync(r.prepPath);
-          }
-        } catch (error) {
-          console.warn(`⚠️ Cannot delete temp file: ${r.path}`, error.message);
-        }
-      });
-
-      return { text: allText };
-    } catch (error) {
-      console.log('OCR Error: ', error);
-      throw error;
-    }
-  }
-
-  // Normalize text: nối từ ngắt dòng, gộp khoảng trắng, sửa lỗi OCR phổ biến tiếng Việt
-  private normalizeText(text: string): string {
-    const normalized = text
-      // Nối từ bị ngắt dòng
-      .replace(/-\s*\n\s*/g, '')
-      // Giữ nguyên xuống dòng đơn, chỉ gộp xuống dòng nhiều
-      .replace(/\n{3,}/g, '\n\n')
-      // Chuẩn hóa space (không gộp xuống dòng)
-      .replace(/[ \t]+/g, ' ')
-      // Remove brand watermarks
-      .replace(/Scanned with[\s\S]*$/gi, '')
-      // Sửa lỗi OCR phổ biến tiếng Việt
-      .replace(/\bl\b/g, 'I') // l đơn -> I
-      .replace(/ĐẠl/g, 'ĐẠI')
-      .replace(/HỘl/g, 'HỘI')
-      .replace(/TRUẬT/g, 'THUẬT')
-      .replace(/lẼN/g, 'MIỄN')
-      // Loại bỏ ký tự lỗi OCR phổ biến
-      .replace(/[¬]/g, '-')
-      .replace(/[‹›«»]/g, '"')
-      // Loại bỏ các ký tự lạ không phải chữ cái, số, dấu câu thông thường
-      .replace(
-        /[^\w\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđĐÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸ.,;:!?()\-"/\n]/g,
-        ' ',
-      )
-      // Gộp space thừa sau khi xử lý
-      .replace(/[ \t]+/g, ' ')
-      .trim();
-
-    // Đếm diacritics để debug
-    const diacriticCount = (
-      normalized.match(
-        /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/gi,
-      ) || []
-    ).length;
-    if (diacriticCount > 0) {
-      console.log(`Detected ${diacriticCount} diacritics`);
-    }
-
-    return normalized;
-  }
-
-  private async preprocessImage(imgPath: string): Promise<string> {
-    const outPath = imgPath.replace('.png', '-prep.png');
-
-    const img = sharp(imgPath);
-    const meta = await img.metadata();
-
-    const topCut = Math.floor(meta.height! * 0.03); // 1000px => cut 30px
-    const bottomCut = Math.floor(meta.height! * 0.03);
-
-    // Chỉ cắt trái/phải nếu ảnh quá rộng (scan lệch)
-    // aspect ratio: width / height
-    // < 1 là ảnh dọc, 0.75 là tỉ lệ phổ biến của trang A4
-    const sideCut =
-      meta.width! / meta.height! > 0.75 ? Math.floor(meta.width! * 0.012) : 0;
-
-    await img
-      .extract({
-        left: sideCut,
-        top: topCut,
-        width: meta.width! - sideCut * 2, // cut left/right
-        height: meta.height! - topCut - bottomCut, // cut top/bottom
-      })
-      .grayscale()
-      .normalize()
-      .sharpen({ sigma: 0.5 })
-      // .threshold(115)
-      .median(1)
-      .toFile(outPath);
-
-    return outPath;
-  }
-
-  async onModuleDestroy() {
-    console.log('🛑 Terminating OCR workers...');
-    await Promise.all(this.workers.map((w) => w.terminate()));
-  }
-}
-
-```
-
-### src\ingest\loaders\pdf.loader.ts
+### src\ingest\loaders\cloud.loader.ts
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import pdfParse from 'pdf-parse';
-import * as fs from 'fs';
-
-// Type definitions for pdf.js objects
-interface TextItem {
-  str: string;
-  transform: number[];
-}
-
-interface TextContent {
-  items: TextItem[];
-}
-
-interface PageData {
-  pageNumber: number;
-  getTextContent(options?: {
-    normalizeWhitespace?: boolean;
-    disableCombineTextItems?: boolean;
-  }): Promise<TextContent>;
-}
+import { LlamaParseReader } from 'llama-cloud-services';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class PdfService {
-  private pageTexts: Map<number, string> = new Map();
+export class CloudService {
+  private reader: LlamaParseReader;
 
-  async load(filePath: string): Promise<{ page: number; text: string }[]> {
-    // Reset page texts for new document
-    this.pageTexts.clear();
-
-    // Read PDF file as buffer
-    const dataBuffer = fs.readFileSync(filePath);
-
-    // Parse PDF with pdf-parse
-    await pdfParse(dataBuffer, {
-      pagerender: (pageData: PageData) => this.renderPage(pageData),
+  constructor(private configService: ConfigService) {
+    this.reader = new LlamaParseReader({
+      apiKey: this.configService.get<string>('LLAMA_CLOUD_API_KEY'),
+      tier: 'cost_effective',
+      version: 'latest',
+      high_res_ocr: true,
+      adaptive_long_table: true,
+      outlined_table_extraction: true,
+      output_tables_as_HTML: true,
+      max_pages: 0,
+      precise_bounding_box: true,
     });
-
-    // Convert Map to array sorted by page number
-    const result = Array.from(this.pageTexts.entries())
-      .sort((a, b) => a[0] - b[0])
-      .map(([pageNum, text]) => ({
-        page: pageNum,
-        text: text,
-      }));
-
-    return result;
   }
-
-  private async renderPage(pageData: PageData): Promise<string> {
-    const render_options = {
-      normalizeWhitespace: false,
-      disableCombineTextItems: false,
-    };
-
-    const textContent = await pageData.getTextContent(render_options);
-    const strings = textContent.items.map((item) => item.str);
-    const pageText = strings.join(' ') + '\n';
-
-    // Store text by page number
-    this.pageTexts.set(pageData.pageNumber, pageText);
-
-    return pageText;
+  // docx, pdf, ... to markdown
+  async load(fileUrl: string) {
+    const results = await this.reader.parse(fileUrl);
+    return results;
   }
 }
 
@@ -4174,179 +2905,64 @@ export class PdfService {
 ### src\ingest\splitters\text-splitter.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CHUNK_SIZE, CHUNK_OVERLAP } from '../../constant/index.constant.js';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
 export type ChunkResult = {
-  text: string;
-  page: number;
+  content: string;
   chunkIndex: number;
-  startOffset: number;
-  endOffset: number;
+  metadata: Record<string, any>;
 };
+
+export type MarkdownProp = { content: string; page: number };
 
 @Injectable()
 export class TextSplitterService {
-  // Thứ tự ưu tiên: Ngắt đoạn đôi -> Đoạn đơn -> Câu -> Mệnh đề -> Từ
-  private readonly SEPARATORS = [
-    '\n\n',
-    '\n',
-    '. ',
-    '? ',
-    '! ',
-    '; ',
-    ': ', // Thêm dấu hai chấm
-    ', ',
-    ' ',
-    '', // Fallback cuối cùng: cắt từng ký tự nếu không tìm thấy gì
-  ];
+  private readonly logger = new Logger(TextSplitterService.name);
 
-  splitPdfPages(pages: { page: number; text: string }[]): ChunkResult[] {
-    const chunks: ChunkResult[] = [];
-    let globalOffset = 0;
-    let chunkIndex = 0;
-
-    for (const p of pages) {
-      const pageText = p.text;
-
-      // Xử lý trang rỗng
-      if (!pageText || pageText.length === 0) {
-        continue; // Offset không đổi vì độ dài = 0
-      }
-
-      let localStart = 0;
-
-      while (localStart < pageText.length) {
-        // 1. Xác định điểm cắt lý tưởng (Hard Limit)
-        let localEnd = Math.min(localStart + CHUNK_SIZE, pageText.length);
-
-        // 2. Tìm điểm cắt ngữ nghĩa (Semantic Boundary)
-        // Chỉ tìm nếu chưa hết văn bản
-        if (localEnd < pageText.length) {
-          const semanticEnd = this.findNearestSeparator(
-            pageText,
-            localStart,
-            localEnd,
-          );
-          if (semanticEnd !== -1) {
-            localEnd = semanticEnd;
-          }
-        }
-
-        // 3. Lấy raw text
-        const rawChunkText = pageText.slice(localStart, localEnd);
-
-        // 4. XỬ LÝ TRIM VÀ OFFSET CHÍNH XÁC (QUAN TRỌNG)
-        // Ta cần tìm vị trí thực của chữ cái đầu tiên và cuối cùng trong rawChunkText
-        // để offset trả về KHÔNG bao gồm khoảng trắng thừa ở đầu/cuối.
-        if (rawChunkText.trim().length > 0) {
-          // Tính toán offset nội bộ để trim
-          const startTrimDelta =
-            rawChunkText.length - rawChunkText.trimStart().length;
-          const endTrimDelta =
-            rawChunkText.length - rawChunkText.trimEnd().length;
-
-          const realStartOffset = globalOffset + localStart + startTrimDelta;
-          const realEndOffset = globalOffset + localEnd - endTrimDelta;
-
-          chunks.push({
-            text: rawChunkText.trim(),
-            page: p.page,
-            chunkIndex: chunkIndex,
-            startOffset: realStartOffset,
-            endOffset: realEndOffset,
-          });
-          chunkIndex++;
-        }
-
-        // 5. Chuẩn bị cho vòng lặp sau (Overlap)
-        if (localEnd >= pageText.length) {
-          break;
-        }
-
-        // Tính overlap
-        const idealNextStart = Math.max(localStart, localEnd - CHUNK_OVERLAP);
-
-        // Tìm điểm bắt đầu "đẹp" cho chunk sau (tránh cắt giữa từ)
-        localStart = this.findSmartNextStart(
-          pageText,
-          idealNextStart,
-          localEnd,
-        );
-      }
-
-      globalOffset += pageText.length;
+  async splitToMarkdown(
+    markdownInputs: MarkdownProp[],
+  ): Promise<ChunkResult[]> {
+    if (!markdownInputs || markdownInputs.length === 0) {
+      this.logger.warn('Empty markdown text received for splitting.');
+      return [];
     }
 
-    return chunks;
-  }
+    const texts = markdownInputs.map((item) => item.content);
+    const metadata = markdownInputs.map((item) => ({
+      page: item.page,
+    }));
 
-  /**
-   * TỐI ƯU HIỆU NĂNG:
-   * Không dùng slice() để tạo chuỗi con mới. Dùng lastIndexOf với tham số position.
-   */
-  private findNearestSeparator(
-    text: string,
-    start: number,
-    limit: number,
-  ): number {
-    // Chỉ tìm ngược lại trong khoảng 40% cuối của chunk
-    // Để đảm bảo chunk không bị quá ngắn (ví dụ chunk 1000 mà cắt ở ký tự thứ 10)
-    const minSearchIndex = Math.max(
-      start,
-      limit - Math.floor(CHUNK_SIZE * 0.4),
+    // Logic: Cố gắng giữ văn bản liền mạch, chỉ cắt khi vượt quá CHUNK_SIZE
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: CHUNK_SIZE || 1000,
+      chunkOverlap: CHUNK_OVERLAP || 200,
+      separators: [
+        '\n\n', // Ưu tiên 1: Cắt theo đoạn văn (giữ header dính với body)
+        '\n', // Ưu tiên 2: Xuống dòng
+        '. ', // Ưu tiên 3: Kết thúc câu
+        '? ',
+        '! ',
+        ' ', // Ưu tiên 4: Dấu cách
+        '', // Cuối cùng: Cắt ký tự
+      ],
+      // keepSeparator: true, // Giữ lại ký tự phân cách để văn bản tự nhiên hơn
+    });
+
+    const docsSplitted = await splitter.createDocuments(texts, metadata);
+
+    this.logger.log(
+      `Splitting completed: Processed ${texts.length} pages into ${docsSplitted.length} chunks.`,
     );
 
-    for (const sep of this.SEPARATORS) {
-      if (sep === '') return limit; // Fallback hard cut
+    let globalChildIndex = 0;
 
-      // Tìm separator cuối cùng xuất hiện TRƯỚC limit
-      const lastIndex = text.lastIndexOf(sep, limit);
-
-      // Quan trọng: lastIndex phải >= minSearchIndex để đảm bảo chunk đủ dài
-      if (lastIndex !== -1 && lastIndex >= minSearchIndex) {
-        // Cắt SAU separator (ví dụ sau dấu chấm)
-        return lastIndex + sep.length;
-      }
-    }
-
-    return -1; // Fallback
-  }
-
-  private findSmartNextStart(
-    text: string,
-    idealStart: number,
-    previousEnd: number,
-  ): number {
-    if (idealStart <= 0) return 0;
-    if (idealStart >= text.length) return text.length;
-
-    // Nếu ngay tại idealStart đã là ký tự bắt đầu từ mới (trước đó là space) -> Tốt
-    if (text[idealStart - 1] === ' ' || text[idealStart - 1] === '\n') {
-      return idealStart;
-    }
-
-    // Nếu không, lùi lại tìm khoảng trắng gần nhất
-    // Giới hạn lùi tối đa 50 ký tự để tránh chunk sau bị overlap quá nhiều (thừa thãi)
-    const searchLimit = Math.max(0, idealStart - 50);
-
-    // Tìm space hoặc newline gần nhất phía trước
-    const lastSpace = text.lastIndexOf(' ', idealStart);
-    const lastNewline = text.lastIndexOf('\n', idealStart);
-
-    const bestStart = Math.max(lastSpace, lastNewline);
-
-    if (bestStart !== -1 && bestStart >= searchLimit) {
-      return bestStart + 1; // Bắt đầu sau dấu cách
-    }
-
-    // Nếu từ quá dài (dài hơn 50 ký tự không có dấu cách), đành cắt giữa từ
-    return idealStart;
-  }
-
-  splitText(text: string): ChunkResult[] {
-    const pages = [{ page: 1, text }];
-    return this.splitPdfPages(pages);
+    return docsSplitted.map((doc) => ({
+      content: doc.pageContent,
+      chunkIndex: globalChildIndex++,
+      metadata: doc.metadata || {},
+    }));
   }
 }
 
@@ -4373,7 +2989,7 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly logger: ConsoleLogger,
-  ) {}
+  ) { }
 
   // Tự động chạy khi module khởi tạo
   async onModuleInit() {
@@ -4432,6 +3048,26 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
     return this.vectorStore;
   }
 
+  // Expose the pool for direct SQL queries
+  async getPool(): Promise<Pool> {
+    if (!this.pool) {
+      await this.initVectorStore();
+    }
+    return this.pool!;
+  }
+
+  // Get the configured table name
+  getTableName(): string {
+    const config = getPgConfig();
+    return config.tableName;
+  }
+
+  // Get the configured metadata column name
+  getMetadataColumnName(): string {
+    const config = getPgConfig();
+    return config.columns.metadataColumnName;
+  }
+
   // ---  INDEX HNSW ---
   async ensureHnswIndex() {
     if (!this.vectorStore) await this.initVectorStore();
@@ -4475,7 +3111,7 @@ type Metadata = {
 };
 @Injectable()
 export class VectorService {
-  constructor(private readonly pgvectorService: PgvectorService) {}
+  constructor(private readonly pgvectorService: PgvectorService) { }
 
   // -- ADD DOCUMENTS TO VECTOR STORE --
   async addDocuments({
@@ -4489,13 +3125,11 @@ export class VectorService {
 
     return vectorStore.addDocuments(
       chunks.map((chunk) => ({
-        pageContent: chunk.text,
+        pageContent: chunk.content,
         metadata: {
-          ...metadata,
           chunkIndex: chunk.chunkIndex,
-          page: chunk.page,
-          startOffset: chunk.startOffset,
-          endOffset: chunk.endOffset,
+          ...metadata,
+          ...chunk.metadata,
         },
       })),
     );
@@ -4541,6 +3175,45 @@ export class VectorService {
     // }
 
     return results;
+  }
+
+  async link2Project(docIds: string[], projectId: string) {
+    // PGVectorStore doesn't have an update() method
+    // We need to update the metadata directly using SQL
+    const pool = await this.pgvectorService.getPool();
+    const tableName = this.pgvectorService.getTableName();
+    const metadataColumn = this.pgvectorService.getMetadataColumnName();
+
+    await Promise.all(
+      docIds.map(async (docId) => {
+        // Update the metadata column by merging the new projectId
+        await pool.query(
+          `UPDATE ${tableName} 
+           SET ${metadataColumn} = jsonb_set(${metadataColumn}, '{projectId}', $1::jsonb, true)
+           WHERE ${metadataColumn}->>'fileId' = $2`,
+          [JSON.stringify(projectId), docId]
+        );
+      })
+    );
+  }
+
+  async removeOutProject(docIds: string[], projectId: string) {
+    const pool = await this.pgvectorService.getPool();
+    const tableName = this.pgvectorService.getTableName();
+    const metadataColumn = this.pgvectorService.getMetadataColumnName();
+
+    await Promise.all(
+      docIds.map(async (docId) => {
+        // Dùng toán tử '-' để xóa key khỏi JSONB
+        await pool.query(
+          `UPDATE ${tableName} 
+           SET ${metadataColumn} = ${metadataColumn} - 'projectId'
+           WHERE ${metadataColumn}->>'fileId' = $1 
+           AND ${metadataColumn}->>'projectId' = $2`,
+          [docId, projectId]
+        );
+      })
+    );
   }
 
   // -- DELETE VECTOR STORE BY FILEID --
@@ -4631,17 +3304,17 @@ async function bootstrap() {
   app.enableCors();
 
   /* //  Production mode: Restrict origins
+   */
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://chatnary.com'], // Add your allowed origins here
+    origin: ['http://localhost:3000'], // Add your allowed origins here
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies
   });
-  */
 
   const config = new DocumentBuilder()
     .setTitle('Chatnary API')
     .setDescription('The Chatnary API description')
-    .setVersion('1.0')
+    .setVersion('1.1')
     .addTag('chatnary')
     .addBearerAuth()
     .build();
@@ -4661,26 +3334,74 @@ bootstrap();
 
 ```
 
-### src\pipeline\pipeline.module.ts
+### src\notification\notification.controller.ts
 
 ```ts
-import { Module } from '@nestjs/common';
-import { PipelineService } from './pipeline.service';
+import { Controller, Query, Sse, Post, Body, Get } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { filter, fromEvent, map, Observable } from 'rxjs';
+import { Public } from '../auth/decorators/public.decorator';
 
-@Module({
-  providers: [PipelineService],
-})
-export class PipelineModule {}
+@Controller('notifications')
+export class NotificationController {
+    constructor(private eventEmitter: EventEmitter2) { }
+
+    @Sse('sse')
+    sse(@Query('userId') userId: string): Observable<MessageEvent> {
+        return fromEvent(this.eventEmitter, 'system.notification').pipe(
+            // filter event by userId
+            filter((event: any) => event.userId === userId),
+
+            // mapping to SSE format
+            map((event: any) => {
+                const { type, userId, ...payload } = event;
+                return {
+                    data: JSON.stringify({
+                        type,
+                        payload,
+                        timestamp: new Date().toISOString()
+                    })
+                } as MessageEvent
+            })
+        );
+    }
+
+    @Public()
+    @Post('test-emit')
+    testEmit(@Body() body: { userId: string; type: string; status: string; message: string }) {
+        const { userId, type, status, message } = body;
+
+        this.eventEmitter.emit('system.notification', {
+            type: type || 'DOCUMENT_PROCESSED',
+            userId: userId || 'test-user-001',
+            fileId: `test-file-${Date.now()}`,
+            projectId: 'test-project-001',
+            status: status || 'DONE',
+            message: message || 'Test notification',
+        });
+
+        return {
+            success: true,
+            message: 'Test notification emitted',
+            data: { userId, type, status }
+        };
+    }
+}
 
 ```
 
-### src\pipeline\pipeline.service.ts
+### src\notification\notification.module.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { NotificationController } from './notification.controller';
 
-@Injectable()
-export class PipelineService {}
+@Module({
+    imports: [],
+    controllers: [NotificationController],
+    providers: [],
+})
+export class NotificationModule { }
 
 ```
 
@@ -4782,13 +3503,6 @@ export class UpdateProjectDto {
 
 ```
 
-### src\project\entities\project.entity.ts
-
-```ts
-export class Project {}
-
-```
-
 ### src\project\project.controller.ts
 
 ```ts
@@ -4817,7 +3531,7 @@ export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE --
   @Post()
@@ -4838,6 +3552,20 @@ export class ProjectController {
   ) {
     return await this.documentService.addDocumentsToProject(
       req.user.userId,
+      projectId,
+      dto.documentIds,
+    );
+  }
+
+  // -- REMOVE DOUCMENTS TO PROJECT -- 
+  @Delete('/:projectId/documents/unlink')
+  async removeDocumentsOutProject(
+    @Req() req: { user: JwtPayloadWithRt },
+    @Param('projectId') projectId: string,
+    @Body() dto: AddDocumentToProjectDto,
+  ) {
+    return await this.documentService.removeDocumentsOutProject(
+      // req.user.userId,
       projectId,
       dto.documentIds,
     );
@@ -4974,7 +3702,7 @@ export class ProjectService {
     private prisma: PrismaService,
     private readonly chatService: ChatService,
     private readonly documentService: DocumentService,
-  ) {}
+  ) { }
 
   // -- CREATE NEW PROJECT --
   async createNewProject(createProjectDto: CreateProjectDto) {
@@ -5004,9 +3732,9 @@ export class ProjectService {
       );
     }
 
-    return await this.prisma.chats.findMany({
+    return await this.prisma.chat.findMany({
       where: { projectId: projectId },
-      omit: { userId: true, projectId: true, messages: true },
+      omit: { userId: true, projectId: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -5018,7 +3746,7 @@ export class ProjectService {
   //   chatId: string,
   // ) {
   //   // TODO: CHECK EXISTED
-  //   return await this.prisma.chats.findUnique({
+  //   return await this.prisma.chat.findUnique({
   //     where: { id: chatId, userId: userId, projectId: projectId },
   //     omit: { userId: true, projectId: true },
   //   });
@@ -5080,6 +3808,148 @@ export class ProjectService {
     return `This action returns a #${id} project`;
   }
 }
+
+```
+
+### src\queue\ingest.processor.ts
+
+```ts
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
+import { Logger } from '@nestjs/common';
+import { IngestService } from '../ingest/ingest.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { DocumentStatus } from '@prisma/client';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
+export interface IngestJobData {
+    fileId: string;
+    filePath: string;
+    userId: string;
+    projectId?: string;
+    originalFileName?: string;
+}
+
+@Processor('ingest-queue')
+export class IngestProcessor extends WorkerHost {
+    private readonly logger = new Logger(IngestProcessor.name);
+
+    constructor(
+        private readonly ingestService: IngestService,
+        private readonly prisma: PrismaService,
+        private readonly eventEmitter: EventEmitter2,
+    ) {
+        super();
+    }
+
+    async process(job: Job<IngestJobData>): Promise<number> {
+        const { fileId, filePath, userId, projectId, originalFileName } = job.data;
+
+        this.logger.log(`🚀 Start processing job ${job.id} for file ${fileId}`);
+
+        try {
+            // 1. Update Status: PROCESSING
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: { status: DocumentStatus.PROCESSING },
+            });
+
+            // 2. Call existing Ingest logic (Cloud loader -> Split -> Embed -> PGVector)
+            const chunks = await this.ingestService.ingestDocument(
+                filePath,
+                fileId,
+                userId,
+                projectId,
+                originalFileName,
+            );
+
+            // 3. Update Status: DONE
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: {
+                    status: DocumentStatus.DONE,
+                    pageCount: chunks.length, // TODO: Wrong pageCount
+                },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'DONE',
+                message: 'Xử lý thành công',
+            });
+
+            this.logger.log(
+                `✅ Completed job ${job.id}. Processed ${chunks.length} chunks.`,
+            );
+
+            return chunks.length;
+        } catch (error) {
+            this.logger.error(`❌ Job ${job.id} failed: ${error.message}`);
+
+            // 4. Update Status: ERROR with error message
+            await this.prisma.documents.update({
+                where: { id: fileId },
+                data: {
+                    status: DocumentStatus.ERROR,
+                    errorMessage: error.message?.substring(0, 500), // Truncate long errors
+                },
+            });
+
+            // 4. Emit event
+            this.eventEmitter.emit('system.notification', {
+                type: 'DOCUMENT_PROCESSED',
+                fileId,
+                userId,
+                projectId,
+                status: 'ERROR',
+                message: 'Xử lý thất bại',
+            });
+
+            throw error; // Re-throw for BullMQ retry mechanism
+        }
+    }
+}
+
+```
+
+### src\queue\queue.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { IngestProcessor } from './ingest.processor';
+import { IngestModule } from '../ingest/ingest.module';
+import { PrismaModule } from '../prisma/prisma.module';
+
+@Module({
+    imports: [
+        // BullModule.forRootAsync({
+        //     imports: [ConfigModule],
+        //     useFactory: (configService: ConfigService) => ({
+        //         connection: {
+        //             host: configService.get<string>('REDIS_HOST'),
+        //             port: configService.get<number>('REDIS_PORT'),
+        //             username: configService.get<string>('REDIS_USERNAME') || 'default',
+        //             password: configService.get<string>('REDIS_PASSWORD'),
+        //         },
+        //     }),
+        //     inject: [ConfigService],
+        // }),
+        BullModule.registerQueue({
+            name: 'ingest-queue',
+        }),
+        IngestModule,
+        PrismaModule,
+    ],
+    providers: [IngestProcessor],
+    exports: [BullModule],
+})
+export class QueueModule { }
 
 ```
 
@@ -5198,6 +4068,9 @@ export class RetrievalModule {}
 ```ts
 import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
+import { CohereRerank } from '@langchain/cohere';
+import { Document } from '@langchain/core/documents';
+import { ConfigService } from '@nestjs/config';
 
 type MetadataDoc = {
   fileId?: string;
@@ -5224,18 +4097,19 @@ export interface ScoredDocument {
 @Injectable()
 export class RetrievalService {
   // Lấy nhiều hơn để lọc kỹ hơn (Wide Net)
-  private readonly RETRIEVE_K = 100;
+  private readonly RETRIEVE_K = 90;
   // Chỉ lấy top kết quả chất lượng nhất gửi cho LLM
-  private readonly FINAL_K = 8;
+  private readonly FINAL_K = 20;
 
   // Trọng số cho Hybrid search (Fire tune base on real data)
-  private readonly WEIGHT_VECTOR = 0.3;
-  private readonly WEIGHT_KEYWORD = 0.7;
+  // private readonly WEIGHT_VECTOR = 0.3;
+  // private readonly WEIGHT_KEYWORD = 0.7;
 
   constructor(
     private vectorService: VectorService,
     private logger: Logger,
-  ) {}
+    private configService: ConfigService,
+  ) { }
 
   /**
    * Pipeline tìm kiếm chuyên nghiệp:
@@ -5254,139 +4128,45 @@ export class RetrievalService {
 
     if (!rawDocs.length) return [];
 
+    const docsRerank: Document[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    rawDocs.forEach(([doc, _]) => {
+      docsRerank.push(
+        new Document({
+          id: doc.id,
+          pageContent: doc.pageContent,
+          metadata: { ...doc.metadata },
+        }),
+      );
+    });
+
+    const cohereRerank = new CohereRerank({
+      apiKey: this.configService.get<string>('COHERE_API_KEY'),
+      topN: this.FINAL_K,
+      model: 'rerank-v4.0-pro',
+    });
+
+    const rerankedDocuments = await cohereRerank.compressDocuments(
+      docsRerank,
+      query,
+    );
+
+
+
     // Chuẩn hóa documents sang format dễ xử lý
-    let candidates: ScoredDocument[] = rawDocs.map(([doc, score]) => ({
+    const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({
       pageContent: doc.pageContent,
       metadata: doc.metadata,
-      vectorScore: score, // Giả sử score càng cao càng tốt (Cosine Similarity)
+      finalScore: doc.metadata.relevanceScore as number,
+      vectorScore: 0,
+      keywordScore: 0,
     }));
-
-    // BƯỚC 2: RERANKING - Tính điểm từ khóa (Keyword Boosting)
-    // Đây là Core quality để tìm chính xác thông tin hỗn tạp
-    candidates = this.performKeywordReranking(query, candidates);
-
-    // BƯỚC 3: SORTING & SELECTION
-    // Sắp xếp theo điểm số cuối cùng (Final Score)
-    candidates.sort((a, b) => (b.finalScore || 0) - (a.finalScore || 0));
 
     // Log để debug chất lượng tìm kiếm
     this.logSearchQuality(query, candidates);
 
     // Trả về top kết quả tốt nhất
     return candidates.slice(0, this.FINAL_K);
-  }
-
-  /**
-   * THUẬT TOÁN RERANK MỚI CHO TIẾNG VIỆT
-   * Ưu tiên: Cụm từ chính xác (Bigram/Phrase) > Từ đơn (Unigram)
-   */
-  private performKeywordReranking(
-    query: string,
-    docs: ScoredDocument[],
-  ): ScoredDocument[] {
-    const queryLower = query.toLowerCase().trim();
-
-    // 1. Tách từ đơn (Unigrams) - KHÔNG lọc độ dài nữa
-    const unigrams = queryLower.split(/\s+/);
-
-    // 2. Tạo cụm từ (Bigrams) để bắt ngữ cảnh.
-    // Ví dụ: "miễn giảm học phí" -> ["miễn giảm", "giảm học", "học phí"]
-    const bigrams: string[] = [];
-    for (let i = 0; i < unigrams.length - 1; i++) {
-      bigrams.push(`${unigrams[i]} ${unigrams[i + 1]}`);
-    }
-
-    return docs.map((doc) => {
-      const contentLower = doc.pageContent.toLowerCase();
-      let score = 0;
-
-      // -- A. Điểm cho cụm từ (Quan trọng nhất - Trọng số cao) --
-      // Nếu tìm thấy "miễn giảm" hoặc "học phí", cộng điểm rất lớn
-      bigrams.forEach((gram) => {
-        if (contentLower.includes(gram)) {
-          score += 0.5; // Mỗi bigram khớp cộng 0.5 điểm
-        }
-      });
-
-      // -- B. Điểm cho từ đơn (Bổ trợ) --
-      unigrams.forEach((term) => {
-        if (contentLower.includes(term)) {
-          score += 0.1; // Mỗi từ đơn khớp cộng 0.1 điểm
-        }
-      });
-
-      // -- C. Boost đặc biệt nếu khớp nguyên câu query (Hiếm nhưng chất) --
-      if (contentLower.includes(queryLower)) {
-        score += 2.0;
-      }
-
-      // Normalization: Kéo điểm về khoảng [0, 1] để không lấn át Vector quá đà
-      // (Dùng hàm sigmoid hoặc min/max đơn giản)
-      const normalizedKeywordScore = Math.min(score, 2.0) / 2.0; // Max là 1.0
-
-      doc.keywordScore = normalizedKeywordScore;
-
-      // Công thức tính Final Score
-      doc.finalScore =
-        doc.vectorScore * this.WEIGHT_VECTOR +
-        normalizedKeywordScore * this.WEIGHT_KEYWORD;
-
-      return doc;
-    });
-  }
-
-  /**
-   * Thuật toán tính điểm Keyword đơn giản nhưng hiệu quả (BM25 Simplified)
-   * Tăng điểm cho các document chứa chính xác từ khóa trong query
-   */
-  // private performKeywordReranking(
-  //   query: string,
-  //   docs: ScoredDocument[],
-  // ): ScoredDocument[] {
-  //   // Tách query thành các token (từ đơn), loại bỏ từ quá ngắn
-  //   const queryTerms = query
-  //     .toLowerCase()
-  //     .split(/\s+/)
-  //     .filter((w) => w.length > 2); // TODO: User chat: "IT là gì, AI là gì?, IC là gì? " -> loại bỏ luôn key thì toang
-
-  //   if (queryTerms.length === 0) return docs;
-
-  //   return docs.map((doc) => {
-  //     const contentLower = doc.pageContent.toLowerCase();
-  //     let keywordMatches = 0;
-
-  //     // Đếm số lượng từ khóa xuất hiện trong đoạn văn
-  //     queryTerms.forEach((term) => {
-  //       // Sử dụng regex để tìm từ chính xác (word boundary) tránh match nhầm
-  //       // Ví dụ: tìm "tài" không nên match "tài liệu"
-  //       const regex = new RegExp(`\\b${this.escapeRegExp(term)}\\b`, 'g');
-  //       const matches = contentLower.match(regex);
-  //       if (matches) {
-  //         keywordMatches += matches.length;
-  //       }
-  //       // Fallback: nếu không tìm thấy chính xác, tìm chuỗi con (cho tiếng Việt)
-  //       else if (contentLower.includes(term)) {
-  //         keywordMatches += 0.5;
-  //       }
-  //     });
-
-  //     // Tính điểm keyword (Normalization đơn giản)
-  //     // Giới hạn điểm keyword boost tối đa là 1.0 để không lấn át hoàn toàn Vector
-  //     const keywordScore = Math.min(keywordMatches * 0.1, 1.0);
-
-  //     // CÔNG THỨC HYBRID SCORE
-  //     // Kết hợp sức mạnh của Vector (hiểu ngữ nghĩa) và Keyword (độ chính xác)
-  //     doc.keywordScore = keywordScore;
-  //     doc.finalScore =
-  //       doc.vectorScore * this.WEIGHT_VECTOR +
-  //       keywordScore * this.WEIGHT_KEYWORD;
-
-  //     return doc;
-  //   });
-  // }
-
-  private escapeRegExp(string: string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   private logSearchQuality(query: string, sortedDocs: ScoredDocument[]) {
@@ -5436,13 +4216,6 @@ export class UpdateUserDto {
   name?: string;
   password?: string;
 }
-
-```
-
-### src\user\entities\user.entity.ts
-
-```ts
-export class User {}
 
 ```
 
@@ -5577,66 +4350,1343 @@ export class UserService {
 
 ```
 
-### prisma\schema.prisma
+### .env.example
 
 *(Unsupported file type)*
 
-### prisma\seed.ts
+### API_ENDPOINTS.md
 
-```ts
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+```md
+# 📘 Chatnary Backend API Endpoints
 
-const prisma = new PrismaClient();
+_(NestJS · Prisma · PGVector · LangChainJS)_
 
-async function main() {
-  console.log('🌱 Seeding users...');
+## Base URL
 
-  const passwordHash = await bcrypt.hash('123456', 10);
+```
+http://localhost:8080/api/v1
+```
 
-  const user = await prisma.users.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
-      email: 'admin@example.com',
-      username: 'admin',
-      name: 'Administrator',
-      password: passwordHash,
-    },
-  });
+---
 
-  // 2. Create sample projects for this user
-  const project1 = await prisma.projects.create({
-    data: {
-      name: 'AI Văn Bản',
-      description: 'Project dùng để test RAG + OCR',
-      userId: user.id,
-    },
-  });
+# 🏠 Root
 
-  const project2 = await prisma.projects.create({
-    data: {
-      name: 'Thư Viện Số',
-      description: 'Project số hóa tài liệu PDF',
-      userId: user.id,
-    },
-  });
+### **GET** `/docs`
 
-  console.log('📁 Projects created:');
-  console.log('  -', project1.id);
-  console.log('  -', project2.id);
+- API documents Backend
 
-  console.log('✅ Seed completed!');
+---
+
+# 🔑 Authentication
+
+## Register
+
+### **POST** `/auth/register`
+
+**Body**
+
+```json
+{
+  "email": "user1@example.com",
+  "password": "123456"
+}
+```
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "message": "User registered successfully"
+  }
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// Error
+{
+  "statusCode": 403,
+  "success": false,
+  "message": {
+    "message": "User already exists",
+    "error": "Forbidden",
+    "statusCode": 403
+  },
+  "timestamp": "2025-12-13T08:34:50.308Z",
+  "path": "/api/v1/auth/register"
+}
+```
+
+## Login
+
+### **POST** `/auth/login`
+
+**Body**
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "123456"
+}
+```
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjU2MDA3NjJ9.OlDUVXNx2FNlF7g7ldbuiHFFueiexPW6dvSj0jIQNsM",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY1NTk5ODYyLCJleHAiOjE3NjYyMDQ2NjJ9.tiCXjCNmMOrzdZYKmgoEXQvgFvViZAWd8IhFn8bIYIE",
+    "user": {
+      "id": "bbe027d0-74ea-4630-a846-5040a9772d19",
+      "email": "admin@example.com",
+      "username": "admin",
+      "name": "Administrator",
+      "refreshToken": "$2b$10$L/FBJkavJpoQMrz3dgjg7.MdglrEahBl6dS77syc.P08fkXyHjGuu",
+      "role": "ADMIN"
+    }
+  }
+}
+
+// Error
+{
+  "statusCode": 500,
+  "success": false,
+  "message": "Invalid credentials",
+  "timestamp": "2025-12-13T08:58:05.663Z",
+  "path": "/api/v1/auth/login"
+}
+```
+
+## Refresh token
+
+### **POST** `/auth/refresh`
+
+**Headers(Bearer header)**
+authentication = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjU0NDQwMTl9.822N8k9AZQ5Yk3KT1gwd-NI77ujFDFd7TjR_yainwQk",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJ1c2VySWQiOiJiYmUwMjdkMC03NGVhLTQ2MzAtYTg0Ni01MDQwYTk3NzJkMTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY1NDQzMTE5LCJleHAiOjE3NjYwNDc5MTl9.0QkgBkk39vVfY1vUWNDB57Rk3eQ0VSz_cnRibutD_Ro"
+  }
+}
+
+// Error
+{
+  "statusCode": 403,
+  "success": false,
+  "message": {
+    "message": "Access Denied",
+    "error": "Forbidden",
+    "statusCode": 403
+  },
+  "timestamp": "2025-12-13T09:00:00.471Z",
+  "path": "/api/v1/auth/refresh"
+}
+```
+
+## Logout
+
+### **POST** `/auth/logout`
+
+**Response**
+
+```json
+// Success
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "message": "User logged out successfully"
+  }
+}
+```
+
+# 📁 Projects
+
+_(Giống ChatGPT workspace — quản lý không gian dự án)_
+
+## Create Project
+
+### **POST** `/project`
+
+**Body**
+
+```json
+{
+  "name": "Sinoo khung bo",
+  "description": "Desc ...",
+  "color": "#3B82F6",
+  "isArchived": false
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "id": "0c08f09e-f996-454c-a9b0-055c35658fea",
+    "name": "Sinoo khung bo",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-25T05:33:54.970Z",
+    "updatedAt": "2025-12-25T05:33:54.970Z"
+  }
+}
+```
+
+## List Projects by user
+
+### **GET** `/project`
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "cf3ad296-3044-451f-84db-9fc99c9e327d",
+      "name": "AI Văn Bản",
+      "description": "Project dùng để test RAG + OCR",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-23T16:52:10.813Z",
+      "updatedAt": "2025-12-23T16:52:10.813Z"
+    },
+    {
+      "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+      "name": "Thư Viện Số",
+      "description": "Project số hóa tài liệu PDF",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-23T16:52:10.972Z",
+      "updatedAt": "2025-12-23T16:52:10.972Z"
+    },
+    {
+      "id": "0c08f09e-f996-454c-a9b0-055c35658fea",
+      "name": "Sinoo khung bo",
+      "description": "Desc ...",
+      "color": "#3B82F6",
+      "isArchived": false,
+      "createdAt": "2025-12-25T05:33:54.970Z",
+      "updatedAt": "2025-12-25T05:33:54.970Z"
+    }
+  ]
+}
+```
+
+## Update Project
+
+### **PATCH** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Body**
+
+```json
+// some fields:  name, description, color, isArchived
+{
+  "name": "Sinoo khung bo 1101"
+  // ... some fields to update
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "eae33420-8426-4f3e-b055-d4afeefad60b",
+    "name": "Sinoo khung bo 1101",
+    "description": "Desc ...",
+    "color": "#3B82F6",
+    "isArchived": false,
+    "createdAt": "2025-12-08T15:48:49.375Z",
+    "updatedAt": "2025-12-08T15:53:24.488Z",
+    "userId": "bbe027d0-74ea-4630-a846-5040a9772d19"
+  }
+}
+```
+
+## Delete Project
+
+### **DELETE** `/project/:projectId`
+
+**Param**
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "8a4457cd-9c0d-4346-a88e-16b0b1aed99e",
+      "name": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1765080486331-485462277.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "status": "done",
+      "createdAt": "2025-12-07T04:08:06.354Z"
+    }
+  ]
+}
+```
+
+## List Chats in Project
+
+### **GET** `/project/:projectId/chats`
+
+**Param**:
+projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "1d86b1ef-f248-420b-9413-21747c92bd9c",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T06:54:02.583Z",
+      "updatedAt": "2025-12-25T06:54:05.592Z"
+    },
+    {
+      "id": "62dc4be3-deeb-4360-bf90-c6613efaea4a",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T06:52:14.196Z",
+      "updatedAt": "2025-12-25T06:52:16.691Z"
+    },
+    {
+      "id": "3538ea80-e655-45e2-ad7a-5952871e1f2c",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T06:44:56.699Z",
+      "updatedAt": "2025-12-25T06:45:04.120Z"
+    },
+    {
+      "id": "84cf2155-4fde-4f61-ae96-21a9f113bc85",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T06:44:08.271Z",
+      "updatedAt": "2025-12-25T06:44:11.607Z"
+    },
+    {
+      "id": "e2c71722-deea-4568-ad41-e385493ab389",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T06:43:52.259Z",
+      "updatedAt": "2025-12-25T06:43:54.114Z"
+    }
+  ]
+}
+```
+
+## List Documents in Project
+
+### **GET** `/project/:projectId/documents`
+
+**Param**: projectId = eae33420-8426-4f3e-b055-d4afeefad60b
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "addedAt": "2025-12-25T06:42:10.797Z",
+      "isSelected": true,
+      "linkId": "bcc2b031-8d14-4fe2-9b66-190090faa263",
+      "id": "b75e74c0-58a1-4d11-ba67-3842e938211e",
+      "title": "MGHP HK1(2025-2026).pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1766638685745-591043014.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "pageCount": 0,
+      "status": "done",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T04:58:05.759Z",
+      "updatedAt": "2025-12-25T04:58:16.140Z"
+    },
+    {
+      "addedAt": "2025-12-25T06:42:10.797Z",
+      "isSelected": true,
+      "linkId": "1169513b-68b6-44dd-9c62-8802e1a99ae3",
+      "id": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+      "title": "LV_CTUET_ThinhNhat.pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "LV_CTUET_ThinhNhat.pdf",
+      "filePath": "uploads\\documents\\1766638903777-216667186.pdf",
+      "mimeType": "application/pdf",
+      "size": 2743322,
+      "pageCount": 0,
+      "status": "done",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T05:01:43.787Z",
+      "updatedAt": "2025-12-25T05:01:58.145Z"
+    },
+    {
+      "addedAt": "2025-12-23T17:06:25.989Z",
+      "isSelected": true,
+      "linkId": "866d7528-48f0-4a8b-9594-680f4551c0b4",
+      "id": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+      "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+      "filePath": "uploads\\documents\\1766509585247-333190162.pdf",
+      "mimeType": "application/pdf",
+      "size": 39998,
+      "pageCount": 0,
+      "status": "done",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-23T17:06:25.897Z",
+      "updatedAt": "2025-12-23T17:06:30.157Z"
+    }
+  ]
+}
+```
+
+## Add documents to Project
+
+### **POST** `/project/:projectId/documents`
+
+**Param**
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+{
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "count": 1
+  }
+}
+```
+
+## Remove documents from Project
+
+### **DELETE** `/project/:projectId/documents/unlink`
+
+**Param**
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+{
+  "documentIds": [
+    "7dba30eb-d4d3-4bc4-bcd3-96ccd3ef49d4",
+    "8a4457cd-9c0d-4346-a88e-16b0b1aed99e"
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "count": 1
+  }
+}
+```
+
+---
+
+# 📄 Documents
+
+## Access static file
+
+`http://localhost:8000/uploads/documents/1765080486331-485462277.pdf`
+
+## Upload Document (Auto Ingest)
+
+### **POST** `/document/upload/files`
+
+**Headers**: Content-Type: multipart/form-data
+
+**Mulit-Part (Body)**
+
+```json
+// multi part
+{
+  "files": "File[]",// multi-part... from form input
+  "data": //Chuỗi JSON String. FE cần JSON.stringify(metadataObj) trước khi gửi.
+}
+
+// "data" exmaple
+// {
+//   "projectId": "eae33420-8426-4f3e-b055-d4afeefad60b", // Nếu muốn nằm ở trong project và muốn thêm file sau đó nó sẽ tự link
+//   "title": "Tên hiển thị (Optional)",
+//   "description": "Mô tả ngắn",
+//   "authors": ["Tác giả A", "Tác giả B"],
+//   "tags": ["Tag1", "Tag2"],
+//   "subjects": ["Chủ đề 1"],
+//   "publishedYear": 2024,
+//   "accessLevel": "PRIVATE"  // hoặc "PUBLIC", "RESTRICTED"
+// }
+
+// FE phải stringify object này trước khi gửi
+// formData.append('data', JSON.stringify(metadata));
+
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": [
+    {
+      "url": "/uploads/documents/1764829198418-674679539.pdf"
+    }
+  ]
+}
+```
+
+## Get All Document by user
+
+### **GET** `/document`
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+      "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+      "filePath": "uploads\\documents\\1766509585247-333190162.pdf",
+      "mimeType": "application/pdf",
+      "size": 39998,
+      "pageCount": 0,
+      "status": "PROCESSING",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-23T17:06:25.897Z",
+      "updatedAt": "2025-12-23T17:06:30.157Z",
+      "indexedAt": null,
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "linkedProjects": [
+        {
+          "id": "866d7528-48f0-4a8b-9594-680f4551c0b4",
+          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+          "documentId": "1c375418-270c-4a60-ac88-13aa5fb885f9",
+          "isSelected": true,
+          "addedAt": "2025-12-23T17:06:25.989Z",
+          "project": {
+            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+            "name": "Thư Viện Số",
+            "description": "Project số hóa tài liệu PDF",
+            "color": "#3B82F6"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b75e74c0-58a1-4d11-ba67-3842e938211e",
+      "title": "MGHP HK1(2025-2026).pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "MGHP HK1(2025-2026).pdf",
+      "filePath": "uploads\\documents\\1766638685745-591043014.pdf",
+      "mimeType": "application/pdf",
+      "size": 2751843,
+      "pageCount": 0,
+      "status": "PROCESSING",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T04:58:05.759Z",
+      "updatedAt": "2025-12-25T04:58:16.140Z",
+      "indexedAt": null,
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "linkedProjects": [
+        {
+          "id": "bcc2b031-8d14-4fe2-9b66-190090faa263",
+          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+          "documentId": "b75e74c0-58a1-4d11-ba67-3842e938211e",
+          "isSelected": true,
+          "addedAt": "2025-12-25T06:42:10.797Z",
+          "project": {
+            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+            "name": "Thư Viện Số",
+            "description": "Project số hóa tài liệu PDF",
+            "color": "#3B82F6"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5c4d7aa4-1460-4160-accc-ad5f2ea71e94",
+      "title": "HTTT_CTDH_2022.pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "HTTT_CTDH_2022.pdf",
+      "filePath": "uploads\\documents\\1766638786657-7059145.pdf",
+      "mimeType": "application/pdf",
+      "size": 24305987,
+      "pageCount": 0,
+      "status": "PROCESSING",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T04:59:46.711Z",
+      "updatedAt": "2025-12-25T05:01:02.794Z",
+      "indexedAt": null,
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "linkedProjects": []
+    },
+    {
+      "id": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+      "title": "LV_CTUET_ThinhNhat.pdf",
+      "description": "",
+      "authors": [],
+      "subjects": [],
+      "tags": [],
+      "documentType": "unknown",
+      "publishedYear": null,
+      "accessLevel": "PRIVATE",
+      "originalName": "LV_CTUET_ThinhNhat.pdf",
+      "filePath": "uploads\\documents\\1766638903777-216667186.pdf",
+      "mimeType": "application/pdf",
+      "size": 2743322,
+      "pageCount": 0,
+      "status": "PROCESSING",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T05:01:43.787Z",
+      "updatedAt": "2025-12-25T05:01:58.145Z",
+      "indexedAt": null,
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "linkedProjects": [
+        {
+          "id": "1169513b-68b6-44dd-9c62-8802e1a99ae3",
+          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+          "documentId": "87fff748-6ba4-429c-93b7-47b2c7427f6e",
+          "isSelected": true,
+          "addedAt": "2025-12-25T06:42:10.797Z",
+          "project": {
+            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+            "name": "Thư Viện Số",
+            "description": "Project số hóa tài liệu PDF",
+            "color": "#3B82F6"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
+      "title": "Giáo trình AI",
+      "description": "Demo upload",
+      "authors": ["Teacher A"],
+      "subjects": [],
+      "tags": ["AI"],
+      "documentType": "unknown",
+      "publishedYear": 2024,
+      "accessLevel": "PRIVATE",
+      "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+      "filePath": "uploads\\documents\\1766670753505-891084681.pdf",
+      "mimeType": "application/pdf",
+      "size": 39998,
+      "pageCount": 0,
+      "status": "DONE",
+      "metadata": null,
+      "viewCount": 0,
+      "createdAt": "2025-12-25T13:52:33.512Z",
+      "updatedAt": "2025-12-25T13:52:37.474Z",
+      "indexedAt": null,
+      "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+      "linkedProjects": [
+        {
+          "id": "5154c96d-c0a5-43d4-9452-c7a284e53963",
+          "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+          "documentId": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
+          "isSelected": true,
+          "addedAt": "2025-12-25T13:52:33.906Z",
+          "project": {
+            "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+            "name": "Thư Viện Số",
+            "description": "Project số hóa tài liệu PDF",
+            "color": "#3B82F6"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Get Document Detail by user
+
+### **GET** `/document/:documentId`
+
+**Param**
+
+documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
+    "title": "Giáo trình AI",
+    "description": "Demo upload",
+    "authors": ["Teacher A"],
+    "subjects": [],
+    "tags": ["AI"],
+    "documentType": "unknown",
+    "publishedYear": 2024,
+    "accessLevel": "PRIVATE",
+    "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+    "filePath": "uploads\\documents\\1766670753505-891084681.pdf",
+    "mimeType": "application/pdf",
+    "size": 39998,
+    "pageCount": 0,
+    "status": "DONE",
+    "metadata": null,
+    "viewCount": 0,
+    "createdAt": "2025-12-25T13:52:33.512Z",
+    "updatedAt": "2025-12-25T13:52:37.474Z",
+    "indexedAt": null,
+    "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717",
+    "linkedProjects": [
+      {
+        "id": "5154c96d-c0a5-43d4-9452-c7a284e53963",
+        "projectId": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+        "documentId": "6499af04-1bf1-4a16-a2f6-a847f02f8526",
+        "isSelected": true,
+        "addedAt": "2025-12-25T13:52:33.906Z",
+        "project": {
+          "id": "a1eb1073-7b5d-470b-bb70-929515554f9b",
+          "name": "Thư Viện Số",
+          "description": "Project số hóa tài liệu PDF",
+          "color": "#3B82F6"
+        }
+      }
+    ]
+  }
+}
+```
+
+## Delete Document
+
+### **DELETE** `/document/:documentId`
+
+**Param**
+documentId = 8a4457cd-9c0d-4346-a88e-16b0b1aed99e
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "6b4c5bb7-a05b-4661-8d1c-abf437e3ec9c",
+    "title": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+    "description": "",
+    "authors": [],
+    "subjects": [],
+    "tags": [],
+    "documentType": "unknown",
+    "publishedYear": null,
+    "accessLevel": "PRIVATE",
+    "originalName": "Nghiên cứu nước ngoài về mô hình ngôn ngữ lớn (LLM) và so sánh ChatGPT – Gemini.pdf",
+    "filePath": "uploads\\documents\\1766654367238-651959962.pdf",
+    "mimeType": "application/pdf",
+    "size": 39998,
+    "pageCount": 0,
+    "status": "done",
+    "metadata": null,
+    "viewCount": 0,
+    "createdAt": "2025-12-25T09:19:27.249Z",
+    "updatedAt": "2025-12-25T09:19:33.060Z",
+    "indexedAt": null,
+    "userId": "4251d365-0aeb-4e5f-a5be-83b77017b717"
+  }
+}
+```
+
+<!-- --------------------- CHAT MODULE --------------------- -->
+
+# 💬 Chat RAG Module
+
+## Chat global
+
+\*Will have projectId = null
+
+### **POST** `/chat/global`
+
+**Query**
+chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
+
+**Body**
+
+```json
+{
+  "message": "Đối tượng nào được miễn giảm học phí năm 2025 2026"
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "answer": "Theo thông báo của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ, các đối tượng được miễn, giảm học phí học kỳ I năm học 2025-2026 phải đáp ứng đủ 2 điều kiện:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/ND-CP.\n\nCụ thể, các đối tượng được miễn, giảm học phí bao gồm:\n\n### 1. Đối tượng được miễn học phí\n- Con của người hoạt động cách mạng trước tháng 08/1945; con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; con của liệt sĩ, thương binh, bệnh binh được hưởng chính sách như thương binh, bệnh binh; con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.\n- Sinh viên khuyết tật.\n- Sinh viên từ 16 đến 22 tuổi đang học văn bằng thứ nhất, không có nguồn nuôi dưỡng, thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/ND-CP.\n- Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.\n- Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.\n\n### 2. Đối tượng được giảm 70% học phí\n- Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.\n\n### 3. Đối tượng được giảm 50% học phí\n- Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.\n\n**Lưu ý:** Nếu sinh viên thuộc nhiều diện miễn, giảm học phí thì chỉ được hưởng một chế độ ưu đãi cao nhất [#0][#1].",
+    "citations": [
+      {
+        "index": 0,
+        "snippet": "# THÔNG BÁO\n## Về các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy học kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/ND-CP ng...",
+        "text": "# THÔNG BÁO\n## Về các chế độ chính sách miễn, giảm học phí cho sinh viên chính quy học kỳ I năm học 2025 - 2026\n\nCăn cứ Nghị định số 238/2025/ND-CP ngày 03 tháng 9 năm 2025 của Chính phủ quy định về chính sách học phí, miễn, giảm, hỗ trợ học phí, hỗ trợ chi phí học tập và giá dịch vụ trong lĩnh vực giáo dục, đào tạo, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ thông báo đến lãnh đạo các khoa, cố vấn học tập và toàn thể sinh viên chính quy các nội dung sau:\n\n### I. Đối tượng được miễn, giảm: Sinh viên thuộc đối tượng được miễn, giảm học phí phải đủ 02 điều kiện sau:\n\n1. Thường trú tại thành phố Cần Thơ (sau sáp nhập).\n2. Thuộc đối tượng được miễn, giảm theo Nghị định số 238/2025/ND-CP (được nêu cụ thể tại phần \"Thủ tục thực hiện\").\n\n### II. Thủ tục thực hiện\n\nSinh viên thuộc đối tượng được miễn, giảm học phí cần nộp hồ sơ để được xét miễn, giảm học phí, cụ thể như sau:\n\n<table>\n  <thead>\n    <tr>\n        <th>1. Đối tượng miễn học phí</th>\n        <th>Hồ sơ cần thực hiện</th>\n    </tr>\n<tr>\n        <th>Đối tượng 1: (Khoản 2 - Điều 15)</th>\n        <th>-</th>\n    </tr>\n<tr>\n        <th>Con của người hoạt động cách mạng trước tháng 08/1945; Con của Anh hùng Lực lượng vũ trang nhân dân, Anh hùng Lao động trong thời kỳ kháng chiến; Con của liệt sĩ, thương binh, bệnh binh được hưởng chính sách như thương binh, bệnh binh; Con của người hoạt động kháng chiến bị nhiễm chất độc hóa học.</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);</th>\n    </tr>\n<tr>\n        <th></th>\n        <th>- Bản sao có công chứng Giấy xác nhận đối tượng do cơ quan quản lý đối với người có công.</th>\n    </tr>\n<tr>\n        <th>Đối tượng 2: (Khoản 3 - Điều 15)</th>\n        <th>-</th>\n    </tr>\n<tr>\n        <th>Sinh viên khuyết tật.</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);</th>\n    </tr>\n<tr>\n        <th></th>\n        <th>- Bản sao có công chứng Giấy xác nhận khuyết tật</th>\n    </tr>\n  </thead>\n</table>",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 1,
+        "score": 0.96973956,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 1,
+        "snippet": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;...",
+        "text": "2\n\n<table>\n  <thead>\n    <tr>\n        <th>**Đối tượng 3: (Khoản 4 - Điều 15)**</th>\n        <th>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao có công chứng Quyết định về việc trợ cấp xã hội.</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>Sinh viên từ 16 tuổi đến 22 tuổi đang học văn bằng thứ nhất không có nguồn nuôi dưỡng thuộc đối tượng hưởng trợ cấp xã hội hàng tháng theo quy định tại khoản 1 và khoản 2 Điều 5 Nghị định số 20/2021/ND-CP.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 4: (Khoản 7 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Giấy chứng nhận hộ nghèo, hộ cận nghèo.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số có cha hoặc mẹ hoặc cả cha và mẹ hoặc ông bà (trong trường hợp ở với ông bà) thuộc hộ nghèo và hộ cận nghèo theo quy định của Thủ tướng Chính phủ.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Đối tượng 5: (Khoản 10 - Điều 15)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là dân tộc thiểu số rất ít người ở vùng có điều kiện kinh tế - xã hội khó khăn và đặc biệt khó khăn.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**2. Đối tượng giảm 70% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 6: (Khoản 1 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Giấy khai sinh.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là người dân tộc thiểu số (ngoài đối tượng dân tộc thiểu số rất ít người) ở thôn/bản đặc biệt khó khăn, xã khu vực III vùng dân tộc và miền núi, xã đặc biệt khó khăn vùng bãi ngang ven biển hải đảo theo quy định của cơ quan có thẩm quyền.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**3. Đối tượng giảm 50% học phí**</td>\n<td>**Hồ sơ cần thực hiện**</td>\n    </tr>\n<tr>\n        <td>**Đối tượng 7: (Khoản 2 - Điều 16)**</td>\n<td>- Đơn đề nghị miễn, giảm học phí (theo mẫu);&lt;br&gt;- Bản sao công chứng của Quyết định hưởng trợ cấp hàng tháng của cha hoặc mẹ bị tai nạn lao động hoặc mắc bệnh nghề nghiệp do tổ chức Bảo hiểm xã hội cấp.</td>\n    </tr>\n<tr>\n        <td>Sinh viên là con cán bộ, công chức, viên chức, công nhân mà cha hoặc mẹ bị mắc bệnh nghề nghiệp hoặc tai nạn lao động được hưởng trợ cấp thường xuyên.</td>\n<td></td>\n    </tr>\n<tr>\n        <td>**Lưu ý:**</td>\n<td></td>\n    </tr>\n<tr>\n        <td>(1) Sinh viên thuộc diện miễn, giảm học phí cùng lúc hưởng nhiều chính sách hỗ trợ khác nhau thì chỉ được hưởng một chế độ ưu đãi cao nhất.</td>\n<td></td>\n    </tr>\n  </tbody>\n</table>\n\nScanned with<br>CS CamScanner™",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 2,
+        "score": 0.9009141,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 4,
+        "snippet": "# ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;  \n- Phòng Công tác Chính trị - Quản lý sinh vi...",
+        "text": "# ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ\n\nKính gửi:- Ban Giám hiệu Trường Đại học Kỹ thuật - Công nghệ Cần Thơ;  \n- Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp;  \n- Cố vấn học tập: ……………………………………………\n\nHọ và tên sinh viên: ………………………………………… CC/CCCD: …………………………………………  \nNgày, tháng, năm sinh: …………………………………………  \nNơi sinh: …………………………………………  \nLớp: ………………………………………… Khoa: …………………………………………  \nMSSV: …………………………………………  \nSố điện thoại sinh viên: ………………………………………… Số điện thoại người thân: …………………………………………  \nĐịa chỉ thường trú cũ: …………………………………………  \nĐịa chỉ thường trú mới: …………………………………………  \nThuộc đối tượng: …………………………………………  \n\n(Ghi rõ đối tượng được quy định tại Nghị định 238/2025/ND-CP)\n\nCăn cứ vào Nghị định số 238/2025/ND-CP của Chính phủ, tôi làm đơn này đề nghị được Nhà trường xem xét để được miễn, giảm học phí theo quy định và chế độ hiện hành.\n\n……, ngày …… tháng …… năm ……\n\n**Xác nhận của CVHT**  \n………………………………………  \n………………………………………  \n………………………………………\n\n**Người làm đơn**  \n(Ký tên và ghi rõ họ tên)  \n………………………………………",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 5,
+        "score": 0.84927243,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 2,
+        "snippet": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo ...",
+        "text": "(2) Danh mục vùng, địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn áp dụng đối với đối tượng 5 và đối tượng 6 theo phụ lục đính kèm thông báo này. Sinh viên cần có theo địa chỉ thường trú trước sáp nhập để xét.\n\nIII. Thời gian và địa điểm nộp hồ sơ:\n\nSinh viên nộp trực tiếp tại Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp đến hết ngày 03/10/2025. Để biết thêm thông tin vui lòng liên hệ Phòng Công tác Chính trị - Quản lý sinh viên - Khối nghiệp (Cô Đinh Việt Tuyết Hiền, ĐT: 0919.232.577).\n\nNoi nhận:\n- Các đơn vị;\n- website Phòng QLSV;\n- Lưu: VT, QLSV.\n(Hiện)\n\nKT. HIỆU TRƯỞNG\nPHÓ HIỆU TRƯỞNG\nNguyễn Thị Yên Chi",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 3,
+        "score": 0.7214293,
+        "startOffset": 0,
+        "endOffset": 0
+      },
+      {
+        "index": 3,
+        "snippet": "# PHỤ LỤC\n## DANH MỤC VÙNG, ĐỊA BÀN CÓ ĐIỀU KIỆN KINH TẾ - XÃ HỘI ĐẶC BIỆT KHÓ KHĂN\n(Kèm theo Thông báo số 169/TB-DHKTGN ngày 16 tháng 9 năm 2025 của ...",
+        "text": "# PHỤ LỤC\n## DANH MỤC VÙNG, ĐỊA BÀN CÓ ĐIỀU KIỆN KINH TẾ - XÃ HỘI ĐẶC BIỆT KHÓ KHĂN\n(Kèm theo Thông báo số 169/TB-DHKTGN ngày 16 tháng 9 năm 2025 của Trường Đại học Kỹ thuật – Công nghệ Cần Thơ)\n\n1. Quyết định số 353/QĐ-TTg ngày 15 tháng 3 năm 2022 của Thủ tướng Chính phủ: Phê duyệt danh sách huyện nghèo, xã đặc biệt khó khăn vùng bãi ngang, ven biển và hải đảo giai đoạn 2021 - 2025;\n\n2. Quyết định số 576/QĐ-TTg ngày 22 tháng 6 năm 2024 của Thủ tướng Chính phủ: Công nhận 09 xã đặc biệt khó khăn vùng bãi ngang, ven biển và hải đảo giai đoạn 2021 - 2025 thoát khỏi tình trạng đặc biệt khó khăn;\n\n3. Quyết định số 861/QĐ-TTg ngày 04 tháng 6 năm 2021 của Thủ tướng Chính phủ: Phê duyệt danh sách các xã khu vực III, khu vực II, khu vực I thuộc vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n4. Quyết định số 698/QĐ-TTg ngày 19 tháng 7 năm 2024 của Thủ tướng Chính phủ: Phê duyệt điều chỉnh, bổ sung và hiệu chỉnh danh sách xã khu vực III, khu vực II, khu vực I thuộc vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n5. Quyết định số 612/QĐ-UBDT ngày 16 tháng 9 năm 2021 phê duyệt danh sách các thôn đặc biệt khó khăn vùng đồng bào dân tộc thiểu số và miền núi giai đoạn 2021 - 2025;\n\n6. Quyết định số 497/QĐ-UBDT ngày 30 tháng 7 năm 2024 phê duyệt điều chỉnh và hiệu chỉnh tên huyện, xã, thôn đặc biệt khó khăn; thôn thuộc vùng dân tộc thiểu số và miền núi giai đoạn 2021 - 2025.",
+        "fileId": "ee6016ad-58b7-44c3-b334-411b9619f35f",
+        "fileUrl": "uploads\\documents\\1767614161574-58673668.pdf",
+        "page": 4,
+        "score": 0.6509999,
+        "startOffset": 0,
+        "endOffset": 0
+      }
+    ],
+    "chatId": "53852a0e-6bb8-49c0-b17d-e5accb980355"
+  }
+}
+```
+
+## Chat Stream (SSE)
+
+_Real-time streaming chat responses using Server-Sent Events_
+
+### **GET** `/chat/stream`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time streaming chat responses. Returns AI responses token-by-token with citations.
+
+**Query Parameters:**
+
+```
+message (required) - The user's question
+projectId (optional) - Project context for the chat
+chatId (optional) - Existing chat session ID
+```
+
+**Headers:**
+
+```
+Authorization: Bearer <accessToken>
+Accept: text/event-stream
+```
+
+**Event Stream Format:**
+
+The endpoint sends multiple SSE events in sequence:
+
+1. **CITATIONS Event** - Document references found for the question
+
+```json
+{
+  "data": {
+    "type": "CITATIONS",
+    "content": [
+      {
+        "index": 0,
+        "snippet": "Preview text...",
+        "text": "Full chunk content",
+        "fileId": "uuid",
+        "fileUrl": "path/to/file.pdf",
+        "page": 1,
+        "score": 0.95,
+        "startOffset": 0,
+        "endOffset": 100,
+        "projectId": "uuid"
+      }
+    ],
+    "chatId": "uuid"
+  }
+}
+```
+
+2. **TOKEN Events** - AI response streamed word-by-word
+
+```json
+{
+  "data": {
+    "type": "TOKEN",
+    "content": "word "
+  }
+}
+```
+
+3. **DONE Event** - Signals completion
+
+```json
+{
+  "data": {
+    "type": "DONE"
+  }
+}
+```
+
+4. **ERROR Event** - If an error occurs
+
+```json
+{
+  "data": {
+    "type": "ERROR",
+    "content": "Error message"
+  }
+}
+```
+
+**Example Usage (JavaScript/TypeScript):**
+
+```javascript
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/chat/stream?message=${encodeURIComponent('Your question')}`,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  },
+);
+
+let fullAnswer = '';
+let citations = [];
+let chatId = null;
+
+eventSource.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+
+  switch (data.data.type) {
+    case 'CITATIONS':
+      citations = data.data.content;
+      chatId = data.data.chatId;
+      break;
+
+    case 'TOKEN':
+      fullAnswer += data.data.content;
+      // Update UI with streaming text
+      break;
+
+    case 'DONE':
+      eventSource.close();
+      // Finalize UI
+      break;
+
+    case 'ERROR':
+      console.error(data.data.content);
+      eventSource.close();
+      break;
+  }
+});
+
+eventSource.addEventListener('error', (error) => {
+  console.error('SSE connection error:', error);
+  eventSource.close();
+});
+```
+
+**Example cURL:**
+
+```bash
+curl -N -X GET "http://localhost:8080/api/v1/chat/stream?message=Your%20question" \
+  -H "Authorization: Bearer eyJhbGci..." \
+  -H "Accept: text/event-stream"
+```
+
+### **POST** `/project/:projectId/chats/messages`
+
+**Param**:
+projectId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Query**:
+
+```json
+// chatId null thì tạo mới chat, sau khi tạo xong gắng chatId vào để tiếp tục chat
+chatId = bbe027d0-74ea-4630-a846-5040a9772aaa
+```
+
+Body and Response same with `/chat/global`
+
+## Get Chat Detail
+
+### **GET** `/chat/:chatId/messages`
+
+**Param**
+chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "bdb88320-5a0a-4153-8f9a-1d1a9e43d3eb",
+    "title": "New Chat",
+    "createdAt": "2025-12-28T08:17:52.074Z",
+    "updatedAt": "2025-12-28T08:17:55.145Z",
+    "userId": "977a368e-abfe-4a38-adbe-4625cce8d500",
+    "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Cho tôi biết kiến trúc hệ thống và công nghệ của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật. Vậy kiến trúc này có giống kiến trúc RAG không hay chỉ là một phiên bản đơn giản hơn"
+      },
+      {
+        "role": "assistant",
+        "content": "Tài liệu hiện tại không chứa thông tin về kiến trúc hệ thống và công nghệ của luận văn tốt nghiệp của tác giả Trường Thịnh và Minh Nhật, cũng như không đề cập đến việc kiến trúc này có giống kiến trúc RAG hay chỉ là một phiên bản đơn giản hơn. Nội dung tài liệu chủ yếu tập trung vào các mô hình ngôn ngữ lớn như ChatGPT và Gemini, cùng các công nghệ liên quan đến LLM hiện đại [#0][#5][#10][#12].",
+        "citation": [
+          {
+            "page": 2,
+            "text": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tuy nhiên,  ở bài kiểm tra HellaSwag về suy luận thường thức ,   GPT-4 (ChatGPT)  lại    nhỉnh hơn Gemini Ultra  đôi chút, phản ánh rằng  mô hình của OpenAI vẫn dẫn trước về một số khả năng hiểu biết ngữ cảnh thường nhật . Điều này gợi ý rằng  hiệu suất của LLM  phụ thuộc vào tính chất của từng nhiệm vụ cũng như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay.",
+            "index": 12,
+            "score": 0.9077052703255086,
+            "fileId": "c65128ad-9272-46a3-a20d-9c3d83096727",
+            "fileUrl": "uploads\\documents\\1766909856075-818194294.pdf",
+            "snippet": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tu...",
+            "endOffset": 7353,
+            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
+            "startOffset": 6616
+          },
+          {
+            "page": 2,
+            "text": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tuy nhiên,  ở bài kiểm tra HellaSwag về suy luận thường thức ,   GPT-4 (ChatGPT)  lại    nhỉnh hơn Gemini Ultra  đôi chút, phản ánh rằng  mô hình của OpenAI vẫn dẫn trước về một số khả năng hiểu biết ngữ cảnh thường nhật . Điều này gợi ý rằng  hiệu suất của LLM  phụ thuộc vào tính chất của từng nhiệm vụ cũng như  cách thức huấn luyện : mô hình có thể vượt trội trong lĩnh vực này nhưng kém hơn ở lĩnh vực khác.  Tóm lại,  các nghiên cứu nước ngoài  đã và đang làm sáng tỏ bức tranh phát triển của LLM, từ nền tảng Transformer  đến những hệ thống đa năng như  ChatGPT và Gemini  ngày nay.",
+            "index": 12,
+            "score": 0.907649701833725,
+            "fileId": "24e58995-f414-4530-a863-56c3dc85e287",
+            "fileUrl": "uploads\\documents\\1766727002595-897595108.pdf",
+            "snippet": "Gemini Ultra thậm chí vượt qua cả mức trung bình của chuyên gia con người trên bộ đề MMLU , cho thấy tiềm năng xuất sắc về  kiến thức và suy luận . Tu...",
+            "endOffset": 7353,
+            "projectId": "b90a5e74-9cf9-416b-9acc-900bee4baa02",
+            "startOffset": 6616
+          }
+          // ...
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Get Global Chats
+
+### **GET** `/chat/user/global`
+
+**Note:** Get all chats that have `projectId` = null
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": [
+    {
+      "id": "05db033f-643d-4cbc-92cc-8b13538eb217",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T05:07:23.316Z",
+      "updatedAt": "2025-12-25T05:07:32.142Z",
+      "projectId": null
+    },
+    {
+      "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
+      "title": "New Chat",
+      "createdAt": "2025-12-25T05:04:19.340Z",
+      "updatedAt": "2025-12-25T05:04:23.696Z",
+      "projectId": null
+    }
+  ]
+}
+```
+
+## Update chat
+
+### **PATCH** `/chat/user/:chatId`
+
+**Param**
+chatId = bbe027d0-74ea-4630-a846-5040a9772jkk
+
+**Body**
+
+```json
+{
+  // Just update 2 fields
+  "title": "Sinoo chat",
+  "projectId": "46da89f2-401a-489c-98ea-4a4121d6ed91"
+}
+```
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
+    "title": "Sinoo chat moved",
+    "createdAt": "2025-12-25T05:04:19.340Z",
+    "updatedAt": "2025-12-25T14:23:51.997Z",
+    "projectId": "cf3ad296-3044-451f-84db-9fc99c9e327d"
+  }
+}
+```
+
+## Delete chat
+
+### **DELETE** `/chat/user/:chatId`
+
+**Param**
+chatId = db4d69de-d88f-4ae8-8dc1-d087907dc195
+
+**Response**
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "data": {
+    "id": "65d1f823-e0d2-4e92-b32b-97351ce85561",
+    "title": "Sinoo chat moved",
+    "createdAt": "2025-12-25T05:04:19.340Z",
+    "updatedAt": "2025-12-25T14:23:51.997Z",
+    "projectId": "cf3ad296-3044-451f-84db-9fc99c9e327d"
+  }
+}
+```
+
+---
+
+# � Notifications (SSE)
+
+## Connect to SSE Stream
+
+### **GET** `/notifications/sse`
+
+**Description:** Establishes a Server-Sent Events (SSE) connection for real-time notifications. Events are filtered by userId.
+
+**Query Parameters:**
+
+- `userId` (required): User ID to filter notifications
+
+**Authentication:** Required (JWT Bearer Token)
+
+**Example Connection:**
+
+```javascript
+const userId = 'user-123';
+const token = 'your-jwt-token';
+
+const eventSource = new EventSource(
+  `http://localhost:8080/api/v1/notifications/sse?userId=${userId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  },
+);
+
+eventSource.onopen = () => {
+  console.log('✅ SSE Connected');
+};
+
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('📨 Notification:', data);
+
+  // Handle different event types
+  switch (data.type) {
+    case 'DOCUMENT_PROCESSED':
+      handleDocumentProcessed(data.payload);
+      break;
+    // Add more event types as needed
+  }
+};
+
+eventSource.onerror = (error) => {
+  console.error('❌ SSE Error:', error);
+  // Implement reconnection logic
+};
+
+// Clean up on component unmount
+// eventSource.close();
+```
+
+**Event Format:**
+
+```json
+{
+  "type": "DOCUMENT_PROCESSED",
+  "payload": {
+    "fileId": "abc-123",
+    "projectId": "project-456",
+    "status": "DONE",
+    "message": "Xử lý thành công"
+  },
+  "timestamp": "2026-01-15T03:30:00.000Z"
+}
+```
+
+**Event Types:**
+
+| Type                 | Description                   | Payload Fields                             |
+| -------------------- | ----------------------------- | ------------------------------------------ |
+| `DOCUMENT_PROCESSED` | Document processing completed | `fileId`, `projectId`, `status`, `message` |
+
+**Status Values:**
+
+- `DONE`: Processing completed successfully
+- `ERROR`: Processing failed
+
+**Notes:**
+
+- SSE connection is persistent and will automatically push events when they occur
+- No polling required
+- Events are only sent to the user who owns the resource
+- Connection will auto-reconnect on network issues (browser default behavior)
+
+---
+
+# 📙 Response Format
+
+## Success Response
+
+```json
+{
+  "statusCode": 200, // 201, 400, 500
+  "success": true,
+  "data": // {} or [],
+}
+```
 
 ```
 
@@ -5671,13 +5721,16 @@ main()
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@langchain/cohere": "^1.0.1",
     "@langchain/community": "^1.0.4",
     "@langchain/core": "^1.0.6",
     "@langchain/openai": "^1.1.2",
     "@langchain/textsplitters": "^1.0.0",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/event-emitter": "^3.0.1",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
@@ -5687,10 +5740,13 @@ main()
     "@prisma/adapter-pg": "6.9.0",
     "@prisma/client": "6.9.0",
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.66.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "express": "^5.2.1",
+    "ioredis": "^5.9.1",
     "joi": "^18.0.2",
+    "llama-cloud-services": "^0.5.1",
     "lodash": "^4.17.21",
     "multer": "^2.0.2",
     "nest-winston": "^1.10.2",
