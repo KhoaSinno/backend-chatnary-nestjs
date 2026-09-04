@@ -288,15 +288,15 @@ Rollback never means disabling authorization or adding a public token-bearing UR
 
 ## 11. D2 definition of done
 
-- [ ] All D2 automated tests pass.
-- [ ] Backend Nest build and full Jest suite pass.
-- [ ] Frontend typecheck and production build pass.
-- [ ] Owner and project viewer can preview/download.
-- [ ] Outsider receives consistent 404 without bytes.
-- [ ] Physical path never appears in JSON response or browser URL.
-- [ ] No request uses legacy preview/download URLs.
-- [ ] Static /uploads serving is removed only after all above checks pass.
-- [ ] API_INTEGRATION_PHASES.md is updated with commit hashes and manual evidence.
+- [x] All D2 automated tests pass.
+- [x] Backend Nest build and full Jest suite pass.
+- [x] Frontend typecheck and production build pass.
+- [x] Owner and project viewer can preview/download.
+- [x] Outsider receives consistent 404 without bytes.
+- [x] Physical path never appears in JSON response or browser URL.
+- [x] No request uses legacy preview/download URLs.
+- [x] Static /uploads serving is removed only after all above checks pass.
+- [x] API_INTEGRATION_PHASES.md is updated with commit hashes and manual evidence.
 
 ## 12. Next phase after D2
 
