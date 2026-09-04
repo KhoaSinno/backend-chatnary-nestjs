@@ -313,6 +313,7 @@ Only after D2 is complete, begin D3: return ingest result as named data containi
 - Automated evidence: BE full Jest suite passes (11 suites, 23 tests) and Nest build passes; FE type-check and production build pass.
 - Runtime evidence: BE booted from commit `ad718c0` and mapped `GET /api/v1/document/:id/file`; a real legacy `uploads/documents/*` path returned `404`, while the new file route returned `401` without a JWT.
 - HTTP smoke evidence: a temporary owner-owned text fixture was created and removed in a `finally` block. Owner inline and attachment requests both returned `200` with exact bytes and safe headers; the seed outsider received `404`; the fixture's legacy `/uploads/documents/*` URL returned `404`.
+- Viewer smoke evidence: a separate temporary fixture made the seed user a project `VIEWER` for the duration of the probe only. Both owner and viewer received `200` with exact bytes; the temporary membership, document relation, record, and file were removed afterward.
 
 ### D2 still requires browser verification
 
