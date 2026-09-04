@@ -17,9 +17,9 @@ export class ProjectService {
   ) { }
 
   // -- CREATE NEW PROJECT --
-  async createNewProject(createProjectDto: CreateProjectDto) {
+  async createNewProject(createProjectDto: CreateProjectDto, userId: string) {
     return await this.prisma.project.create({
-      data: createProjectDto,
+      data: { ...createProjectDto, userId },
       omit: { userId: true },
     });
   }

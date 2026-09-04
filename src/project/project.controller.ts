@@ -32,8 +32,10 @@ export class ProjectController {
     @Req() req: { user: JwtPayloadWithRt },
     @Body() createProjectDto: CreateProjectDto,
   ) {
-    createProjectDto.userId = req.user.userId;
-    return this.projectService.createNewProject(createProjectDto);
+    return this.projectService.createNewProject(
+      createProjectDto,
+      req.user.userId,
+    );
   }
 
   // -- ADD DOCUMENTS TO PROJECT --

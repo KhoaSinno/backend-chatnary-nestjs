@@ -8,20 +8,33 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Response } from 'express';
 
+interface SuccessResponse<T> {
+  statusCode: number;
+  success: true;
+  data: T;
+}
+
+function isSuccessResponse(value: unknown): value is SuccessResponse<unknown> {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'statusCode' in value &&
+    'success' in value
+  );
+}
+
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<SuccessResponse<unknown>> {
     const res = context.switchToHttp().getResponse<Response>();
     // -- RETURN WRAPPED RESPONSE --
     return next.handle().pipe(
-      map((data: any) => {
+      map((data: unknown) => {
         // If response already formatted → do NOTHING
-        if (
-          data &&
-          typeof data === 'object' &&
-          data.hasOwnProperty('statusCode') &&
-          data.hasOwnProperty('success')
-        ) {
+        if (isSuccessResponse(data)) {
           return data;
         }
         return {

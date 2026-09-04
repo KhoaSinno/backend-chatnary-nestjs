@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,12 +12,7 @@ async function bootstrap() {
   // Replace the default NestJS logger with Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-  // --- Config CORS ---
-  // Dev mode: Allow all origins
-  app.enableCors();
-
-  /* //  Production mode: Restrict origins
-   */
+  // The browser frontend runs on port 3000 in local development.
   app.enableCors({
     origin: ['http://localhost:3000'], // Add your allowed origins here
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -36,6 +32,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   // -- HTTP exception filter --
   app.useGlobalFilters(new HttpExceptionFilter());
+  // -- Validate every DTO before it reaches a controller or Prisma --
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   // -- Prefix all routes with /api/v1 --
   app.setGlobalPrefix('api/v1');
   // -- Swagger setup --

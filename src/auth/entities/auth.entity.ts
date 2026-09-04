@@ -8,7 +8,6 @@ export interface SafeUser {
   username: string;
   name: string | null;
   role: Role;
-  refreshToken: string | null;
   createdAt: Date;
   updatedAt: Date;
   storageUsed: number;

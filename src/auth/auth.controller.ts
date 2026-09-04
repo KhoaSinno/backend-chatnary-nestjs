@@ -37,7 +37,6 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   refreshToken(@Req() req: { user: JwtPayloadWithRt }) {
-    console.log(req);
     return this.authService.refreshToken(
       req.user.userId,
       req.user.refreshToken,

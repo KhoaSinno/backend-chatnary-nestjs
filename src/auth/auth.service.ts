@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthEntity, SafeUser } from './entities/auth.entity';
 import { PrismaService } from '../prisma/prisma.service';
@@ -53,7 +57,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
-    if (!user) throw new Error('Invalid credentials');
+    if (!user) throw new UnauthorizedException('Invalid credentials');
 
     // Compare passwords
     const isPasswordValid = bcrypt.compareSync(
@@ -78,7 +82,6 @@ export class AuthService {
       username: user.username,
       name: user.name,
       role: user.role,
-      refreshToken: user.refreshToken,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       storageUsed: Number(user.storageUsed),
