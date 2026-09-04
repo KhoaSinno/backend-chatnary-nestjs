@@ -15,7 +15,6 @@ export class CloudService {
       adaptive_long_table: true,
       outlined_table_extraction: true,
       output_tables_as_HTML: true,
-      max_pages: 0,
       precise_bounding_box: true,
     });
   }

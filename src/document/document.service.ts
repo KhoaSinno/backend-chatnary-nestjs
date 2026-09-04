@@ -10,6 +10,7 @@ import { UploadMetadataDto } from './dto/upload-document.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { IngestJobData } from '../queue/ingest.processor';
+import { DocumentAccessService } from './document-access.service';
 
 @Injectable()
 export class DocumentService {
@@ -18,15 +19,18 @@ export class DocumentService {
     private vectorService: VectorService,
     private prisma: PrismaService,
     private readonly logger: ConsoleLogger,
+    private readonly documentAccess: DocumentAccessService,
   ) { }
 
   //-- UPLOAD (Non-blocking with Queue) --
   async uploadFiles(
     userId: string,
     files: Express.Multer.File[],
-    projectId?: string,
-    metadata?: UploadMetadataDto,
+    projectId: string,
+    metadata: UploadMetadataDto,
   ): Promise<{ documents: Document[]; jobIds: string[] }> {
+    await this.documentAccess.assertCanEditProject(userId, projectId);
+
     const createdDocuments: Document[] = [];
     const jobIds: string[] = [];
 
@@ -247,7 +251,7 @@ export class DocumentService {
     // Check exist project
 
     const docsRaw = await this.prisma.projectResources.findMany({
-      where: { projectId: projectId, document: { userId: userId } },
+      where: { projectId: projectId },
       include: {
         document: {
           omit: { userId: true, indexedAt: true },
@@ -373,7 +377,13 @@ export class DocumentService {
   }
 
   // -- UPDATE DOCUMENT --
-  async updateDocument(id: string, updateDocumentDto: UpdateDocumentDto) {
+  async updateDocument(
+    userId: string,
+    id: string,
+    updateDocumentDto: UpdateDocumentDto,
+  ) {
+    await this.documentAccess.assertCanManageDocument(userId, id);
+
     return await this.prisma.document.update({
       where: { id: id },
       data: {

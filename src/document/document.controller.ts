@@ -9,7 +9,6 @@ import {
   UseInterceptors,
   BadRequestException,
   UploadedFiles,
-  Logger,
   Headers,
   Req,
 } from '@nestjs/common';
@@ -59,32 +58,18 @@ export class DocumentController {
     @Req() req: { user: JwtPayloadWithRt },
     @UploadedFiles() files: Express.Multer.File[],
     // @Body('projectId') projectId?: string,
-    @Body('data', ParseJsonPipe) metadata?: UploadMetadataDto,
+    @Body('data', ParseJsonPipe) metadata: UploadMetadataDto,
   ) {
-    Logger.log('Uploaded files:', files);
-
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
     }
 
-    console.log('Metadata:', metadata);
-    // Lúc này 'metadata' đã là Object xịn, có type đầy đủ, không cần parse thủ công
-    console.log(metadata?.authors); // ['Nguyen Van A', 'Tran Van B']
-    console.log(metadata?.publishedYear); // 2024 (Number)
-
-    if (!files || files.length === 0) {
-      throw new BadRequestException('No files uploaded');
-    }
-
-    await this.documentService.uploadFiles(
+    return this.documentService.uploadFiles(
       req.user.userId,
       files,
-      metadata?.projectId as string,
+      metadata.projectId,
       metadata,
     );
-    return files.map((file) => ({
-      url: `/uploads/documents/${file.filename}`,
-    }));
   }
 
   // -- REMOVE --
@@ -114,9 +99,14 @@ export class DocumentController {
   //  -- UPDATE DOCUMENT --
   @Patch(':id')
   updateDocument(
+    @Req() req: { user: JwtPayloadWithRt },
     @Param('id') id: string,
     @Body() updateDocumentDto: UpdateDocumentDto,
   ) {
-    return this.documentService.updateDocument(id, updateDocumentDto);
+    return this.documentService.updateDocument(
+      req.user.userId,
+      id,
+      updateDocumentDto,
+    );
   }
 }

@@ -47,6 +47,10 @@ export class IngestProcessor extends WorkerHost {
                 originalFileName,
             );
 
+            if (chunks.length === 0) {
+                throw new Error('No text chunks were extracted from this document');
+            }
+
             // 3. Update Status: DONE
             await this.prisma.document.update({
                 where: { id: fileId },

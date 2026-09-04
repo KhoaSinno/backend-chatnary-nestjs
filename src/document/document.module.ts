@@ -4,6 +4,7 @@ import { DocumentController } from './document.controller';
 import { IngestModule } from '../ingest/ingest.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { BullModule } from '@nestjs/bullmq';
+import { DocumentAccessService } from './document-access.service';
 
 @Module({
   imports: [
@@ -13,7 +14,12 @@ import { BullModule } from '@nestjs/bullmq';
     }),
   ],
   controllers: [DocumentController],
-  providers: [DocumentService, PrismaService, ConsoleLogger],
+  providers: [
+    DocumentService,
+    DocumentAccessService,
+    PrismaService,
+    ConsoleLogger,
+  ],
   exports: [DocumentService],
 })
 export class DocumentModule { }

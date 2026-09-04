@@ -2,6 +2,7 @@ import {
   IsArray,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
@@ -10,9 +11,9 @@ import { Type } from 'class-transformer';
 import { AccessLevelDoc } from '@prisma/client';
 
 export class UploadMetadataDto {
-  @IsOptional()
   @IsUUID()
-  projectId?: string;
+  @IsNotEmpty()
+  projectId: string;
 
   @IsOptional()
   @IsString()
