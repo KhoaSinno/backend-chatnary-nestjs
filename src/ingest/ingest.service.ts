@@ -3,6 +3,11 @@ import { VectorService } from './vector/vector.service';
 import { TextSplitterService } from './splitters/text-splitter';
 import { CloudService } from './loaders/cloud.loader';
 
+export interface IngestResult {
+  chunks: Awaited<ReturnType<TextSplitterService['splitToMarkdown']>>;
+  pageCount: number;
+}
+
 @Injectable()
 export class IngestService {
   constructor(
@@ -21,7 +26,7 @@ export class IngestService {
     userId: string,
     projectId?: string,
     originalFileName?: string,
-  ) {
+  ): Promise<IngestResult> {
     const markdownResult = await this.cloudService.load(filePath);
 
     // console.log(JSON.stringify(markdownResult));
@@ -54,7 +59,9 @@ export class IngestService {
       metadata,
     });
 
-    // Return number of chunks processed
-    return chunks;
+    return {
+      chunks,
+      pageCount: markdownList.length,
+    };
   }
 }

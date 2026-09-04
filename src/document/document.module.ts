@@ -5,6 +5,7 @@ import { IngestModule } from '../ingest/ingest.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { BullModule } from '@nestjs/bullmq';
 import { DocumentAccessService } from './document-access.service';
+import { DocumentFileService } from './document-file.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DocumentAccessService } from './document-access.service';
   providers: [
     DocumentService,
     DocumentAccessService,
+    DocumentFileService,
     PrismaService,
     ConsoleLogger,
   ],

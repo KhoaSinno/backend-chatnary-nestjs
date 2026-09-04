@@ -39,7 +39,7 @@ export class IngestProcessor extends WorkerHost {
             });
 
             // 2. Call existing Ingest logic (Cloud loader -> Split -> Embed -> PGVector)
-            const chunks = await this.ingestService.ingestDocument(
+            const result = await this.ingestService.ingestDocument(
                 filePath,
                 fileId,
                 userId,
@@ -47,7 +47,7 @@ export class IngestProcessor extends WorkerHost {
                 originalFileName,
             );
 
-            if (chunks.length === 0) {
+            if (result.chunks.length === 0) {
                 throw new Error('No text chunks were extracted from this document');
             }
 
@@ -56,7 +56,7 @@ export class IngestProcessor extends WorkerHost {
                 where: { id: fileId },
                 data: {
                     status: DocumentStatus.DONE,
-                    pageCount: chunks.length, // TODO: Wrong pageCount
+                    pageCount: result.pageCount,
                 },
             });
 
@@ -71,10 +71,10 @@ export class IngestProcessor extends WorkerHost {
             });
 
             this.logger.log(
-                `✅ Completed job ${job.id}. Processed ${chunks.length} chunks.`,
+                `✅ Completed job ${job.id}. Processed ${result.chunks.length} chunks from ${result.pageCount} pages.`,
             );
 
-            return chunks.length;
+            return result.chunks.length;
         } catch (error) {
             this.logger.error(`❌ Job ${job.id} failed: ${error.message}`);
 

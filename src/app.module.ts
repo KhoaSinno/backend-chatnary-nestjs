@@ -9,8 +9,6 @@ import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ProjectModule } from './project/project.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { envConfig } from './config/env.config';
 import { UserModule } from './user/user.module';
@@ -34,11 +32,6 @@ import { AdminModule } from './admin/admin.module';
 
     // Event emitter
     EventEmitterModule.forRoot(),
-    // Serve static files from the "uploads" directory
-    ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'uploads'), // PROJECT_ROOT/uploads
-      serveRoot: '/uploads',
-    }),
     // Environment configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,

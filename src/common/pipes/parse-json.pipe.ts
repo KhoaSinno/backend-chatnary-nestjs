@@ -51,6 +51,12 @@ export class ParseJsonPipe implements PipeTransform {
   }
 
   private isPrimitive(metatype: Function): boolean {
-    return [String, Boolean, Number, Array, Object].includes(metatype);
+    return (
+      metatype === String ||
+      metatype === Boolean ||
+      metatype === Number ||
+      metatype === Array ||
+      metatype === Object
+    );
   }
 }

@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
+  StreamableFile,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -28,13 +29,13 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<SuccessResponse<unknown>> {
+  ): Observable<unknown> {
     const res = context.switchToHttp().getResponse<Response>();
     // -- RETURN WRAPPED RESPONSE --
     return next.handle().pipe(
       map((data: unknown) => {
         // If response already formatted → do NOTHING
-        if (isSuccessResponse(data)) {
+        if (data instanceof StreamableFile || isSuccessResponse(data)) {
           return data;
         }
         return {
