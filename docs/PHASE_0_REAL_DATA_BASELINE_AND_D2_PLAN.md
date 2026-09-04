@@ -311,6 +311,7 @@ Only after D2 is complete, begin D3: return ingest result as named data containi
 - The global response interceptor leaves `StreamableFile` responses unwrapped.
 - Public `ServeStaticModule` exposure of `/uploads` has been removed.
 - Automated evidence: BE full Jest suite passes (11 suites, 23 tests) and Nest build passes; FE type-check and production build pass.
+- Runtime evidence: BE booted from commit `ad718c0` and mapped `GET /api/v1/document/:id/file`; a real legacy `uploads/documents/*` path returned `404`, while the new file route returned `401` without a JWT.
 
 ### D2 still requires browser verification
 
