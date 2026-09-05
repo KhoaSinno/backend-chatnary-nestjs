@@ -5,7 +5,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { PGVectorStore } from '@langchain/community/vectorstores/pgvector';
-import { OpenaiService } from '../../llm/openai/openai.service';
+import { LlmService } from '../../llm/llm.service';
 import { getPgConfig } from '../../config/pg.config';
 import { Pool, PoolClient } from 'pg';
 @Injectable()
@@ -14,9 +14,9 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
   private pool: Pool | null = null;
 
   constructor(
-    private readonly openaiService: OpenaiService,
+    private readonly llm: LlmService,
     private readonly logger: ConsoleLogger,
-  ) { }
+  ) {}
 
   // Tự động chạy khi module khởi tạo
   async onModuleInit() {
@@ -26,10 +26,10 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
     // Nếu index đã tồn tại, nó có thể báo lỗi, ta nên dùng try/catch
     try {
       await this.ensureHnswIndex();
-    } catch (e) {
+    } catch (error: unknown) {
       this.logger.error(
         '⚠️ Warning: HNSW Index check failed (non-fatal)',
-        e.message,
+        this.errorMessage(error),
       );
     }
   }
@@ -66,10 +66,10 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
     });
 
     // Pass the pool to vector store config
-    this.vectorStore = await PGVectorStore.initialize(
-      this.openaiService.getEmbeddings(),
-      { ...config, pool: this.pool },
-    );
+    this.vectorStore = await PGVectorStore.initialize(this.llm.embeddings(), {
+      ...config,
+      pool: this.pool,
+    });
 
     this.logger.log('✅ Connected to PGVector successfully!');
     return this.vectorStore;
@@ -109,14 +109,19 @@ export class PgvectorService implements OnModuleInit, OnModuleDestroy {
         efConstruction: 64, // Độ sâu tìm kiếm khi xây dựng index (Default: 64)
       });
       this.logger.log('✅ HNSW Index created successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       // PGVector thường throw lỗi nếu Index đã tồn tại.
       // Ta catch lỗi này để không làm crash app.
-      if (error.message && error.message.includes('already exists')) {
+      const message = this.errorMessage(error);
+      if (message.includes('already exists')) {
         this.logger.log('ℹ️ HNSW Index already exists. Skipping creation.');
       } else {
         this.logger.error('❌ Error creating HNSW index:', error);
       }
     }
+  }
+
+  private errorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
   }
 }

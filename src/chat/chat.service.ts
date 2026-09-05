@@ -1,582 +1,181 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
-import { UpdateChatDto } from './dto/update-chat.dto';
-import { OpenaiService } from '../llm/openai/openai.service';
+import { Observable } from 'rxjs';
 import { ChatDto } from './dto/chat.dto';
+import { UpdateChatDto } from './dto/update-chat.dto';
+import { LlmService } from '../llm/llm.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { ContentBlock } from '@langchain/core/messages';
-import {
-  RetrievalService,
-  ScoredDocument,
-} from '../retrieval/retrieval.service';
-import * as path from 'node:path';
-import { Observable, Subject } from 'rxjs';
+import { ChatConversationService } from './chat-conversation.service';
+import { RagContextService } from './rag-context.service';
+import { ChatResponse, ChatStreamEvent, RagContext } from './chat.types';
 
-type MessageType = {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-};
+const NO_DOCUMENTS_ANSWER =
+  'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn để trả lời câu hỏi này.';
 
-type CitationType = {
-  index: number;
-  snippet: string;
-  text: string;
-  fileId: string;
-  fileUrl: string;
-  page: number;
-  startOffset: number;
-  endOffset: number;
-  score?: number;
-  projectId: string;
-};
-
-// Custom SSE message type for streaming responses
-type SSEMessage = {
-  data: {
-    type: 'TOKEN' | 'CITATIONS' | 'CHAT_ID' | 'ERROR' | 'DONE';
-    content?: string | CitationType[];
-    chatId?: string;
-  };
-};
-
-type BaseMessage =
-  | {
-    answer: string;
-    citations?: undefined;
-    chat?: undefined;
-  }
-  | {
-    answer: string | (ContentBlock | ContentBlock.Text)[];
-    citations: CitationType[];
-    // chat: {
-    //   id: string;
-    //   userId: string;
-    //   title: string;
-    //   messages: JsonValue[];
-    //   createdAt: Date;
-    //   updatedAt: Date;
-    //   projectId: string | null;
-    // };
-    chatId: string;
-  };
-
-// 1. Grouping: Gom các chunk về theo từng File
-// Mục đích: Không để chunk của file A nằm xen kẽ file B, gây lú ngữ cảnh.
-type FileGroup = {
-  fileId: string;
-  fileName: string; // Để hiển thị cho LLM hiểu
-  maxScore: number; // Điểm cao nhất mà file này đạt được (để đánh giá độ quan trọng của cả file)
-  chunks: { content: string; index: number; score: number }[];
-};
 @Injectable()
 export class ChatService {
-  // logger
   private readonly logger = new Logger(ChatService.name);
+
   constructor(
-    private readonly openaiService: OpenaiService,
-    private prisma: PrismaService,
-    private readonly retrievalService: RetrievalService,
-  ) { }
+    private readonly llm: LlmService,
+    private readonly prisma: PrismaService,
+    private readonly conversations: ChatConversationService,
+    private readonly ragContext: RagContextService,
+  ) {}
 
-  // -- CORE CHAT FUNCTIONALITY --
-
-  chatStream(chatDto: ChatDto): Observable<SSEMessage> {
-    const subject = new Subject<SSEMessage>();
-
-    (async () => {
-      try {
-        const preparedData = await this.prepareRagContext(chatDto);
-
-        // Xử lý case không tìm thấy tài liệu
-        if ('answer' in preparedData) {
-          subject.next({ data: { type: 'ERROR', content: preparedData.answer } });
-          subject.complete();
-          return;
-        }
-
-        const { chatId, messages, citations } = preparedData;
-
-        subject.next({
-          data: { type: 'CITATIONS', content: citations, chatId }
-        });
-
-        // Call stream llm
-        const stream = await this.openaiService.getChatModel().stream(messages);
-
-        let fullAnswer = ''; // Biến gom text để lưu DB
-
-        for await (const chunk of stream) {
-          const token = chunk.content as string;
-          if (token) {
-            fullAnswer += token;
-            // Send token to client
-            subject.next({ data: { type: 'TOKEN', content: token } });
-          }
-        }
-
-        // Call save db
-        await this.saveChatToDb(chatId, chatDto.message, fullAnswer, citations);
-
-        // Send done to client
-        subject.next({ data: { type: 'DONE' } });
-        subject.complete();
-
-
-      } catch (error) {
-        this.logger.error(error);
-        subject.next({ data: { type: 'ERROR', content: 'Có lỗi xảy ra khi xử lý.' } });
-        subject.complete();
-      }
-    })()
-
-    return subject.asObservable();
+  async chatGlobal(chatDto: ChatDto): Promise<ChatResponse> {
+    return this.answer(chatDto);
   }
 
-  // === DRY === 
-
-  private async prepareRagContext(chatDto: ChatDto): Promise<
-    | { answer: string } // Case không tìm thấy docs
-    | { chatId: string; messages: any[]; citations: CitationType[] } // Case thành công
-  > {
-    const MAX_HISTORY_MESSAGES = 6;
-
-    // 1. Ensure Chat & Load History
-    const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
-
-    const historyMessages = await this.prisma.chatMessage.findMany({
-      where: { chatId: chatId },
-      orderBy: { createdAt: 'asc' },
-      take: MAX_HISTORY_MESSAGES,
-    });
-
-    const contentHistory = historyMessages
-      .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
-
-    // 2. Rewrite Question
-    let finalQuestion = chatDto.message;
-    if (contentHistory.length > 0) {
-      finalQuestion = await this.createStandaloneQuestion(contentHistory, chatDto.message);
-    }
-
-    // 3. Retrieve & Rerank
-    const scoredDocs = await this.callRetrieveAndRerank(
-      finalQuestion,
-      chatDto.userId as string,
-      chatDto.projectId as string,
-    );
-
-    if (!scoredDocs || scoredDocs.length === 0) {
-      return {
-        answer: 'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn.',
-      };
-    }
-
-    // 4. Build Context
-    const fileGroups = this.createFileGroups(scoredDocs);
-    const contextStr = this.createContextFromFileGroups(fileGroups);
-    const messages = this.createFinalInputLlm(contextStr, chatDto.message, contentHistory);
-
-    // 5. Build Citations (Logic map cũ của em)
-    const citations: CitationType[] = scoredDocs.map((doc) => ({
-      index: doc.metadata.chunkIndex as number,
-      snippet: doc.pageContent.substring(0, 150) + '...',
-      text: doc.pageContent,
-      fileId: doc.metadata.fileId as string,
-      fileUrl: (doc.metadata.fileUrl as string) || '',
-      page: (doc.metadata.page as number) || 0,
-      score: doc.finalScore,
-      startOffset: (doc.metadata.startOffset as number) || 0,
-      endOffset: (doc.metadata.endOffset as number) || 0,
-      projectId: doc.metadata.projectId as string,
-    }));
-
-    return { chatId: chatId as string, messages, citations };
+  async chatHistory(chatDto: ChatDto): Promise<ChatResponse> {
+    return this.answer(chatDto);
   }
 
-
-
-  private async chatUtil(chatDto: ChatDto): Promise<BaseMessage> {
-    const MAX_HISTORY_MESSAGES = 6;
-
-    // Ensure chat exists
-    const chatId = await this.ensureChatExists(chatDto.chatId, chatDto);
-
-    // Rewrite question to standalone if chatId provided
-    let finalQuestion = chatDto.message;
-
-    // Load history from ChatMessage table (not JSON)
-    const historyMessages = await this.prisma.chatMessage.findMany({
-      where: { chatId: chatId },
-      orderBy: { createdAt: 'asc' },
-      take: MAX_HISTORY_MESSAGES,
-    });
-
-    const contentHistory: MessageType[] = historyMessages
-      .filter((m) => m.role && m.content)
-      .map((m) => ({ role: m.role as MessageType['role'], content: m.content }));
-
-    if (contentHistory.length > 0) {
-      finalQuestion = await this.createStandaloneQuestion(
-        contentHistory,
-        chatDto.message,
-      );
-    }
-
-    // -- HELPER: Call Retrieve and Rerank, sorted doc's score--
-    const scoredDocs = await this.callRetrieveAndRerank(
-      finalQuestion,
-      chatDto.userId as string,
-      chatDto.projectId as string,
-    );
-
-    // Handle case when no documents found
-    // Xử lý trường hợp không có tài liệu nào
-    if (!scoredDocs || scoredDocs.length === 0) {
-      // Return with not save
-      return {
-        answer:
-          'Tôi không tìm thấy thông tin nào phù hợp trong tài liệu của bạn để trả lời câu hỏi này.',
-      };
-    }
-
-
-    // -- HELPER: Create File Groups from Scored Docs --
-    const fileGroups = this.createFileGroups(scoredDocs);
-
-    // -- HELPER: Create Context from File Groups --
-    const contextStr = this.createContextFromFileGroups(fileGroups);
-
-
-    // -- HELPER: Create final inputLlm for LLM --
-    const inputLlm = this.createFinalInputLlm(
-      contextStr,
-      chatDto.message,
-      contentHistory,
-    );
-
-    // Call LLM
-    const response = await this.openaiService.getChatModel().invoke(inputLlm);
-    const aiAnswer = response.content as string;
-
-    // 5. PREPARE CITATIONS (FE will controll it)
-    // Map từ ScoredDocument sang CitationType
-    const citations: CitationType[] = scoredDocs.map((doc) => ({
-      index: doc.metadata.chunkIndex as number,
-      snippet: doc.pageContent.substring(0, 150) + '...', // Preview ngắn
-      text: doc.pageContent,
-      fileId: doc.metadata.fileId as string,
-      // Fallback các trường metadata nếu thiếu
-      fileUrl: (doc.metadata.fileUrl as string) || '',
-      page: (doc.metadata.page as number) || 0,
-      score: doc.finalScore, // Trả về score để FE có thể hiện độ tin cậy
-      startOffset: (doc.metadata.startOffset as number) || 0,
-      endOffset: (doc.metadata.endOffset as number) || 0,
-      projectId: doc.metadata.projectId as string,
-    }));
-
-    // 6. SAVE MESSAGES TO ChatMessage TABLE
-    // Save user message
-    await this.prisma.chatMessage.create({
-      data: {
-        chatId: chatId!,
-        role: 'user',
-        content: chatDto.message,
-      },
-    });
-
-    // Save assistant message with citations
-    await this.prisma.chatMessage.create({
-      data: {
-        chatId: chatId!,
-        role: 'assistant',
-        content: aiAnswer,
-        metadata: { citations },
-      },
-    });
-
-    return {
-      answer: aiAnswer,
-      citations,
-      chatId: chatId!,
-    };
-  }
-
-  // -- PUBLIC CHAT FUNC --
-  async chatGlobal(chatDto: ChatDto) {
-    return await this.chatUtil(chatDto);
-  }
-
-  // -- Chat history --
-  async chatHistory(chatDto: ChatDto) {
-    // -- VALIDATIONS --
-    // ... TODO: ...
-
-    return await this.chatUtil(chatDto);
-  }
-
-  // -- HELPER FUNC FOR CHAT MANAGEMENT --
-  private createFinalInputLlm(
-    context: string,
-    message: string,
-    contentHistory: MessageType[],
-  ) {
-    // 3. PROMPT ENGINEERING (Tinh chỉnh cho Rerank)
-    const SYSTEM_PROMPT = `
-      Bạn là trợ lý AI chuyên nghiệp, nhiệm vụ là trả lời câu hỏi dựa trên các tài liệu được cung cấp.
-
-      HƯỚNG DẪN XỬ LÝ THÔNG TIN:
-      1. **Ưu tiên**: Các tài liệu được liệt kê đầu tiên trong Context là quan trọng nhất (đã được xếp hạng). Hãy dùng chúng làm cơ sở chính.
-      2. **Tổng hợp**: Nếu thông tin nằm rải rác ở nhiều tài liệu, hãy tổng hợp lại một cách mạch lạc.
-      3. **Mâu thuẫn**: Nếu các tài liệu mâu thuẫn nhau, hãy tin tưởng tài liệu có "Độ phù hợp" cao hơn (nằm trên cùng).
-      4. **Trung thực**: Nếu không tìm thấy thông tin để trả lời, hãy nói "Tài liệu hiện tại không chứa thông tin về vấn đề này". Đừng bịa đặt.
-      5. Nếu câu hỏi độc lập (rephrased) có vẻ sai lệch so với ý định ban đầu, hãy ưu tiên trả lời theo ngữ cảnh tài liệu tìm được.
-
-      QUY TẮC: BẮT BUỘC TRÍCH DẪN (CITATION) :
-      - Đã trích dẫn thì phải chính xác
-      - Mọi thông tin đưa ra phải có dẫn chứng.
-      - Sử dụng format **[#index]** ngay sau câu thông tin liên quan.
-      - Ví dụ: "Doanh thu năm nay tăng 20% [#12]"
-      - Chỉ sử dụng số index đã có trong context (Trích đoạn #...).
-    `;
-
-    const FINAL_USER_PROMPT = `
-      CONTEXT TÀI LIỆU:
-      ${context}
-
-      ---
-      CÂU HỎI CỦA TÔI: 
-      ${message}
-    `;
-
-    // 4. HISTORY & LLM CALL (Logic giữ nguyên, chỉ thay đổi input)
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT.trim() },
-      ...contentHistory,
-      { role: 'user', content: FINAL_USER_PROMPT.trim() },
-    ];
-
-    return messages;
-  }
-
-  // -- CREATE CONTEXT --
-  private createContextFromFileGroups(fileGroups: Map<string, FileGroup>) {
-    // Sắp xếp các FILE theo độ quan trọng giảm dần
-    const sortedFiles = Array.from(fileGroups.values()).sort(
-      (a, b) => b.maxScore - a.maxScore,
-    );
-
-    // Tạo chuỗi Context mạch lạc
-    const contextParts: string[] = [];
-
-    sortedFiles.forEach((group) => {
-      // Trong 1 file, sắp xếp chunk theo thứ tự xuất hiện (index) để đọc như văn bản thường
-      group.chunks.sort((a, b) => a.index - b.index);
-
-      // Header rõ ràng cho LLM nhận biết nguồn
-      let fileContext = `--- NGUỒN TÀI LIỆU: "${group.fileName}" (Độ phù hợp: ${(group.maxScore * 100).toFixed(0)}%) ---\n`;
-
-      fileContext += group.chunks
-        .map((c) => `(Trích đoạn #${c.index}): ${c.content}`) // Format: (Trích đoạn #1): Nội dung
-        .join('\n\n');
-
-      contextParts.push(fileContext);
-    });
-
-    const context = contextParts.join('\n\n');
-
-    return context;
-  }
-
-  // -- CREATE FILE GROUPS --
-  private createFileGroups(
-    scoredDocs: ScoredDocument[],
-  ): Map<string, FileGroup> {
-    // 2. CONTEXT CONSTRUCTION (Learn Logic from "NotebookLM")
-    // Gom nhóm chunk theo File để LLM hiểu ngữ cảnh của từng tài liệu
-    const fileGroups = new Map<string, FileGroup>();
-
-    // Lưu ý: scoredDocs bây giờ là mảng object, không phải [doc, score] nữa
-    scoredDocs.forEach((doc) => {
-      // Lọc nhiễu cơ bản
-      if (doc.pageContent.length < 30) return;
-
-      const fileId = doc.metadata.fileId as string;
-      const fileName =
-        doc.metadata['originalFileName'] ||
-        `File_${fileId?.substring(0, 5) ?? 'Unknown'}`;
-      const chunkIndex = doc.metadata.chunkIndex as number;
-      const score = doc.finalScore || 0;
-
-      if (!fileGroups.has(fileId)) {
-        fileGroups.set(fileId, {
-          fileId,
-          // remove extension from file name
-          fileName: path.parse(fileName).name,
-          maxScore: 0,
-          chunks: [],
-        });
-      }
-
-      const group = fileGroups.get(fileId)!;
-      // Cập nhật maxScore để biết file nào quan trọng nhất
-      // TODO: Nên lấy trung bình score của tất cả chunk trong file thay vì maxScore?
-      if (score > group.maxScore) group.maxScore = score;
-
-      group.chunks.push({
-        content: doc.pageContent,
-        index: chunkIndex,
-        score: score,
-      });
-    });
-
-    return fileGroups;
-  }
-
-  // -- CREATE SCORED DOCS --
-  private async callRetrieveAndRerank(
-    finalQuestion: string,
-    userId: string,
-    projectId?: string,
-  ) {
-    const scoredDocs: ScoredDocument[] =
-      await this.retrievalService.retrieveAndRerank(
-        finalQuestion,
-        userId,
-        projectId,
-      );
-
-    return scoredDocs;
-  }
-
-
-  // -- HELPER: Save chat to db --
-  private async saveChatToDb(
-    chatId: string,
-    userMsg: string,
-    aiMsg: string,
-    citations: CitationType[]
-  ) {
-    // Save user message
-    await this.prisma.chatMessage.create({
-      data: { chatId, role: 'user', content: userMsg },
-    });
-
-    // Save assistant message
-    await this.prisma.chatMessage.create({
-      data: {
-        chatId,
-        role: 'assistant',
-        content: aiMsg,
-        metadata: { citations } // Lưu citations vào metadata để truy xuất sau
-      },
+  chatStream(chatDto: ChatDto): Observable<ChatStreamEvent> {
+    return new Observable<ChatStreamEvent>((subscriber) => {
+      void this.stream(chatDto, subscriber);
     });
   }
 
-  // -- HELPER: Ensure chat exists or create it --
-  private async ensureChatExists(chatId: string | undefined, chatDto: ChatDto) {
-    let chatIdLocal = chatId;
-    if (!chatId) {
-      const created = await this.prisma.chat.create({
-        data: {
-          userId: chatDto.userId as string,
-          projectId: chatDto.projectId as string,
-          title:
-            chatDto.message.length > 50
-              ? chatDto.message.slice(0, 50) + '...'
-              : chatDto.message,
-        },
-      });
-      chatIdLocal = created.id;
-    }
-    return chatIdLocal;
-  }
-
-  // -- HELPER: Rephrase question to standalone --
-  private async createStandaloneQuestion(
-    chatHistory: MessageType[],
-    question: string,
-  ) {
-    if (!chatHistory || chatHistory.length === 0) return question;
-
-    const historyContext = chatHistory
-      .map((msg) => `${msg.role}: ${msg.content}`)
-      .join('\n');
-
-    const rephrasePrompt = `
-    Dựa trên lịch sử trò chuyện và câu hỏi mới nhất của người dùng, hãy viết lại câu hỏi mới sao cho nó trở thành một câu hỏi ĐỘC LẬP, đầy đủ ngữ nghĩa mà không cần đọc lịch sử vẫn hiểu được.
-    KHÔNG trả lời câu hỏi, chỉ viết lại hoặc giữ nguyên nếu đã rõ ràng.
-    Ví dụ: 
-    - History: "Ai là hiệu trưởng?" -> Current: "Ông ấy bao nhiêu tuổi?" -> Output: "Hiệu trưởng trường hiện tại bao nhiêu tuổi?"
-    `;
-
-    // Call llm
-    const messages = [
-      { role: 'system', content: rephrasePrompt.trim() },
-      {
-        role: 'user',
-        content: `HISTORY:\n${historyContext}\n\nCURRENT QUESTION:\n${question}`,
-      },
-    ];
-
-    const rewrittenQuestion = await this.openaiService
-      .getRewriteModel()
-      .invoke(messages)
-      .then((res) => res.content as string);
-
-    return rewrittenQuestion;
-  }
-
-  // -- Get all user chats --
-  // async getAllUserChat(userId: string) {
-  //   return await this.prisma.chat.findMany({
-  //     orderBy: { updatedAt: 'desc' },
-  //     where: { userId },
-  //     omit: { messages: true, userId: true },
-  //   });
-  // }
-
-  // -- Get global user chats --
   async getGlobalUserChat(userId: string) {
-    return await this.prisma.chat.findMany({
+    return this.prisma.chat.findMany({
       orderBy: { updatedAt: 'desc' },
       where: { userId, projectId: null },
       omit: { userId: true },
     });
   }
 
-  // -- Get Chat by ID --
   async getChatById(userId: string, chatId: string) {
-    return await this.prisma.chat.findUnique({
+    return this.prisma.chat.findFirst({
       where: { id: chatId, userId },
     });
   }
 
-  // -- Update chat (title, or move in project) --
   async update(userId: string, id: string, updateChatDto: UpdateChatDto) {
-    return await this.prisma.chat.update({
-      where: { id, userId },
+    await this.assertChatOwner(userId, id);
+    return this.prisma.chat.update({
+      where: { id },
       data: updateChatDto,
       omit: { userId: true },
     });
   }
 
-  // -- Delete chat --
   async remove(userId: string, id: string) {
-    const chat = await this.prisma.chat.findUnique({
-      where: { id },
-    });
-    if (!chat) throw new BadRequestException('Chat not found');
-    if (chat.userId !== userId)
-      throw new ForbiddenException('User Unauthorized!');
-
-    return await this.prisma.chat.delete({
+    await this.assertChatOwner(userId, id);
+    return this.prisma.chat.delete({
       where: { id },
       omit: { userId: true },
     });
+  }
+
+  private async answer(chatDto: ChatDto): Promise<ChatResponse> {
+    const prepared = await this.prepare(chatDto);
+    const answer = prepared.rag
+      ? await this.llm.answer(prepared.rag.messages)
+      : NO_DOCUMENTS_ANSWER;
+    const citations = prepared.rag?.citations ?? [];
+
+    await this.conversations.saveExchange({
+      chatId: prepared.chatId,
+      userMessage: chatDto.message,
+      assistantMessage: answer,
+      citations,
+    });
+
+    return { answer, citations, chatId: prepared.chatId };
+  }
+
+  private async stream(
+    chatDto: ChatDto,
+    subscriber: {
+      next: (event: ChatStreamEvent) => void;
+      complete: () => void;
+    },
+  ): Promise<void> {
+    try {
+      const prepared = await this.prepare(chatDto);
+      if (!prepared.rag) {
+        await this.conversations.saveExchange({
+          chatId: prepared.chatId,
+          userMessage: chatDto.message,
+          assistantMessage: NO_DOCUMENTS_ANSWER,
+          citations: [],
+        });
+        subscriber.next({
+          data: {
+            type: 'ERROR',
+            content: NO_DOCUMENTS_ANSWER,
+            chatId: prepared.chatId,
+          },
+        });
+        return;
+      }
+
+      subscriber.next({
+        data: {
+          type: 'CITATIONS',
+          content: prepared.rag.citations,
+          chatId: prepared.chatId,
+        },
+      });
+
+      let answer = '';
+      for await (const token of this.llm.streamAnswer(prepared.rag.messages)) {
+        answer += token;
+        subscriber.next({ data: { type: 'TOKEN', content: token } });
+      }
+
+      await this.conversations.saveExchange({
+        chatId: prepared.chatId,
+        userMessage: chatDto.message,
+        assistantMessage: answer,
+        citations: prepared.rag.citations,
+      });
+      subscriber.next({ data: { type: 'DONE' } });
+    } catch (error) {
+      this.logger.error('Failed to stream chat response', error);
+      subscriber.next({
+        data: { type: 'ERROR', content: 'Có lỗi xảy ra khi xử lý.' },
+      });
+    } finally {
+      subscriber.complete();
+    }
+  }
+
+  private async prepare(
+    chatDto: ChatDto,
+  ): Promise<{ chatId: string; rag: RagContext | null }> {
+    const userId = this.userIdFrom(chatDto);
+    const chatId = await this.conversations.resolveChat({
+      chatId: chatDto.chatId,
+      userId,
+      projectId: chatDto.projectId,
+      firstMessage: chatDto.message,
+    });
+    const history = await this.conversations.recentHistory(chatId);
+    const rag = await this.ragContext.build({
+      question: chatDto.message,
+      history,
+      userId,
+      projectId: chatDto.projectId,
+    });
+    return { chatId, rag };
+  }
+
+  private userIdFrom(chatDto: ChatDto): string {
+    if (!chatDto.userId) throw new BadRequestException('User ID is required');
+    return chatDto.userId;
+  }
+
+  private async assertChatOwner(userId: string, chatId: string): Promise<void> {
+    const chat = await this.prisma.chat.findFirst({
+      where: { id: chatId, userId },
+      select: { id: true },
+    });
+    if (!chat) throw new NotFoundException('Chat not found');
   }
 }

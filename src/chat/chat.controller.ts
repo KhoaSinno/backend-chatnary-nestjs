@@ -17,7 +17,7 @@ import { JwtPayloadWithRt } from '../auth/strategies/refresh.strategy';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) { }
+  constructor(private readonly chatService: ChatService) {}
 
   // -- CHAT STREAM --
   // Note: SSE uses GET, so we use Query params instead of Body

@@ -5,7 +5,6 @@ import { AppService } from './app.service';
 import { IngestModule } from './ingest/ingest.module';
 import { DocumentModule } from './document/document.module';
 import { ChatModule } from './chat/chat.module';
-import { OpenaiModule } from './llm/openai/openai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ProjectModule } from './project/project.module';
@@ -29,7 +28,6 @@ import { QuizModule } from './quiz/quiz.module';
 import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
-
     // Event emitter
     EventEmitterModule.forRoot(),
     // Environment configuration with validation
@@ -84,6 +82,11 @@ import { AdminModule } from './admin/admin.module';
         // Model configuration
         GEMINI_MODEL: Joi.string().optional(),
         EMBEDDING_MODEL: Joi.string().optional(),
+        OPENAI_CHAT_MODEL: Joi.string().optional(),
+        OPENAI_REWRITE_MODEL: Joi.string().optional(),
+        OPENAI_EMBEDDING_MODEL: Joi.string().optional(),
+        COHERE_API_KEY: Joi.string().optional(),
+        COHERE_RERANK_MODEL: Joi.string().optional(),
 
         // Performance settings
         API_TIMEOUT: Joi.number().optional(),
@@ -156,7 +159,6 @@ import { AdminModule } from './admin/admin.module';
     IngestModule,
     DocumentModule,
     ChatModule,
-    OpenaiModule,
     PrismaModule,
     ProjectModule,
     AuthModule,
@@ -196,4 +198,4 @@ import { AdminModule } from './admin/admin.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

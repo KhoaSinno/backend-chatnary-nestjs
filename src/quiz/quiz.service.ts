@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { RetrievalService } from '../retrieval/retrieval.service';
-import { OpenaiService } from '../llm/openai/openai.service';
-import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { LlmService } from '../llm/llm.service';
 import { SubmitQuizDto } from './dto/submit-quiz.dto';
 
 export type QuizQuestionData = {
@@ -11,7 +14,7 @@ export type QuizQuestionData = {
   options: string[];
   correctAnswer: string;
   explanation?: string;
-}
+};
 
 export type AttemptQuestion = {
   questionId: string;
@@ -19,15 +22,28 @@ export type AttemptQuestion = {
   correctAnswer: string;
   isCorrect: boolean;
   explanation: string | null;
-}
+};
+
+const isQuizQuestionData = (value: unknown): value is QuizQuestionData => {
+  if (typeof value !== 'object' || value === null) return false;
+  const question = value as Record<string, unknown>;
+  return (
+    typeof question.question === 'string' &&
+    Array.isArray(question.options) &&
+    question.options.every((option) => typeof option === 'string') &&
+    typeof question.correctAnswer === 'string' &&
+    (question.explanation === undefined ||
+      typeof question.explanation === 'string')
+  );
+};
 
 @Injectable()
 export class QuizService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly retrievalService: RetrievalService,
-    private readonly openaiService: OpenaiService,
-  ) { }
+    private readonly llm: LlmService,
+  ) {}
   // == generate quiz ==
 
   async generate(quizDto: CreateQuizDto) {
@@ -40,24 +56,26 @@ export class QuizService {
     });
 
     if (!project) {
-      throw new NotFoundException('Project not found or you do not have access');
+      throw new NotFoundException(
+        'Project not found or you do not have access',
+      );
     }
 
     // 2. Retrieve relevant documents
     const relevantDocs = await this.retrievalService.retrieveAndRerank(
       quizDto.topic || 'General summary',
       quizDto.userId!,
-      quizDto.projectId
+      quizDto.projectId,
     );
 
     if (!relevantDocs || relevantDocs.length === 0) {
       throw new NotFoundException(
-        'No documents found in this project. Please upload documents first.'
+        'No documents found in this project. Please upload documents first.',
       );
     }
 
     // 3. Build context from documents
-    const context = relevantDocs.map(d => d.pageContent).join('\n\n');
+    const context = relevantDocs.map((d) => d.pageContent).join('\n\n');
 
     // 4. Generate quiz using AI
     const prompt = `
@@ -81,26 +99,33 @@ export class QuizService {
       ]
     `;
 
-    const response = await this.openaiService.getChatModel().invoke([
-      new SystemMessage('Bạn là chuyên gia tạo đề thi. Chỉ trả về JSON thuần, không có markdown.'),
-      new HumanMessage(prompt)
+    const response = await this.llm.answer([
+      {
+        role: 'system',
+        content:
+          'Bạn là chuyên gia tạo đề thi. Chỉ trả về JSON thuần, không có markdown.',
+      },
+      { role: 'user', content: prompt },
     ]);
 
     // 5. Parse AI response
     let quizData: QuizQuestionData[];
     try {
       // Clean markdown json tags if present (```json ... ```)
-      const cleanJson = (response.content as string)
-        .replace(/```json|```/g, '')
-        .trim();
-      quizData = JSON.parse(cleanJson);
+      const cleanJson = response.replace(/```json|```/g, '').trim();
+      const parsed: unknown = JSON.parse(cleanJson);
 
-      if (!Array.isArray(quizData) || quizData.length === 0) {
+      if (
+        !Array.isArray(parsed) ||
+        parsed.length === 0 ||
+        !parsed.every(isQuizQuestionData)
+      ) {
         throw new Error('Invalid quiz data format');
       }
-    } catch (e) {
+      quizData = parsed;
+    } catch (error: unknown) {
       throw new BadRequestException(
-        `AI returned invalid format. Please try again. Error: ${e.message}`
+        `AI returned invalid format. Please try again. Error: ${this.errorMessage(error)}`,
       );
     }
 
@@ -137,26 +162,24 @@ export class QuizService {
   // == Submit ==
 
   async submitQuiz(body: SubmitQuizDto) {
-
     // Get quiz
     const quiz = await this.prisma.quiz.findUnique({
       where: { id: body.quizId },
       include: {
         questions: true,
       },
-    })
+    });
 
     if (!quiz) {
       throw new NotFoundException('Quiz not found');
     }
 
-    let resultArr: AttemptQuestion[] = [];
+    const resultArr: AttemptQuestion[] = [];
     let countCorrectQuestion = 0;
     const totalQuestions = quiz.questions.length;
 
     quiz.questions.forEach((q) => {
-
-      const isCorrect = q.correctAnswer === body.answers[q.id]
+      const isCorrect = q.correctAnswer === body.answers[q.id];
       if (isCorrect) {
         countCorrectQuestion++;
       }
@@ -166,13 +189,15 @@ export class QuizService {
         userAnswer: body.answers[q.id] || null, // Có thể user không chọn
         correctAnswer: q.correctAnswer,
         isCorrect: isCorrect,
-        explanation: q.explanation
+        explanation: q.explanation,
       });
-
     });
 
-    // == Calculate score 
-    const score = totalQuestions > 0 ? Number((countCorrectQuestion / totalQuestions) * 10).toFixed(2) : 0;
+    // == Calculate score
+    const score =
+      totalQuestions > 0
+        ? Number((countCorrectQuestion / totalQuestions) * 10).toFixed(2)
+        : 0;
 
     // Ensure userId exists (should be populated by controller from JWT)
     if (!body.userId) {
@@ -185,7 +210,6 @@ export class QuizService {
         userId: body.userId,
         score: Number(score),
         userAnswers: body.answers,
-
       },
     });
 
@@ -193,7 +217,7 @@ export class QuizService {
       attemptId: attempt.id,
       score: Number(score),
       totalQuestions: totalQuestions,
-      details: resultArr
+      details: resultArr,
     };
   }
 
@@ -202,9 +226,9 @@ export class QuizService {
     return await this.prisma.userQuizAttempt.findMany({
       where: { userId },
       include: {
-        quiz: { select: { title: true, difficulty: true } }
+        quiz: { select: { title: true, difficulty: true } },
       },
-      orderBy: { startedAt: 'desc' }
+      orderBy: { startedAt: 'desc' },
     });
   }
 
@@ -213,11 +237,12 @@ export class QuizService {
     return await this.prisma.userQuizAttempt.findUnique({
       where: { id: attemptId, userId }, //  Check userId to save security
       include: {
-        quiz: { include: { questions: true } }
-      }
+        quiz: { include: { questions: true } },
+      },
     });
   }
+
+  private errorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
+  }
 }
-
-
-

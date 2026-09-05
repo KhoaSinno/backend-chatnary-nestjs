@@ -1,6 +1,9 @@
 export const envConfig = () => ({
   openai: {
     apiKey: process.env.OPENAI_API_KEY,
+    chatModel: process.env.OPENAI_CHAT_MODEL,
+    rewriteModel: process.env.OPENAI_REWRITE_MODEL,
+    embeddingModel: process.env.OPENAI_EMBEDDING_MODEL,
   },
   database: {
     // Flexible: works with any PostgreSQL provider (Neon, Supabase, Docker, etc.)

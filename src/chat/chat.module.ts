@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ChatController } from './chat.controller';
-import { OpenaiService } from '../llm/openai/openai.service';
 import { RetrievalModule } from '../retrieval/retrieval.module';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { LlmModule } from '../llm/llm.module';
+import { ChatConversationService } from './chat-conversation.service';
+import { RagContextService } from './rag-context.service';
 
 @Module({
-  imports: [RetrievalModule],
+  imports: [LlmModule, PrismaModule, RetrievalModule],
   controllers: [ChatController],
-  providers: [ChatService, OpenaiService, PrismaService],
+  providers: [ChatService, ChatConversationService, RagContextService],
+  exports: [ChatService],
 })
 export class ChatModule {}

@@ -1,8 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { VectorService } from '../ingest/vector/vector.service';
-import { CohereRerank } from '@langchain/cohere';
 import { Document } from '@langchain/core/documents';
-import { ConfigService } from '@nestjs/config';
+import { CohereRerankerService } from './cohere-reranker.service';
 
 type MetadataDoc = {
   fileId?: string;
@@ -40,8 +39,8 @@ export class RetrievalService {
   constructor(
     private vectorService: VectorService,
     private logger: Logger,
-    private configService: ConfigService,
-  ) { }
+    private readonly reranker: CohereRerankerService,
+  ) {}
 
   /**
    * Pipeline tìm kiếm chuyên nghiệp:
@@ -72,18 +71,11 @@ export class RetrievalService {
       );
     });
 
-    const cohereRerank = new CohereRerank({
-      apiKey: this.configService.get<string>('COHERE_API_KEY'),
-      topN: this.FINAL_K,
-      model: 'rerank-v4.0-pro',
-    });
-
-    const rerankedDocuments = await cohereRerank.compressDocuments(
-      docsRerank,
+    const rerankedDocuments = await this.reranker.rerank(
       query,
+      docsRerank,
+      this.FINAL_K,
     );
-
-
 
     // Chuẩn hóa documents sang format dễ xử lý
     const candidates: ScoredDocument[] = rerankedDocuments.map((doc) => ({
