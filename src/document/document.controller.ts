@@ -25,6 +25,8 @@ import { ParseJsonPipe } from '../common/pipes/parse-json.pipe';
 import { UploadMetadataDto } from './dto/upload-document.dto';
 import { DocumentFileService } from './document-file.service';
 
+export interface UploadMetadata extends UploadMetadataDto {}
+
 @Controller('document')
 export class DocumentController {
   constructor(
@@ -64,8 +66,7 @@ export class DocumentController {
   async uploadFiles(
     @Req() req: { user: JwtPayloadWithRt },
     @UploadedFiles() files: Express.Multer.File[],
-    // @Body('projectId') projectId?: string,
-    @Body('data', ParseJsonPipe) metadata: UploadMetadataDto,
+    @Body('data', new ParseJsonPipe(UploadMetadataDto)) metadata: UploadMetadata,
   ) {
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
